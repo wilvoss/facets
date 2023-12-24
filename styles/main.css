@@ -69,18 +69,18 @@ app {
 }
 
 header {
-    padding: 0 calc(4 * var(--defaultGap));
-    width: calc(var(--cardSize) * 2 + (var(--defaultGap) * 3));
+    /* padding: 0 calc(var(--defaultGap)); */
+    width: auto;
 }
 
 header h1 {
     cursor: default;
     text-align: center;
     text-transform: uppercase;
-    letter-spacing: 4px;
+    letter-spacing: 2px;
     font-family: 'Theme';
     font-weight: normal;
-    font-size: 300%;
+    font-size: 280%;
     line-height: 84%;
 }
 
@@ -138,7 +138,7 @@ wrapper {
 }
 
 wrapper:first-of-type {
-    padding: calc(2 * var(--defaultGap)) 0 var(--defaultGap);
+    padding: calc(var(--defaultGap)) 0;
     background: hsla(var(--appBackgroundDarkHSL), .8);
     margin-bottom: calc(2 * var(--defaultGap));
     border-radius: 0 0 var(--borderRadius) var(--borderRadius);
@@ -555,6 +555,44 @@ article::-webkit-scrollbar, modal::-webkit-scrollbar {
     opacity: .3;
 }
 
+@media screen and (max-height:730px) {
+
+    wrapper {
+        padding: 0
+    }
+
+    wrapper:first-of-type {
+        margin-bottom: var(--defaultGap);
+        padding: calc(var(--defaultGap)) 0;
+    }
+
+    controls {
+        padding-top: 0;
+        padding-bottom: 0;
+        height: 100%;
+    }
+
+    controls button {
+        width: auto;
+        height: 100%;
+        padding: 0 var(--defaultGap) 0;
+    }
+
+    header {
+        width: auto;
+        padding: 0;
+    }
+
+    header h1 {
+        letter-spacing: 1px;
+        font-size: 180%;
+    }
+
+    header subtitle {
+        font-size: 70%;
+    }
+}
+
 @media screen and (max-width:640px) {
 
     :root {
@@ -594,6 +632,10 @@ article::-webkit-scrollbar, modal::-webkit-scrollbar {
     header h1 {
         letter-spacing: 1px;
         font-size: 280%;
+    }
+
+    header subtitle {
+        font-size: 100%;
     }
 
     message {
