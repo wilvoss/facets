@@ -131,7 +131,9 @@ var app = new Vue({
         queryString += hint.value + '-';
       });
 
-      queryString += this.player.name;
+      queryString += this.player.name + '-';
+      queryString += this.puzzlePlayer.name + '-';
+      queryString += this.gameMode;
 
       this.shareURL = queryString;
     },
@@ -194,32 +196,29 @@ var app = new Vue({
         }
       }
 
-      // this.draggedCard.words = []  ;
       if (this.getSelectedCard !== undefined && _card !== this.getSelectedCard) {
-        if (this.getSelectedCard !== undefined) {
-          this.getSelectedCard.justDropped = true;
-          _card.justDropped = true;
+        this.getSelectedCard.justDropped = true;
+        _card.justDropped = true;
 
-          setTimeout(() => {
-            this.cards.concat(this.parkedCards).forEach((card) => {
-              card.justDropped = false;
-            });
-          }, this.longTransition);
-          let temp1 = new CardObject(_card);
-          let temp2 = new CardObject(this.getSelectedCard);
-          _card.words = temp2.words;
-          _card.rotation = temp2.rotation;
-          this.getSelectedCard.words = temp1.words;
-          this.getSelectedCard.rotation = temp1.rotation;
-          this.getSelectedCard.isSelected = false;
-        }
+        setTimeout(() => {
+          this.cards.concat(this.parkedCards).forEach((card) => {
+            card.justDropped = false;
+          });
+        }, this.longTransition);
+        let temp1 = new CardObject(_card);
+        let temp2 = new CardObject(this.getSelectedCard);
+        _card.words = temp2.words;
+        _card.rotation = temp2.rotation;
+        this.getSelectedCard.words = temp1.words;
+        this.getSelectedCard.rotation = temp1.rotation;
+        this.getSelectedCard.isSelected = false;
       } else if (_card !== undefined) {
         // this.isDragging = false;
         this.ToggleCardSelection(_card);
       }
     },
 
-    HandleDragRelease(e, _card) {
+    HandleBodyPointerUp(e, _card) {
       if (this.getSelectedCard !== null && this.getSelectedCard !== undefined) {
         this.isDragging = false;
         this.draggedCard = this.emptyCard;
@@ -238,6 +237,12 @@ var app = new Vue({
         card.isSelected = false;
       });
       this.HandleCardPointerDown(_card);
+    },
+
+    HandleCardClick(e, _card) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.ToggleCardSelection(_card);
     },
 
     HandleCardDrop(e, _card) {
@@ -322,7 +327,7 @@ var app = new Vue({
         setTimeout(() => {
           let hint0 = document.getElementById('hint0');
           hint0.focus();
-          hint0.select();
+          // hint0.select();
         }, this.longTransition);
       }
     },
@@ -400,7 +405,7 @@ var app = new Vue({
         boardPieces = window.location.search.split('?')[1].split('=')[1].split('-');
       }
 
-      if (boardPieces.length === 45) {
+      if (boardPieces.length >= 45) {
         this.RestoreGame(boardPieces);
       } else if (!this.isGuessing) {
         this.NewGame();
