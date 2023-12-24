@@ -27,6 +27,10 @@ getUniqueWords = function (_mode = 'nouns', _num = 20) {
   return shuffledWords.slice(0, _num); // get the first four elements
 };
 
+getWordIndex = function (_word) {
+  return Nouns.concat(Verbs).findIndex((value) => value === _word);
+};
+
 /* prettier-ignore */
 let Nouns = [
     "Apple", "Ball", "Chair", "Door", "Elephant", "Flower", "Guitar", "Hat", "Island", "Juice", "Kite", "Lemon", "Mountain", "Notebook", "Orange", "Pencil", "Queen", "Rainbow", "Star", "Tree", "Umbrella", "Violin", "Whale", "Xylophone", "Yacht", "Zoo", "Book", "Clock", "Desk", "Envelope", "Flag", "Grass", "House", "Igloo", "Jacket", "Key", "Lamp", "Moon", "Nest", "Owl", "Penguin", "Quilt", "River", "Sun", "Table", "Unicorn", "Van", "Wall", "X-ray", "Yogurt", "Zipper", "Ant", "Bear", "Crab", "Duck", "Eagle", "Fish", "Goat", "Hippo", "Insect", "Jellyfish", "Airport", "Bridge", "City", "Desert", "Elevator", "Forest", "Garden", "Harbor", "Island", "Jungle", "Kingdom", "Lagoon", "Museum", "Nursery", "Ocean", "Park", "Quarry", "River", "Swamp", "Tower", "University", "Valley", "Waterfall", "Xenon", "Yard", "Ziggurat", "Alley", "Beach", "Canyon", "Dome", "Estuary", "Fjord", "Glacier", "Hill", "Isthmus", "Jetty", "Knoll", "Ledge", "Mesa", "Niche", "Oasis", "Plateau", "Quicksand", "Ridge", "Steppe", "Tundra", "Upland", "Volcano", "Wetland", "Xeric", "Yard", "Zephyr", "Archipelago", "Basin", "Cape", "Delta", "Escarpment", "Foothill", "Gulf", "Highland", "Iceberg", "Jetstream", "Knob", "Lowland", "Marsh", "Notch", "Outcrop", "Prairie", "Quagmire", "Savanna", "Terrace", "Underground", "Vale", "Watershed", "Xebec", "Yawl", "Zeppelin"

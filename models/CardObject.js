@@ -12,5 +12,6 @@ class CardObject {
     this.rotation = spec.rotation === undefined ? 0 : spec.rotation;
     this.isExtra = spec.isExtra === undefined ? false : spec.isExtra;
     this.isRotating = spec.isRotating === undefined ? false : spec.isRotating;
+    this.justDropped = spec.justDropped === undefined ? false : spec.justDropped;
   }
 }

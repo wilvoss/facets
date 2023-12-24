@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Work (portfolio) - Wil Voss</title>
+    <title>Facets</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="user-scalable=yes, width=device-width, initial-scale=1.0, maximum-scale=5.0" />
-    <meta name="keywords" content="" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+    <meta name="keywords" content="casual, video, game, boardgame" />
     <meta name="description" content="" />
     <link rel="icon" type="image/png" sizes="48x48" href="favicon.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
@@ -13,19 +13,21 @@
   </head>
 
   <body>
-    <app id="app" v-cloak :class="{guessing: isGuessing}">
+    <app id="app" v-cloak :class="{guessing: isGuessing}" @touchend="HandleTouchEnd(event, isDragging ? draggedCard : getSelectedCard)" @pointerup="HandleTouchEnd(event, isDragging ? draggedCard : getSelectedCard)">
       <wrapper>
-        <controls><button @click="NewGame">New</button></controls>
+        <controls>
+          <button @click="NewGame">New</button>
+        </controls>
         <header>
           <hgroup>
             <h1>{{gameName}}</h1>
             <subtitle>{{gameCatchphrase}}</subtitle>
           </hgroup>
         </header>
-        <controls><button @click="HandleSubmitButtonPress" :class="{disabled:(!isGuessing && getNumberOfHintsThatHaveBeenFilled !== 4) ||(isGuessing && getNumberOfCardsThatHaveBeenPlacedOnTray !== 4)}">{{ isGuessing ? 'Guess' : 'Ready'}}</button></controls>
+        <controls><button @click="HandleSubmitButtonPress" :class="{disabled:(!isGuessing && getNumberOfHintsThatHaveBeenFilled !== 4)}">Send</button></controls>
       </wrapper>
       <wrapper style="padding: 0">
-        <p style="padding: 0; margin: 0; line-height: 100%">{{ isGuessing ? 'Players, you are now guessing the clues given by ' + player.name + '!' : player.name + ', you are giving clues!'}}</p>
+        <message style="padding: 0; margin: 0; line-height: 100%">{{ player.name + (isGuessing ? ', you are now guessing!' : ', you are giving clues!')}}</message>
       </wrapper>
       <wrapper>
         <rotators>
@@ -34,13 +36,20 @@
         </rotators>
       </wrapper>
       <wrapper>
+        <card class="ghost" :style="{transform: 'translate(' + ghostX + 'px, ' + ghostY + 'px)'}" :class="{show: isDragging}">
+          <words>
+            <word v-for="word in draggedCard.words">{{word}}</word>
+          </words>
+        </card>
+      </wrapper>
+      <wrapper>
         <parking>
-          <spot @drop="HandleCardTouch(card)" @click="HandleCardTouch(card)" v-for="(card, index) in parkedCards" v-if="index < 3" :class="{empty: card.words.length === 0}">
+          <spot v-for="(card, index) in parkedCards" v-if="index < 3" :class="{empty: card.words.length === 0, selected: card.isSelected}">
             <rotators>
-              <button class="clockwise" @click="RotateCard(event, card, 1)"></button>
-              <button class="anticlockwise" @click="RotateCard(event, card, -1)"></button>
+              <button class="clockwise" @pointerdown="RotateCard(event, card, 1)"></button>
+              <button class="anticlockwise" @pointerdown="RotateCard(event, card, -1)"></button>
             </rotators>
-            <card :draggable="!isDragging && card.words.length > 0" @dragstart="HandleCardDragStart(card)" @dragover="HandleCardDragOver(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected}">
+            <card @click="HandleCardDrop(event, card)" @pointerup="HandleCardDrop(event, card)" @pointerdown="HandleCardTouch(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped, disabled: isDragging && card === getSelectedCard}">
               <words>
                 <word v-for="word in card.words">{{word}}</word>
               </words>
@@ -54,16 +63,16 @@
         <tray :class="{rotating: trayIsRotating}" :style="{rotate: trayRotation * 90 + 'deg'}">
           <hints>
             <hint v-for="(hint, index) in hints" :key="index">
-              <input :disabled="isGuessing" v-model="hint.value" :tabindex="index + 1" type="text" onfocus="this.placeholder=''" onblur="this.placeholder='______'" placeholder="______" />
+              <input :id="'hint' + index" :disabled="isGuessing" v-model="hint.value" :tabindex="index + 1" type="text" @focus="RotateTrayBasedOnInputFocus(index)" onfocus="this.placeholder=''" onblur="this.placeholder='______'" placeholder="______" />
             </hint>
           </hints>
           <cards>
-            <spot @drop="HandleCardTouch(card)" @click="HandleCardTouch(card)" v-for="(card, index) in cards" v-if="!card.isExtra" :class="{empty: card.words.length === 0}">
+            <spot v-for="(card, index) in cards" v-if="!card.isExtra" :class="{empty: card.words.length === 0, selected: card.isSelected}">
               <rotators>
                 <button class="clockwise" @click="RotateCard(event, card, 1)"></button>
                 <button class="anticlockwise" @click="RotateCard(event, card, -1)"></button>
               </rotators>
-              <card :draggable="!isDragging && card.words.length > 0" @dragstart="HandleCardDragStart(card)" @dragover="HandleCardDragOver(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected}">
+              <card @click="HandleCardDrop(event, card)" @pointerup="HandleCardDrop(event, card)" @pointerdown="HandleCardTouch(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped, disabled: isDragging && card === getSelectedCard}">
                 <words>
                   <word v-for="word in card.words">{{word}}</word>
                 </words>
@@ -76,12 +85,12 @@
           </cards>
         </tray>
         <parking>
-          <spot @drop="HandleCardTouch(card)" @click="HandleCardTouch(card)" v-for="(card, index) in parkedCards" v-if="index > 2" :class="{empty: card.words.length === 0}">
+          <spot v-for="(card, index) in parkedCards" v-if="index > 2" :class="{empty: card.words.length === 0, selected: card.isSelected}">
             <rotators>
               <button class="clockwise" @click="RotateCard(event, card, 1)"></button>
               <button class="anticlockwise" @click="RotateCard(event, card, -1)"></button>
             </rotators>
-            <card :draggable="!isDragging && card.words.length > 0" @dragstart="HandleCardDragStart(card)" @dragover="HandleCardDragOver(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected}">
+            <card @click="HandleCardDrop(event, card)" @pointerup="HandleCardDrop(event, card)" @pointerdown="HandleCardTouch(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped, disabled: isDragging && card === getSelectedCard}">
               <words>
                 <word v-for="word in card.words">{{word}}</word>
               </words>
@@ -99,6 +108,6 @@
     <script src="models/CardObject-min.js" type="text/javascript"></script>
     <script src="models/PlayerObject-min.js" type="text/javascript"></script>
     <script src="helpers/vue.min.js" type="text/javascript"></script>
-    <script src="scripts/crumbengine.js" type="text/javascript"></script>
+    <script src="scripts/facets.js" type="text/javascript"></script>
   </body>
 </html>
