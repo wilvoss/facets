@@ -17,7 +17,7 @@ var app = new Vue({
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
     showArticle: false,
-    emptyCard: new CardObject({}),
+    emptyCard: new CardObject({ id: 'ghost' }),
     draggedCard: new CardObject({}),
     ghostX: 0,
     ghostY: 0,
@@ -184,12 +184,16 @@ var app = new Vue({
       }
     },
 
-    HandleCardTouch(e, _card) {
-      note('HandleCardTouch() called');
+    HandleCardPointerDown(e, _card) {
+      note('HandleCardPointerDown() called');
       if (e !== null) {
         e.preventDefault();
         e.stopPropagation();
+        if (e.target.hasPointerCapture(e.pointerId)) {
+          e.target.releasePointerCapture(e.pointerId);
+        }
       }
+
       // this.draggedCard.words = []  ;
       if (this.getSelectedCard !== undefined && _card !== this.getSelectedCard) {
         if (this.getSelectedCard !== undefined) {
@@ -215,29 +219,30 @@ var app = new Vue({
       }
     },
 
-    HandleTouchEnd(e, _card) {
-      var elemBelow = document.elementFromPoint(e.clientX, e.clientY);
-      if (elemBelow.tagName === 'card') {
-        var newEvent = new PointerEvent('pointerup', { e: e, card: _card });
-        elemBelow.dispatchEvent(newEvent);
-      } else {
-        this.HandleCardDrop(e, _card);
+    HandleDragRelease(e, _card) {
+      if (this.getSelectedCard !== null && this.getSelectedCard !== undefined) {
+        this.isDragging = false;
+        this.draggedCard = this.emptyCard;
+        this.getSelectedCard.isSelected = false;
       }
+    },
+
+    HandleTouchStart(e) {
+      e.preventDefault();
     },
 
     HandleCardDragStart(e, _card) {
       note('HandleCardDragStart() called');
       this.isDragging = true;
-      // this.draggedCard.words = [..._card.words];
       this.cards.concat(this.parkedCards).forEach((card) => {
         card.isSelected = false;
       });
-      this.HandleCardTouch(_card);
+      this.HandleCardPointerDown(_card);
     },
 
     HandleCardDrop(e, _card) {
       note('HandleCardDrop() called');
-      this.HandleCardTouch(e, _card);
+      this.HandleCardPointerDown(e, _card);
       this.isDragging = false;
       this.draggedCard = this.emptyCard;
     },
@@ -407,7 +412,6 @@ var app = new Vue({
 
     HandleKeyDownEvent(e) {
       note('HandleKeyUpEvent() called');
-      highlight(e.key);
       switch (e.key) {
         case 'Enter':
           e.preventDefault();

@@ -360,6 +360,7 @@ card {
     cursor: grab;
     color: hsl(var(--hueMain), 40%, 17%);
     z-index: 200;
+    touch-action: none;
 }
 
 card.ghost {
@@ -558,7 +559,7 @@ article::-webkit-scrollbar, modal::-webkit-scrollbar {
     opacity: .3;
 }
 
-@media screen and (max-height:730px) {
+@media screen and (max-height:780px) {
 
     wrapper {
         padding: 0
