@@ -1,6 +1,5 @@
 /// <reference path="../models/WordObject.js" />
-/// <reference path="../models/WordObject.js" />
-/// <reference path="../helpers/interact.min.js" />
+/// <reference path="../models/CardObject.js" />
 
 // if (!UseDebug) {
 Vue.config.devtools = false;
@@ -13,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.008',
+    version: '0.1.009',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',

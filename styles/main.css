@@ -678,8 +678,13 @@ article::-webkit-scrollbar, modal::-webkit-scrollbar {
     }
 
     hints hint input {
+        pointer-events: none;
         font-size: 210%;
         line-height: 100%;
+    }
+
+    hints hint:first-of-type input {
+        pointer-events: all;
     }
 
     parking {
