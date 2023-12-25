@@ -24,10 +24,11 @@
             <subtitle>{{gameCatchphrase}}</subtitle>
           </hgroup>
         </header>
-        <controls><button @click="HandleSubmitButtonPress" :class="{disabled:(!isGuessing && getNumberOfHintsThatHaveBeenFilled !== 4)}">Send</button></controls>
+        <controls><button @click="HandleSubmitButtonPress" :class="{disabled: puzzleJustSent || (!isGuessing && getNumberOfHintsThatHaveBeenFilled !== 4)}">{{shareText}}</button></controls>
       </wrapper>
       <wrapper style="padding: 0">
-        <message style="padding: 0; margin: 0; line-height: 100%">{{ player.name + (isGuessing ? ', you are now guessing!' : ', you are giving clues!')}}</message>
+        <message v-if="player.id === puzzlePlayer.id" style="padding: 0; margin: 0; line-height: 100%">{{ player.name + (isGuessing ? ', you created this puzzle!' : ', you are giving clues!')}}</message>
+        <message v-if="player.id !== puzzlePlayer.id" style="padding: 0; margin: 0; line-height: 100%">{{ player.name + (isGuessing ? ', you are now guessing!' : ', you are giving clues!')}}</message>
       </wrapper>
       <wrapper>
         <rotators>
@@ -38,7 +39,7 @@
       <wrapper>
         <card class="ghost" :style="{transform: 'translate(' + ghostX + 'px, ' + ghostY + 'px)'}" :class="{show: isDragging}">
           <words>
-            <word v-for="word in draggedCard.words">{{word}}</word>
+            <word v-for="word in draggedCard.words">{{word.value}}</word>
           </words>
         </card>
       </wrapper>
@@ -51,7 +52,7 @@
             </rotators>
             <card @click="HandleCardDrop(event, card)" @pointerup="HandleCardDrop(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped, disabled: isDragging && card === getSelectedCard}">
               <words>
-                <word v-for="word in card.words">{{word}}</word>
+                <word v-for="word in card.words">{{word.value}}</word>
               </words>
             </card>
             <rotators>
@@ -63,7 +64,7 @@
         <tray :class="{rotating: trayIsRotating}" :style="{rotate: trayRotation * 90 + 'deg'}">
           <hints>
             <hint v-for="(hint, index) in hints" :key="index">
-              <input :id="'hint' + index" :disabled="isGuessing" v-model="hint.value" :tabindex="index + 1" type="text" @focus="RotateTrayBasedOnInputFocus(index)" onfocus="this.placeholder=''" onblur="this.placeholder='______'" placeholder="______" />
+              <input :id="'hint' + index" :disabled="isGuessing" v-model="hint.value" :tabindex="index + 1" type="text" @focus="RotateTrayBasedOnInputFocus(index)" onfocus="this.placeholder=''" onblur="this.placeholder='_ _ _ _ _ _'" placeholder="_ _ _ _ _ _" />
             </hint>
           </hints>
           <cards>
@@ -74,7 +75,7 @@
               </rotators>
               <card @click="HandleCardDrop(event, card)" @pointerup="HandleCardDrop(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped, disabled: isDragging && card === getSelectedCard}">
                 <words>
-                  <word v-for="word in card.words">{{word}}</word>
+                  <word v-for="word in card.words">{{word.value}}</word>
                 </words>
               </card>
               <rotators>
@@ -92,7 +93,7 @@
             </rotators>
             <card @click="HandleCardDrop(event, card)" @pointerup="HandleCardDrop(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped, disabled: isDragging && card === getSelectedCard}">
               <words>
-                <word v-for="word in card.words">{{word}}</word>
+                <word v-for="word in card.words">{{word.value}}</word>
               </words>
             </card>
             <rotators>

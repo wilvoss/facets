@@ -13,6 +13,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
+    version: '0.1.006',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -30,7 +31,10 @@ var app = new Vue({
     parkedCards: [],
     hints: [],
     player: new PlayerObject({}),
-    puzzlePlayer: new PlayerObject({}),
+    puzzlePlayer: new PlayerObject({ name: 'Challenger' }),
+    sendingPlayer: new PlayerObject({}),
+    shareText: 'Send',
+    puzzleJustSent: false,
     isGuessing: false,
     trayRotation: 0,
     trayIsRotating: false,
@@ -59,6 +63,7 @@ var app = new Vue({
 
     FillParkingLot() {
       note('FillParkingLot() called');
+      this.puzzlePlayer.id = this.player.id;
       this.isGuessing = true;
       let temp = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
       let index = 0;
@@ -79,11 +84,14 @@ var app = new Vue({
       this.parkedCards.push(new CardObject({}));
 
       this.cards = temp;
+      this.ShareBoard();
     },
 
     RestoreGame(_boardArray) {
       note('RestoreGame() called');
-      if (_boardArray.length === 45) {
+      if (_boardArray.length >= 45) {
+        this.shareURL = window.location.href;
+        this.puzzleJustSent = false;
         let allWords = Nouns.concat(Verbs);
         this.cards = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
         this.parkedCards = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
@@ -93,7 +101,8 @@ var app = new Vue({
         this.cards.forEach((card) => {
           for (let x = 0; x < 4; x++) {
             if (_boardArray[index] !== '') {
-              card.words.push(allWords[parseInt(_boardArray[index])]);
+              let word = allWords.find((_word) => _word.id === parseInt(_boardArray[index]));
+              card.words.push(word);
             }
             index++;
           }
@@ -101,7 +110,8 @@ var app = new Vue({
         this.parkedCards.forEach((card) => {
           for (let x = 0; x < 4; x++) {
             if (_boardArray[index] !== '') {
-              card.words.push(allWords[parseInt(_boardArray[index])]);
+              let word = allWords.find((_word) => _word.id === parseInt(_boardArray[index]));
+              card.words.push(word);
             }
             index++;
           }
@@ -109,47 +119,53 @@ var app = new Vue({
         this.hints.forEach((hint) => {
           hint.value = _boardArray[index++];
         });
-        this.puzzlePlayer.name = _boardArray[index++];
+        this.sendingPlayer.id = parseInt(_boardArray[_boardArray.length - 2]);
+        this.puzzlePlayer.id = parseInt(_boardArray[_boardArray.length - 1]);
+        this.shareText = this.player.id !== this.sendingPlayer.id && this.player.id !== this.puzzlePlayer.id ? 'Send' : 'Reply';
       }
-      history.replaceState(null, null, window.location.origin);
       this.isGuessing = true;
     },
 
     ConstructURLForCurrentGame() {
       note('ConstructURLForCurrentGame() called');
-      let queryString = 'https://' + window.location.hostname + '?board=';
+      let urlString = window.location.origin + '?board=';
       this.cards.concat(this.parkedCards).forEach((card) => {
         if (card.words.length === 0) {
-          queryString += '----';
+          urlString += '----';
         }
         card.words.forEach((word) => {
-          queryString += getWordIndex(word) + '-';
+          urlString += word.id + '-';
         });
       });
 
       this.hints.forEach((hint) => {
-        queryString += hint.value + '-';
+        urlString += hint.value + '-';
       });
 
-      queryString += this.player.name + '-';
-      queryString += this.puzzlePlayer.name + '-';
-      queryString += this.gameMode;
+      urlString += this.player.id + '-';
+      urlString += this.puzzlePlayer.id;
 
-      this.shareURL = queryString;
+      this.shareURL = urlString;
+      history.replaceState(null, null, this.shareURL);
     },
 
     ShareBoard() {
       note('ShareBoard() called');
+      this.puzzleJustSent = this.shareURL === '';
+      let text = this.puzzleJustSent ? "Here's a new puzzle to solve!" : "Here's my guess!";
+      if (this.player.id === this.puzzlePlayer.id && this.sendingPlayer.id !== this.player.id) {
+        text = "Here's what I think of your guess!";
+      }
+      text = text + '\r\n' + this.shareURL;
       this.ConstructURLForCurrentGame();
       let _shareObject = {
         title: 'Facets Challenge',
-        text: 'I created a puzzle, can you solve it?',
-        url: this.shareURL,
+        text: text,
       };
       if (navigator.share) {
         navigator.share(_shareObject);
-      } else {
-        _shareObject = this.shareURL;
+      } else if (navigator.clipboard !== undefined) {
+        _shareObject = text;
         alert('Copied game link to the clipboard.');
         navigator.clipboard.writeText(_shareObject);
       }
@@ -213,7 +229,6 @@ var app = new Vue({
         this.getSelectedCard.rotation = temp1.rotation;
         this.getSelectedCard.isSelected = false;
       } else if (_card !== undefined) {
-        // this.isDragging = false;
         this.ToggleCardSelection(_card);
       }
     },
@@ -303,9 +318,6 @@ var app = new Vue({
           case 2:
             this.RotateTray(1);
             break;
-          case 3:
-            // _index = 2;
-            break;
         }
       }
     },
@@ -327,7 +339,6 @@ var app = new Vue({
         setTimeout(() => {
           let hint0 = document.getElementById('hint0');
           hint0.focus();
-          // hint0.select();
         }, this.longTransition);
       }
     },
@@ -389,6 +400,11 @@ var app = new Vue({
 
     NewGame() {
       note('NewGame() called');
+      this.puzzleJustSent = false;
+      this.puzzlePlayer.id = this.player.id;
+      this.sendingPlayer.id = this.player.id;
+      this.shareText = 'Send';
+      history.replaceState(null, null, window.location.origin);
       this.isGuessing = false;
       this.cards = [];
       this.parkedCards = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
@@ -396,8 +412,23 @@ var app = new Vue({
       this.CreateCardsForPlayer(null);
     },
 
+    HandlePageVisibilityChange() {
+      let id = localStorage.getItem('userID');
+      if (id !== undefined && id !== null) {
+        id = JSON.parse(id);
+        this.player.id = id;
+        this.puzzlePlayer.id = id;
+        this.sendingPlayer = id;
+      } else {
+        this.player.id = getRandomInt(100000, 100000000);
+        localStorage.setItem('userID', this.player.id);
+      }
+      announce('Player ' + this.player.id + ' has initiated the app.');
+    },
+
     LoadPage() {
       note('LoadPage() called');
+      this.HandlePageVisibilityChange();
       this.longTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
       this.shortTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
       let boardPieces = [];
@@ -409,9 +440,6 @@ var app = new Vue({
         this.RestoreGame(boardPieces);
       } else if (!this.isGuessing) {
         this.NewGame();
-      } else {
-        this.FillParkingLot();
-        this.ShareBoard();
       }
     },
 
@@ -454,12 +482,10 @@ var app = new Vue({
       this.appSettingsSoundFX.unload();
       if (this.appSettingsSaveSettings) {
         localStorage.setItem('storedVersion', this.currentVersion);
-        // localStorage.setItem('appSettingsModes', JSON.stringify(this.appSettingsModes));
       }
     },
 
     HandlePointerMoveEvent(e) {
-      // note('HandlePointerMoveEvent() called');
       this.ghostX = e.clientX;
       this.ghostY = e.clientY;
       if (this.isGuessing) {
@@ -472,6 +498,7 @@ var app = new Vue({
     this.LoadPage();
     window.addEventListener('keydown', this.HandleKeyDownEvent);
     window.addEventListener('pointermove', this.HandlePointerMoveEvent);
+    window.addEventListener('visibilitychange', this.HandlePageVisibilityChange);
   },
 
   computed: {
@@ -492,30 +519,3 @@ var app = new Vue({
     },
   },
 });
-
-// interact('card').draggable({
-//   inertia: true,
-//   modifiers: [
-//     interact.modifiers.restrictRect({
-//       restriction: 'parent',
-//       endOnly: true,
-//     }),
-//   ],
-//   autoScroll: true,
-//   listeners: {
-//     move: function (event) {
-//       var target = event.target;
-//       var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-//       var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
-//       target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
-
-//       target.setAttribute('data-x', x);
-//       target.setAttribute('data-y', y);
-//     },
-//     end: function (event) {
-//       var textEl = event.target.querySelector('p');
-//       textEl && (textEl.textContent = 'moved a distance of ' + Math.sqrt((Math.pow(event.pageX - event.x0, 2) + Math.pow(event.pageY - event.y0, 2)) | 0).toFixed(2) + 'px');
-//     },
-//   },
-// });

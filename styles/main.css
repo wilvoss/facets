@@ -459,6 +459,11 @@ hints hint input {
     /* text-transform: uppercase; */
 }
 
+.guessing hints hint input:disabled {
+    opacity: 1;
+    color: hsl(var(--appForegroundHSL));
+}
+
 .guessing hints hint input {
     user-select: none;
     -webkit-user-select: none;
@@ -596,6 +601,10 @@ article::-webkit-scrollbar, modal::-webkit-scrollbar {
     header subtitle {
         display: none;
         font-size: 70%;
+    }
+
+    rotators {
+        padding: calc(.5 * var(--defaultGap)) 0px;
     }
 }
 
