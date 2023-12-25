@@ -27,8 +27,10 @@
         <controls><button @click="HandleSubmitButtonPress" :class="{disabled: puzzleJustSent || (!isGuessing && getNumberOfHintsThatHaveBeenFilled !== 4)}">{{shareText}}</button></controls>
       </wrapper>
       <wrapper style="padding: 0">
-        <message v-if="player.id === puzzlePlayer.id" style="padding: 0; margin: 0; line-height: 100%">{{ player.name + (isGuessing ? ', you created this puzzle!' : ', you are giving clues!')}}</message>
-        <message v-if="player.id !== puzzlePlayer.id" style="padding: 0; margin: 0; line-height: 100%">{{ player.name + (isGuessing ? ', you are now guessing!' : ', you are giving clues!')}}</message>
+        <message v-if="message !== ''">{{ message}}</message>
+
+        <message v-if="message === '' && player.id === puzzlePlayer.id">{{ player.name + (isGuessing ? ', you created this puzzle!' : ', you are giving clues!')}}</message>
+        <message v-if="message === '' && player.id !== puzzlePlayer.id">{{ player.name + (isGuessing ? ', you are now guessing!' : ', you are giving clues!')}}</message>
       </wrapper>
       <wrapper>
         <rotators>

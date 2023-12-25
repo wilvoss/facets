@@ -656,7 +656,9 @@ article::-webkit-scrollbar, modal::-webkit-scrollbar {
 
     message {
         font-size: 130%;
-        line-height: 130%;
+        padding: 0;
+        margin: 0;
+        line-height: 100%;
     }
 
     rotators {

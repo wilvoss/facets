@@ -13,7 +13,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.007',
+    version: '0.1.008',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -42,6 +42,7 @@ var app = new Vue({
     shortTransition: 0,
     showModal: false,
     modalContainer: null,
+    message: '',
     trayRotationTimeout: null,
     cardRotationTimeout: null,
     isDragging: false,
@@ -159,15 +160,15 @@ var app = new Vue({
       this.ConstructURLForCurrentGame();
       text = text + '\r\n' + this.shareURL;
       let _shareObject = {
-        title: 'Facets Challenge',
+        title: 'FACETS',
         text: text,
       };
       if (navigator.share) {
         navigator.share(_shareObject);
       } else if (navigator.clipboard !== undefined) {
         _shareObject = text;
-        alert('Copied game link to the clipboard.');
         navigator.clipboard.writeText(_shareObject);
+        this.message = 'Sharing message copied to the clipboard.';
       }
     },
 
@@ -262,6 +263,7 @@ var app = new Vue({
 
     HandleCardDrop(e, _card) {
       note('HandleCardDrop() called');
+      this.message = '';
       this.HandleCardPointerDown(e, _card);
       this.isDragging = false;
       this.draggedCard = this.emptyCard;
@@ -403,6 +405,7 @@ var app = new Vue({
       this.puzzleJustSent = false;
       this.puzzlePlayer.id = this.player.id;
       this.sendingPlayer.id = this.player.id;
+      this.shareURL = '';
       this.shareText = 'Send';
       history.replaceState(null, null, window.location.origin);
       this.isGuessing = false;
@@ -418,7 +421,7 @@ var app = new Vue({
         id = JSON.parse(id);
         this.player.id = id;
         this.puzzlePlayer.id = id;
-        this.sendingPlayer = id;
+        this.sendingPlayer.id = id;
       } else {
         this.player.id = getRandomInt(100000, 100000000);
         localStorage.setItem('userID', this.player.id);
@@ -437,6 +440,7 @@ var app = new Vue({
       }
 
       if (boardPieces.length >= 45) {
+        document.title = 'Facets - CHALLENGE!';
         this.RestoreGame(boardPieces);
       } else if (!this.isGuessing) {
         this.NewGame();
