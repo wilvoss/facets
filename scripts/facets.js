@@ -13,7 +13,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.006',
+    version: '0.1.007',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -156,8 +156,8 @@ var app = new Vue({
       if (this.player.id === this.puzzlePlayer.id && this.sendingPlayer.id !== this.player.id) {
         text = "Here's what I think of your guess!";
       }
-      text = text + '\r\n' + this.shareURL;
       this.ConstructURLForCurrentGame();
+      text = text + '\r\n' + this.shareURL;
       let _shareObject = {
         title: 'Facets Challenge',
         text: text,
