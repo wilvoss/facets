@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.009',
+    version: '0.1.010',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -447,7 +447,7 @@ var app = new Vue({
     },
 
     HandleKeyDownEvent(e) {
-      note('HandleKeyUpEvent() called');
+      note('HandleKeyDownEvent() called');
       switch (e.key) {
         case 'Enter':
           e.preventDefault();
@@ -471,8 +471,11 @@ var app = new Vue({
             }
           }
           break;
-        default:
+        case ' ':
+          e.preventDefault();
+          e.stopPropagation();
           break;
+        default:
       }
     },
 

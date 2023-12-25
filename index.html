@@ -66,7 +66,7 @@
         <tray :class="{rotating: trayIsRotating}" :style="{rotate: trayRotation * 90 + 'deg'}">
           <hints>
             <hint v-for="(hint, index) in hints" :key="index">
-              <input :id="'hint' + index" :disabled="isGuessing" v-model="hint.value" :tabindex="index + 1" type="text" @focus="RotateTrayBasedOnInputFocus(index)" onfocus="this.placeholder=''" onblur="this.placeholder='_ _ _ _ _ _'" placeholder="_ _ _ _ _ _" />
+              <input :id="'hint' + index" :disabled="isGuessing" v-model="hint.value" maxlength="14" :tabindex="index + 1" type="text" @focus="RotateTrayBasedOnInputFocus(index)" onfocus="this.placeholder=''" onblur="this.placeholder='_ _ _ _ _ _'" placeholder="_ _ _ _ _ _" />
             </hint>
           </hints>
           <cards>

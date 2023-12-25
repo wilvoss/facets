@@ -17,6 +17,7 @@
 
 :root {
     --hueMain: 205;
+    /* --hueMain: 140; */
     --hueHighlight: 140;
 
     --bodyBackgroundHSL: 0, 0%, 0%;
@@ -26,7 +27,8 @@
     --linkColorLightHSL: var(--hueHighlight), 79%, 55%;
     --linkColorDarkHSL: var(--hueHighlight), 69%, 45%;
     --highlightColorHSL: 50, 100%, 70%;
-    --trayBackgroundHSL: var(--hueMain), 88%, 40%;
+    --trayBackgroundHSL: var(--hueMain), 90%, 40%;
+    /* --trayBackgroundHSL: var(--hueMain), 70%, 40%; */
 
     --longTransition: 400ms;
     --shortTransition: 150ms;
@@ -36,7 +38,7 @@
     --defaultGap: 20px;
     --borderRadius: 5px;
     --cardDropShadow: 0px 0px 10px rgba(0, 0, 0, .3);
-    --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, .4);
+    --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, .5);
 }
 
 html {
