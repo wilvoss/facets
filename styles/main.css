@@ -260,8 +260,10 @@ spot rotators {
     pointer-events: none;
 }
 
+
 spot.empty rotators, spot.empty:hover rotators, .guessing spot.empty:hover rotators {
     opacity: 0;
+    display: none;
 }
 
 .guessing spot:hover rotators, .guessing spot.selected rotators {
@@ -339,6 +341,26 @@ spot {
 
 .guessing spot {
     pointer-events: all;
+}
+
+.guessing modal spot {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.guessing modal spot.disabled {
+    pointer-events: none;
+}
+
+modal spot icon {
+    display: block;
+    /* color: hsl(var(--linkColorDarkHSL)); */
+    opacity: .7;
+    padding: 0 0 calc(.5 * var(--defaultGap));
+    font-size: 200%;
 }
 
 spot.empty {

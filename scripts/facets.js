@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.019',
+    version: '0.1.020',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -155,8 +155,22 @@ var app = new Vue({
       note('ShareBoard() called');
       this.puzzleJustSent = this.shareURL === '';
       let text = this.puzzleJustSent ? "Here's a new puzzle to solve!" : "Here's my guess!";
-      if (this.player.id === this.puzzlePlayer.id && this.sendingPlayer.id !== this.player.id) {
-        text = 'Not quite!';
+      if (this.player.role === 'reviewer') {
+        switch (this.getNumberOfCardsThatHaveBeenPlacedOnTray) {
+          case 0:
+          case 1:
+          case 2:
+            text = '😱 Try again!';
+            break;
+          case 3:
+            text = '🤪 Not quite!';
+            break;
+          case 4:
+            text = '🔥 Nailed it!';
+            break;
+          default:
+            break;
+        }
       }
       this.ConstructURLForCurrentGame();
       text = text + '\r\n' + this.shareURL;
@@ -178,6 +192,8 @@ var app = new Vue({
       // if (_card.words.length > 0) {
       if (document.body.offsetWidth <= 640 && !this.showModal) {
         this.targetCard = _card;
+      } else if (this.showModal) {
+        this.targetCard = null;
       }
       if (_card.words.length > 0 || document.body.offsetWidth <= 640) {
         let selectedState = !_card.isSelected;
@@ -284,10 +300,7 @@ var app = new Vue({
 
     HandleCardDrop(e, _card) {
       note('HandleCardDrop() called');
-      let keepModal = false;
       if (this.targetCard !== null) {
-        keepModal = this.showModal && this.targetCard.id === _card.id;
-
         this.targetCard.isSelected = true;
         this.targetCard = null;
       }
@@ -298,7 +311,6 @@ var app = new Vue({
       this.isDragging = false;
       this.showModal = false;
       this.draggedCard = this.emptyCard;
-      if (keepModal) this.showModal = true;
     },
 
     HandleCardDragOver(e, _card) {
@@ -613,7 +625,7 @@ var app = new Vue({
       newArray.forEach((card) => {
         card.id = this.GetUniqueCardId(card.words);
       });
-      newArray = newArray.sort((a, b) => a.id - b.id); //.filter((card) => (this.targetCard === null ? card : card.id != this.targetCard.id));
+      newArray = newArray.sort((a, b) => a.id - b.id);
       return newArray;
     },
     getFirstThreeParkedCards: function () {
@@ -627,6 +639,9 @@ var app = new Vue({
     },
     getUniqueCardId: function (_words) {
       return this.GetUniqueCardId(_words);
+    },
+    getFirstAvailableParkingSpot: function () {
+      return this.parkedCards.find((card) => card.words.length === 0);
     },
   },
 });

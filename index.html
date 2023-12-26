@@ -18,12 +18,14 @@
       <modal :class="{disabled: !showModal}" @click="showModal = false">
         <!-- <modal class="disabled"> -->
         <message>Choose a card</message>
-        <cards>
-          <card @click="HandleCardDrop(event, card)" v-for="card in getAllCards" v-if="card !== draggedCard" :class="{disabled: card.isInTray}">
+        <cards v-if="showModal">
+          <card @click="HandleCardDrop(event, card)" v-for="card in getAllCards" :disabled="!showModal" :class="{disabled: card.isInTray || !showModal}">
             <words>
               <word v-for="word in card.words">{{word.value}}</word>
             </words>
           </card>
+
+          <spot v-if="targetCard && targetCard.words.length > 0" :class="{disabled: !showModal}" class="empty" @click="HandleCardDrop(event, getFirstAvailableParkingSpot)"><icon>♻</icon>Put back</spot>
         </cards>
       </modal>
       <wrapper>
