@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.016',
+    version: '0.1.017',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -434,6 +434,7 @@ var app = new Vue({
           this.cards[3] = card1;
           break;
         case 2:
+        case -2:
           this.hints[0] = hint1;
           this.hints[1] = hint0;
           this.hints[2] = hint3;
