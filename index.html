@@ -36,7 +36,7 @@
             <subtitle>{{gameCatchphrase}}</subtitle>
           </hgroup>
         </header>
-        <controls><button @click="HandleSubmitButtonPress" :class="{disabled: puzzleJustSent || (!isGuessing && getNumberOfHintsThatHaveBeenFilled !== 4)}">{{shareText}}</button></controls>
+        <controls><button @click="HandleSubmitButtonPress" :class="{disabled: !isGuessing && getNumberOfHintsThatHaveBeenFilled !== 4}">{{shareText}}</button></controls>
       </wrapper>
       <wrapper style="padding: 0">
         <message v-if="message !== ''">{{ message}}</message>

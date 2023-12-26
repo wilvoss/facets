@@ -634,7 +634,7 @@ modal::-webkit-scrollbar {
     }
 
     controls button {
-        width: auto;
+        width: 130px;
         height: 100%;
         padding: 0 var(--defaultGap) 0;
     }
@@ -698,9 +698,14 @@ modal::-webkit-scrollbar {
     }
 
     controls button {
-        width: auto;
+        width: calc(100px - (var(--defaultGap) / 2));
         height: 100%;
-        padding: 0 var(--defaultGap) 0;
+        padding: 0;
+        text-align: left;
+    }
+
+    controls:last-of-type button {
+        text-align: right;
     }
 
     header {
