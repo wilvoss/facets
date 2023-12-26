@@ -656,19 +656,32 @@ modal::-webkit-scrollbar {
 
     :root {
         --wordHeight: 26px;
+        --cardSize: 130px;
     }
 
     body {
         font-size: 90%;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    app {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
     }
 
     wrapper {
-        padding: 0
+        padding: calc(var(--defaultGap) / 2) 0 0;
+        overflow: hidden;
     }
 
     wrapper:first-of-type {
-        margin-bottom: var(--defaultGap);
         padding: calc(var(--defaultGap)) 0;
+        margin-bottom: calc(2 * var(--defaultGap));
+        gap: 0px;
+
     }
 
     controls {
@@ -706,8 +719,8 @@ modal::-webkit-scrollbar {
     }
 
     rotators {
-        padding: calc(.5 * var(--defaultGap)) 0px;
-        width: 100%;
+        padding: calc(2 * var(--defaultGap)) 0px;
+        width: 440px;
         min-width: 440px;
     }
 
@@ -716,24 +729,53 @@ modal::-webkit-scrollbar {
         font-size: 146%;
     }
 
+    word {
+        font-size: 100%;
+        line-height: 180%;
+    }
+
+
+    word:nth-child(2) {
+        transform: translate(calc((var(--cardSize) / 2) - (var(--wordHeight) / 2)), calc(-1 * (var(--cardSize) / 2) + calc(var(--defaultGap) * 1) - 7px));
+    }
+
+    word:nth-child(3) {
+        transform: translate(0, calc(-1 * (var(--cardSize) / 1) + calc(var(--defaultGap) * 1.3)));
+    }
+
+    word:nth-child(4) {
+        transform: translate(calc(-1 * (var(--cardSize) / 2) + calc(var(--defaultGap) * 1) - 7px), calc(-1 * (var(--cardSize) / 2) + calc(var(--defaultGap) * 1) - 7px));
+    }
+
     hints hint {
         padding: calc(var(--defaultGap) / 4) calc(var(--defaultGap) / 4) calc(var(--defaultGap));
         width: calc(1.6 * var(--cardSize));
     }
 
-    word {
-        font-size: 130%;
-        line-height: 130%;
-    }
-
     hints hint input {
-        pointer-events: none;
-        font-size: 210%;
-        line-height: 100%;
+        font-size: 170%;
+        line-height: 120%;
     }
 
     hints hint:first-of-type input {
         pointer-events: all;
+    }
+
+    hints hint:nth-child(1) {
+        transform: translate(0px, calc(-1.89 * var(--wordHeight)));
+    }
+
+    hints hint:nth-child(2) {
+        transform: translate(calc(var(--cardSize) + (var(--defaultGap) / 5)), calc(-1 * var(--cardSize) + calc(var(--wordHeight) * -2.1)));
+
+    }
+
+    hints hint:nth-child(3) {
+        transform: translate(calc(-1 * var(--cardSize) - var(--defaultGap) / 5), calc(-1 * var(--cardSize) + calc(var(--wordHeight) * -2.1)));
+    }
+
+    hints hint:nth-child(4) {
+        transform: translate(0px, calc(var(--cardSize) * -2.46));
     }
 
     parking {

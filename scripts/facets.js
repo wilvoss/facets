@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.013',
+    version: '0.1.014',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -351,6 +351,9 @@ var app = new Vue({
           case 2:
             this.RotateTray(1);
             break;
+          case 3:
+            this.RotateTray(2);
+            break;
         }
       }
     },
@@ -365,6 +368,7 @@ var app = new Vue({
         }
         if (this.getSelectedCard) this.getSelectedCard.isSelected = false;
         this.trayRotation = this.trayRotation + _inc;
+        document.getElementById('parkingInput').focus();
         this.cardtrayRotationTimeoutRotationTimeout = setTimeout(() => {
           this.ResetTrayAfterRotation();
         }, this.longTransition);
@@ -372,6 +376,8 @@ var app = new Vue({
         setTimeout(() => {
           let hint0 = document.getElementById('hint0');
           hint0.focus();
+          // if (document.body.offsetWidth > 640) {
+          // }
         }, this.longTransition);
       }
     },
@@ -387,16 +393,16 @@ var app = new Vue({
         }
       }
 
-      let hint1 = this.hints[0];
-      let hint2 = this.hints[1];
-      let hint3 = this.hints[2];
-      let hint4 = this.hints[3];
-      let card1 = this.cards[0];
-      let card2 = this.cards[1];
-      let card3 = this.cards[2];
-      let card4 = this.cards[3];
+      let hint0 = this.hints[0];
+      let hint1 = this.hints[1];
+      let hint2 = this.hints[2];
+      let hint3 = this.hints[3];
+      let card0 = this.cards[0];
+      let card1 = this.cards[1];
+      let card2 = this.cards[2];
+      let card3 = this.cards[3];
 
-      card1.rotation = card2.rotation = card3.rotation = card4.rotation = this.trayRotation;
+      card0.rotation = card1.rotation = card2.rotation = card3.rotation = this.trayRotation;
 
       this.cards.forEach((card) => {
         this.ResetCardAfterRotation(card);
@@ -404,24 +410,37 @@ var app = new Vue({
 
       switch (this.trayRotation) {
         case -1:
-          this.hints[1] = hint3;
-          this.hints[2] = hint4;
+          this.hints[0] = hint0;
+          this.hints[1] = hint2;
+          this.hints[2] = hint3;
+          this.hints[3] = hint1;
+
+          this.cards[0] = card1;
+          this.cards[2] = card0;
+          this.cards[1] = card3;
+          this.cards[3] = card2;
+          break;
+        case 1:
+          this.hints[0] = hint3;
+          this.hints[1] = hint1;
+          this.hints[2] = hint0;
           this.hints[3] = hint2;
 
           this.cards[0] = card2;
-          this.cards[2] = card1;
-          this.cards[1] = card4;
-          this.cards[3] = card3;
+          this.cards[1] = card0;
+          this.cards[2] = card3;
+          this.cards[3] = card1;
           break;
-        case 1:
-          this.hints[0] = hint4;
-          this.hints[2] = hint1;
-          this.hints[3] = hint3;
+        case 2:
+          this.hints[0] = hint1;
+          this.hints[1] = hint1;
+          this.hints[2] = hint3;
+          this.hints[3] = hint2;
 
           this.cards[0] = card3;
-          this.cards[1] = card1;
-          this.cards[2] = card4;
-          this.cards[3] = card2;
+          this.cards[1] = card2;
+          this.cards[2] = card1;
+          this.cards[3] = card0;
           break;
         default:
           break;
