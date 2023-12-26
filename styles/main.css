@@ -586,7 +586,7 @@ modal cards {
     height: auto;
     pointer-events: all;
     transition: 0 linear all;
-    transition-delay: 50ms;
+    transition-delay: 150ms;
 }
 
 modal.disabled cards {
@@ -769,7 +769,7 @@ modal::-webkit-scrollbar {
     }
 
     hints hint:nth-child(1) {
-        transform: translate(0px, calc(-1.89 * var(--wordHeight)));
+        transform: translate(0px, calc(-1.93 * var(--wordHeight)));
     }
 
     hints hint:nth-child(2) {
