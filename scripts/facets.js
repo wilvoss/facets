@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.018',
+    version: '0.1.019',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -122,6 +122,7 @@ var app = new Vue({
         });
         this.sendingPlayer.id = parseInt(_boardArray[_boardArray.length - 2]);
         this.puzzlePlayer.id = parseInt(_boardArray[_boardArray.length - 1]);
+        this.player.role = this.puzzlePlayer.id === this.player.id && this.player.id !== this.sendingPlayer.id ? 'reviewer' : 'guesser';
         // this.shareText = this.player.id !== this.sendingPlayer.id && this.player.id !== this.puzzlePlayer.id ? 'Send' : 'Reply';
       }
       this.isGuessing = true;
@@ -147,7 +148,7 @@ var app = new Vue({
       urlString += this.puzzlePlayer.id;
 
       this.shareURL = urlString;
-      history.replaceState(null, null, this.shareURL);
+      history.pushState(null, null, this.shareURL);
     },
 
     ShareBoard() {
@@ -456,6 +457,7 @@ var app = new Vue({
     NewGame() {
       note('NewGame() called');
       this.puzzleJustSent = false;
+      this.player.role = 'creator';
       this.puzzlePlayer.id = this.player.id;
       this.sendingPlayer.id = this.player.id;
       this.shareURL = '';

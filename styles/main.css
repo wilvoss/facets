@@ -17,17 +17,19 @@
 
 :root {
     --hueMain: 205;
-    /* --hueMain: 140; */
+    --hueGuessing: 140;
+    --hueReviewing: 344;
     --hueHighlight: 140;
 
-    --bodyBackgroundHSL: 0, 0%, 0%;
     --appBackgroundHSL: var(--hueMain), 40%, 30%;
     --appBackgroundDarkHSL: var(--hueMain), 40%, 10%;
-    --appForegroundHSL: var(--hueMain), 90%, 93%;
+    --appForegroundHSL: var(--hueMain), 94%, 93%;
     --linkColorLightHSL: var(--hueHighlight), 79%, 55%;
     --linkColorDarkHSL: var(--hueHighlight), 69%, 45%;
     --highlightColorHSL: 50, 100%, 70%;
     --trayBackgroundHSL: var(--hueMain), 90%, 40%;
+    --trayGuessingBackgroundHSL: var(--hueGuessing), 60%, 40%;
+    --trayReviewingBackgroundHSL: var(--hueReviewing), 60%, 44%;
     /* --trayBackgroundHSL: var(--hueMain), 70%, 40%; */
 
     --longTransition: 400ms;
@@ -54,7 +56,7 @@ body {
     color: hsl(var(--appForegroundHSL));
     line-height: 1.3em;
     margin: 0px 0px;
-    background: hsl(var(--appBackgroundHSL));
+    background: hsl(var(--appBackgroundDarkHSL));
     width: 100%;
     height: 100%;
     display: block;
@@ -67,7 +69,7 @@ app {
     height: 100%;
     display: flex;
     flex-direction: column;
-    background-image: repeating-linear-gradient(45deg, hsla(var(--bodyBackgroundHSL), 0.4) 0px, hsla(var(--bodyBackgroundHSL), 0.4) 40px, hsla(var(--bodyBackgroundHSL), 0.45) 40px, hsla(var(--bodyBackgroundHSL), 0.45) 80px);
+    background-image: repeating-linear-gradient(45deg, hsla(var(--appBackgroundHSL), 0.4) 0px, hsla(var(--appBackgroundHSL), 0.4) 40px, hsla(var(--appBackgroundHSL), 0.32) 40px, hsla(var(--appBackgroundHSL), 0.32) 80px);
 }
 
 header {
@@ -144,7 +146,6 @@ wrapper:first-of-type {
     padding: calc(var(--defaultGap)) 0;
     background: hsla(var(--appBackgroundDarkHSL), .8);
     margin-bottom: calc(2 * var(--defaultGap));
-    border-radius: 0 0 var(--borderRadius) var(--borderRadius);
     max-width: unset;
 
 }
@@ -319,6 +320,14 @@ cards {
     box-shadow: var(--trayDropShadow);
 }
 
+.guessing cards {
+    background: hsl(var(--trayGuessingBackgroundHSL));
+}
+
+.guessing.reviewing cards {
+    background: hsl(var(--trayReviewingBackgroundHSL));
+}
+
 spot {
     display: block;
     width: var(--cardSize);
@@ -445,6 +454,14 @@ hints hint {
     width: calc(1.75 * var(--cardSize));
     border-radius: calc(var(--borderRadius) * 2) calc(var(--borderRadius) * 2) 0 0;
     box-shadow: var(--trayDropShadow);
+}
+
+.guessing hints hint {
+    background: hsl(var(--trayGuessingBackgroundHSL));
+}
+
+.guessing.reviewing hints hint {
+    background: hsl(var(--trayReviewingBackgroundHSL));
 }
 
 hints hint input {
@@ -589,6 +606,10 @@ modal cards {
     transition-delay: 150ms;
 }
 
+.guessing.reviewing modal cards, .guessing modal cards, modal cards {
+    background: none;
+}
+
 modal.disabled cards {
     pointer-events: none;
 }
@@ -666,6 +687,12 @@ modal::-webkit-scrollbar {
         --cardSize: 130px;
     }
 
+    html {
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
     body {
         font-size: 90%;
         width: 100%;
@@ -686,6 +713,7 @@ modal::-webkit-scrollbar {
 
     wrapper:first-of-type {
         padding: calc(var(--defaultGap)) 0;
+        background: hsla(var(--appBackgroundDarkHSL), 1);
         margin-bottom: calc(2 * var(--defaultGap));
         gap: 0px;
 
@@ -731,9 +759,9 @@ modal::-webkit-scrollbar {
     }
 
     rotators {
+        width: 100%;
+        overflow: hidden;
         padding: calc(2 * var(--defaultGap)) 0px;
-        width: 440px;
-        min-width: 440px;
     }
 
     spot rotators {
