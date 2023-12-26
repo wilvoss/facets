@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.010',
+    version: '0.1.011',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -24,6 +24,7 @@ var app = new Vue({
     ghostOffsetX: 0,
     ghostOffsetY: 0,
     shareURL: '',
+    targetCard: null,
     year: new Date().getFullYear(),
     actualCards: [],
     cards: [],
@@ -173,7 +174,11 @@ var app = new Vue({
 
     ToggleCardSelection(_card) {
       note('ToggleCardSelection() called');
-      if (_card.words.length > 0) {
+      // if (_card.words.length > 0) {
+      if (document.body.offsetWidth <= 640 && !this.showModal) {
+        this.targetCard = _card;
+      }
+      if (_card.words.length > 0 || document.body.offsetWidth <= 640) {
         let selectedState = !_card.isSelected;
         this.cards.forEach((card) => {
           card.isSelected = false;
@@ -183,6 +188,16 @@ var app = new Vue({
         });
         _card.isSelected = selectedState;
         this.draggedCard = _card.isSelected ? _card : this.emptyCard;
+        if (document.body.offsetWidth <= 640) {
+          this.showModal = true;
+          this.cards.forEach((card) => {
+            card.isInTray = true;
+          });
+
+          this.parkedCards.forEach((card) => {
+            card.isInTray = false;
+          });
+        }
       }
     },
 
@@ -200,6 +215,11 @@ var app = new Vue({
         card.words = words.slice(0 + x * 4, 4 + x * 4);
         this.cards.push(card);
       }
+    },
+
+    HandleMenuClick(e) {
+      e.preventDefault();
+      e.stopPropagation();
     },
 
     HandleCardPointerDown(e, _card) {
@@ -248,6 +268,7 @@ var app = new Vue({
     HandleCardDragStart(e, _card) {
       note('HandleCardDragStart() called');
       this.isDragging = true;
+      this.showModal = false;
       this.cards.concat(this.parkedCards).forEach((card) => {
         card.isSelected = false;
       });
@@ -262,10 +283,21 @@ var app = new Vue({
 
     HandleCardDrop(e, _card) {
       note('HandleCardDrop() called');
+      let keepModal = false;
+      if (this.targetCard !== null) {
+        keepModal = this.showModal && this.targetCard.id === _card.id;
+
+        this.targetCard.isSelected = true;
+        this.targetCard = null;
+      }
+
       this.message = '';
+
       this.HandleCardPointerDown(e, _card);
       this.isDragging = false;
+      this.showModal = false;
       this.draggedCard = this.emptyCard;
+      if (keepModal) this.showModal = true;
     },
 
     HandleCardDragOver(e, _card) {
@@ -498,6 +530,40 @@ var app = new Vue({
         this.isDragging = this.draggedCard.words.length > 0;
       }
     },
+
+    GetUniqueCardId(_words) {
+      if (_words.length === 0) {
+        return 0;
+      }
+      let letters = '';
+      _words.forEach((word) => {
+        letters += word.value.toLowerCase();
+      });
+      letters = letters.split('');
+      letters = letters.sort();
+      letters = letters.join('');
+      let prime = 1000000007; // a large prime number
+      let hash = 0;
+      for (let i = 0; i < letters.length; i++) {
+        hash = (hash * 26 + (letters.charCodeAt(i) - 'a'.charCodeAt(0) + 1)) % prime;
+      }
+      return hash;
+    },
+
+    CheckIfCardIsInTray(_card) {
+      if (!_card.words || _card.words.length === 0) {
+        warn('no words');
+        return false;
+      }
+      this.cards.forEach((card) => {
+        if (this.GetUniqueCardId(card.words) === this.GetUniqueCardId(_card.words)) {
+          highlight('card is in tray');
+          return true;
+        }
+      });
+      warn('card is NOT in tray');
+      return false;
+    },
   },
 
   mounted() {
@@ -514,6 +580,15 @@ var app = new Vue({
     getAllPlayerCards: function (_value) {
       return this.cards.concat(this.parkedCards).find((card) => card.id.indexOf(_value === 0));
     },
+    getAllCards: function () {
+      let newArray = this.cards.concat(this.parkedCards).filter((card) => card.words.length > 0);
+
+      newArray.forEach((card) => {
+        card.id = this.GetUniqueCardId(card.words);
+      });
+      newArray = newArray.sort((a, b) => a.id - b.id); //.filter((card) => (this.targetCard === null ? card : card.id != this.targetCard.id));
+      return newArray;
+    },
     getFirstThreeParkedCards: function () {
       return this.parkedCards.splice(0, 3);
     },
@@ -522,6 +597,9 @@ var app = new Vue({
     },
     getNumberOfHintsThatHaveBeenFilled: function () {
       return this.hints === undefined ? 0 : this.hints.filter((hint) => hint.value != '').length;
+    },
+    getUniqueCardId: function (_words) {
+      return this.GetUniqueCardId(_words);
     },
   },
 });

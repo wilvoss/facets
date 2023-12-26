@@ -14,6 +14,17 @@
 
   <body>
     <app id="app" v-cloak :class="{guessing: isGuessing}" @pointerup="HandleBodyPointerUp(event, isDragging ? draggedCard : getSelectedCard)">
+      <modal :class="{disabled: !showModal}" @click="showModal = false">
+        <!-- <modal class="disabled"> -->
+        <message>Choose a card</message>
+        <cards>
+          <card @click="HandleCardDrop(event, card)" v-for="card in getAllCards" v-if="card !== draggedCard" :class="{disabled: card.isInTray}">
+            <words>
+              <word v-for="word in card.words">{{word.value}}</word>
+            </words>
+          </card>
+        </cards>
+      </modal>
       <wrapper>
         <controls>
           <button @click="NewGame">New</button>
@@ -28,7 +39,6 @@
       </wrapper>
       <wrapper style="padding: 0">
         <message v-if="message !== ''">{{ message}}</message>
-
         <message v-if="message === '' && player.id === puzzlePlayer.id">{{ player.name + (isGuessing ? ', you created this puzzle!' : ', you are giving clues!')}}</message>
         <message v-if="message === '' && player.id !== puzzlePlayer.id">{{ player.name + (isGuessing ? ', you are now guessing!' : ', you are giving clues!')}}</message>
       </wrapper>
@@ -52,7 +62,7 @@
               <button class="clockwise" @pointerdown="RotateCard(event, card, 1)"></button>
               <button class="anticlockwise" @pointerdown="RotateCard(event, card, -1)"></button>
             </rotators>
-            <card @click="HandleCardDrop(event, card)" @pointerup="HandleCardDrop(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped, disabled: isDragging && card === getSelectedCard}">
+            <card @click="HandleCardClick(event, card)" @pointerup="HandleCardDrop(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped, disabled: isDragging && card === getSelectedCard}">
               <words>
                 <word v-for="word in card.words">{{word.value}}</word>
               </words>
@@ -75,7 +85,7 @@
                 <button class="clockwise" @click="RotateCard(event, card, 1)"></button>
                 <button class="anticlockwise" @click="RotateCard(event, card, -1)"></button>
               </rotators>
-              <card @click="HandleCardDrop(event, card)" @pointerup="HandleCardDrop(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped, disabled: isDragging && card === getSelectedCard}">
+              <card @click="HandleCardClick(event, card)" @pointerup="HandleCardDrop(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped, disabled: isDragging && card === getSelectedCard}">
                 <words>
                   <word v-for="word in card.words">{{word.value}}</word>
                 </words>
@@ -93,7 +103,7 @@
               <button class="clockwise" @click="RotateCard(event, card, 1)"></button>
               <button class="anticlockwise" @click="RotateCard(event, card, -1)"></button>
             </rotators>
-            <card @click="HandleCardDrop(event, card)" @pointerup="HandleCardDrop(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped, disabled: isDragging && card === getSelectedCard}">
+            <card @click="HandleCardClick(event, card)" @pointerup="HandleCardDrop(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped, disabled: isDragging && card === getSelectedCard}">
               <words>
                 <word v-for="word in card.words">{{word.value}}</word>
               </words>
