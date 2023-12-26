@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.014',
+    version: '0.1.015',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -373,12 +373,14 @@ var app = new Vue({
           this.ResetTrayAfterRotation();
         }, this.longTransition);
 
-        setTimeout(() => {
-          let hint0 = document.getElementById('hint0');
-          hint0.focus();
-          // if (document.body.offsetWidth > 640) {
-          // }
-        }, this.longTransition);
+        if (!this.isGuessing) {
+          setTimeout(() => {
+            let hint0 = document.getElementById('hint0');
+            hint0.focus();
+            // if (document.body.offsetWidth > 640) {
+            // }
+          }, this.longTransition);
+        }
       }
     },
 

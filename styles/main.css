@@ -466,7 +466,7 @@ hints hint input {
     color: hsl(var(--appForegroundHSL));
 }
 
-.guessing hints hint input {
+.guessing input, .guessing hints hint input {
     user-select: none;
     -webkit-user-select: none;
 }
@@ -584,6 +584,13 @@ modal cards {
     background: none;
     box-shadow: none;
     height: auto;
+    pointer-events: all;
+    transition: 0 linear all;
+    transition-delay: 50ms;
+}
+
+modal.disabled cards {
+    pointer-events: none;
 }
 
 modal cards card {
@@ -715,7 +722,7 @@ modal::-webkit-scrollbar {
         font-size: 130%;
         padding: 0;
         margin: 0;
-        line-height: 100%;
+        line-height: 130%;
     }
 
     rotators {

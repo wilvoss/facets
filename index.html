@@ -14,7 +14,7 @@
 
   <body>
     <app id="app" v-cloak :class="{guessing: isGuessing}" @pointerup="HandleBodyPointerUp(event, isDragging ? draggedCard : getSelectedCard)">
-      <input id="parkingInput" style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1" tabindex="-1" />
+      <input :disabled="isGuessing" id="parkingInput" style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1" tabindex="-1" />
       <modal :class="{disabled: !showModal}" @click="showModal = false">
         <!-- <modal class="disabled"> -->
         <message>Choose a card</message>
