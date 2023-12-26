@@ -572,6 +572,7 @@ modal {
     align-items: center;
     z-index: 300;
     transition: var(--shortTransition) ease-in-out opacity;
+    transition-delay: 50ms;
 }
 
 

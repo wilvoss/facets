@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.012',
+    version: '0.1.013',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -528,6 +528,9 @@ var app = new Vue({
       this.ghostY = e.clientY;
       if (this.isGuessing) {
         this.isDragging = this.draggedCard.words.length > 0;
+        if (this.isDragging) {
+          this.showModal = false;
+        }
       }
     },
 
