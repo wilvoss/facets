@@ -12,11 +12,13 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.020',
+    version: '0.1.021',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
     showArticle: false,
+    changeName: false,
+    changeNameTitle: "What's your name?",
     emptyCard: new CardObject({ id: 'ghost' }),
     draggedCard: new CardObject({}),
     ghostX: 0,
@@ -31,7 +33,7 @@ var app = new Vue({
     parkedCards: [],
     hints: [],
     player: new PlayerObject({}),
-    puzzlePlayer: new PlayerObject({ name: 'Challenger' }),
+    puzzlePlayer: new PlayerObject({}),
     sendingPlayer: new PlayerObject({}),
     shareText: 'Send',
     puzzleJustSent: false,
@@ -120,6 +122,10 @@ var app = new Vue({
         this.hints.forEach((hint) => {
           hint.value = _boardArray[index++];
         });
+        let possibleName = _boardArray[_boardArray.length - 3];
+        if (possibleName !== '' && parseInt(possibleName) !== NaN) {
+          this.sendingPlayer.name = _boardArray[_boardArray.length - 3];
+        }
         this.sendingPlayer.id = parseInt(_boardArray[_boardArray.length - 2]);
         this.puzzlePlayer.id = parseInt(_boardArray[_boardArray.length - 1]);
         this.player.role = this.puzzlePlayer.id === this.player.id && this.player.id !== this.sendingPlayer.id ? 'reviewer' : 'guesser';
@@ -144,6 +150,7 @@ var app = new Vue({
         urlString += hint.value + '-';
       });
 
+      urlString += this.player.name + '-';
       urlString += this.player.id + '-';
       urlString += this.puzzlePlayer.id;
 
@@ -494,6 +501,16 @@ var app = new Vue({
         localStorage.setItem('userID', this.player.id);
       }
       announce('Player ' + this.player.id + ' has initiated the app.');
+
+      let name = localStorage.getItem('name');
+      if (name !== undefined && name !== null) {
+        name = name;
+        this.player.name = name;
+      } else {
+        this.changeNameTitle = "Hello, what's your name?";
+        this.showModal = true;
+        this.changeName = true;
+      }
     },
 
     LoadPage() {
@@ -514,6 +531,31 @@ var app = new Vue({
       }
     },
 
+    ChangeName() {
+      this.showModal = true;
+      this.changeName = true;
+      this.changeNameTitle = "What's your name?";
+      document.getElementById('nameInput').value = this.player.name === 'Player' ? '' : this.player.name;
+    },
+
+    CancelNameChange(e) {
+      note('CancelNameChange() called');
+      e.preventDefault();
+      e.stopPropagation();
+      this.showModal = false;
+      this.changeName = false;
+    },
+
+    SubmitName(e) {
+      note('SubmitName() called');
+      e.preventDefault();
+      e.stopPropagation();
+      this.showModal = false;
+      this.changeName = false;
+      this.player.name = document.getElementById('nameInput').value;
+      localStorage.setItem('name', this.player.name);
+    },
+
     HandleKeyDownEvent(e) {
       note('HandleKeyDownEvent() called');
       switch (e.key) {
@@ -521,7 +563,9 @@ var app = new Vue({
           e.preventDefault();
           if (!this.isGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
             this.FillParkingLot();
-          } else if (this.isGuessing && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
+          }
+          if (this.showModal && this.changeName) {
+            this.SubmitName(e);
           }
           break;
         case 'Tab':

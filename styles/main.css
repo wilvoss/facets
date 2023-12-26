@@ -103,6 +103,10 @@ message {
     color: hsl(var(--highlightColorHSL));
 }
 
+message.clickable {
+    cursor: pointer;
+}
+
 nav ul {
     list-style-type: none;
     padding: 0px;
@@ -215,6 +219,10 @@ controls button {
     font-family: "Theme";
     width: var(--cardSize);
     padding: 0 var(--defaultGap);
+}
+
+controls button.secondary {
+    color: rgba(255, 255, 255, .4);
 }
 
 rotators {
@@ -486,7 +494,7 @@ hints hint {
     background: hsl(var(--trayReviewingBackgroundHSL));
 }
 
-hints hint input {
+modal intro input, hints hint input {
     text-align: center;
     outline: none;
     border: none;
@@ -498,6 +506,10 @@ hints hint input {
     padding: 0;
     font-size: 150%;
     /* text-transform: uppercase; */
+}
+
+modal intro input {
+    font-size: 300%;
 }
 
 .guessing hints hint input:disabled {
@@ -605,7 +617,7 @@ modal {
     height: 100%;
     overflow-x: hidden;
     flex-wrap: wrap;
-    background: rgba(0, 0, 0.9);
+    background: hsla(var(--appBackgroundDarkHSL), 1);
     opacity: 1;
     justify-content: center;
     align-items: center;
@@ -617,6 +629,14 @@ modal {
 
 modal.disabled {
     opacity: 0;
+}
+
+modal intro {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: var(--defaultGap);
 }
 
 modal cards {
@@ -775,7 +795,8 @@ modal::-webkit-scrollbar {
 
     message {
         font-size: 130%;
-        padding: 0;
+        text-align: center;
+        padding: 0 calc(3 * var(--defaultGap));
         margin: 0;
         line-height: 130%;
     }
