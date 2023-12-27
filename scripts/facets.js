@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.021',
+    version: '0.1.022',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -557,9 +557,9 @@ var app = new Vue({
     },
 
     HandleKeyDownEvent(e) {
-      note('HandleKeyDownEvent() called');
       switch (e.key) {
         case 'Enter':
+          note('HandleKeyDownEvent() called');
           e.preventDefault();
           if (!this.isGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
             this.FillParkingLot();
@@ -569,6 +569,7 @@ var app = new Vue({
           }
           break;
         case 'Tab':
+          note('HandleKeyDownEvent() called');
           e.preventDefault();
           if (!this.trayIsRotating) {
             let newTarget = 'hint0';
@@ -584,6 +585,7 @@ var app = new Vue({
           }
           break;
         case ' ':
+          note('HandleKeyDownEvent() called');
           e.preventDefault();
           e.stopPropagation();
           break;

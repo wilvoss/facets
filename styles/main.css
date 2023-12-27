@@ -628,6 +628,7 @@ modal {
 
 
 modal.disabled {
+    transform: scale(0);
     opacity: 0;
 }
 
@@ -805,6 +806,12 @@ modal::-webkit-scrollbar {
         width: 100%;
         overflow: hidden;
         padding: calc(2 * var(--defaultGap)) 0px;
+    }
+
+    cards spot.empty {
+        background: url(../images/tap.svg) no-repeat center;
+        background-size: 40px;
+
     }
 
     spot rotators {
