@@ -22,7 +22,7 @@
     --hueHighlight: 140;
 
     --appBackgroundHSL: var(--hueMain), 40%, 30%;
-    --appBackgroundDarkHSL: var(--hueMain), 40%, 10%;
+    --appBackgroundDarkHSL: var(--hueMain), 76%, 8%;
     --appForegroundHSL: var(--hueMain), 94%, 93%;
     --linkColorLightHSL: var(--hueHighlight), 79%, 55%;
     --linkColorDarkHSL: var(--hueHighlight), 69%, 45%;
@@ -41,6 +41,9 @@
     --borderRadius: 5px;
     --cardDropShadow: 0px 0px 10px rgba(0, 0, 0, .3);
     --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, .5);
+
+    --texture: url(../images/texture-subtle.png);
+    --textureSuble: url(../images/texture-subtle.png);
 }
 
 html {
@@ -56,7 +59,7 @@ body {
     color: hsl(var(--appForegroundHSL));
     line-height: 1.3em;
     margin: 0px 0px;
-    background: hsl(var(--appBackgroundDarkHSL));
+    background: hsl(var(--appBackgroundDarkHSL)) var(--textureSuble);
     width: 100%;
     height: 100%;
     display: block;
@@ -150,7 +153,7 @@ wrapper {
 
 wrapper:first-of-type {
     padding: calc(var(--defaultGap)) 0;
-    background: hsla(var(--appBackgroundDarkHSL), .8);
+    background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkHSL), .9));
     margin-bottom: calc(2 * var(--defaultGap));
     max-width: unset;
 
@@ -319,7 +322,7 @@ cards {
     transition: var(--longTransition) ease-in-out;
     transition-property: transform, rotate, opacity;
     padding: var(--defaultGap);
-    background: hsl(var(--trayBackgroundHSL));
+    background: hsl(var(--trayBackgroundHSL)) var(--texture);
     width: calc(var(--cardSize) * 2 + var(--defaultGap));
     height: calc(var(--cardSize) * 2 + var(--defaultGap));
     flex-wrap: wrap;
@@ -329,11 +332,11 @@ cards {
 }
 
 .guessing cards {
-    background: hsl(var(--trayGuessingBackgroundHSL));
+    background-color: hsl(var(--trayGuessingBackgroundHSL));
 }
 
 .guessing.reviewing cards {
-    background: hsl(var(--trayReviewingBackgroundHSL));
+    background-color: hsl(var(--trayReviewingBackgroundHSL));
 }
 
 spot {
@@ -476,7 +479,7 @@ hints hint {
     display: block;
     position: absolute;
     height: var(--wordHeight);
-    background: hsl(var(--trayBackgroundHSL));
+    background: hsl(var(--trayBackgroundHSL)) var(--texture);
     padding: calc(var(--defaultGap) / 4) calc(var(--defaultGap) / 4) calc(var(--defaultGap));
     width: calc(1.75 * var(--cardSize));
     border-radius: calc(var(--borderRadius) * 2) calc(var(--borderRadius) * 2) 0 0;
@@ -484,11 +487,11 @@ hints hint {
 }
 
 .guessing hints hint {
-    background: hsl(var(--trayGuessingBackgroundHSL));
+    background-color: hsl(var(--trayGuessingBackgroundHSL));
 }
 
 .guessing.reviewing hints hint {
-    background: hsl(var(--trayReviewingBackgroundHSL));
+    background-color: hsl(var(--trayReviewingBackgroundHSL));
 }
 
 modal intro input, hints hint input {

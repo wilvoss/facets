@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.023',
+    version: '0.1.024',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -148,7 +148,7 @@ var app = new Vue({
 
     ConstructURLForCurrentGame() {
       note('ConstructURLForCurrentGame() called');
-      let urlString = window.location.origin + '?board=';
+      let urlString = '';
       this.cards.concat(this.parkedCards).forEach((card) => {
         if (card.words.length === 0) {
           urlString += '----';
@@ -165,7 +165,8 @@ var app = new Vue({
       urlString += this.player.name + '-';
       urlString += this.player.id + '-';
       urlString += this.puzzlePlayer.id;
-
+      urlString = encodeURIComponent(urlString);
+      urlString = window.location.origin + '?board=' + urlString;
       this.shareURL = urlString;
       history.pushState(null, null, this.shareURL);
     },
@@ -408,13 +409,10 @@ var app = new Vue({
         }, this.longTransition);
 
         if (!this.isGuessing) {
-          setTimeout(
-            () => {
-              let hint0 = document.getElementById('hint0');
-              hint0.focus();
-            },
-            document.body.offsetWidth <= 640 ? this.longTransition : 0,
-          );
+          setTimeout(() => {
+            let hint0 = document.getElementById('hint0');
+            hint0.focus();
+          }, this.longTransition);
         }
       }
     },
@@ -536,7 +534,8 @@ var app = new Vue({
       this.shortTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
       let boardPieces = [];
       if (window.location.search) {
-        boardPieces = window.location.search.split('?')[1].split('=')[1].split('-');
+        let search = decodeURIComponent(window.location.search);
+        boardPieces = search.split('?')[1].split('=')[1].split('-');
       }
 
       if (boardPieces.length >= 45) {
@@ -568,7 +567,7 @@ var app = new Vue({
       e.stopPropagation();
       this.showModal = false;
       this.changeName = false;
-      this.player.name = document.getElementById('nameInput').value;
+      this.player.name = document.getElementById('nameInput').value.trim();
       localStorage.setItem('name', this.player.name);
     },
 
@@ -602,11 +601,21 @@ var app = new Vue({
           break;
         case ' ':
           note('HandleKeyDownEvent() called');
-          e.preventDefault();
-          e.stopPropagation();
+          // e.preventDefault();
+          // e.stopPropagation();
           break;
         default:
       }
+    },
+
+    HandleInputKeyDown(e) {
+      note('HandleInputKeyDown() called');
+      // input.value = input.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ-]/g, '');
+      // let isInvalidChars = /[^a-zA-ZÀ-ÖØ-öø-ÿ\-!]/.test(e.key);
+      // if (isInvalidChars) {
+      //   e.preventDefault();
+      //   e.stopPropagation();
+      // }
     },
 
     HandleOnPageHideEvent(_clearInterval = true) {
