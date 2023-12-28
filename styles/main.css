@@ -805,6 +805,11 @@ version {
 
     }
 
+    message {
+        height: calc(1 * var(--wordHeight));
+        position: absolute;
+    }
+
     controls {
         padding: 0;
         width: 100%;
@@ -844,7 +849,7 @@ version {
     message {
         font-size: 130%;
         text-align: center;
-        padding: 0 calc(3 * var(--defaultGap));
+        padding: 0 calc(2 * var(--defaultGap));
         margin: 0;
         line-height: 130%;
     }
