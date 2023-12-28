@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.024',
+    version: '0.1.025',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -533,16 +533,21 @@ var app = new Vue({
       this.longTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
       this.shortTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
       let boardPieces = [];
-      if (window.location.search) {
-        let search = decodeURIComponent(window.location.search);
-        boardPieces = search.split('?')[1].split('=')[1].split('-');
-      }
-
-      if (boardPieces.length >= 45) {
-        document.title = 'Facets - CHALLENGE!';
-        this.RestoreGame(boardPieces);
-      } else if (!this.isGuessing) {
-        this.NewGame();
+      try {
+        if (window.location.search) {
+          let search = decodeURIComponent(window.location.search);
+          boardPieces = search.split('?')[1].split('=')[1].split('-');
+        }
+        if (boardPieces.length >= 45) {
+          document.title = 'Facets - CHALLENGE!';
+          this.RestoreGame(boardPieces);
+        } else if (!this.isGuessing) {
+          this.NewGame();
+        }
+      } catch (e) {
+        warn(e.message);
+        boardPieces = [];
+        this.NewGame(null, '😕 - Something went wrong.');
       }
     },
 
@@ -550,7 +555,6 @@ var app = new Vue({
       this.showModal = true;
       this.changeName = true;
       this.changeNameTitle = this.player.name === 'Player' ? "What's your name?" : "What's your new name?";
-      // document.getElementById('nameInput').value = this.player.name === 'Player' ? '' : this.player.name;
     },
 
     CancelNameChange(e) {
