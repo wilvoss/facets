@@ -39,11 +39,13 @@
     --wordHeight: 30px;
     --defaultGap: 20px;
     --borderRadius: 5px;
+    --smallIconSize: 24px;
+    --mediumIconSize: 35px;
     --cardDropShadow: 0px 0px 10px rgba(0, 0, 0, .3);
     --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, .5);
 
-    --texture: url(../images/texture-subtle.png);
-    --textureSuble: url(../images/texture-subtle.png);
+    --texture: url(../images/texture.png);
+    --textureSuble: url(../images/texture.png);
 }
 
 html {
@@ -59,7 +61,7 @@ body {
     color: hsl(var(--appForegroundHSL));
     line-height: 1.3em;
     margin: 0px 0px;
-    background: hsl(var(--appBackgroundDarkHSL)) var(--textureSuble);
+    background: hsl(var(--appBackgroundDarkHSL));
     width: 100%;
     height: 100%;
     display: block;
@@ -73,6 +75,50 @@ app {
     display: flex;
     flex-direction: column;
     background-image: repeating-linear-gradient(45deg, hsla(var(--appBackgroundHSL), 0.4) 0px, hsla(var(--appBackgroundHSL), 0.4) 40px, hsla(var(--appBackgroundHSL), 0.32) 40px, hsla(var(--appBackgroundHSL), 0.32) 80px);
+}
+
+
+icon {
+    display: block;
+    mask-size: var(--smallIconSize) var(--smallIconSize);
+    -webkit-mask-size: var(--smallIconSize) var(--smallIconSize);
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
+    mask-position: center;
+    -webkit-mask-position: center;
+    background-color: white;
+    width: var(--smallIconSize);
+    height: var(--smallIconSize);
+    pointer-events: none;
+}
+
+icon.share {
+    mask-image: url(../images/icon-share.svg);
+    -webkit-mask-image: url(../images/icon-share.svg);
+}
+
+
+icon.add {
+    mask-image: url(../images/icon-plus.svg);
+    -webkit-mask-image: url(../images/icon-plus.svg);
+}
+
+icon.recycle {
+    mask-image: url(../images/icon-recycle.svg);
+    -webkit-mask-image: url(../images/icon-recycle.svg);
+}
+
+picker spot icon.recycle {
+    width: var(--mediumIconSize);
+    height: var(--mediumIconSize);
+    mask-size: var(--mediumIconSize) var(--mediumIconSize);
+    -webkit-mask-size: var(--mediumIconSize) var(--mediumIconSize);
+    background-color: hsl(var(--linkColorDarkHSL));
+    opacity: .7;
+}
+
+controls button icon {
+    background: hsl(var(--linkColorLightHSL));
 }
 
 header {
@@ -177,6 +223,14 @@ button {
     width: auto;
 }
 
+button.inline {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: calc(var(--defaultGap) / 2);
+}
+
 .clockwise::after {
     content: '⤷';
     display: block;
@@ -210,7 +264,8 @@ controls {
     justify-content: center;
     align-items: center;
     width: var(--cardSize);
-    padding: var(--defaultGap);
+    height: 100%;
+    padding: 0 var(--defaultGap);
 }
 
 controls button {
@@ -221,6 +276,7 @@ controls button {
     font-size: 150%;
     font-family: "Theme";
     width: var(--cardSize);
+    height: 100%;
     padding: 0 var(--defaultGap);
 }
 
@@ -362,13 +418,6 @@ spot {
 
 .guessing modal spot.disabled {
     pointer-events: none;
-}
-
-modal spot icon {
-    display: block;
-    opacity: .7;
-    padding: 0 0 calc(.5 * var(--defaultGap));
-    font-size: 200%;
 }
 
 spot.empty {
@@ -664,6 +713,13 @@ modal::-webkit-scrollbar {
     opacity: .3;
 }
 
+version {
+    text-align: center;
+    font-size: 10px;
+    color: hsla(var(--hueMain), 45%, 55%);
+}
+
+
 @media screen and (max-height:780px) {
 
     wrapper {
@@ -682,10 +738,11 @@ modal::-webkit-scrollbar {
     }
 
     controls button {
-        width: 130px;
+        width: auto;
         height: 100%;
-        padding: 0 var(--defaultGap) 0;
+        padding: 0;
     }
+
 
     header {
         width: auto;
@@ -725,6 +782,8 @@ modal::-webkit-scrollbar {
         width: 100%;
         height: 100%;
         overflow: hidden;
+        background-image: none;
+        background-size: 128px;
     }
 
     app {
@@ -748,15 +807,19 @@ modal::-webkit-scrollbar {
 
     controls {
         padding: 0;
-        width: auto;
+        width: 100%;
         height: 100%;
     }
 
     controls button {
-        width: calc(100px - (var(--defaultGap) / 2));
+        /* width: calc(100px - (var(--defaultGap) / 2)); */
         height: 100%;
         padding: 0;
         text-align: left;
+    }
+
+    controls button span {
+        display: none;
     }
 
     controls:last-of-type button {
@@ -792,6 +855,10 @@ modal::-webkit-scrollbar {
         padding: calc(2 * var(--defaultGap)) 0px;
     }
 
+    cards {
+        background-size: 128px;
+    }
+
     cards spot.empty {
         background: url(../images/tap.svg) no-repeat center;
         background-size: 40px;
@@ -822,6 +889,7 @@ modal::-webkit-scrollbar {
     hints hint {
         padding: calc(var(--defaultGap) / 4) calc(var(--defaultGap) / 4) calc(var(--defaultGap));
         width: calc(1.6 * var(--cardSize));
+        background-size: 128px;
     }
 
     hints hint input {
