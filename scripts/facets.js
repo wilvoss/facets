@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.025',
+    version: '0.1.026',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -508,8 +508,6 @@ var app = new Vue({
       if (id !== undefined && id !== null) {
         id = JSON.parse(id);
         this.player.id = id;
-        this.puzzlePlayer.id = id;
-        this.sendingPlayer.id = id;
       } else {
         this.player.id = getRandomInt(100000, 100000000);
         localStorage.setItem('userID', this.player.id);
@@ -603,34 +601,8 @@ var app = new Vue({
             }
           }
           break;
-        case ' ':
-          note('HandleKeyDownEvent() called');
-          // e.preventDefault();
-          // e.stopPropagation();
-          break;
+
         default:
-      }
-    },
-
-    HandleInputKeyDown(e) {
-      note('HandleInputKeyDown() called');
-      // input.value = input.value.replace(/[^a-zA-ZÀ-ÖØ-öø-ÿ-]/g, '');
-      // let isInvalidChars = /[^a-zA-ZÀ-ÖØ-öø-ÿ\-!]/.test(e.key);
-      // if (isInvalidChars) {
-      //   e.preventDefault();
-      //   e.stopPropagation();
-      // }
-    },
-
-    HandleOnPageHideEvent(_clearInterval = true) {
-      note('HandleOnPageHideEvent() called');
-      if (_clearInterval) {
-        window.clearInterval(this.updateInterval);
-      }
-
-      this.appSettingsSoundFX.unload();
-      if (this.appSettingsSaveSettings) {
-        localStorage.setItem('storedVersion', this.currentVersion);
       }
     },
 
