@@ -30,9 +30,9 @@
     --trayBackgroundHSL: var(--hueMain), 90%, 40%;
     --trayGuessingBackgroundHSL: var(--hueGuessing), 60%, 40%;
     --trayReviewingBackgroundHSL: var(--hueReviewing), 60%, 44%;
-    /* --trayBackgroundHSL: var(--hueMain), 70%, 40%; */
 
     --longTransition: 400ms;
+    --mediumTransition: 250ms;
     --shortTransition: 150ms;
 
     --cardSize: 180px;
@@ -100,7 +100,9 @@ header subtitle {
 }
 
 message {
+    display: block;
     color: hsl(var(--highlightColorHSL));
+    text-align: center;
 }
 
 message.clickable {
@@ -176,14 +178,12 @@ button {
     content: '⤷';
     display: block;
     transform: scaleY(-1);
-    /* rotate: -90deg; */
 }
 
 .anticlockwise::after {
     content: '⤶';
     display: block;
     transform: scaleY(-1);
-    /* rotate: 90deg; */
 }
 
 rotators, tray, hints {
@@ -268,7 +268,6 @@ spot rotators {
     pointer-events: none;
 }
 
-
 spot.empty rotators, spot.empty:hover rotators, .guessing spot.empty:hover rotators {
     opacity: 0;
     display: none;
@@ -278,7 +277,7 @@ spot.empty rotators, spot.empty:hover rotators, .guessing spot.empty:hover rotat
     opacity: 1;
 }
 
-.guessing spot rotators {
+.guessing spot rotators button {
     pointer-events: all;
 }
 
@@ -326,7 +325,6 @@ cards {
     flex-wrap: wrap;
     border-radius: calc(2 * var(--borderRadius));
     gap: var(--defaultGap);
-    /* border: 1px dashed hsl(var(--appForegroundHSL)); */
     box-shadow: var(--trayDropShadow);
 }
 
@@ -365,7 +363,6 @@ spot {
 
 modal spot icon {
     display: block;
-    /* color: hsl(var(--linkColorDarkHSL)); */
     opacity: .7;
     padding: 0 0 calc(.5 * var(--defaultGap));
     font-size: 200%;
@@ -505,7 +502,6 @@ modal intro input, hints hint input {
     line-height: 120%;
     padding: 0;
     font-size: 150%;
-    /* text-transform: uppercase; */
 }
 
 modal intro input {
@@ -578,18 +574,6 @@ word {
     text-transform: capitalize;
 }
 
-/* tray spot:nth-child(2) {
-    rotate: 90deg;
-}
-
-tray spot:nth-child(4) {
-    rotate: 180deg;
-}
-
-tray spot:nth-child(3) {
-    rotate: -90deg;
-} */
-
 word:nth-child(1) {
     rotate: 0deg;
 }
@@ -622,13 +606,10 @@ modal {
     justify-content: center;
     align-items: center;
     z-index: 300;
-    transition: var(--shortTransition) ease-in-out opacity;
-    transition-delay: 50ms;
+    transition: var(--mediumTransition) ease-in-out all;
 }
 
-
 modal.disabled {
-    transform: scale(0);
     opacity: 0;
 }
 
@@ -637,7 +618,7 @@ modal intro {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: var(--defaultGap);
+    gap: calc(2 * var(--defaultGap));
 }
 
 modal cards {
@@ -811,7 +792,6 @@ modal::-webkit-scrollbar {
     cards spot.empty {
         background: url(../images/tap.svg) no-repeat center;
         background-size: 40px;
-
     }
 
     spot rotators {
@@ -823,7 +803,6 @@ modal::-webkit-scrollbar {
         font-size: 100%;
         line-height: 180%;
     }
-
 
     word:nth-child(2) {
         transform: translate(calc((var(--cardSize) / 2) - (var(--wordHeight) / 2)), calc(-1 * (var(--cardSize) / 2) + calc(var(--defaultGap) * 1) - 7px));
@@ -857,7 +836,6 @@ modal::-webkit-scrollbar {
 
     hints hint:nth-child(2) {
         transform: translate(calc(var(--cardSize) + (var(--defaultGap) / 5)), calc(-1 * var(--cardSize) + calc(var(--wordHeight) * -2.1)));
-
     }
 
     hints hint:nth-child(3) {

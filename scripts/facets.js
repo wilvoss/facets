@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.022',
+    version: '0.1.023',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -51,7 +51,9 @@ var app = new Vue({
     r: document.querySelector(':root'),
   },
   methods: {
-    ToggleShowModal() {
+    ToggleShowModal(e) {
+      e.preventDefault();
+      e.stopPropagation();
       this.showModal = !this.showModal;
     },
 
@@ -92,6 +94,7 @@ var app = new Vue({
 
     RestoreGame(_boardArray) {
       note('RestoreGame() called');
+      let corruptData = false;
       if (_boardArray.length >= 45) {
         this.shareURL = window.location.href;
         this.puzzleJustSent = false;
@@ -105,6 +108,9 @@ var app = new Vue({
           for (let x = 0; x < 4; x++) {
             if (_boardArray[index] !== '') {
               let word = allWords.find((_word) => _word.id === parseInt(_boardArray[index]));
+              if (word === undefined) {
+                corruptData = true;
+              }
               card.words.push(word);
             }
             index++;
@@ -114,6 +120,9 @@ var app = new Vue({
           for (let x = 0; x < 4; x++) {
             if (_boardArray[index] !== '') {
               let word = allWords.find((_word) => _word.id === parseInt(_boardArray[index]));
+              if (word === undefined) {
+                corruptData = true;
+              }
               card.words.push(word);
             }
             index++;
@@ -129,9 +138,12 @@ var app = new Vue({
         this.sendingPlayer.id = parseInt(_boardArray[_boardArray.length - 2]);
         this.puzzlePlayer.id = parseInt(_boardArray[_boardArray.length - 1]);
         this.player.role = this.puzzlePlayer.id === this.player.id && this.player.id !== this.sendingPlayer.id ? 'reviewer' : 'guesser';
-        // this.shareText = this.player.id !== this.sendingPlayer.id && this.player.id !== this.puzzlePlayer.id ? 'Send' : 'Reply';
       }
       this.isGuessing = true;
+      if (corruptData) {
+        announce('the data was corrupt');
+        this.NewGame(null, '😕 - Something went wrong.');
+      }
     },
 
     ConstructURLForCurrentGame() {
@@ -179,7 +191,9 @@ var app = new Vue({
             break;
         }
       }
+      this.shareURL = '';
       this.ConstructURLForCurrentGame();
+      announce(this.shareURL);
       text = text + '\r\n' + this.shareURL;
       let _shareObject = {
         title: 'FACETS',
@@ -191,37 +205,6 @@ var app = new Vue({
         _shareObject = text;
         navigator.clipboard.writeText(_shareObject);
         this.message = 'Sharing message copied to the clipboard.';
-      }
-    },
-
-    ToggleCardSelection(_card) {
-      note('ToggleCardSelection() called');
-      // if (_card.words.length > 0) {
-      if (document.body.offsetWidth <= 640 && !this.showModal) {
-        this.targetCard = _card;
-      } else if (this.showModal) {
-        this.targetCard = null;
-      }
-      if (_card.words.length > 0 || document.body.offsetWidth <= 640) {
-        let selectedState = !_card.isSelected;
-        this.cards.forEach((card) => {
-          card.isSelected = false;
-        });
-        this.parkedCards.forEach((card) => {
-          card.isSelected = false;
-        });
-        _card.isSelected = selectedState;
-        this.draggedCard = _card.isSelected ? _card : this.emptyCard;
-        if (document.body.offsetWidth <= 640) {
-          this.showModal = true;
-          this.cards.forEach((card) => {
-            card.isInTray = true;
-          });
-
-          this.parkedCards.forEach((card) => {
-            card.isInTray = false;
-          });
-        }
       }
     },
 
@@ -241,9 +224,43 @@ var app = new Vue({
       }
     },
 
-    HandleMenuClick(e) {
+    ToggleCardSelection(_card) {
+      note('ToggleCardSelection() called');
+      let selectedState = !_card.isSelected;
+      this.cards.concat(this.parkedCards).forEach((card) => {
+        card.isSelected = false;
+      });
+      _card.isSelected = selectedState;
+      this.targetCard = _card.isSelected ? _card : null;
+
+      this.cards.forEach((card) => {
+        card.isInTray = true;
+      });
+
+      this.parkedCards.forEach((card) => {
+        card.isInTray = false;
+      });
+
+      this.cards.concat(this.parkedCards).forEach((card) => {
+        card.justDropped = false;
+      });
+
+      if (document.body.offsetWidth <= 640 && (_card.isSelected || _card.words.length === 0)) {
+        this.showModal = true;
+      }
+    },
+
+    HandleCardClick(e, _card) {
+      note('HandleCardClick() called');
       e.preventDefault();
       e.stopPropagation();
+      this.ToggleCardSelection(_card);
+    },
+
+    HandleBodyPointerUp(e, _card) {
+      note('HandleBodyPointerUp() called');
+      this.isDragging = false;
+      this.draggedCard = this.emptyCard;
     },
 
     HandleCardPointerDown(e, _card) {
@@ -256,72 +273,62 @@ var app = new Vue({
         }
       }
 
-      if (this.getSelectedCard !== undefined && _card !== this.getSelectedCard) {
-        this.getSelectedCard.justDropped = true;
+      if (_card.words.length > 0) {
+        this.draggedCard = _card;
+        this.isDragging = true;
+      }
+    },
+
+    HandleCardPointerUp(e, _card) {
+      note('HandleCardPointerUp() called');
+      e.preventDefault();
+      e.stopPropagation();
+      if (this.targetCard !== null) {
+        this.draggedCard = this.targetCard;
+      }
+
+      this.message = '';
+
+      if (this.draggedCard.words.length > 0 || this.showModal) {
+        let temp1 = new CardObject(_card);
+        let temp2 = new CardObject(this.draggedCard);
+        _card.words = temp2.words;
+        _card.rotation = temp2.rotation;
+        _card.isSelected = false; //temp2.isSelected;
+        this.draggedCard.words = temp1.words;
+        this.draggedCard.rotation = temp1.rotation;
+        this.draggedCard.isSelected = false; //temp1.isSelected;
+
+        this.draggedCard.justDropped = true;
         _card.justDropped = true;
 
         setTimeout(() => {
           this.cards.concat(this.parkedCards).forEach((card) => {
             card.justDropped = false;
           });
+          this.draggedCard.justDropped = false;
         }, this.longTransition);
-        let temp1 = new CardObject(_card);
-        let temp2 = new CardObject(this.getSelectedCard);
-        _card.words = temp2.words;
-        _card.rotation = temp2.rotation;
-        this.getSelectedCard.words = temp1.words;
-        this.getSelectedCard.rotation = temp1.rotation;
-        this.getSelectedCard.isSelected = false;
-      } else if (_card !== undefined) {
-        this.ToggleCardSelection(_card);
-      }
-    },
-
-    HandleBodyPointerUp(e, _card) {
-      if (this.getSelectedCard !== null && this.getSelectedCard !== undefined) {
-        this.isDragging = false;
-        this.draggedCard = this.emptyCard;
-        this.getSelectedCard.isSelected = false;
-      }
-    },
-
-    HandleTouchStart(e) {
-      e.preventDefault();
-    },
-
-    HandleCardDragStart(e, _card) {
-      note('HandleCardDragStart() called');
-      this.isDragging = true;
-      this.showModal = false;
-      this.cards.concat(this.parkedCards).forEach((card) => {
-        card.isSelected = false;
-      });
-      this.HandleCardPointerDown(_card);
-    },
-
-    HandleCardClick(e, _card) {
-      e.preventDefault();
-      e.stopPropagation();
-      this.ToggleCardSelection(_card);
-    },
-
-    HandleCardDrop(e, _card) {
-      note('HandleCardDrop() called');
-      if (this.targetCard !== null) {
-        this.targetCard.isSelected = true;
-        this.targetCard = null;
       }
 
-      this.message = '';
-
-      this.HandleCardPointerDown(e, _card);
       this.isDragging = false;
-      this.showModal = false;
       this.draggedCard = this.emptyCard;
     },
 
-    HandleCardDragOver(e, _card) {
-      e.preventDefault();
+    HandlePickerCardClicked(e, _card) {
+      note('HandlePickerCardClicked() called');
+
+      if (_card !== null) {
+        this.draggedCard = _card;
+      } else {
+        this.draggedCard = this.getFirstAvailableParkingSpot;
+      }
+      _card = this.targetCard;
+      this.targetCard = null;
+
+      this.message = '';
+
+      this.HandleCardPointerUp(e, _card);
+      this.showModal = false;
     },
 
     RotateCard(e, _card, _inc) {
@@ -329,6 +336,7 @@ var app = new Vue({
       e.preventDefault();
       e.stopPropagation();
       if (this.isGuessing) {
+        this.message = '';
         if (this.cardRotationTimeout) {
           clearTimeout(this.cardRotationTimeout);
           this.cardRotationTimeout = null;
@@ -340,6 +348,11 @@ var app = new Vue({
           this.ResetCardAfterRotation();
         }, this.shortTransition);
       }
+    },
+
+    HandlePointerMoveEvent(e) {
+      this.ghostX = e.clientX;
+      this.ghostY = e.clientY;
     },
 
     ResetCardAfterRotation() {
@@ -381,6 +394,7 @@ var app = new Vue({
     RotateTray(_inc) {
       note('RotateTray() called');
       if (!this.trayIsRotating) {
+        this.message = '';
         this.trayIsRotating = true;
         if (this.trayRotationTimeout) {
           clearTimeout(this.trayRotationTimeout);
@@ -394,12 +408,13 @@ var app = new Vue({
         }, this.longTransition);
 
         if (!this.isGuessing) {
-          setTimeout(() => {
-            let hint0 = document.getElementById('hint0');
-            hint0.focus();
-            // if (document.body.offsetWidth > 640) {
-            // }
-          }, this.longTransition);
+          setTimeout(
+            () => {
+              let hint0 = document.getElementById('hint0');
+              hint0.focus();
+            },
+            document.body.offsetWidth <= 640 ? this.longTransition : 0,
+          );
         }
       }
     },
@@ -473,8 +488,9 @@ var app = new Vue({
       this.trayIsRotating = false;
     },
 
-    NewGame() {
+    NewGame(e, _message = '') {
       note('NewGame() called');
+      this.message = _message;
       this.puzzleJustSent = false;
       this.player.role = 'creator';
       this.puzzlePlayer.id = this.player.id;
@@ -500,7 +516,6 @@ var app = new Vue({
         this.player.id = getRandomInt(100000, 100000000);
         localStorage.setItem('userID', this.player.id);
       }
-      announce('Player ' + this.player.id + ' has initiated the app.');
 
       let name = localStorage.getItem('name');
       if (name !== undefined && name !== null) {
@@ -516,6 +531,7 @@ var app = new Vue({
     LoadPage() {
       note('LoadPage() called');
       this.HandlePageVisibilityChange();
+      announce('Player ' + this.player.id + ' has initiated the app.');
       this.longTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
       this.shortTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
       let boardPieces = [];
@@ -534,8 +550,8 @@ var app = new Vue({
     ChangeName() {
       this.showModal = true;
       this.changeName = true;
-      this.changeNameTitle = "What's your name?";
-      document.getElementById('nameInput').value = this.player.name === 'Player' ? '' : this.player.name;
+      this.changeNameTitle = this.player.name === 'Player' ? "What's your name?" : "What's your new name?";
+      // document.getElementById('nameInput').value = this.player.name === 'Player' ? '' : this.player.name;
     },
 
     CancelNameChange(e) {
@@ -605,17 +621,6 @@ var app = new Vue({
       }
     },
 
-    HandlePointerMoveEvent(e) {
-      this.ghostX = e.clientX;
-      this.ghostY = e.clientY;
-      if (this.isGuessing) {
-        this.isDragging = this.draggedCard.words.length > 0;
-        if (this.isDragging) {
-          this.showModal = false;
-        }
-      }
-    },
-
     GetUniqueCardId(_words) {
       if (_words.length === 0) {
         return 0;
@@ -637,16 +642,13 @@ var app = new Vue({
 
     CheckIfCardIsInTray(_card) {
       if (!_card.words || _card.words.length === 0) {
-        warn('no words');
         return false;
       }
       this.cards.forEach((card) => {
         if (this.GetUniqueCardId(card.words) === this.GetUniqueCardId(_card.words)) {
-          highlight('card is in tray');
           return true;
         }
       });
-      warn('card is NOT in tray');
       return false;
     },
   },
