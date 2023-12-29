@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.035',
+    version: '0.1.036',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -186,7 +186,11 @@ var app = new Vue({
       if (this.player.role === 'reviewer') {
         switch (this.getNumberOfCardsThatHaveBeenPlacedOnTray) {
           case 0:
+            text = "🤢 Oh buddy, that's just sad.";
+            break;
           case 1:
+            text = '🫣 better than nothing!';
+            break;
           case 2:
             text = '😱 Try again!';
             break;
