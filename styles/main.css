@@ -45,7 +45,6 @@
     --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, .5);
 
     --texture: url(../images/texture.png);
-    --textureSuble: url(../images/texture.png);
 }
 
 html {
@@ -379,6 +378,7 @@ cards {
     transition-property: transform, rotate, opacity;
     padding: var(--defaultGap);
     background: hsl(var(--trayBackgroundHSL)) var(--texture);
+    background-size: 128px 128px;
     width: calc(var(--cardSize) * 2 + var(--defaultGap));
     height: calc(var(--cardSize) * 2 + var(--defaultGap));
     flex-wrap: wrap;
@@ -529,6 +529,7 @@ hints hint {
     position: absolute;
     height: var(--wordHeight);
     background: hsl(var(--trayBackgroundHSL)) var(--texture);
+    background-size: 128px 128px;
     padding: calc(var(--defaultGap) / 4) calc(var(--defaultGap) / 4) calc(var(--defaultGap));
     width: calc(1.75 * var(--cardSize));
     border-radius: calc(var(--borderRadius) * 2) calc(var(--borderRadius) * 2) 0 0;
@@ -743,6 +744,14 @@ version {
         padding: 0;
     }
 
+    modal controls {
+        height: var(--wordHeight);
+    }
+
+    modal controls button {
+        padding: 0 var(--defaultGap) var(--defaultGap);
+    }
+
 
     header {
         width: auto;
@@ -810,6 +819,10 @@ version {
         position: absolute;
     }
 
+    modal message {
+        position: relative;
+    }
+
     controls {
         padding: 0;
         width: 100%;
@@ -821,6 +834,14 @@ version {
         height: 100%;
         padding: 0;
         text-align: left;
+    }
+
+    modal controls {
+        height: var(--wordHeight);
+    }
+
+    modal controls button {
+        padding: 0 var(--defaultGap) var(--defaultGap);
     }
 
     controls button span {

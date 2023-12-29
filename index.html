@@ -17,20 +17,20 @@
       <input maxlength="0" :disabled="isGuessing" id="parkingInput" style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1" tabindex="-1" />
       <modal :class="{disabled: !showModal}" @click="showModal = changeName ? true : false">
         <!-- <modal class="disabled"> -->
-        <intro v-if="changeName">
+        <intro v-if="changeName && showModal">
           <message>{{changeNameTitle}}</message>
           <input id="nameInput" placeholder="_ _ _ _ _ _" />
           <controls><button class="secondary" @click="CancelNameChange(event)">Cancel</button><button @click="SubmitName(event)">Okay</button></controls>
         </intro>
-        <picker v-if="!changeName">
+        <picker v-if="!changeName && showModal">
           <message>Choose a card</message>
-          <cards v-if="showModal">
+          <cards>
             <card @click="HandlePickerCardClicked(event, card)" v-for="card in getAllCards" :disabled="!showModal" :class="{disabled: card.isInTray || !showModal}">
               <words>
                 <word v-for="word in card.words">{{word.value}}</word>
               </words>
             </card>
-            <spot v-if="targetCard && targetCard.words.length > 0" :class="{disabled: !showModal}" class="empty" @click="HandlePickerCardClicked(event, null)"><icon class="recycle"></icon>Put back</spot>
+            <spot v-if="draggedCard && draggedCard.words.length > 0" :class="{disabled: !showModal}" class="empty" @click="HandlePickerCardClicked(event, null)"><icon class="recycle"></icon>Put back</spot>
           </cards>
         </picker>
       </modal>
@@ -61,7 +61,7 @@
         </rotators>
       </wrapper>
       <wrapper>
-        <card class="ghost" :style="{transform: 'translate(' + ghostX + 'px, ' + ghostY + 'px)'}" :class="{show: isDragging}">
+        <card class="ghost" :style="{transform: 'translate(' + ghostX + 'px, ' + ghostY + 'px)'}" :class="{show: isDragging, empty: draggedCard.words.length === 0}">
           <words>
             <word v-for="word in draggedCard.words">{{word.value}}</word>
           </words>
@@ -85,7 +85,7 @@
             </rotators>
           </spot>
         </parking>
-        <tray :class="{rotating: trayIsRotating}" :style="{rotate: trayRotation * 90 + 'deg'}">
+        <tray :class="{disabled: showModal, rotating: trayIsRotating}" :style="{rotate: trayRotation * 90 + 'deg'}">
           <hints>
             <hint v-for="(hint, index) in hints" :key="index">
               <input :id="'hint' + index" :disabled="isGuessing" v-model="hint.value" maxlength="14" :tabindex="index + 1" type="text" @focus="RotateTrayBasedOnInputFocus(index)" onfocus="this.placeholder=''" onblur="this.placeholder='_ _ _ _ _ _'" placeholder="_ _ _ _ _ _" />

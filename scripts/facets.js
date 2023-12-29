@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.028',
+    version: '0.1.029',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -50,6 +50,7 @@ var app = new Vue({
     isDragging: false,
     r: document.querySelector(':root'),
   },
+
   methods: {
     ToggleShowModal(e) {
       e.preventDefault();
@@ -225,44 +226,15 @@ var app = new Vue({
       }
     },
 
-    ToggleCardSelection(_card) {
-      note('ToggleCardSelection() called');
-      let selectedState = !_card.isSelected;
-      this.cards.concat(this.parkedCards).forEach((card) => {
-        card.isSelected = false;
-      });
-      _card.isSelected = selectedState;
-      this.targetCard = _card.isSelected ? _card : null;
-
-      this.cards.forEach((card) => {
-        card.isInTray = true;
-      });
-
-      this.parkedCards.forEach((card) => {
-        card.isInTray = false;
-      });
-
-      this.cards.concat(this.parkedCards).forEach((card) => {
-        card.justDropped = false;
-      });
-
-      if (document.body.offsetWidth <= 640 && (_card.isSelected || _card.words.length === 0)) {
-        this.showModal = true;
+    HandleBodyPointerUp(e, _card) {
+      note('HandleBodyPointerUp() called');
+      if (!this.showModal) {
+        this.isDragging = false;
+        this.draggedCard = this.emptyCard;
       }
     },
 
-    HandleCardClick(e, _card) {
-      note('HandleCardClick() called');
-      e.preventDefault();
-      e.stopPropagation();
-      this.ToggleCardSelection(_card);
-    },
-
-    HandleBodyPointerUp(e, _card) {
-      note('HandleBodyPointerUp() called');
-      this.isDragging = false;
-      this.draggedCard = this.emptyCard;
-    },
+    /* === CARD MANIPULATION === */
 
     HandleCardPointerDown(e, _card) {
       note('HandleCardPointerDown() called');
@@ -274,62 +246,95 @@ var app = new Vue({
         }
       }
 
-      if (_card.words.length > 0) {
-        this.draggedCard = _card;
-        this.isDragging = true;
-      }
+      this.draggedCard = _card;
+      this.isDragging = true;
     },
 
     HandleCardPointerUp(e, _card) {
       note('HandleCardPointerUp() called');
       e.preventDefault();
       e.stopPropagation();
-      if (this.targetCard !== null) {
-        this.draggedCard = this.targetCard;
-      }
-
       this.message = '';
 
-      if (this.draggedCard.words.length > 0 || this.showModal) {
-        let temp1 = new CardObject(_card);
-        let temp2 = new CardObject(this.draggedCard);
-        _card.words = temp2.words;
-        _card.rotation = temp2.rotation;
-        _card.isSelected = false; //temp2.isSelected;
-        this.draggedCard.words = temp1.words;
-        this.draggedCard.rotation = temp1.rotation;
-        this.draggedCard.isSelected = false; //temp1.isSelected;
-
-        this.draggedCard.justDropped = true;
-        _card.justDropped = true;
-
-        setTimeout(() => {
-          this.cards.concat(this.parkedCards).forEach((card) => {
-            card.justDropped = false;
-          });
-          this.draggedCard.justDropped = false;
-        }, this.longTransition);
+      if (this.draggedCard.words.length > 0) {
+        this.SwapCards(_card, this.draggedCard);
       }
+    },
+
+    HandlePickerCardClicked(e, _card) {
+      note('HandlePickerCardClicked() called');
+      e.preventDefault();
+      e.stopPropagation();
+      this.message = '';
+
+      if (_card === null) {
+        _card = this.getFirstAvailableParkingSpot;
+      }
+
+      this.SwapCards(_card, this.draggedCard);
+      this.showModal = false;
+    },
+
+    SwapCards(_card1, _card2) {
+      note('SwapCards() called');
+
+      let temp1 = new CardObject(_card1);
+      let temp2 = new CardObject(_card2);
+
+      _card1.words = temp2.words;
+      _card1.rotation = temp2.rotation;
+      _card1.isSelected = false;
+      _card1.justDropped = true;
+
+      _card2.words = temp1.words;
+      _card2.rotation = temp1.rotation;
+      _card2.isSelected = false;
+      _card2.justDropped = true;
+
+      setTimeout(() => {
+        this.cards.concat(this.parkedCards).forEach((card) => {
+          card.justDropped = false;
+        });
+      }, this.longTransition);
 
       this.isDragging = false;
       this.draggedCard = this.emptyCard;
     },
 
-    HandlePickerCardClicked(e, _card) {
-      note('HandlePickerCardClicked() called');
+    HandleCardClick(e, _card) {
+      note('HandleCardClick() called');
+      e.preventDefault();
+      e.stopPropagation();
+      this.ToggleCardSelection(_card);
+    },
 
-      if (_card !== null) {
-        this.draggedCard = _card;
-      } else {
-        this.draggedCard = this.getFirstAvailableParkingSpot;
+    ToggleCardSelection(_card) {
+      note('ToggleCardSelection() called');
+      let selectedState = !_card.isSelected;
+      warn(this.draggedCard.words.length > 0);
+
+      this.cards.forEach((card) => {
+        card.isSelected = false;
+        card.isInTray = true;
+        card.justDropped = false;
+      });
+
+      this.parkedCards.forEach((card) => {
+        card.isSelected = false;
+        card.isInTray = false;
+        card.justDropped = false;
+      });
+
+      _card.isSelected = selectedState;
+
+      if (document.body.offsetWidth <= 640 && !this.showModal) {
+        this.showModal = true;
       }
-      _card = this.targetCard;
-      this.targetCard = null;
 
-      this.message = '';
-
-      this.HandleCardPointerUp(e, _card);
-      this.showModal = false;
+      if (_card.isSelected) {
+        this.draggedCard = _card;
+        warn('draggedCard card has been assigned on card click');
+      }
     },
 
     RotateCard(e, _card, _inc) {
@@ -349,11 +354,6 @@ var app = new Vue({
           this.ResetCardAfterRotation();
         }, this.shortTransition);
       }
-    },
-
-    HandlePointerMoveEvent(e) {
-      this.ghostX = e.clientX;
-      this.ghostY = e.clientY;
     },
 
     ResetCardAfterRotation() {
@@ -486,6 +486,8 @@ var app = new Vue({
       this.trayIsRotating = false;
     },
 
+    /* END CARD MANIPULATION */
+
     NewGame(e, _message = '') {
       note('NewGame() called');
       this.message = _message;
@@ -501,6 +503,11 @@ var app = new Vue({
       this.parkedCards = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
       this.hints = [new WordObject({}), new WordObject({}), new WordObject({}), new WordObject({})];
       this.CreateCardsForPlayer(null);
+    },
+
+    HandlePointerMoveEvent(e) {
+      this.ghostX = e.clientX;
+      this.ghostY = e.clientY;
     },
 
     HandlePageVisibilityChange() {
