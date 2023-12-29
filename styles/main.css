@@ -107,6 +107,22 @@ icon.recycle {
     -webkit-mask-image: url(../images/icon-recycle.svg);
 }
 
+hintcard {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: var(--defaultGap);
+    pointer-events: none;
+    font-size: 90%;
+    opacity: .7;
+}
+
+hintcard card {
+    background: none;
+    color: hsl(var(--appForegroundHSL));
+}
+
 picker spot icon.recycle {
     width: var(--mediumIconSize);
     height: var(--mediumIconSize);
@@ -807,11 +823,11 @@ version {
     }
 
     wrapper:first-of-type {
-        padding: calc(var(--defaultGap)) 0;
+        padding: calc(var(--defaultGap) / 2) 0;
         background: hsla(var(--appBackgroundDarkHSL), 1);
         margin-bottom: calc(2 * var(--defaultGap));
         gap: 0px;
-
+        align-items: center;
     }
 
     message {
@@ -830,9 +846,8 @@ version {
     }
 
     controls button {
-        /* width: calc(100px - (var(--defaultGap) / 2)); */
         height: 100%;
-        padding: 0;
+        padding: calc(var(--defaultGap) / 2) var(--defaultGap);
         text-align: left;
     }
 

@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.029',
+    version: '0.1.030',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -226,15 +226,17 @@ var app = new Vue({
       }
     },
 
+    /* === CARD MANIPULATION === */
+
     HandleBodyPointerUp(e, _card) {
       note('HandleBodyPointerUp() called');
       if (!this.showModal) {
         this.isDragging = false;
         this.draggedCard = this.emptyCard;
+      } else {
+        this.draggedCard.isSelected = false;
       }
     },
-
-    /* === CARD MANIPULATION === */
 
     HandleCardPointerDown(e, _card) {
       note('HandleCardPointerDown() called');
@@ -255,6 +257,12 @@ var app = new Vue({
       e.preventDefault();
       e.stopPropagation();
       this.message = '';
+
+      if (this.getSelectedCard && this.getSelectedCard === _card) {
+        this.draggedCard = this.emptyCard;
+        this.isDragging = false;
+        return;
+      }
 
       if (this.draggedCard.words.length > 0) {
         this.SwapCards(_card, this.draggedCard);
@@ -310,6 +318,12 @@ var app = new Vue({
 
     ToggleCardSelection(_card) {
       note('ToggleCardSelection() called');
+
+      if (this.getSelectedCard && this.getSelectedCard !== _card) {
+        this.SwapCards(this.getSelectedCard, _card);
+        return;
+      }
+
       let selectedState = !_card.isSelected;
       warn(this.draggedCard.words.length > 0);
 
@@ -325,7 +339,7 @@ var app = new Vue({
         card.justDropped = false;
       });
 
-      _card.isSelected = selectedState;
+      _card.isSelected = _card.words.length === 0 ? false : selectedState;
 
       if (document.body.offsetWidth <= 640 && !this.showModal) {
         this.showModal = true;
