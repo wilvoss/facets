@@ -116,11 +116,14 @@ hintcard {
     pointer-events: none;
     font-size: 90%;
     opacity: .7;
+    border: none;
 }
 
 hintcard card {
     background: none;
     color: hsl(var(--appForegroundHSL));
+    border: none;
+    box-shadow: none;
 }
 
 picker spot icon.recycle {
