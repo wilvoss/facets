@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.033',
+    version: '0.1.034',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -149,27 +149,29 @@ var app = new Vue({
 
     ConstructURLForCurrentGame() {
       note('ConstructURLForCurrentGame() called');
-      let urlString = '';
-      this.cards.concat(this.parkedCards).forEach((card) => {
-        if (card.words.length === 0) {
-          urlString += '----';
-        }
-        card.words.forEach((word) => {
-          urlString += word.id + '-';
+      if (this.isGuessing) {
+        let urlString = '';
+        this.cards.concat(this.parkedCards).forEach((card) => {
+          if (card.words.length === 0) {
+            urlString += '----';
+          }
+          card.words.forEach((word) => {
+            urlString += word.id + '-';
+          });
         });
-      });
 
-      this.hints.forEach((hint) => {
-        urlString += hint.value + '-';
-      });
+        this.hints.forEach((hint) => {
+          urlString += hint.value + '-';
+        });
 
-      urlString += this.player.name + '-';
-      urlString += this.player.id + '-';
-      urlString += this.puzzlePlayer.id;
-      urlString = encodeURIComponent(urlString);
-      urlString = window.location.origin + '?board=' + urlString;
-      this.shareURL = urlString;
-      history.pushState(null, null, this.shareURL);
+        urlString += this.player.name + '-';
+        urlString += this.player.id + '-';
+        urlString += this.puzzlePlayer.id;
+        urlString = encodeURIComponent(urlString);
+        urlString = window.location.origin + '?board=' + urlString;
+        this.shareURL = urlString;
+        history.pushState(null, null, this.shareURL);
+      }
     },
 
     ShareBoard() {
@@ -307,6 +309,8 @@ var app = new Vue({
 
       this.isDragging = false;
       this.draggedCard = this.emptyCard;
+
+      this.ConstructURLForCurrentGame();
     },
 
     HandleCardClick(e, _card) {
@@ -384,6 +388,8 @@ var app = new Vue({
           card.rotation = 0;
         }
       });
+
+      this.ConstructURLForCurrentGame();
     },
 
     RotateTrayBasedOnInputFocus(_index) {
@@ -496,9 +502,10 @@ var app = new Vue({
         default:
           break;
       }
-      this.trayRotation = 0;
 
+      this.trayRotation = 0;
       this.trayIsRotating = false;
+      this.ConstructURLForCurrentGame();
     },
 
     /* END CARD MANIPULATION */
