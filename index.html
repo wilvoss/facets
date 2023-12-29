@@ -62,9 +62,7 @@
       </wrapper>
       <wrapper style="padding: 0">
         <message v-if="message !== ''">{{ message}}</message>
-        <message class="clickable" @click="ChangeName()" v-if="message === '' && player.role === 'creator'">{{ player.name + (isGuessing ? ', you are guessing your own puzzle!' :', you are creating!')}}</message>
-        <message class="clickable" @click="ChangeName()" v-if="message === '' && player.role === 'reviewer'">{{ player.name + ', you are reviewing ' + (sendingPlayer.name !== 'Player' ? sendingPlayer.name +'\'s guess!' : 'this guess!')}}</message>
-        <message class="clickable" @click="ChangeName()" v-if="message === '' && player.role === 'guesser'">{{ player.name + ', you are now guessing ' + (sendingPlayer.name !== 'Player' ? sendingPlayer.name +'\'s puzzle' : '') + '!' }}</message>
+        <message v-if="message === ''" @click="ChangeName()">{{getPlayerMessage}}</message>
       </wrapper>
       <wrapper>
         <rotators>

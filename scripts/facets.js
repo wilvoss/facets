@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.034',
+    version: '0.1.035',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -96,7 +96,7 @@ var app = new Vue({
     RestoreGame(_boardArray) {
       note('RestoreGame() called');
       let corruptData = false;
-      if (_boardArray.length >= 45) {
+      if (_boardArray.length >= 44) {
         this.shareURL = window.location.href;
         this.puzzleJustSent = false;
         let allWords = Nouns.concat(Verbs);
@@ -132,12 +132,16 @@ var app = new Vue({
         this.hints.forEach((hint) => {
           hint.value = _boardArray[index++];
         });
-        let possibleName = _boardArray[_boardArray.length - 3];
-        if (possibleName !== '' && parseInt(possibleName) !== NaN) {
-          this.sendingPlayer.name = _boardArray[_boardArray.length - 3];
+        let sendingName = _boardArray[_boardArray.length - 4];
+        if (sendingName !== '' && parseInt(sendingName) !== NaN && sendingName !== this.hints[0].value) {
+          this.sendingPlayer.name = _boardArray[_boardArray.length - 4];
+          let puzzlerName = _boardArray[_boardArray.length - 3];
+          if (puzzlerName !== '' && parseInt(puzzlerName) !== NaN) {
+            this.puzzlePlayer.name = _boardArray[_boardArray.length - 3];
+          }
+          this.sendingPlayer.id = parseInt(_boardArray[_boardArray.length - 2]);
+          this.puzzlePlayer.id = parseInt(_boardArray[_boardArray.length - 1]);
         }
-        this.sendingPlayer.id = parseInt(_boardArray[_boardArray.length - 2]);
-        this.puzzlePlayer.id = parseInt(_boardArray[_boardArray.length - 1]);
         this.player.role = this.puzzlePlayer.id === this.player.id && this.player.id !== this.sendingPlayer.id ? 'reviewer' : 'guesser';
       }
       this.isGuessing = true;
@@ -160,14 +164,15 @@ var app = new Vue({
           });
         });
 
-        this.hints.forEach((hint) => {
-          urlString += hint.value + '-';
+        this.hints.forEach((hint, index) => {
+          urlString += hint.value + (index === this.hints.length - 1 ? '' : '-');
         });
 
-        urlString += this.player.name + '-';
-        urlString += this.player.id + '-';
-        urlString += this.puzzlePlayer.id;
         urlString = encodeURIComponent(urlString);
+        urlString += '&sendingName=' + encodeURIComponent(this.player.name);
+        urlString += '&sendingID=' + encodeURIComponent(this.player.id);
+        urlString += '&puzzleName=' + encodeURIComponent(this.puzzlePlayer.name);
+        urlString += '&puzzleId=' + encodeURIComponent(this.puzzlePlayer.id);
         urlString = window.location.origin + '?board=' + urlString;
         this.shareURL = urlString;
         history.pushState(null, null, this.shareURL);
@@ -177,7 +182,7 @@ var app = new Vue({
     ShareBoard() {
       note('ShareBoard() called');
       this.puzzleJustSent = this.shareURL === '';
-      let text = this.puzzleJustSent ? "Here's a new puzzle to solve!" : "Here's my guess!";
+      let text = this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id ? "Here's a new puzzle to solve!" : "Here's my guess!";
       if (this.player.role === 'reviewer') {
         switch (this.getNumberOfCardsThatHaveBeenPlacedOnTray) {
           case 0:
@@ -516,7 +521,9 @@ var app = new Vue({
       this.puzzleJustSent = false;
       this.player.role = 'creator';
       this.puzzlePlayer.id = this.player.id;
+      this.puzzlePlayer.name = this.player.name;
       this.sendingPlayer.id = this.player.id;
+      this.sendingPlayer.name = this.player.name;
       this.shareURL = '';
       this.shareText = 'Send';
       history.replaceState(null, null, window.location.origin);
@@ -559,13 +566,21 @@ var app = new Vue({
       announce('Player ' + this.player.id + ' has initiated the app.');
       this.longTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
       this.shortTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
+      let params = [];
       let boardPieces = [];
       try {
         if (window.location.search) {
           let search = decodeURIComponent(window.location.search);
-          boardPieces = search.split('?')[1].split('=')[1].split('-');
+          params = search.split('?')[1].split('&');
+          boardPieces = params[0].split('=')[1].split('-');
+
+          if (params.length > 1) this.sendingPlayer.name = params[1].split('=')[1];
+          if (params.length > 2) this.sendingPlayer.id = parseInt(params[2].split('=')[1]);
+          if (params.length > 3) this.puzzlePlayer.name = params[3].split('=')[1];
+          if (params.length > 4) this.puzzlePlayer.id = parseInt(params[4].split('=')[1]);
         }
-        if (boardPieces.length >= 45) {
+
+        if (boardPieces.length >= 44) {
           document.title = 'Facets - CHALLENGE!';
           this.RestoreGame(boardPieces);
         } else if (!this.isGuessing) {
@@ -582,6 +597,7 @@ var app = new Vue({
       this.showModal = true;
       this.changeName = true;
       this.changeNameTitle = this.player.name === 'Player' ? "What's your name?" : "What's your new name?";
+      this.ConstructURLForCurrentGame();
     },
 
     CancelNameChange(e) {
@@ -709,6 +725,19 @@ var app = new Vue({
     },
     getFirstAvailableParkingSpot: function () {
       return this.parkedCards.find((card) => card.words.length === 0);
+    },
+    getPlayerMessage: function () {
+      let text = this.player.name + ', you are guessing ' + this.puzzlePlayer.name + "'s puzzle!";
+      if (!this.isGuessing) {
+        text = this.player.name + ', you are creating a new puzzle!';
+      } else {
+        if (this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id) {
+          text = this.player.name + ', you are guessing your own puzzle!';
+        } else if (this.player.id !== this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id) {
+          text = this.player.name + ', you are reviewing ' + this.sendingPlayer.name + "'s guess!";
+        }
+      }
+      return text;
     },
   },
 });
