@@ -602,13 +602,13 @@ hints hint:nth-child(1) {
 
 hints hint:nth-child(2) {
     rotate: 90deg;
-    transform: translate(calc(var(--cardSize) + (var(--defaultGap) / 5)), calc(-1 * var(--cardSize) + calc(var(--wordHeight) * -1.91)));
+    transform: translate(calc(var(--cardSize) + (var(--defaultGap) / 8)), calc(-1 * var(--cardSize) + calc(var(--wordHeight) * -1.9)));
 
 }
 
 hints hint:nth-child(3) {
     rotate: -90deg;
-    transform: translate(calc(-1 * var(--cardSize) - var(--defaultGap) / 5), calc(-1 * var(--cardSize) + calc(var(--wordHeight) * -1.91)));
+    transform: translate(calc(-1 * var(--cardSize) - var(--defaultGap) / 8), calc(-1 * var(--cardSize) + calc(var(--wordHeight) * -1.9)));
 }
 
 hints hint:nth-child(4) {

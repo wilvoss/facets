@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.031',
+    version: '0.1.033',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -425,6 +425,7 @@ var app = new Vue({
         if (!this.isGuessing) {
           setTimeout(() => {
             let hint0 = document.getElementById('hint0');
+            document.getElementById('parkingInput').value = '';
             hint0.focus();
           }, this.longTransition);
         }
@@ -622,6 +623,11 @@ var app = new Vue({
             }
           }
           break;
+        case '-':
+        case '?':
+          e.preventDefault();
+          e.stopPropagation();
+          return;
 
         default:
       }

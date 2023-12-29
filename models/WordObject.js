@@ -42,41 +42,13 @@ let Verbs = [
 getJustWords = function (_array) {
   let wordArray = [];
   _array.forEach((w) => {
-    wordArray.push(w.value);
+    wordArray.push(w.value.toLowerCase());
   });
 
-  wordArray = wordArray.join(',');
+  wordArray = wordArray.join(', ');
 
   return wordArray;
 };
-
-/* prettier-ignore */
-let Xmas = ["Advent", "Angel", "Bells", "Bethlehem", "Blitzen", "Candles", "Candy", "Carols", "Celebration", "Chimney", "Christmas", "Cider", "Comet", "Cookies", "Cupid", "Dancer", "Dasher", "December", "Decorations", "Donner", "Elf", "Epiphany", "Eve", "Family", "Feast", "Fir", "Fireplace", "Frosty", "Gifts", "Gingerbread",  "Giving", "Glitter", "Gold", "Goodwill", "Greeting", "Holly", "Hope", "Icicles", "Igloo", "Ivy",  "Jingle", "Joy", "King", "Kringle", "Lights", "Love", "Manger", "Merry", "Mistletoe", "Myrrh", "Nativity", "North", "Ornaments", "Presents", "Prancer", "Reindeer", "Ribbon", "Rudolph", "Santa", "Sleigh", "Snow", "Snowflakes", "Snowman", "Star", "Stockings", "Tidings", "Tinsel", "Toys", "Tree", "Vixen", "Winter", "Wise", "Wreath", "Yule", "Yuletide", "Zest", "Nutmeg", "Poinsettia", "Partridge", "Pear", "Peppermint", "Pine", "Plum", "Pudding", "Red", "Roast", "Sack", "Nicholas", "Scrooge", "Shepherd",  "Silent", "Silver", "Sled", "Spices", "Stable", "Bethlehem", "Stuffing", "Sugarplums", "Tidings", "Turkey"]
-
-/* prettier-ignore */
-let NewNouns = [
-    "Car", "Road", "Sky", "Cloud", "River", "Sea", "Ocean", "Boat", "Ship", "Plane", 
-    "Train", "City", "Village", "Country", "State", "Map", "Globe", "World", "Earth", "Moon", 
-    "Sun", "Star", "Comet", "Meteor", "Galaxy", "Universe", "Space", "Astronaut", "Alien", "Robot", 
-    "Machine", "Engine", "Wheel", "Bike", "Motorcycle", "Bus", "Truck", "Van", "Taxi", "Pilot", 
-    "Driver", "Passenger", "Pedestrian", "Crowd", "Group", "Team", "Band", "Music", "Song", "Melody", 
-    "Rhythm", "Beat", "Note", "Chord", "Lyrics", "Voice", "Singer", "Dancer", "Artist", "Painter", 
-    "Sculptor", "Writer", "Poet", "Novel", "Story", "Tale", "Myth", "Legend", "History", "Past", 
-    "Present", "Future", "Time", "Hour", "Minute", "Second", "Clock", "Watch", "Calendar", "Date", 
-    "Year", "Month", "Week", "Day", "Night", "Morning", "Afternoon", "Evening", "Midnight", "Noon", 
-    "Sunrise", "Sunset", "Dawn", "Dusk", "Light", "Dark", "Shadow", "Color", "Rainbow", "Paint", 
-    "Brush", "Canvas", "Paper", "Pen", "Pencil", "Ink", "Book", "Page", "Letter", "Word", 
-    "Sentence", "Paragraph", "Chapter", "Text", "Print", "Photo", "Image", "Picture", "Camera", "Lens", 
-    "Film", "Video", "Screen", "Monitor", "Computer", "Keyboard", "Mouse", "Speaker", "Microphone", "Headphones", 
-    "Radio", "Television", "Phone", "Call", "Message", "Information", "News", "Report", "Fact", "Data", 
-    "Number", "Count", "Math", "Add", "Subtract", "Multiply", "Divide", "Equal", "More", "Less", 
-    "Big", "Small", "Long", "Short", "High", "Low", "Fast", "Slow", "Hot", "Cold", 
-    "Warm", "Cool", "Wet", "Dry", "Clean", "Dirty", "Old", "New", "Young", "Old", 
-    "Happy", "Sad", "Angry", "Calm", "Excited", "Bored", "Tired", "Awake", "Asleep", "Dream", 
-    "Thought", "Idea", "Mind", "Brain", "Head", "Face", "Eye", "Nose", "Mouth", "Ear", 
-    "Hand", "Foot", "Arm", "Leg", "Heart", "Lung", "Stomach", "Skin", "Hair", "Nail", 
-    "Name", "Word", "Place", "Person", "Animal", "Plant", "Thing", "Time", "Way", "Day"
-]
 
 /* prettier-ignore */
 createWordArray = function (_array, _index = 0) {

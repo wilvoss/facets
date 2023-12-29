@@ -25,7 +25,10 @@
           <hintcard>
             <card>
               <words>
-                <word v-for="(hint, index) in hints" :key="index">{{hint.value}}</word>
+                <word>{{hints[0].value}}</word>
+                <word>{{hints[1].value}}</word>
+                <word>{{hints[3].value}}</word>
+                <word>{{hints[2].value}}</word>
               </words>
             </card>
           </hintcard>
@@ -59,9 +62,9 @@
       </wrapper>
       <wrapper style="padding: 0">
         <message v-if="message !== ''">{{ message}}</message>
-        <message class="clickable" @click="ChangeName()" v-if="message === '' && player.role === 'creator'">{{ player.name + ', you are creating!'}}</message>
+        <message class="clickable" @click="ChangeName()" v-if="message === '' && player.role === 'creator'">{{ player.name + (isGuessing ? ', you are guessing your own puzzle!' :', you are creating!')}}</message>
         <message class="clickable" @click="ChangeName()" v-if="message === '' && player.role === 'reviewer'">{{ player.name + ', you are reviewing ' + (sendingPlayer.name !== 'Player' ? sendingPlayer.name +'\'s guess!' : 'this guess!')}}</message>
-        <message class="clickable" @click="ChangeName()" v-if="message === '' && player.role === 'guesser'">{{ player.name + ', you are now guessing ' + (sendingPlayer.name !== 'Player' ? sendingPlayer.name +'\'s game' : '') + '!' }}</message>
+        <message class="clickable" @click="ChangeName()" v-if="message === '' && player.role === 'guesser'">{{ player.name + ', you are now guessing ' + (sendingPlayer.name !== 'Player' ? sendingPlayer.name +'\'s puzzle' : '') + '!' }}</message>
       </wrapper>
       <wrapper>
         <rotators>
@@ -94,13 +97,13 @@
             </rotators>
           </spot>
         </parking>
-        <tray :class="{disabled: showModal, rotating: trayIsRotating}" :style="{rotate: trayRotation * 90 + 'deg'}">
+        <tray :class="{rotating: trayIsRotating}" :style="{rotate: trayRotation * 90 + 'deg'}">
           <hints>
             <hint v-for="(hint, index) in hints" :key="index">
-              <input :id="'hint' + index" :disabled="isGuessing" v-model="hint.value" maxlength="14" :tabindex="index + 1" type="text" @focus="RotateTrayBasedOnInputFocus(index)" onfocus="this.placeholder=''" onblur="this.placeholder='_ _ _ _ _ _'" placeholder="_ _ _ _ _ _" />
+              <input :id="'hint' + index" :disabled="isGuessing" v-model="hint.value" maxlength="14" :tabindex="index + 1" type="text" @pointerdown="RotateTrayBasedOnInputFocus(index)" @focus="RotateTrayBasedOnInputFocus(index)" onfocus="this.placeholder=''" onblur="this.placeholder='_ _ _ _ _ _'" placeholder="_ _ _ _ _ _" />
             </hint>
           </hints>
-          <cards>
+          <cards :class="{disabled: showModal}">
             <spot v-for="(card, index) in cards" v-if="!card.isExtra" :class="{empty: card.words.length === 0, selected: card.isSelected}">
               <rotators>
                 <button class="clockwise" @click="RotateCard(event, card, 1)"></button>
