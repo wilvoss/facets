@@ -406,6 +406,10 @@ cards {
     box-shadow: var(--trayDropShadow);
 }
 
+cards.disabled {
+    opacity: 1;
+}
+
 .guessing cards {
     background-color: hsl(var(--trayGuessingBackgroundHSL));
 }

@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.036',
+    version: '0.1.037',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
