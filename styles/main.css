@@ -39,8 +39,9 @@
     --wordHeight: 30px;
     --defaultGap: 20px;
     --borderRadius: 5px;
+    --extraSmallIconSize: 16px;
     --smallIconSize: 24px;
-    --mediumIconSize: 35px;
+    --mediumIconSize: 32px;
     --cardDropShadow: 0px 0px 10px rgba(0, 0, 0, .3);
     --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, .5);
 
@@ -96,7 +97,6 @@ icon.share {
     -webkit-mask-image: url(../images/icon-share.svg);
 }
 
-
 icon.add {
     mask-image: url(../images/icon-plus.svg);
     -webkit-mask-image: url(../images/icon-plus.svg);
@@ -105,6 +105,11 @@ icon.add {
 icon.recycle {
     mask-image: url(../images/icon-recycle.svg);
     -webkit-mask-image: url(../images/icon-recycle.svg);
+}
+
+icon.rotate {
+    mask-image: url(../images/icon-rotatearrow.svg);
+    -webkit-mask-image: url(../images/icon-rotatearrow.svg);
 }
 
 hintcard {
@@ -249,16 +254,12 @@ button.inline {
     gap: calc(var(--defaultGap) / 2);
 }
 
-.clockwise::after {
-    content: '⤷';
-    display: block;
-    transform: scaleY(-1);
+.clockwise {
+    transform: scaleX(-1);
 }
 
-.anticlockwise::after {
-    content: '⤶';
+.anticlockwise {
     display: block;
-    transform: scaleY(-1);
 }
 
 rotators, tray, hints {
@@ -327,6 +328,23 @@ rotators button {
     outline: none;
 }
 
+rotators button icon {
+    padding-top: 12px;
+    width: var(--mediumIconSize);
+    height: var(--mediumIconSize);
+    mask-size: var(--mediumIconSize) var(--mediumIconSize);
+    -webkit-mask-size: var(--mediumIconSize) var(--mediumIconSize);
+    background: hsl(var(--linkColorLightHSL));
+}
+
+spot rotators button icon {
+    width: var(--extraSmallIconSize);
+    height: var(--extraSmallIconSize);
+    mask-size: var(--extraSmallIconSize) var(--extraSmallIconSize);
+    -webkit-mask-size: var(--extraSmallIconSize) var(--extraSmallIconSize);
+    background: hsl(var(--linkColorDarkHSL));
+}
+
 rotators button:hover {
     color: white;
 }
@@ -366,10 +384,9 @@ spot rotators:last-of-type {
 spot rotators button, spot.empty rotators button:hover {
     opacity: 0;
     font-size: 100%;
-    padding: 3px 6px 6px 3px;
+    padding: 0px 6px;
     transition: var(--shortTransition) ease-in-out;
     transition-property: opacity, color;
-    transform: translateY(-2px);
     color: hsl(var(--linkColorDarkHSL));
     pointer-events: none;
 }
@@ -902,6 +919,24 @@ version {
         overflow: hidden;
         padding: calc(2 * var(--defaultGap)) 0px;
     }
+
+    spot rotators button {
+        padding: 6px;
+    }
+
+    rotators button icon {
+        padding-top: 0px;
+        width: var(--smallIconSize);
+        height: var(--smallIconSize);
+        mask-size: var(--smallIconSize) var(--smallIconSize);
+        -webkit-mask-size: var(--smallIconSize) var(--smallIconSize);
+        background: hsl(var(--linkColorLightHSL));
+    }
+
+    spot rotators button icon {
+        background: rgb(0, 0, 0, 0.1);
+    }
+
 
     cards {
         background-size: 128px;

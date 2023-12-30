@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.039',
+    version: '0.1.040',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -606,7 +606,10 @@ var app = new Vue({
     ChangeName() {
       this.showModal = true;
       this.changeName = true;
-      this.changeNameTitle = this.player.name === 'Player' ? "What's your name?" : "What's your new name?";
+      this.changeNameTitle = this.player.name + ", what's your new name?";
+      setTimeout(() => {
+        document.getElementById('nameInput').focus();
+      }, 10);
       this.ConstructURLForCurrentGame();
     },
 

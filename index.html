@@ -73,12 +73,12 @@
       </wrapper>
       <wrapper style="padding: 0">
         <message v-if="message !== ''">{{ message}}</message>
-        <message v-if="message === ''" @click="ChangeName()">{{getPlayerMessage}}</message>
+        <message style="cursor: pointer" v-if="message === ''" @click="ChangeName()">{{getPlayerMessage}}</message>
       </wrapper>
       <wrapper>
         <rotators>
-          <button class="clockwise" @click="RotateTray(1)"></button>
-          <button class="anticlockwise" @click="RotateTray(-1)"></button>
+          <button class="clockwise" @click="RotateTray(1)"><icon class="rotate"></icon></button>
+          <button class="anticlockwise" @click="RotateTray(-1)"><icon class="rotate"></icon></button>
         </rotators>
       </wrapper>
       <wrapper>
@@ -92,8 +92,8 @@
         <parking>
           <spot v-for="(card, index) in parkedCards" v-if="index < 3" :class="{empty: card.words.length === 0, selected: card.isSelected}">
             <rotators>
-              <button class="clockwise" @pointerdown="RotateCard(event, card, 1)"></button>
-              <button class="anticlockwise" @pointerdown="RotateCard(event, card, -1)"></button>
+              <button class="clockwise" @pointerdown="RotateCard(event, card, 1)"><icon class="rotate"></icon></button>
+              <button class="anticlockwise" @pointerdown="RotateCard(event, card, -1)"><icon class="rotate"></icon></button>
             </rotators>
             <card @click="HandleCardClick(event, card)" @pointerup="HandleCardPointerUp(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
               <words>
@@ -101,8 +101,8 @@
               </words>
             </card>
             <rotators>
-              <button class="clockwise" @click="RotateCard(event, card, 1)"></button>
-              <button class="anticlockwise" @click="RotateCard(event, card, -1)"></button>
+              <button class="clockwise" @click="RotateCard(event, card, 1)"><icon class="rotate"></icon></button>
+              <button class="anticlockwise" @click="RotateCard(event, card, -1)"><icon class="rotate"></icon></button>
             </rotators>
           </spot>
         </parking>
@@ -115,8 +115,8 @@
           <cards :class="{disabled: showModal}">
             <spot v-for="(card, index) in cards" v-if="!card.isExtra" :class="{empty: card.words.length === 0, selected: card.isSelected}">
               <rotators>
-                <button class="clockwise" @click="RotateCard(event, card, 1)"></button>
-                <button class="anticlockwise" @click="RotateCard(event, card, -1)"></button>
+                <button class="clockwise" @click="RotateCard(event, card, 1)"><icon class="rotate"></icon></button>
+                <button class="anticlockwise" @click="RotateCard(event, card, -1)"><icon class="rotate"></icon></button>
               </rotators>
               <card @click="HandleCardClick(event, card)" @pointerup="HandleCardPointerUp(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
                 <words>
@@ -124,8 +124,8 @@
                 </words>
               </card>
               <rotators>
-                <button class="clockwise" @click="RotateCard(event, card, 1)"></button>
-                <button class="anticlockwise" @click="RotateCard(event, card, -1)"></button>
+                <button class="clockwise" @click="RotateCard(event, card, 1)"><icon class="rotate"></icon></button>
+                <button class="anticlockwise" @click="RotateCard(event, card, -1)"><icon class="rotate"></icon></button>
               </rotators>
             </spot>
           </cards>
@@ -133,8 +133,8 @@
         <parking>
           <spot v-for="(card, index) in parkedCards" v-if="index > 2" :class="{empty: card.words.length === 0, selected: card.isSelected}">
             <rotators>
-              <button class="clockwise" @click="RotateCard(event, card, 1)"></button>
-              <button class="anticlockwise" @click="RotateCard(event, card, -1)"></button>
+              <button class="clockwise" @click="RotateCard(event, card, 1)"><icon class="rotate"></icon></button>
+              <button class="anticlockwise" @click="RotateCard(event, card, -1)"><icon class="rotate"></icon></button>
             </rotators>
             <card @click="HandleCardClick(event, card)" @pointerup="HandleCardPointerUp(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
               <words>
@@ -142,8 +142,8 @@
               </words>
             </card>
             <rotators>
-              <button class="clockwise" @click="RotateCard(event, card, 1)"></button>
-              <button class="anticlockwise" @click="RotateCard(event, card, -1)"></button>
+              <button class="clockwise" @click="RotateCard(event, card, 1)"><icon class="rotate"></icon></button>
+              <button class="anticlockwise" @click="RotateCard(event, card, -1)"><icon class="rotate"></icon></button>
             </rotators>
           </spot>
         </parking>
