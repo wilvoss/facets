@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.037',
+    version: '0.1.038',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -80,7 +80,13 @@ var app = new Vue({
       });
 
       this.parkedCards = this.cards;
-      this.parkedCards.push(new CardObject({ words: getUniqueWords(this.gameMode, 4) }));
+      let allUsedWords = [];
+      this.cards.forEach((card) => {
+        card.words.forEach((word) => {
+          allUsedWords.push(word);
+        });
+      });
+      this.parkedCards.push(new CardObject({ words: getUniqueWords(this.gameMode, 4, getJustWords(allUsedWords)) }));
 
       for (let i = this.parkedCards.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
