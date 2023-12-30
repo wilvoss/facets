@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.038',
+    version: '0.1.039',
     gameName: 'Facets',
     gameCatchphrase: 'A game of word association!',
     gameMode: 'both',
@@ -189,22 +189,24 @@ var app = new Vue({
       note('ShareBoard() called');
       this.puzzleJustSent = this.shareURL === '';
       let text = this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id ? "Here's a new puzzle to solve!" : "Here's my guess!";
+      let nailedIt = false;
       if (this.player.role === 'reviewer') {
         switch (this.getNumberOfCardsThatHaveBeenPlacedOnTray) {
           case 0:
-            text = "🤢 Oh buddy, that's just sad.";
+            text = '🤢 Oh boy, this is just sad.';
             break;
           case 1:
-            text = '🫣 better than nothing!';
+            text = '🫣 I guess one right is better than nothing?';
             break;
           case 2:
-            text = '😱 Try again!';
+            text = '😱 Nope!';
             break;
           case 3:
             text = '🤪 Not quite!';
             break;
           case 4:
             text = '🔥 Nailed it!';
+            nailedIt = true;
             break;
           default:
             break;
@@ -212,10 +214,8 @@ var app = new Vue({
       }
       this.shareURL = '';
       this.ConstructURLForCurrentGame();
-      announce(this.shareURL);
-      text = text + '\r\n' + this.shareURL;
+      text = text + (nailedIt ? '' : '\r\n' + this.shareURL);
       let _shareObject = {
-        title: 'FACETS',
         text: text,
       };
       if (navigator.share) {
