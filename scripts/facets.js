@@ -12,12 +12,13 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.040',
+    version: '0.1.041',
     gameName: 'Facets',
-    gameCatchphrase: 'A game of word association!',
+    gameCatchphrase: 'A game of words!',
+    modes: Modes,
     gameMode: 'both',
     showArticle: false,
-    changeName: false,
+    showSettings: false,
     changeNameTitle: "What's your name?",
     emptyCard: new CardObject({ id: 'ghost' }),
     draggedCard: new CardObject({}),
@@ -456,71 +457,73 @@ var app = new Vue({
     ResetTrayAfterRotation() {
       note('ResetTrayAfterRotation() called');
 
-      if (this.trayRotation !== 0) {
-        let len = this.hints.length;
-        if (len > 0) {
-          let shift = ((this.trayRotation % len) + len) % len;
-          this.hints = this.hints.slice(-shift).concat(this.hints.slice(0, -shift));
+      if (this.trayRotation < 3) {
+        if (this.trayRotation !== 0) {
+          let len = this.hints.length;
+          if (len > 0) {
+            let shift = ((this.trayRotation % len) + len) % len;
+            this.hints = this.hints.slice(-shift).concat(this.hints.slice(0, -shift));
+          }
         }
+
+        let hint0 = this.hints[0];
+        let hint1 = this.hints[1];
+        let hint2 = this.hints[2];
+        let hint3 = this.hints[3];
+        let card0 = this.cards[0];
+        let card1 = this.cards[1];
+        let card2 = this.cards[2];
+        let card3 = this.cards[3];
+
+        card0.rotation = card1.rotation = card2.rotation = card3.rotation = this.trayRotation;
+
+        this.cards.forEach((card) => {
+          this.ResetCardAfterRotation(card);
+        });
+
+        switch (this.trayRotation) {
+          case -1:
+            this.hints[0] = hint0;
+            this.hints[1] = hint2;
+            this.hints[2] = hint3;
+            this.hints[3] = hint1;
+
+            this.cards[0] = card1;
+            this.cards[2] = card0;
+            this.cards[1] = card3;
+            this.cards[3] = card2;
+            break;
+          case 1:
+            this.hints[0] = hint3;
+            this.hints[1] = hint1;
+            this.hints[2] = hint0;
+            this.hints[3] = hint2;
+
+            this.cards[0] = card2;
+            this.cards[1] = card0;
+            this.cards[2] = card3;
+            this.cards[3] = card1;
+            break;
+          case 2:
+          case -2:
+            this.hints[0] = hint1;
+            this.hints[1] = hint0;
+            this.hints[2] = hint3;
+            this.hints[3] = hint2;
+
+            this.cards[0] = card3;
+            this.cards[1] = card2;
+            this.cards[2] = card1;
+            this.cards[3] = card0;
+            break;
+          default:
+            break;
+        }
+
+        this.ConstructURLForCurrentGame();
       }
-
-      let hint0 = this.hints[0];
-      let hint1 = this.hints[1];
-      let hint2 = this.hints[2];
-      let hint3 = this.hints[3];
-      let card0 = this.cards[0];
-      let card1 = this.cards[1];
-      let card2 = this.cards[2];
-      let card3 = this.cards[3];
-
-      card0.rotation = card1.rotation = card2.rotation = card3.rotation = this.trayRotation;
-
-      this.cards.forEach((card) => {
-        this.ResetCardAfterRotation(card);
-      });
-
-      switch (this.trayRotation) {
-        case -1:
-          this.hints[0] = hint0;
-          this.hints[1] = hint2;
-          this.hints[2] = hint3;
-          this.hints[3] = hint1;
-
-          this.cards[0] = card1;
-          this.cards[2] = card0;
-          this.cards[1] = card3;
-          this.cards[3] = card2;
-          break;
-        case 1:
-          this.hints[0] = hint3;
-          this.hints[1] = hint1;
-          this.hints[2] = hint0;
-          this.hints[3] = hint2;
-
-          this.cards[0] = card2;
-          this.cards[1] = card0;
-          this.cards[2] = card3;
-          this.cards[3] = card1;
-          break;
-        case 2:
-        case -2:
-          this.hints[0] = hint1;
-          this.hints[1] = hint0;
-          this.hints[2] = hint3;
-          this.hints[3] = hint2;
-
-          this.cards[0] = card3;
-          this.cards[1] = card2;
-          this.cards[2] = card1;
-          this.cards[3] = card0;
-          break;
-        default:
-          break;
-      }
-
       this.trayRotation = 0;
       this.trayIsRotating = false;
-      this.ConstructURLForCurrentGame();
     },
 
     /* END CARD MANIPULATION */
@@ -542,6 +545,7 @@ var app = new Vue({
       this.parkedCards = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
       this.hints = [new WordObject({}), new WordObject({}), new WordObject({}), new WordObject({})];
       this.CreateCardsForPlayer(null);
+      this.RotateTray(-4);
     },
 
     HandlePointerMoveEvent(e) {
@@ -566,7 +570,7 @@ var app = new Vue({
       } else {
         this.changeNameTitle = "Hello, what's your name?";
         this.showModal = true;
-        this.changeName = true;
+        this.showSettings = true;
       }
     },
 
@@ -603,9 +607,9 @@ var app = new Vue({
       }
     },
 
-    ChangeName() {
+    OpenSettings() {
       this.showModal = true;
-      this.changeName = true;
+      this.showSettings = true;
       this.changeNameTitle = this.player.name + ", what's your new name?";
       setTimeout(() => {
         document.getElementById('nameInput').focus();
@@ -613,21 +617,22 @@ var app = new Vue({
       this.ConstructURLForCurrentGame();
     },
 
-    CancelNameChange(e) {
+    CancelSettings(e) {
       note('CancelNameChange() called');
       e.preventDefault();
       e.stopPropagation();
       this.showModal = false;
-      this.changeName = false;
+      this.showSettings = false;
     },
 
-    SubmitName(e) {
-      note('SubmitName() called');
+    SubmitSettings(e) {
+      note('SubmitSettings() called');
       e.preventDefault();
       e.stopPropagation();
       this.showModal = false;
-      this.changeName = false;
-      this.player.name = document.getElementById('nameInput').value.trim();
+      this.showSettings = false;
+      let nameInput = document.getElementById('nameInput').value;
+      this.player.name = nameInput !== '' ? nameInput.trim() : this.player.name;
       localStorage.setItem('name', this.player.name);
     },
 
@@ -639,8 +644,8 @@ var app = new Vue({
           if (!this.isGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
             this.FillParkingLot();
           }
-          if (this.showModal && this.changeName) {
-            this.SubmitName(e);
+          if (this.showModal && this.showSettings) {
+            this.SubmitSettings(e);
           }
           break;
         case 'Tab':

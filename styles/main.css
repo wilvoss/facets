@@ -39,13 +39,16 @@
     --wordHeight: 30px;
     --defaultGap: 20px;
     --borderRadius: 5px;
+    --tinyIconSize: 13px;
     --extraSmallIconSize: 16px;
     --smallIconSize: 24px;
     --mediumIconSize: 32px;
     --cardDropShadow: 0px 0px 10px rgba(0, 0, 0, .3);
     --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, .5);
 
-    --texture: url(../images/texture.png);
+
+    --texture1: url(../images/texture.png);
+    --texture2: url(../images/facets-dark.png);
 }
 
 html {
@@ -61,7 +64,7 @@ body {
     color: hsl(var(--appForegroundHSL));
     line-height: 1.3em;
     margin: 0px 0px;
-    background: hsl(var(--appBackgroundDarkHSL));
+    background: hsl(var(--appBackgroundHSL));
     width: 100%;
     height: 100%;
     display: block;
@@ -74,7 +77,7 @@ app {
     height: 100%;
     display: flex;
     flex-direction: column;
-    background-image: repeating-linear-gradient(45deg, hsla(var(--appBackgroundHSL), 0.4) 0px, hsla(var(--appBackgroundHSL), 0.4) 40px, hsla(var(--appBackgroundHSL), 0.32) 40px, hsla(var(--appBackgroundHSL), 0.32) 80px);
+    background-image: var(--texture2);
 }
 
 
@@ -110,6 +113,11 @@ icon.recycle {
 icon.rotate {
     mask-image: url(../images/icon-rotatearrow.svg);
     -webkit-mask-image: url(../images/icon-rotatearrow.svg);
+}
+
+icon.settings {
+    mask-image: url(../images/icon-settings.svg);
+    -webkit-mask-image: url(../images/icon-settings.svg);
 }
 
 hintcard {
@@ -161,14 +169,43 @@ header h1 {
 }
 
 header subtitle {
+    justify-content: space-between;
+}
+
+header subtitle, header subtitle button {
     cursor: default;
     text-align: center;
     color: hsla(var(--appForegroundHSL), .6);
     text-shadow: 0px 0px 3px black;
-    display: block;
+    display: flex;
     font-size: 70%;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+}
+
+
+header subtitle span, header subtitle button.inline {
+    padding: 2px;
+}
+
+header subtitle button.inline {
+    display: inline-flex;
+    outline: none;
+    border: none;
+    background: none;
+    font-size: 100%;
+    gap: 6px;
+    cursor: pointer;
+}
+
+header subtitle button.inline icon {
+    width: var(--tinyIconSize);
+    height: var(--tinyIconSize);
+    mask-size: var(--tinyIconSize) var(--tinyIconSize);
+    -webkit-mask-size: var(--tinyIconSize) var(--tinyIconSize);
+    background: hsla(var(--appForegroundHSL), .6);
+    margin-top: -1px;
+
 }
 
 message {
@@ -222,7 +259,7 @@ wrapper {
 
 wrapper:first-of-type {
     padding: calc(var(--defaultGap)) 0;
-    background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkHSL), .9));
+    background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkHSL), .0));
     margin-bottom: calc(2 * var(--defaultGap));
     max-width: unset;
 
@@ -296,7 +333,7 @@ controls button {
     font-family: "Theme";
     width: var(--cardSize);
     height: 100%;
-    padding: 0 var(--defaultGap);
+    padding: 0 var(--defaultGap) var(--defaultGap);
 }
 
 controls button.secondary {
@@ -413,7 +450,7 @@ cards {
     transition: var(--longTransition) ease-in-out;
     transition-property: transform, rotate, opacity;
     padding: var(--defaultGap);
-    background: hsl(var(--trayBackgroundHSL)) var(--texture);
+    background: hsl(var(--trayBackgroundHSL)) var(--texture1);
     background-size: 128px 128px;
     width: calc(var(--cardSize) * 2 + var(--defaultGap));
     height: calc(var(--cardSize) * 2 + var(--defaultGap));
@@ -475,7 +512,8 @@ spot.empty card {
 }
 
 parking spot {
-    background: rgba(0, 0, 0, .1);
+    /* background: rgba(0, 0, 0, .1); */
+    background: hsla(var(--appBackgroundDarkHSL), .4);
 }
 
 card {
@@ -568,7 +606,7 @@ hints hint {
     display: block;
     position: absolute;
     height: var(--wordHeight);
-    background: hsl(var(--trayBackgroundHSL)) var(--texture);
+    background: hsl(var(--trayBackgroundHSL)) var(--texture1);
     background-size: 128px 128px;
     padding: calc(var(--defaultGap) / 4) calc(var(--defaultGap) / 4) calc(var(--defaultGap));
     width: calc(1.75 * var(--cardSize));
@@ -584,7 +622,7 @@ hints hint {
     background-color: hsl(var(--trayReviewingBackgroundHSL));
 }
 
-modal intro input, hints hint input {
+modal settings input, hints hint input {
     text-align: center;
     outline: none;
     border: none;
@@ -597,7 +635,7 @@ modal intro input, hints hint input {
     font-size: 150%;
 }
 
-modal intro input {
+modal settings input {
     font-size: 300%;
 }
 
@@ -694,7 +732,9 @@ modal {
     height: 100%;
     overflow-x: hidden;
     flex-wrap: wrap;
-    background: hsla(var(--appBackgroundDarkHSL), 1);
+    background: hsla(var(--appBackgroundDarkHSL), .97);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     opacity: 1;
     justify-content: center;
     align-items: center;
@@ -706,7 +746,7 @@ modal.disabled {
     opacity: 0;
 }
 
-modal intro {
+modal settings {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -781,7 +821,7 @@ version {
     controls button {
         width: auto;
         height: 100%;
-        padding: 0;
+        padding: 0 0 var(--defaultGap);
     }
 
     modal controls {
@@ -804,8 +844,17 @@ version {
     }
 
     header subtitle {
-        display: none;
+        /* display: none; */
         font-size: 70%;
+        justify-content: center;
+    }
+
+    header subtitle span {
+        display: none;
+    }
+
+    header subtitle button.inline {
+        padding: 4px 2px 0px;
     }
 
     rotators {
@@ -847,8 +896,8 @@ version {
     }
 
     wrapper:first-of-type {
-        padding: calc(var(--defaultGap) / 2) 0;
-        background: hsla(var(--appBackgroundDarkHSL), 1);
+        padding: calc(var(--defaultGap) / 1) 0;
+        /* background: hsla(var(--appBackgroundDarkHSL), 1); */
         margin-bottom: calc(2 * var(--defaultGap));
         gap: 0px;
         align-items: center;
@@ -871,7 +920,7 @@ version {
 
     controls button {
         height: 100%;
-        padding: calc(var(--defaultGap) / 2) var(--defaultGap);
+        padding: 0 var(--defaultGap) var(--defaultGap);
         text-align: left;
     }
 
@@ -902,8 +951,16 @@ version {
     }
 
     header subtitle {
-        display: none;
+        justify-content: center;
         font-size: 100%;
+    }
+
+    header subtitle span {
+        display: none;
+    }
+
+    header subtitle button.inline {
+        padding: 4px 2px 0px;
     }
 
     message {
