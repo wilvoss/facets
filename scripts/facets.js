@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.042',
+    version: '0.1.043',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     modes: [...Modes],
@@ -21,6 +21,7 @@ var app = new Vue({
     gameMode: Modes[2],
     showArticle: false,
     showSettings: false,
+    showIntro: false,
     changeNameTitle: "What's your name?",
     emptyCard: new CardObject({ id: 'ghost' }),
     draggedCard: new CardObject({}),
@@ -571,7 +572,7 @@ var app = new Vue({
       } else {
         this.changeNameTitle = "Hello, what's your name?";
         this.showModal = true;
-        this.showSettings = true;
+        this.showIntro = true;
       }
 
       let mode = localStorage.getItem('mode');
@@ -650,6 +651,7 @@ var app = new Vue({
       }
       this.showModal = false;
       this.showSettings = false;
+      this.showIntro = false;
     },
 
     SubmitSettings(e) {
@@ -658,18 +660,21 @@ var app = new Vue({
         e.preventDefault();
         e.stopPropagation();
       }
+      this.player.name = this.tempName !== '' ? this.tempName.trim() : this.player.name;
+      localStorage.setItem('name', this.player.name);
+      if (this.showSettings) {
+        let modeChanged = false;
+        modeChanged = this.modes.find((mode) => mode.isSelected === true).name !== this.tempModes.find((mode) => mode.isSelected === true).name;
+        this.modes = this.tempModes;
+        this.gameMode = this.modes.find((mode) => mode.isSelected === true);
+        if (modeChanged && !this.isGuessing) {
+          this.NewGame();
+        }
+        localStorage.setItem('mode', this.gameMode.name);
+      }
       this.showModal = false;
       this.showSettings = false;
-      this.player.name = this.tempName !== '' ? this.tempName.trim() : this.player.name;
-      let modeChanged = false;
-      modeChanged = this.modes.find((mode) => mode.isSelected === true).name !== this.tempModes.find((mode) => mode.isSelected === true).name;
-      this.modes = this.tempModes;
-      this.gameMode = this.modes.find((mode) => mode.isSelected === true);
-      if (modeChanged && !this.isGuessing) {
-        this.NewGame();
-      }
-      localStorage.setItem('mode', this.gameMode.name);
-      localStorage.setItem('name', this.player.name);
+      this.showIntro = false;
     },
 
     HandleKeyDownEvent(e) {
@@ -680,7 +685,7 @@ var app = new Vue({
           if (!this.isGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
             this.FillParkingLot();
           }
-          if (this.showModal && this.showSettings) {
+          if (this.showModal && (this.showSettings || this.showIntro)) {
             this.SubmitSettings(e);
           }
           break;
@@ -706,7 +711,7 @@ var app = new Vue({
           e.stopPropagation();
           return;
         case 'Escape':
-          if (this.showModal && this.showSettings) {
+          if (this.showModal && (this.showSettings || this.showIntro)) {
             this.CancelSettings(null);
           }
           break;

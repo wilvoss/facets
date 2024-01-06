@@ -626,7 +626,7 @@ hints hint {
     background-color: hsl(var(--trayReviewingBackgroundHSL));
 }
 
-modal settings input, hints hint input {
+modal input, hints hint input {
     text-align: center;
     outline: none;
     border: none;
@@ -639,7 +639,7 @@ modal settings input, hints hint input {
     font-size: 150%;
 }
 
-modal settings input {
+modal input {
     font-size: 300%;
     margin-bottom: var(--defaultGap);
 }
@@ -751,7 +751,7 @@ modal.disabled {
     opacity: 0;
 }
 
-modal settings {
+modal settings, modal intro {
     display: flex;
     flex-direction: column;
     justify-content: center;
