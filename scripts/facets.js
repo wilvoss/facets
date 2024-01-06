@@ -12,11 +12,13 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.041',
+    version: '0.1.042',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
-    modes: Modes,
-    gameMode: 'both',
+    modes: [...Modes],
+    tempModes: [],
+    tempName: '',
+    gameMode: Modes[2],
     showArticle: false,
     showSettings: false,
     changeNameTitle: "What's your name?",
@@ -565,12 +567,20 @@ var app = new Vue({
 
       let name = localStorage.getItem('name');
       if (name !== undefined && name !== null) {
-        name = name;
         this.player.name = name;
       } else {
         this.changeNameTitle = "Hello, what's your name?";
         this.showModal = true;
         this.showSettings = true;
+      }
+
+      let mode = localStorage.getItem('mode');
+      if (mode !== undefined && mode !== null) {
+        this.gameMode = this.modes.find((m) => m.name === mode);
+        this.modes.forEach((m) => {
+          m.isSelected = false;
+        });
+        this.gameMode.isSelected = true;
       }
     },
 
@@ -608,31 +618,57 @@ var app = new Vue({
     },
 
     OpenSettings() {
+      note('OpenSettings() called');
       this.showModal = true;
       this.showSettings = true;
       this.changeNameTitle = this.player.name + ", what's your new name?";
-      setTimeout(() => {
-        document.getElementById('nameInput').focus();
-      }, 10);
-      this.ConstructURLForCurrentGame();
+      this.tempModes = [];
+      this.modes.forEach((mode) => {
+        this.tempModes.push(new ModeObject(mode));
+      });
+      this.tempName = this.player.name;
+      // this.ConstructURLForCurrentGame();
+    },
+
+    SelectMode(e, _mode) {
+      note('SelectMode() called');
+      if (e !== null) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      this.tempModes.forEach((mode) => {
+        mode.isSelected = false;
+      });
+      _mode.isSelected = true;
     },
 
     CancelSettings(e) {
-      note('CancelNameChange() called');
-      e.preventDefault();
-      e.stopPropagation();
+      note('CancelSettings() called');
+      if (e !== null) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       this.showModal = false;
       this.showSettings = false;
     },
 
     SubmitSettings(e) {
       note('SubmitSettings() called');
-      e.preventDefault();
-      e.stopPropagation();
+      if (e !== null) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       this.showModal = false;
       this.showSettings = false;
-      let nameInput = document.getElementById('nameInput').value;
-      this.player.name = nameInput !== '' ? nameInput.trim() : this.player.name;
+      this.player.name = this.tempName !== '' ? this.tempName.trim() : this.player.name;
+      let modeChanged = false;
+      modeChanged = this.modes.find((mode) => mode.isSelected === true).name !== this.tempModes.find((mode) => mode.isSelected === true).name;
+      this.modes = this.tempModes;
+      this.gameMode = this.modes.find((mode) => mode.isSelected === true);
+      if (modeChanged && !this.isGuessing) {
+        this.NewGame();
+      }
+      localStorage.setItem('mode', this.gameMode.name);
       localStorage.setItem('name', this.player.name);
     },
 
@@ -669,7 +705,11 @@ var app = new Vue({
           e.preventDefault();
           e.stopPropagation();
           return;
-
+        case 'Escape':
+          if (this.showModal && this.showSettings) {
+            this.CancelSettings(null);
+          }
+          break;
         default:
       }
     },

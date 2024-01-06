@@ -169,7 +169,7 @@ header h1 {
 }
 
 header subtitle {
-    justify-content: space-between;
+    justify-content: center;
 }
 
 header subtitle, header subtitle button {
@@ -185,7 +185,11 @@ header subtitle, header subtitle button {
 
 
 header subtitle span, header subtitle button.inline {
-    padding: 2px;
+    padding: 6px;
+}
+
+header subtitle span {
+    display: none;
 }
 
 header subtitle button.inline {
@@ -333,7 +337,7 @@ controls button {
     font-family: "Theme";
     width: var(--cardSize);
     height: 100%;
-    padding: 0 var(--defaultGap) var(--defaultGap);
+    padding: 0 var(--defaultGap) calc(var(--defaultGap) / 2);
 }
 
 controls button.secondary {
@@ -637,6 +641,7 @@ modal settings input, hints hint input {
 
 modal settings input {
     font-size: 300%;
+    margin-bottom: var(--defaultGap);
 }
 
 .guessing hints hint input:disabled {
@@ -754,6 +759,25 @@ modal settings {
     gap: calc(2 * var(--defaultGap));
 }
 
+settings modes {
+    display: flex;
+    gap: var(--defaultGap);
+    margin-bottom: var(--defaultGap);
+}
+
+mode {
+    padding: var(--defaultGap);
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: pointer;
+    border: 1px dashed hsla(var(--appForegroundHSL), .7);
+    border-radius: var(--borderRadius);
+}
+
+mode.selected {
+    border: 1px solid hsl(var(--appForegroundHSL));
+}
+
 modal cards {
     background: none;
     box-shadow: none;
@@ -854,7 +878,7 @@ version {
     }
 
     header subtitle button.inline {
-        padding: 4px 2px 0px;
+        /* padding: 4px 2px 0px; */
     }
 
     rotators {
@@ -960,7 +984,7 @@ version {
     }
 
     header subtitle button.inline {
-        padding: 4px 2px 0px;
+        padding: 6px 2px;
     }
 
     message {

@@ -1,3 +1,5 @@
+/// <reference path="../models/ModeObject.js" />
+
 class WordObject {
   constructor(spec) {
     this.id = spec.id === undefined ? -1 : spec.id;
@@ -6,9 +8,9 @@ class WordObject {
   }
 }
 
-getUniqueWords = function (_mode = 'nouns', _num = 20, _exclude = null) {
+getUniqueWords = function (_mode, _num = 20, _exclude = null) {
   let words = Nouns;
-  switch (_mode) {
+  switch (_mode.name.toLowerCase()) {
     case 'verbs':
       words = Verbs;
       break;

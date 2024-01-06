@@ -28,12 +28,13 @@
       <input maxlength="0" :disabled="isGuessing" id="parkingInput" style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1" tabindex="-1" />
       <modal :class="{disabled: !showModal}" @click="showModal = showSettings ? true : false">
         <settings v-if="showSettings && showModal">
+          <message>New Games Use</message>
           <modes>
-            <!-- <mode v-for="mode in modes">{{mode.name}}</mode> -->
+            <mode @click="SelectMode(event, mode)" :class="{selected: mode.isSelected}" v-for="mode in tempModes">{{mode.name}}</mode>
           </modes>
-          <message>{{changeNameTitle}}</message>
-          <input id="nameInput" placeholder="_ _ _ _ _ _" />
-          <controls><button class="secondary" @click="CancelSettings(event)">Cancel</button><button @click="SubmitSettings(event)">Okay</button></controls>
+          <message>Your Name</message>
+          <input id="nameInput" placeholder="_ _ _ _ _ _" v-model="tempName" />
+          <controls><button class="secondary" @click="CancelSettings(event)">Cancel</button><button @click="SubmitSettings(event)">Save</button></controls>
         </settings>
         <picker v-if="!showSettings && showModal">
           <hintcard>
