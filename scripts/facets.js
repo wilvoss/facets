@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.043',
+    version: '0.1.045',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     modes: [...Modes],
@@ -22,6 +22,7 @@ var app = new Vue({
     showArticle: false,
     showSettings: false,
     showIntro: false,
+    showTutorial: false,
     changeNameTitle: "What's your name?",
     emptyCard: new CardObject({ id: 'ghost' }),
     draggedCard: new CardObject({}),
@@ -575,14 +576,16 @@ var app = new Vue({
         this.showIntro = true;
       }
 
+      this.modes.forEach((m) => {
+        m.isSelected = false;
+      });
       let mode = localStorage.getItem('mode');
-      if (mode !== undefined && mode !== null) {
-        this.gameMode = this.modes.find((m) => m.name === mode);
-        this.modes.forEach((m) => {
-          m.isSelected = false;
-        });
-        this.gameMode.isSelected = true;
+      if (mode !== undefined && mode !== null && this.modes.find((m) => m.id === mode)) {
+        this.gameMode = this.modes.find((m) => m.id === mode);
+      } else {
+        this.gameMode = this.modes[2];
       }
+      this.gameMode.isSelected = true;
     },
 
     LoadPage() {
@@ -625,7 +628,7 @@ var app = new Vue({
       this.changeNameTitle = this.player.name + ", what's your new name?";
       this.tempModes = [];
       this.modes.forEach((mode) => {
-        this.tempModes.push(new ModeObject(mode));
+        this.tempModes.push(new WordSetObject(mode));
       });
       this.tempName = this.player.name;
       // this.ConstructURLForCurrentGame();
@@ -664,13 +667,13 @@ var app = new Vue({
       localStorage.setItem('name', this.player.name);
       if (this.showSettings) {
         let modeChanged = false;
-        modeChanged = this.modes.find((mode) => mode.isSelected === true).name !== this.tempModes.find((mode) => mode.isSelected === true).name;
+        modeChanged = this.modes.find((mode) => mode.isSelected === true).id !== this.tempModes.find((mode) => mode.isSelected === true).id;
         this.modes = this.tempModes;
         this.gameMode = this.modes.find((mode) => mode.isSelected === true);
         if (modeChanged && !this.isGuessing) {
           this.NewGame();
         }
-        localStorage.setItem('mode', this.gameMode.name);
+        localStorage.setItem('mode', this.gameMode.id);
       }
       this.showModal = false;
       this.showSettings = false;

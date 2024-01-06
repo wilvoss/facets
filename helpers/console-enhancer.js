@@ -25,7 +25,7 @@ function note(text) {
 function log(text, color, override = false) {
   text = text.toString();
 
-  color = color == undefined ? 'black' : color;
+  color = color === undefined || color === null ? 'black' : color;
 
   var ms = new Date(Date.now()).getMilliseconds();
   ms = ms < 10 ? ms * 100 : ms;
@@ -35,35 +35,13 @@ function log(text, color, override = false) {
   }
 }
 
-function getHashValue(key) {
-  var matches = location.hash.match(new RegExp(key + '=([^&]*)'));
-  return matches ? matches[1] : null;
-}
-
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function createCookie(name, value, days) {
-  if (days) {
-    var date = new Date();
-    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-    var expires = '; expires=' + date.toGMTString();
-  } else var expires = '';
-  document.cookie = name + '=' + value + expires + '; path=/';
-}
-
-function readCookie(name) {
-  var nameEQ = name + '=';
-  var ca = document.cookie.split(';');
-  for (var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-    if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-  }
-  return null;
-}
-
-function eraseCookie(name) {
-  createCookie(name, '', -1);
+function loadScript(filename) {
+  var script = document.createElement('script');
+  script.src = filename;
+  script.type = 'text/javascript';
+  document.head.appendChild(script);
 }

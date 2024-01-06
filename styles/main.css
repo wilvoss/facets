@@ -23,9 +23,10 @@
 
     --appBackgroundHSL: var(--hueMain), 40%, 30%;
     --appBackgroundDarkHSL: var(--hueMain), 76%, 8%;
-    --appForegroundHSL: var(--hueMain), 94%, 93%;
+    --appForegroundHSL: var(--hueMain), 94%, 100%;
     --linkColorLightHSL: var(--hueHighlight), 79%, 55%;
     --linkColorDarkHSL: var(--hueHighlight), 69%, 45%;
+    --messageColorHSL: var(--hueMain), 100%, 70%;
     --highlightColorHSL: 50, 100%, 70%;
     --trayBackgroundHSL: var(--hueMain), 90%, 40%;
     --trayGuessingBackgroundHSL: var(--hueGuessing), 60%, 40%;
@@ -175,7 +176,7 @@ header subtitle {
 header subtitle, header subtitle button {
     cursor: default;
     text-align: center;
-    color: hsla(var(--appForegroundHSL), .6);
+    color: hsla(var(--appForegroundHSL), .9);
     text-shadow: 0px 0px 3px black;
     display: flex;
     font-size: 70%;
@@ -207,14 +208,15 @@ header subtitle button.inline icon {
     height: var(--tinyIconSize);
     mask-size: var(--tinyIconSize) var(--tinyIconSize);
     -webkit-mask-size: var(--tinyIconSize) var(--tinyIconSize);
-    background: hsla(var(--appForegroundHSL), .6);
+    background: hsla(var(--appForegroundHSL), .9);
     margin-top: -1px;
 
 }
 
 message {
     display: block;
-    color: hsl(var(--highlightColorHSL));
+    color: hsl(var(--messageColorHSL));
+    text-shadow: 0px -1px rgb(0, 0, 0);
     text-align: center;
 }
 
@@ -729,7 +731,7 @@ word:nth-child(4) {
     rotate: -90deg;
 }
 
-modal {
+modal, tutorial {
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -747,7 +749,7 @@ modal {
     transition: var(--mediumTransition) ease-in-out all;
 }
 
-modal.disabled {
+modal.disabled, tutorial.disabled {
     opacity: 0;
 }
 
@@ -766,15 +768,25 @@ settings modes {
 }
 
 mode {
-    padding: var(--defaultGap);
+    padding: calc(.75 * var(--defaultGap)) var(--defaultGap);
     user-select: none;
+    /* width: 80px; */
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
     -webkit-user-select: none;
     cursor: pointer;
     border: 1px dashed hsla(var(--appForegroundHSL), .7);
     border-radius: var(--borderRadius);
+    transition: var(--mediumTransition) ease-in-out all;
+    line-height: 110%;
+    /* font-family: 'Theme'; */
 }
 
 mode.selected {
+    background: hsl(var(--appForegroundHSL));
+    color: hsla(var(--appBackgroundDarkHSL), 1);
     border: 1px solid hsl(var(--appForegroundHSL));
 }
 
@@ -1079,6 +1091,16 @@ version {
 
     hints hint:nth-child(4) {
         transform: translate(0px, calc(var(--cardSize) * -2.46));
+    }
+
+    settings modes {
+        gap: calc(.5 * var(--defaultGap));
+    }
+
+    mode {
+        padding: calc(.75 * var(--defaultGap)) var(--defaultGap);
+        /* width: 50px; */
+        font-size: 130%;
     }
 
     parking {

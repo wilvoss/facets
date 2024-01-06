@@ -33,7 +33,7 @@
           <controls><button class="secondary" @click="CancelSettings(event)">Cancel</button><button @click="SubmitSettings(event)">Save</button></controls>
         </intro>
         <settings v-if="showSettings && showModal">
-          <message>New Games Use</message>
+          <message>Game Word Set</message>
           <modes>
             <mode @click="SelectMode(event, mode)" :class="{selected: mode.isSelected}" v-for="mode in tempModes">{{mode.name}}</mode>
           </modes>
@@ -63,6 +63,7 @@
           </cards>
         </picker>
       </modal>
+      <tutorial :class="{disabled: !showTutorial}"> </tutorial>
       <wrapper>
         <controls>
           <button class="inline" @click="NewGame(event)"><span>New</span><icon class="add"></icon></button>
@@ -162,11 +163,13 @@
       <version>Version {{version}}</version>
     </app>
     <script src="helpers/console-enhancer.js" type="text/javascript"></script>
-    <script src="models/ModeObject-min.js" type="text/javascript"></script>
+    <script src="data/nouns.js" type="text/javascript"></script>
+    <script src="data/verbs.js" type="text/javascript"></script>
+    <script src="models/WordSetObject.js" type="text/javascript"></script>
     <script src="models/WordObject-min.js" type="text/javascript"></script>
     <script src="models/CardObject-min.js" type="text/javascript"></script>
     <script src="models/PlayerObject-min.js" type="text/javascript"></script>
     <script src="helpers/vue.min.js" type="text/javascript"></script>
-    <script src="scripts/facets-min.js" type="text/javascript"></script>
+    <script src="scripts/facets.js" type="text/javascript"></script>
   </body>
 </html>

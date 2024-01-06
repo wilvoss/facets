@@ -1,1 +1,0 @@
-var ModeNames={nouns:"Nouns",verb:"Verbs",all:"Both"};class ModeObject{constructor(e){this.name=void 0===e.name?ModeNames.all:e.name,this.isSelected=void 0!==e.isSelected&&e.isSelected}}let Modes=[new ModeObject({name:ModeNames.nouns}),new ModeObject({name:ModeNames.verb}),new ModeObject({name:ModeNames.all,isSelected:!0})];
