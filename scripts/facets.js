@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.046',
+    version: '0.1.047',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -128,6 +128,14 @@ var app = new Vue({
 
     async RestoreGame(_boardArray) {
       note('RestoreGame() called');
+      var urlParams = new URLSearchParams(window.location.search);
+
+      this.sendingPlayer.name = urlParams.has('sendingName') ? urlParams.get('sendingName') : this.sendingPlayer.name;
+      this.puzzlePlayer.name = urlParams.has('puzzleName') ? urlParams.get('puzzleName') : this.puzzlePlayer.name;
+      this.sendingPlayer.id = urlParams.has('sendingID') ? parseInt(urlParams.get('sendingID')) : this.sendingPlayer.id;
+      this.puzzlePlayer.id = urlParams.has('puzzleID') ? parseInt(urlParams.get('puzzleID')) : this.puzzlePlayer.id;
+      this.guessingWordSet = urlParams.has('wordSetID') ? this.wordSets.find((s) => s.id === urlParams.get('wordSetID')) : this.gameWordSet;
+
       let corruptData = false;
       if (_boardArray.length >= 44) {
         this.shareURL = window.location.href;
@@ -167,12 +175,6 @@ var app = new Vue({
           hint.value = _boardArray[index++];
         });
 
-        var urlParams = new URLSearchParams(window.location.search);
-        this.sendingPlayer.name = urlParams.has('sendingName') ? urlParams.get('sendingName') : this.sendingPlayer.name;
-        this.puzzlePlayer.name = urlParams.has('puzzleName') ? urlParams.get('puzzleName') : this.puzzlePlayer.name;
-        this.sendingPlayer.id = urlParams.has('sendingID') ? parseInt(urlParams.get('sendingID')) : this.sendingPlayer.id;
-        this.puzzlePlayer.id = urlParams.has('puzzleID') ? parseInt(urlParams.get('puzzleID')) : this.puzzlePlayer.id;
-        this.guessingWordSet = urlParams.has('wordSetID') ? this.wordSets.find((s) => s.id === urlParams.get('wordSetID')) : this.gameWordSet;
         this.SetWordSetTheme(this.guessingWordSet);
         this.player.role = this.puzzlePlayer.id === this.player.id && this.player.id !== this.sendingPlayer.id ? 'reviewer' : 'guesser';
       }
@@ -204,7 +206,7 @@ var app = new Vue({
         urlString += '&sendingName=' + encodeURIComponent(this.player.name);
         urlString += '&sendingID=' + encodeURIComponent(this.player.id);
         urlString += '&puzzleName=' + encodeURIComponent(this.puzzlePlayer.name);
-        urlString += '&puzzleId=' + encodeURIComponent(this.puzzlePlayer.id);
+        urlString += '&puzzleID=' + encodeURIComponent(this.puzzlePlayer.id);
         urlString += '&wordSetID=' + encodeURIComponent(this.guessingWordSet.id);
         urlString = window.location.origin + '?board=' + urlString;
         this.shareURL = urlString;
@@ -626,18 +628,15 @@ var app = new Vue({
       announce('Player ' + this.player.id + ' has initiated the app.');
       this.longTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
       this.shortTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
+
       let params = [];
       let boardPieces = [];
       try {
         if (window.location.search) {
+          var urlParams = new URLSearchParams(window.location.search);
           let search = decodeURIComponent(window.location.search);
           params = search.split('?')[1].split('&');
-          boardPieces = params[0].split('=')[1].split('-');
-
-          if (params.length > 1) this.sendingPlayer.name = params[1].split('=')[1];
-          if (params.length > 2) this.sendingPlayer.id = parseInt(params[2].split('=')[1]);
-          if (params.length > 3) this.puzzlePlayer.name = params[3].split('=')[1];
-          if (params.length > 4) this.puzzlePlayer.id = parseInt(params[4].split('=')[1]);
+          boardPieces = urlParams.has('board') ? urlParams.get('board').split('-') : [];
         }
 
         if (boardPieces.length >= 44) {
