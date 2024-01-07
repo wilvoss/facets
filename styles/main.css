@@ -17,13 +17,14 @@
 
 :root {
     --hueMain: 205;
+    --hueTheme: 205;
     --hueGuessing: 140;
     --hueReviewing: 344;
     --hueHighlight: 140;
 
-    --appBackgroundHSL: var(--hueMain), 40%, 30%;
-    --appBackgroundDarkHSL: var(--hueMain), 76%, 8%;
-    --appForegroundHSL: var(--hueMain), 94%, 100%;
+    --appBackgroundHSL: var(--hueTheme), 50%, 24%;
+    --appBackgroundDarkHSL: var(--hueTheme), 76%, 8%;
+    --appForegroundHSL: var(--hueTheme), 94%, 100%;
     --linkColorLightHSL: var(--hueHighlight), 79%, 55%;
     --linkColorDarkHSL: var(--hueHighlight), 69%, 45%;
     --messageColorHSL: var(--hueMain), 100%, 70%;
@@ -50,6 +51,8 @@
 
     --texture1: url(../images/texture.png);
     --texture2: url(../images/facets-dark.png);
+    --textureSize: 530px;
+    --textureBlendMode: 'luminosity';
 }
 
 html {
@@ -78,9 +81,20 @@ app {
     height: 100%;
     display: flex;
     flex-direction: column;
-    background-image: var(--texture2);
+    background: hsl(var(--appBackgroundHSL)) var(--texture2);
+    background-size: var(--textureSize);
+    background-blend-mode: var(--textureBlendMode);
+    background-position: center;
 }
 
+h1, h2, h3, h4, h5 {
+    font-weight: normal;
+    margin-bottom: calc(2 * var(--defaultGap));
+}
+
+header h1 {
+    margin-bottom: 0px;
+}
 
 icon {
     display: block;
@@ -189,10 +203,6 @@ header subtitle span, header subtitle button.inline {
     padding: 6px;
 }
 
-header subtitle span {
-    display: none;
-}
-
 header subtitle button.inline {
     display: inline-flex;
     outline: none;
@@ -218,6 +228,10 @@ message {
     color: hsl(var(--messageColorHSL));
     text-shadow: 0px -1px rgb(0, 0, 0);
     text-align: center;
+}
+
+settings message {
+    margin-top: var(--defaultGap);
 }
 
 message.clickable {
@@ -325,10 +339,27 @@ controls {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: var(--cardSize);
     height: 100%;
     padding: 0 var(--defaultGap);
 }
+
+modal controls {
+    padding: calc(2 * var(--defaultGap)) 0;
+    gap: calc(.5 * var(--defaultGap));
+}
+
+
+modal controls button {
+    padding: calc(.75 * var(--defaultGap)) var(--defaultGap);
+    border: 1px solid hsla(var(--linkColorDarkHSL), .5);
+    border-radius: var(--borderRadius);
+    /* width: auto; */
+}
+
+modal controls button.secondary {
+    border-color: rgba(255, 255, 255, .4);
+}
+
 
 controls button {
     outline: none;
@@ -518,7 +549,6 @@ spot.empty card {
 }
 
 parking spot {
-    /* background: rgba(0, 0, 0, .1); */
     background: hsla(var(--appBackgroundDarkHSL), .4);
 }
 
@@ -643,7 +673,6 @@ modal input, hints hint input {
 
 modal input {
     font-size: 300%;
-    margin-bottom: var(--defaultGap);
 }
 
 .guessing hints hint input:disabled {
@@ -758,36 +787,53 @@ modal settings, modal intro {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: calc(2 * var(--defaultGap));
+    gap: calc(1 * var(--defaultGap));
 }
 
-settings modes {
+section {
+    max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
+    width: 100%;
+    background: hsla(var(--appBackgroundHSL), .3);
+    /* border: 1px solid hsla(var(--appBackgroundHSL), 1); */
     display: flex;
-    gap: var(--defaultGap);
-    margin-bottom: var(--defaultGap);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-radius: calc(2 * var(--borderRadius));
+    padding: calc(1 * var(--defaultGap)) 0;
 }
 
-mode {
+settings wordsets {
+    display: flex;
+    gap: calc(.5 * var(--defaultGap));
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+settings input {
+    font-family: "Abel";
+    font-size: inherit;
+}
+
+wordset {
     padding: calc(.75 * var(--defaultGap)) var(--defaultGap);
     user-select: none;
-    /* width: 80px; */
     display: flex;
     justify-content: center;
     text-align: center;
     align-items: center;
     -webkit-user-select: none;
     cursor: pointer;
-    border: 1px dashed hsla(var(--appForegroundHSL), .7);
+    background: hsla(var(--messageColorHSL), .1);
     border-radius: var(--borderRadius);
     transition: var(--mediumTransition) ease-in-out all;
     line-height: 110%;
-    /* font-family: 'Theme'; */
 }
 
-mode.selected {
+wordset.selected {
     background: hsl(var(--appForegroundHSL));
     color: hsla(var(--appBackgroundDarkHSL), 1);
-    border: 1px solid hsl(var(--appForegroundHSL));
 }
 
 modal cards {
@@ -854,20 +900,15 @@ version {
         height: 100%;
     }
 
-    controls button {
+    wrapper controls button {
         width: auto;
         height: 100%;
         padding: 0 0 var(--defaultGap);
     }
 
     modal controls {
-        height: var(--wordHeight);
+        padding: calc(2 * var(--defaultGap)) 0;
     }
-
-    modal controls button {
-        padding: 0 var(--defaultGap) var(--defaultGap);
-    }
-
 
     header {
         width: auto;
@@ -880,17 +921,8 @@ version {
     }
 
     header subtitle {
-        /* display: none; */
         font-size: 70%;
         justify-content: center;
-    }
-
-    header subtitle span {
-        display: none;
-    }
-
-    header subtitle button.inline {
-        /* padding: 4px 2px 0px; */
     }
 
     rotators {
@@ -933,7 +965,6 @@ version {
 
     wrapper:first-of-type {
         padding: calc(var(--defaultGap) / 1) 0;
-        /* background: hsla(var(--appBackgroundDarkHSL), 1); */
         margin-bottom: calc(2 * var(--defaultGap));
         gap: 0px;
         align-items: center;
@@ -945,6 +976,7 @@ version {
     }
 
     modal message {
+        height: auto;
         position: relative;
     }
 
@@ -954,27 +986,20 @@ version {
         height: 100%;
     }
 
-    controls button {
+    wrapper controls button {
         height: 100%;
         padding: 0 var(--defaultGap) var(--defaultGap);
         text-align: left;
     }
 
-    modal controls {
-        height: var(--wordHeight);
-    }
-
-    modal controls button {
-        padding: 0 var(--defaultGap) var(--defaultGap);
-    }
-
-    controls button span {
+    wrapper controls button span {
         display: none;
     }
 
-    controls:last-of-type button {
+    wrapper controls:last-of-type button {
         text-align: right;
     }
+
 
     header {
         width: auto;
@@ -991,10 +1016,6 @@ version {
         font-size: 100%;
     }
 
-    header subtitle span {
-        display: none;
-    }
-
     header subtitle button.inline {
         padding: 6px 2px;
     }
@@ -1002,8 +1023,6 @@ version {
     message {
         font-size: 130%;
         text-align: center;
-        padding: 0 calc(2 * var(--defaultGap));
-        margin: 0;
         line-height: 130%;
     }
 
@@ -1029,7 +1048,6 @@ version {
     spot rotators button icon {
         background: rgb(0, 0, 0, 0.1);
     }
-
 
     cards {
         background-size: 128px;
@@ -1093,13 +1111,22 @@ version {
         transform: translate(0px, calc(var(--cardSize) * -2.46));
     }
 
-    settings modes {
+    section {
+        width: calc(100% - (2 * var(--defaultGap)));
+        margin: 0 var(--defaultGap);
+        max-width: unset;
+    }
+
+    settings input {
+        font-size: 130%;
+    }
+
+    settings wordsets {
         gap: calc(.5 * var(--defaultGap));
     }
 
-    mode {
+    wordset {
         padding: calc(.75 * var(--defaultGap)) var(--defaultGap);
-        /* width: 50px; */
         font-size: 130%;
     }
 

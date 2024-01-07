@@ -5,22 +5,12 @@ class WordObject {
   }
 }
 
-getUniqueWords = function (_mode, _num = 20, _exclude = null) {
-  let words = Nouns;
-  switch (_mode.name.toLowerCase()) {
-    case 'verbs':
-      words = Verbs;
-      break;
-    case 'both':
-      words = Nouns.concat(Verbs);
-      break;
-  }
-
+getUniqueWords = function (_words, _num = 20, _exclude = null) {
   if (_exclude !== null) {
-    words = words.filter((word) => !_exclude.includes(word.value));
+    _words = _words.filter((word) => !_exclude.includes(word.value));
   }
 
-  let shuffledWords = [...words];
+  let shuffledWords = [..._words];
   for (let i = shuffledWords.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
     [shuffledWords[i], shuffledWords[j]] = [shuffledWords[j], shuffledWords[i]];
@@ -48,7 +38,7 @@ createWordArray = function (_array, _index = 0) {
   let index = _index;
   let newArray = '';
   _array.forEach((word) => {
-    newArray += 'new WordObject({ id: ' + index++ + ", value: '" + word + "'}), ";
+    newArray += '{"id":' + index++ + ',"value":"' + word + '"},';
   });
   return newArray;
 };

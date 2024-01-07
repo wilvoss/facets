@@ -21,6 +21,7 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
     <link rel="stylesheet" href="styles/normalize.css" media="screen" />
     <link rel="stylesheet" href="styles/main-min.css" media="screen" />
+    <link rel="stylesheet" href="styles/checkbox-min.css" media="screen" />
   </head>
 
   <body>
@@ -33,12 +34,22 @@
           <controls><button class="secondary" @click="CancelSettings(event)">Cancel</button><button @click="SubmitSettings(event)">Save</button></controls>
         </intro>
         <settings v-if="showSettings && showModal">
-          <message>Game Word Set</message>
-          <modes>
-            <mode @click="SelectMode(event, mode)" :class="{selected: mode.isSelected}" v-for="mode in tempModes">{{mode.name}}</mode>
-          </modes>
-          <message>Your Name</message>
-          <input id="nameInput" placeholder="_ _ _ _ _ _" v-model="tempName" />
+          <!-- <h1>Settings</h1> -->
+          <message>Your name</message>
+          <section>
+            <input maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
+          </section>
+          <message>Your puzzle words</message>
+          <section>
+            <wordsets>
+              <wordset @click="SelectWordSet(event, set)" :class="{selected: set.isSelected}" v-if="set.enabled" v-for="set in getEnabledTempWordSets">{{set.name}}</wordset>
+            </wordsets>
+          </section>
+          <message>Appearance</message>
+          <checkbox :class="{on: tempUseWordSetThemes}" @click="ToggleTempUseWordSetThemes()">
+            Use word themes
+            <toggle></toggle>
+          </checkbox>
           <controls><button class="secondary" @click="CancelSettings(event)">Cancel</button><button @click="SubmitSettings(event)">Save</button></controls>
         </settings>
         <picker v-if="!showSettings && !showIntro && showModal">
@@ -72,7 +83,7 @@
           <hgroup>
             <h1>{{gameName}}</h1>
             <subtitle>
-              <span>{{gameCatchphrase}}</span><button class="inline" @click="OpenSettings()">Settings<icon class="settings"></icon></button
+              <button class="inline" @click="OpenSettings()">Settings<icon class="settings"></icon></button
             ></subtitle>
           </hgroup>
         </header>
@@ -163,13 +174,11 @@
       <version>Version {{version}}</version>
     </app>
     <script src="helpers/console-enhancer.js" type="text/javascript"></script>
-    <script src="data/nouns.js" type="text/javascript"></script>
-    <script src="data/verbs.js" type="text/javascript"></script>
-    <script src="models/WordSetObject.js" type="text/javascript"></script>
+    <script src="models/WordSetObject-min.js" type="text/javascript"></script>
     <script src="models/WordObject-min.js" type="text/javascript"></script>
     <script src="models/CardObject-min.js" type="text/javascript"></script>
     <script src="models/PlayerObject-min.js" type="text/javascript"></script>
     <script src="helpers/vue.min.js" type="text/javascript"></script>
-    <script src="scripts/facets.js" type="text/javascript"></script>
+    <script src="scripts/facets-min.js" type="text/javascript"></script>
   </body>
 </html>
