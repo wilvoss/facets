@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.047',
+    version: '0.1.049',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -217,7 +217,7 @@ var app = new Vue({
     ShareBoard() {
       note('ShareBoard() called');
       this.puzzleJustSent = this.shareURL === '';
-      let text = this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id ? "Here's a new puzzle to solve!" : "Here's my guess!";
+      let text = this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id ? 'Here\'s a new "' + this.guessingWordSet.name + '" puzzle to solve!' : "Here's my guess!";
       let nailedIt = false;
       if (this.player.role === 'reviewer') {
         switch (this.getNumberOfCardsThatHaveBeenPlacedOnTray) {
@@ -390,7 +390,7 @@ var app = new Vue({
 
       _card.isSelected = _card.words.length === 0 ? false : selectedState;
 
-      if (document.body.offsetWidth <= 640 && !this.showModal) {
+      if (document.body.offsetHeight <= 650 && !this.showModal) {
         this.showModal = true;
       }
 
@@ -559,6 +559,7 @@ var app = new Vue({
 
     NewGame(e, _message = '') {
       note('NewGame() called');
+      document.title = 'Facets!';
       this.message = _message;
       this.puzzleJustSent = false;
       this.player.role = 'creator';

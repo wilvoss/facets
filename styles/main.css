@@ -481,6 +481,27 @@ parking {
     padding: var(--defaultGap);
 }
 
+wrapper.mobile {
+    overflow: visible;
+    height: 0px;
+    padding: 0px;
+    transform: translateY(calc(.7 * var(--cardSize)));
+    scale: .5;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+.mobile parking {
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+    overflow: visible;
+}
+
+
 
 cards {
     display: flex;
@@ -549,7 +570,7 @@ spot.empty card {
 }
 
 parking spot {
-    background: hsla(var(--appBackgroundDarkHSL), .4);
+    background: hsla(var(--appBackgroundDarkHSL), .6);
 }
 
 card {
@@ -768,9 +789,7 @@ modal, tutorial {
     height: 100%;
     overflow-x: hidden;
     flex-wrap: wrap;
-    background: hsla(var(--appBackgroundDarkHSL), .97);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    background: hsla(var(--appBackgroundDarkHSL), 1);
     opacity: 1;
     justify-content: center;
     align-items: center;
@@ -965,13 +984,12 @@ version {
 
     wrapper:first-of-type {
         padding: calc(var(--defaultGap) / 1) 0;
-        margin-bottom: calc(2 * var(--defaultGap));
+        margin-bottom: 0;
         gap: 0px;
         align-items: center;
     }
 
     message {
-        height: calc(1 * var(--wordHeight));
         position: absolute;
     }
 
@@ -1021,7 +1039,7 @@ version {
     }
 
     message {
-        font-size: 130%;
+        font-size: 110%;
         text-align: center;
         line-height: 130%;
     }
@@ -1053,10 +1071,6 @@ version {
         background-size: 128px;
     }
 
-    cards spot.empty {
-        background: url(../images/tap.svg) no-repeat center;
-        background-size: 40px;
-    }
 
     spot rotators {
         min-width: unset;
@@ -1134,4 +1148,24 @@ version {
         display: none;
     }
 
+    wrapper.mobile {
+        display: flex;
+    }
+
+    .mobile parking {
+        display: flex;
+        width: 100%;
+    }
+
+}
+
+@media screen and (max-height:650px) {
+    cards spot.empty {
+        background: url(../images/tap.svg) no-repeat center;
+        background-size: 40px;
+    }
+
+    .mobile parking {
+        display: none;
+    }
 }
