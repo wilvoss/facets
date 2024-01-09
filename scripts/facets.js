@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.053',
+    version: '0.1.054',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -741,11 +741,7 @@ var app = new Vue({
           note('HandleKeyDownEvent() called');
           e.preventDefault();
           if (!this.trayIsRotating) {
-            switch (e.target.id) {
-              case 'hint0':
-                this.RotateTray(e.shiftKey ? 1 : -1);
-                break;
-            }
+            this.RotateTray(e.shiftKey ? 1 : -1);
           }
           break;
         case '-':
