@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.052',
+    version: '0.1.053',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -648,7 +648,7 @@ var app = new Vue({
         }
 
         if (boardPieces.length >= 44) {
-          document.title = 'Facets - CHALLENGE!';
+          document.title = 'Facets! - CHALLENGE';
           this.RestoreGame(boardPieces);
         } else if (!this.isGuessing) {
           this.NewGame();
