@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.051',
+    version: '0.1.052',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -835,7 +835,7 @@ var app = new Vue({
     getPlayerMessage: function () {
       let text = this.player.name + ', you are guessing ' + this.puzzlePlayer.name + '\'s "' + this.guessingWordSet.name + '" puzzle!';
       if (!this.isGuessing) {
-        text = this.player.name + ', you are creating!';
+        text = this.player.name + ', you are creating a new "' + this.guessingWordSet.name + '" puzzle!';
       } else {
         if (this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id) {
           text = this.player.name + ', you are guessing your own puzzle!';
