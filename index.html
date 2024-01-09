@@ -113,7 +113,7 @@
       </wrapper>
       <wrapper>
         <parking>
-          <spot v-for="(card, index) in parkedCards" v-if="index < 3" :class="{empty: card.words.length === 0, selected: card.isSelected}">
+          <spot v-for="(card, index) in parkedCards" v-if="index < (guessingCardCount / 2)" :class="{empty: card.words.length === 0, selected: card.isSelected}">
             <rotators>
               <button class="clockwise" @pointerdown="RotateCard(event, card, 1)"><icon class="rotate"></icon></button>
               <button class="anticlockwise" @pointerdown="RotateCard(event, card, -1)"><icon class="rotate"></icon></button>
@@ -156,7 +156,7 @@
           </cards>
         </tray>
         <parking>
-          <spot v-for="(card, index) in parkedCards" v-if="index > 2" :class="{empty: card.words.length === 0, selected: card.isSelected}">
+          <spot v-for="(card, index) in parkedCards" v-if="index >= (guessingCardCount / 2) && (index < guessingCardCount)" :class="{empty: card.words.length === 0, selected: card.isSelected}">
             <rotators>
               <button class="clockwise" @click="RotateCard(event, card, 1)"><icon class="rotate"></icon></button>
               <button class="anticlockwise" @click="RotateCard(event, card, -1)"><icon class="rotate"></icon></button>
@@ -175,7 +175,7 @@
       </wrapper>
       <wrapper class="mobile">
         <parking>
-          <spot v-for="(card, index) in parkedCards" v-if="index < 5" :class="{empty: card.words.length === 0, selected: card.isSelected}">
+          <spot v-for="(card, index) in parkedCards" v-if="index < guessingCardCount" :class="{empty: card.words.length === 0, selected: card.isSelected}">
             <card @click="RotateCard(event, card, -1)" @pointerup="HandleCardPointerUp(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
               <words>
                 <word v-for="word in card.words">{{word.value}}</word>

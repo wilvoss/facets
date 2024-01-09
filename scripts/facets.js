@@ -12,10 +12,11 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.055',
+    version: '0.1.056',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
+    guessingCardCount: 4,
     tempName: '',
     useWordSetThemes: false,
     tempUseWordSetThemes: false,
@@ -113,13 +114,18 @@ var app = new Vue({
         });
       });
       let wordset = await this.getCurrentGameWordSet;
-      this.parkedCards.push(new CardObject({ words: getUniqueWords(wordset, 4, getJustWords(allUsedWords)) }));
+
+      if (this.guessingCardCount === 5) {
+        this.parkedCards.push(new CardObject({ words: getUniqueWords(wordset, 4, getJustWords(allUsedWords)) }));
+      }
 
       for (let i = this.parkedCards.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
         [this.parkedCards[i], this.parkedCards[j]] = [this.parkedCards[j], this.parkedCards[i]];
       }
-
+      if (this.guessingCardCount === 4) {
+        this.parkedCards.push(new CardObject({}));
+      }
       this.parkedCards.push(new CardObject({}));
 
       this.cards = temp;
@@ -137,7 +143,7 @@ var app = new Vue({
       this.guessingWordSet = urlParams.has('wordSetID') ? this.wordSets.find((s) => s.id === urlParams.get('wordSetID')) : this.gameWordSet;
 
       let corruptData = false;
-      if (_boardArray.length >= 44) {
+      if (_boardArray.length >= 40) {
         this.shareURL = window.location.href;
         this.puzzleJustSent = false;
         let allWords = await this.getGuessingGameWordSet;
@@ -647,7 +653,7 @@ var app = new Vue({
           boardPieces = urlParams.has('board') ? urlParams.get('board').split('-') : [];
         }
 
-        if (boardPieces.length >= 44) {
+        if (boardPieces.length >= 40) {
           document.title = 'Facets! - CHALLENGE';
           this.RestoreGame(boardPieces);
         } else if (!this.isGuessing) {

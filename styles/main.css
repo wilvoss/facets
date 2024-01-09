@@ -5,7 +5,7 @@
 
 @font-face {
     font-family: 'ClueFont';
-    src: url('../fonts/CabinSketch-Regular.ttf');
+    src: url('../fonts/Federant-Regular.ttf');
 }
 
 @font-face {
@@ -455,6 +455,18 @@ spot rotators button icon {
     background: rgb(0, 0, 0, 0.2);
 }
 
+parking spot rotators button icon {
+    background: hsla(var(--hueMain), 100%, 70%, 0.46);
+}
+
+.guessing parking spot rotators button icon {
+    background: hsla(var(--hueGuessing), 100%, 70%, 0.46);
+}
+
+.reviewing parking spot rotators button icon {
+    background: hsla(var(--hueReviewing), 100%, 70%, 0.46);
+}
+
 cards spot:hover rotators button icon {
     background: hsl(var(--linkColorLightHSL));
 }
@@ -526,7 +538,7 @@ wrapper.mobile {
     height: 0px;
     padding: 0px;
     transform: translateY(calc(.7 * var(--cardSize)));
-    scale: .5;
+    scale: .6;
     width: 100%;
     justify-content: center;
     align-items: center;
@@ -611,7 +623,7 @@ parking spot {
 
 
 card {
-    background: white;
+    background: transparent;
     background-size: 100% 100%;
     display: block;
     width: var(--cardSize);
@@ -619,7 +631,7 @@ card {
     user-select: none;
     -webkit-user-select: none;
     cursor: grab;
-    color: hsl(var(--hueMain), 40%, 17%);
+    color: hsl(var(--hueMain), 100%, 90%);
     z-index: 200;
     touch-action: none;
 }
@@ -649,6 +661,7 @@ cards spot:nth-child(4) card words word:nth-child(4) {
 }
 
 card.ghost {
+    background: rgba(0, 0, 0, .2);
     transition: 0ms ease-in 0ms opacity;
     position: fixed;
     top: calc(-.5 * var(--cardSize));
@@ -665,10 +678,6 @@ card.ghost.show {
 
 card.rotating {
     transition: var(--shortTransition) ease-in-out all;
-}
-
-card.selected {
-    background: white;
 }
 
 card.dropped, card.selected.dropped {
@@ -726,6 +735,7 @@ hints hint {
     background-size: 128px 128px;
     padding: calc(var(--defaultGap) / 4) calc(var(--defaultGap) / 4) calc(var(--defaultGap));
     width: calc(1.75 * var(--cardSize));
+    perspective: var(--cardSize);
 }
 
 modal input, hints hint input {
@@ -738,7 +748,12 @@ modal input, hints hint input {
     width: 100%;
     line-height: 120%;
     padding: 0;
-    font-size: 140%;
+    font-size: 120%;
+}
+
+hints hint input {
+    transform: rotateX(24deg) rotateY(0deg);
+    transform-style: preserve-3d;
 }
 
 hints hint input::placeholder {
@@ -1131,6 +1146,10 @@ version {
         background: rgb(0, 0, 0, 0.2);
     }
 
+    tray {
+        scale: .95;
+    }
+
     tray diamond {
         width: calc(100% - 4 * var(--defaultGap));
         height: calc(100% - 4 * var(--defaultGap));
@@ -1181,7 +1200,7 @@ version {
     }
 
     hints hint input {
-        font-size: 150%;
+        font-size: 130%;
         line-height: 120%;
     }
 
