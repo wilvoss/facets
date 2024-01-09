@@ -49,7 +49,7 @@
 
 
     --texture1: url(../images/texture.png);
-    --texture2: linear-gradient(0deg, hsla(var(--appBackgroundDarkestHSL), .3) 0%, hsla(var(--appBackgroundDarkestHSL), 0) 20%, hsla(var(--appBackgroundDarkestHSL), 0) 70%, hsla(var(--appBackgroundDarkestHSL), 1) 100%);
+    --texture2: radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), .3) 0%, hsla(var(--appBackgroundDarkestHSL), 0) 40%, hsla(var(--appBackgroundDarkestHSL), 1) 80%);
     --textureSize: cover;
     --textureBlendMode: overlay;
 }
@@ -598,7 +598,17 @@ spot.empty card {
 
 parking spot {
     background: hsla(0, 0%, 0%, .3);
+    border: 1px solid hsla(var(--hueMain), 100%, 70%, .7);
 }
+
+.guessing parking spot {
+    border: 1px solid hsla(var(--hueGuessing), 100%, 70%, .7);
+}
+
+.reviewing parking spot {
+    border: 1px solid hsla(var(--hueReviewing), 100%, 70%, .7);
+}
+
 
 card {
     background: white;
