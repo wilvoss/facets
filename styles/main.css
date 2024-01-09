@@ -741,15 +741,18 @@ modal input {
     color: white;
 }
 
+hints hint input:disabled {
+    opacity: 1;
+    color: hsl(var(--hueMain), 100%, 70%);
+}
+
 .guessing hints hint input:disabled {
     opacity: 1;
     color: hsl(var(--hueGuessing), 94%, 80%);
-    border-bottom: 1px solid rgba(0, 0, 0, 0);
 }
 
 .guessing.reviewing hints hint input:disabled {
     color: hsl(var(--hueReviewing), 94%, 80%);
-    border-bottom: 1px solid rgba(0, 0, 0, 0);
 }
 
 .guessing input, .guessing hints hint input {

@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.050',
+    version: '0.1.051',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -733,18 +733,6 @@ var app = new Vue({
           if (!this.isGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
             this.FillParkingLot();
           }
-          // else {
-          //   if (!this.isGuessing && !this.trayIsRotating) {
-          //     switch (e.target.id) {
-          //       case 'hint0':
-          //         document.getElementById(e.shiftKey ? 'hint2' : 'hint1').focus();
-          //         break;
-          //       default:
-          //         document.getElementById('hint0').focus();
-          //         break;
-          //     }
-          //   }
-          // }
           if (this.showModal && (this.showSettings || this.showIntro)) {
             this.SubmitSettings(e);
           }
@@ -755,10 +743,7 @@ var app = new Vue({
           if (!this.trayIsRotating) {
             switch (e.target.id) {
               case 'hint0':
-                document.getElementById(e.shiftKey ? 'hint2' : 'hint1').focus();
-                break;
-              default:
-                document.getElementById('hint0').focus();
+                this.RotateTray(e.shiftKey ? 1 : -1);
                 break;
             }
           }

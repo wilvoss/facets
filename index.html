@@ -15,8 +15,8 @@
     <meta name="description" content="A game of matching facets of words with other words." />
     <meta name="keywords" content="casual, video, game, boardgame" />
 
-    <link id="appleicon" rel="apple-touch-icon" sizes="180x180" href="images/icon180.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="images/icon512.png" />
+    <link id="appleicon" rel="apple-touch-icon" sizes="180x180" href="images/icon180-guessing.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="images/icon512-guessing.png" />
     <link rel="icon" type="image/png" sizes="128x128" href="favicon.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
     <link rel="stylesheet" href="styles/normalize.css" media="screen" />
@@ -133,8 +133,8 @@
           <diamond class="back"></diamond>
           <diamond></diamond>
           <hints>
-            <hint v-for="(hint, index) in hints" :key="index">
-              <input spellcheck="false" :id="'hint' + index" :disabled="isGuessing" v-model="hint.value" maxlength="14" :tabindex="index + 1" type="text" @pointerdown="RotateTrayBasedOnInputFocus(index)" @focus="RotateTrayBasedOnInputFocus(index)" onfocus="this.placeholder=''" onblur="this.placeholder='tap'" placeholder="tap" />
+            <hint @pointerdown="RotateTrayBasedOnInputFocus(index)" v-for="(hint, index) in hints" :key="index">
+              <input spellcheck="false" :id="'hint' + index" :disabled="isGuessing || index > 0" v-model="hint.value" maxlength="14" :tabindex="index + 1" type="text" onfocus="this.placeholder=''" onblur="this.placeholder='tap'" placeholder="tap" />
             </hint>
           </hints>
           <cards :class="{disabled: showModal}">
