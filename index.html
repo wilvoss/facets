@@ -25,31 +25,30 @@
   </head>
 
   <body>
-    <app id="app" v-cloak :class="{guessing: isGuessing, reviewing: player.role === 'reviewer'}" @pointerup="HandleBodyPointerUp(event, isDragging ? draggedCard : getSelectedCard)">
+    <app id="app" v-cloak :class="{guessing: isGuessing, reviewing: player.role === 'reviewer'}" @pointerdown="HandleBodyPointerDown(event)" @pointerup="HandleBodyPointerUp(event, isDragging ? draggedCard : getSelectedCard)">
       <input maxlength="0" :disabled="isGuessing" id="parkingInput" style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1" tabindex="-1" />
       <modal :class="{disabled: !showModal}" @click="showModal = showSettings || showIntro ? true : false">
         <intro v-if="showIntro && showModal">
           <message>Hello! What's your name?</message>
-          <input id="nameInput" placeholder="_ _ _ _ _ _" v-model="tempName" />
+          <input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" v-model="tempName" />
           <controls><button class="secondary" @click="CancelSettings(event)">Cancel</button><button @click="SubmitSettings(event)">Save</button></controls>
         </intro>
         <settings v-if="showSettings && showModal">
-          <!-- <h1>Settings</h1> -->
           <message>Your name</message>
           <section>
-            <input maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
+            <input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
           </section>
-          <message>Your puzzle words</message>
-          <section>
+          <message>Puzzle category {{isGuessing ? '(disabled while guessing)' : ''}}</message>
+          <section :class="{disabled: isGuessing}">
             <wordsets>
               <wordset @click="SelectWordSet(event, set)" :class="{selected: set.isSelected}" v-if="set.enabled" v-for="set in getEnabledTempWordSets">{{set.name}}</wordset>
             </wordsets>
           </section>
-          <message>Appearance</message>
+          <!-- <message>Appearance</message>
           <checkbox :class="{on: tempUseWordSetThemes}" @click="ToggleTempUseWordSetThemes()">
             Use word themes
             <toggle></toggle>
-          </checkbox>
+          </checkbox> -->
           <controls><button class="secondary" @click="CancelSettings(event)">Cancel</button><button @click="SubmitSettings(event)">Save</button></controls>
           <version>Version {{version}}</version>
         </settings>
@@ -95,7 +94,7 @@
           </button>
         </controls>
       </wrapper>
-      <wrapper style="padding: 0">
+      <wrapper>
         <message v-if="message !== ''">{{ message}}</message>
         <message v-if="message === ''">{{getPlayerMessage}}</message>
       </wrapper>
@@ -131,9 +130,11 @@
           </spot>
         </parking>
         <tray :class="{rotating: trayIsRotating}" :style="{rotate: trayRotation * 90 + 'deg'}">
+          <diamond class="back"></diamond>
+          <diamond></diamond>
           <hints>
             <hint v-for="(hint, index) in hints" :key="index">
-              <input :id="'hint' + index" :disabled="isGuessing" v-model="hint.value" maxlength="14" :tabindex="index + 1" type="text" @pointerdown="RotateTrayBasedOnInputFocus(index)" @focus="RotateTrayBasedOnInputFocus(index)" onfocus="this.placeholder=''" onblur="this.placeholder='_ _ _ _ _ _'" placeholder="_ _ _ _ _ _" />
+              <input spellcheck="false" :id="'hint' + index" :disabled="isGuessing" v-model="hint.value" maxlength="14" :tabindex="index + 1" type="text" @pointerdown="RotateTrayBasedOnInputFocus(index)" @focus="RotateTrayBasedOnInputFocus(index)" onfocus="this.placeholder=''" onblur="this.placeholder='tap'" placeholder="tap" />
             </hint>
           </hints>
           <cards :class="{disabled: showModal}">
@@ -175,7 +176,7 @@
       <wrapper class="mobile">
         <parking>
           <spot v-for="(card, index) in parkedCards" v-if="index < 5" :class="{empty: card.words.length === 0, selected: card.isSelected}">
-            <card @click="HandleCardClick(event, card)" @pointerup="HandleCardPointerUp(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
+            <card @click="RotateCard(event, card, -1)" @pointerup="HandleCardPointerUp(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
               <words>
                 <word v-for="word in card.words">{{word.value}}</word>
               </words>

@@ -4,34 +4,33 @@
 }
 
 @font-face {
-    font-family: 'Written';
-    src: url('../fonts/ReenieBeanie-Regular.ttf');
+    font-family: 'ClueFont';
+    src: url('../fonts/CabinSketch-Regular.ttf');
 }
-
 
 @font-face {
     font-family: 'Theme';
     src: url('../fonts/Bungee-Regular.ttf');
 }
 
-
 :root {
-    --hueMain: 205;
-    --hueTheme: 205;
-    --hueGuessing: 140;
+    --hueMain: 215;
+    --hueTheme: 215;
+    --hueGuessing: 274;
     --hueReviewing: 344;
     --hueHighlight: 140;
 
-    --appBackgroundHSL: var(--hueTheme), 50%, 24%;
-    --appBackgroundDarkHSL: var(--hueTheme), 76%, 8%;
-    --appForegroundHSL: var(--hueTheme), 94%, 100%;
+    --appBackgroundHSL: var(--hueTheme), 50%, 16%;
+    --appBackgroundDarkHSL: var(--hueTheme), 56%, 8%;
+    --appBackgroundDarkestHSL: var(--hueTheme), 56%, 8%;
+    --appForegroundHSL: var(--hueTheme), 100%, 100%;
     --linkColorLightHSL: var(--hueHighlight), 79%, 55%;
     --linkColorDarkHSL: var(--hueHighlight), 69%, 45%;
     --messageColorHSL: var(--hueMain), 100%, 70%;
     --highlightColorHSL: 50, 100%, 70%;
-    --trayBackgroundHSL: var(--hueMain), 90%, 40%;
-    --trayGuessingBackgroundHSL: var(--hueGuessing), 60%, 40%;
-    --trayReviewingBackgroundHSL: var(--hueReviewing), 60%, 44%;
+    --trayBackgroundHSL: var(--hueMain), 100%, 50%;
+    --trayGuessingBackgroundHSL: var(--hueGuessing), 80%, 56%;
+    --trayReviewingBackgroundHSL: var(--hueReviewing), 100%, 54%;
 
     --longTransition: 400ms;
     --mediumTransition: 250ms;
@@ -50,9 +49,9 @@
 
 
     --texture1: url(../images/texture.png);
-    --texture2: url(../images/facets-dark.png);
-    --textureSize: 530px;
-    --textureBlendMode: 'luminosity';
+    --texture2: linear-gradient(0deg, hsla(var(--appBackgroundDarkestHSL), .3) 0%, hsla(var(--appBackgroundDarkestHSL), 0) 20%, hsla(var(--appBackgroundDarkestHSL), 0) 70%, hsla(var(--appBackgroundDarkestHSL), 1) 100%);
+    --textureSize: cover;
+    --textureBlendMode: overlay;
 }
 
 html {
@@ -84,7 +83,7 @@ app {
     background: hsl(var(--appBackgroundHSL)) var(--texture2);
     background-size: var(--textureSize);
     background-blend-mode: var(--textureBlendMode);
-    background-position: center;
+    background-position: left center;
 }
 
 h1, h2, h3, h4, h5 {
@@ -190,12 +189,13 @@ header subtitle {
 header subtitle, header subtitle button {
     cursor: default;
     text-align: center;
-    color: hsla(var(--appForegroundHSL), .9);
+    color: hsla(var(--linkColorLightHSL), 1);
     text-shadow: 0px 0px 3px black;
     display: flex;
     font-size: 70%;
     text-transform: uppercase;
     letter-spacing: 1px;
+    opacity: .9;
 }
 
 
@@ -218,16 +218,24 @@ header subtitle button.inline icon {
     height: var(--tinyIconSize);
     mask-size: var(--tinyIconSize) var(--tinyIconSize);
     -webkit-mask-size: var(--tinyIconSize) var(--tinyIconSize);
-    background: hsla(var(--appForegroundHSL), .9);
+    background: hsla(var(--linkColorLightHSL), 1);
     margin-top: -1px;
 
 }
 
 message {
     display: block;
-    color: hsl(var(--messageColorHSL));
-    text-shadow: 0px -1px rgb(0, 0, 0);
+    color: hsl(var(--hueMain), 100%, 70%);
+    text-shadow: 0px 0px 30px rgb(0, 0, 0);
     text-align: center;
+}
+
+.guessing message {
+    color: hsl(var(--hueGuessing), 100%, 80%);
+}
+
+.reviewing message {
+    color: hsl(var(--hueReviewing), 100%, 80%);
 }
 
 settings message {
@@ -279,7 +287,7 @@ wrapper {
 
 wrapper:first-of-type {
     padding: calc(var(--defaultGap)) 0;
-    background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkHSL), .0));
+    background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0));
     margin-bottom: calc(2 * var(--defaultGap));
     max-width: unset;
 
@@ -330,6 +338,34 @@ tray {
     padding: calc(4 * var(--defaultGap));
 }
 
+tray diamond {
+    width: calc(100% - 2 * var(--defaultGap));
+    height: calc(100% - 2 * var(--defaultGap));
+    position: absolute;
+    background: url(../images/diamond.svg) no-repeat;
+    background-size: 100% 100%;
+    pointer-events: none;
+    transform: translateY(-60px);
+    z-index: -1;
+}
+
+diamond.back {
+    background: hsl(var(--trayBackgroundHSL));
+    mask-image: url(../images/diamond-back.svg);
+    -webkit-mask-image: url(../images/diamond-back.svg);
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
+    opacity: .8;
+}
+
+.guessing diamond.back {
+    background: hsl(var(--trayGuessingBackgroundHSL));
+}
+
+.reviewing diamond.back {
+    background: hsl(var(--trayReviewingBackgroundHSL));
+}
+
 tray.rotating {
     transition: var(--longTransition) ease-in-out;
     transition-property: transform, rotate;
@@ -353,7 +389,7 @@ modal controls button {
     padding: calc(.75 * var(--defaultGap)) var(--defaultGap);
     border: 1px solid hsla(var(--linkColorDarkHSL), .5);
     border-radius: var(--borderRadius);
-    /* width: auto; */
+    font-size: 100%;
 }
 
 modal controls button.secondary {
@@ -416,7 +452,11 @@ spot rotators button icon {
     height: var(--extraSmallIconSize);
     mask-size: var(--extraSmallIconSize) var(--extraSmallIconSize);
     -webkit-mask-size: var(--extraSmallIconSize) var(--extraSmallIconSize);
-    background: hsl(var(--linkColorDarkHSL));
+    background: rgb(0, 0, 0, 0.2);
+}
+
+cards spot:hover rotators button icon {
+    background: hsl(var(--linkColorLightHSL));
 }
 
 rotators button:hover {
@@ -508,34 +548,21 @@ cards {
     transition: var(--longTransition) ease-in-out;
     transition-property: transform, rotate, opacity;
     padding: var(--defaultGap);
-    background: hsl(var(--trayBackgroundHSL)) var(--texture1);
-    background-size: 128px 128px;
     width: calc(var(--cardSize) * 2 + var(--defaultGap));
     height: calc(var(--cardSize) * 2 + var(--defaultGap));
     flex-wrap: wrap;
-    border-radius: calc(2 * var(--borderRadius));
     gap: var(--defaultGap);
-    box-shadow: var(--trayDropShadow);
 }
 
 cards.disabled {
     opacity: 1;
 }
 
-.guessing cards {
-    background-color: hsl(var(--trayGuessingBackgroundHSL));
-}
-
-.guessing.reviewing cards {
-    background-color: hsl(var(--trayReviewingBackgroundHSL));
-}
-
 spot {
     display: block;
     width: var(--cardSize);
     height: var(--cardSize);
-    outline: 1px dashed transparent;
-    border-radius: var(--borderRadius);
+    outline: 1px dotted transparent;
     pointer-events: none;
 }
 
@@ -556,11 +583,11 @@ spot {
 }
 
 spot.empty {
-    outline: 1px dashed hsla(var(--hueMain), 70%, 90%, .2);
+    outline-color: hsla(var(--hueMain), 70%, 90%, 0);
 }
 
 .guessing spot.empty {
-    outline: 1px dashed hsla(var(--hueMain), 70%, 90%, .7);
+    outline-color: hsla(var(--hueMain), 70%, 90%, 0);
 }
 
 spot.empty card {
@@ -570,22 +597,45 @@ spot.empty card {
 }
 
 parking spot {
-    background: hsla(var(--appBackgroundDarkHSL), .6);
+    background: hsla(0, 0%, 0%, .3);
 }
 
 card {
-    background: hsla(var(--hueMain), 70%, 90%, 1);
-    box-shadow: var(--cardDropShadow);
+    background: white;
+    background-size: 100% 100%;
     display: block;
     width: var(--cardSize);
     height: var(--cardSize);
-    border-radius: var(--borderRadius);
     user-select: none;
     -webkit-user-select: none;
     cursor: grab;
     color: hsl(var(--hueMain), 40%, 17%);
     z-index: 200;
     touch-action: none;
+}
+
+cards card, .guessing cards card, .reviewing cards card {
+    background: none;
+    color: hsl(var(--hueMain), 100%, 86%);
+}
+
+.guessing cards card {
+    color: hsl(var(--hueGuessing), 94%, 90%);
+}
+
+.reviewing cards card {
+    color: hsl(var(--hueReviewing), 94%, 90%);
+}
+
+cards spot:nth-child(1) card words word:nth-child(2),
+cards spot:nth-child(1) card words word:nth-child(3),
+cards spot:nth-child(2) card words word:nth-child(3),
+cards spot:nth-child(2) card words word:nth-child(4),
+cards spot:nth-child(3) card words word:nth-child(1),
+cards spot:nth-child(3) card words word:nth-child(2),
+cards spot:nth-child(4) card words word:nth-child(1),
+cards spot:nth-child(4) card words word:nth-child(4) {
+    opacity: .4;
 }
 
 card.ghost {
@@ -612,8 +662,8 @@ card.selected {
 }
 
 card.dropped, card.selected.dropped {
-    animation: pulse var(--longTransition) ease-in;
-    -webkit-animation: pulse var(--longTransition) ease-in;
+    animation: pulse var(--mediumTransition) ease-in-out;
+    -webkit-animation: pulse var(--mediumTransition) ease-in-out;
 }
 
 .empty card.dropped, cards .empty card.dropped {
@@ -623,29 +673,29 @@ card.dropped, card.selected.dropped {
 
 @keyframes pulse {
     0% {
-        background: hsl(var(--highlightColorHSL));
+        opacity: .9;
     }
 
     30% {
-        background: hsl(var(--highlightColorHSL));
+        opacity: .9;
     }
 
     100% {
-        background: hsla(var(--hueMain), 70%, 90%, 1);
+        opacity: 1;
     }
 }
 
 @-webkit-keyframes pulse {
     0% {
-        background: hsl(var(--highlightColorHSL));
+        opacity: .9;
     }
 
     30% {
-        background: hsl(var(--highlightColorHSL));
+        opacity: .9;
     }
 
     100% {
-        background: hsla(var(--hueMain), 70%, 90%, 1);
+        opacity: 1;
     }
 }
 
@@ -663,20 +713,9 @@ hints hint {
     display: block;
     position: absolute;
     height: var(--wordHeight);
-    background: hsl(var(--trayBackgroundHSL)) var(--texture1);
     background-size: 128px 128px;
     padding: calc(var(--defaultGap) / 4) calc(var(--defaultGap) / 4) calc(var(--defaultGap));
     width: calc(1.75 * var(--cardSize));
-    border-radius: calc(var(--borderRadius) * 2) calc(var(--borderRadius) * 2) 0 0;
-    box-shadow: var(--trayDropShadow);
-}
-
-.guessing hints hint {
-    background-color: hsl(var(--trayGuessingBackgroundHSL));
-}
-
-.guessing.reviewing hints hint {
-    background-color: hsl(var(--trayReviewingBackgroundHSL));
 }
 
 modal input, hints hint input {
@@ -684,21 +723,33 @@ modal input, hints hint input {
     outline: none;
     border: none;
     background: none;
-    color: white;
-    font-family: 'Written';
+    color: hsl(var(--hueMain), 100%, 70%);
+    font-family: 'ClueFont';
     width: 100%;
     line-height: 120%;
     padding: 0;
-    font-size: 150%;
+    font-size: 140%;
+}
+
+hints hint input::placeholder {
+    color: hsla(var(--hueMain), 94%, 07%, 0);
+    text-shadow: none;
 }
 
 modal input {
     font-size: 300%;
+    color: white;
 }
 
 .guessing hints hint input:disabled {
     opacity: 1;
-    color: hsl(var(--appForegroundHSL));
+    color: hsl(var(--hueGuessing), 94%, 80%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0);
+}
+
+.guessing.reviewing hints hint input:disabled {
+    color: hsl(var(--hueReviewing), 94%, 80%);
+    border-bottom: 1px solid rgba(0, 0, 0, 0);
 }
 
 .guessing input, .guessing hints hint input {
@@ -706,9 +757,6 @@ modal input {
     -webkit-user-select: none;
 }
 
-hints hint input::placeholder {
-    color: rgba(255, 255, 255, .50)
-}
 
 
 hints hint:nth-child(1) {
@@ -813,7 +861,6 @@ section {
     max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
     width: 100%;
     background: hsla(var(--appBackgroundHSL), .3);
-    /* border: 1px solid hsla(var(--appBackgroundHSL), 1); */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -873,7 +920,7 @@ modal.disabled cards {
 }
 
 modal cards card {
-    background: white;
+    background: hsla(255, 100%, 100%, .2);
 }
 
 modal cards card.intray {
@@ -978,7 +1025,7 @@ version {
     }
 
     wrapper {
-        padding: calc(var(--defaultGap) / 2) 0 0;
+        padding: calc(var(--defaultGap) / 4) 0 0;
         overflow: hidden;
     }
 
@@ -1018,6 +1065,10 @@ version {
         text-align: right;
     }
 
+    modal controls button {
+        padding: calc(.5 * var(--defaultGap));
+        font-size: 140%;
+    }
 
     header {
         width: auto;
@@ -1045,9 +1096,9 @@ version {
     }
 
     rotators {
-        width: 100%;
+        width: calc(100% + 1 * var(--defaultGap));
         overflow: hidden;
-        padding: calc(2 * var(--defaultGap)) 0px;
+        padding: calc(1.5 * var(--defaultGap)) 0;
     }
 
     spot rotators button {
@@ -1063,8 +1114,14 @@ version {
         background: hsl(var(--linkColorLightHSL));
     }
 
-    spot rotators button icon {
-        background: rgb(0, 0, 0, 0.1);
+    cards spot:hover rotators button icon {
+        background: rgb(0, 0, 0, 0.2);
+    }
+
+    tray diamond {
+        width: calc(100% - 4 * var(--defaultGap));
+        height: calc(100% - 4 * var(--defaultGap));
+        transform: translateY(-40px);
     }
 
     cards {
@@ -1077,9 +1134,19 @@ version {
         font-size: 146%;
     }
 
+    .guessing spot rotators button {
+        padding: 0px 0px 12px 12px;
+    }
+
     word {
         font-size: 100%;
         line-height: 180%;
+    }
+
+    cards word {
+        align-items: start;
+        font-size: 100%;
+        line-height: 100%;
     }
 
     word:nth-child(2) {
@@ -1095,13 +1162,13 @@ version {
     }
 
     hints hint {
-        padding: calc(var(--defaultGap) / 4) calc(var(--defaultGap) / 4) calc(var(--defaultGap));
+        padding: calc(var(--defaultGap) / 1) calc(var(--defaultGap) / 4) calc(var(--defaultGap) / 2.6);
         width: calc(1.6 * var(--cardSize));
         background-size: 128px;
     }
 
     hints hint input {
-        font-size: 170%;
+        font-size: 150%;
         line-height: 120%;
     }
 
@@ -1110,19 +1177,24 @@ version {
     }
 
     hints hint:nth-child(1) {
-        transform: translate(0px, calc(-1.93 * var(--wordHeight)));
+        transform: translate(0px, calc(-1.99 * var(--wordHeight)));
     }
 
     hints hint:nth-child(2) {
-        transform: translate(calc(var(--cardSize) + (var(--defaultGap) / 5)), calc(-1 * var(--cardSize) + calc(var(--wordHeight) * -2.1)));
+        transform: translate(calc(var(--cardSize) + (var(--defaultGap) / 6)), calc(-1 * var(--cardSize) + calc(var(--wordHeight) * -2.1)));
     }
 
     hints hint:nth-child(3) {
-        transform: translate(calc(-1 * var(--cardSize) - var(--defaultGap) / 5), calc(-1 * var(--cardSize) + calc(var(--wordHeight) * -2.1)));
+        transform: translate(calc(-1 * var(--cardSize) - var(--defaultGap) / 6), calc(-1 * var(--cardSize) + calc(var(--wordHeight) * -2.08)));
     }
 
     hints hint:nth-child(4) {
-        transform: translate(0px, calc(var(--cardSize) * -2.46));
+        transform: translate(0px, calc(var(--cardSize) * -2.44));
+    }
+
+    hints hint input::placeholder {
+        color: hsl(var(--hueMain), 94%, 07%);
+        text-shadow: none;
     }
 
     section {
@@ -1159,13 +1231,21 @@ version {
 
 }
 
-@media screen and (max-height:650px) {
-    cards spot.empty {
-        background: url(../images/tap.svg) no-repeat center;
-        background-size: 40px;
+@media screen and (max-height:670px) {
+    wrapper {
+        padding: 0px;
+        margin: 0px;
     }
 
-    .mobile parking {
+    wrapper:first-of-type {
+        padding-bottom: 0px;
+    }
+
+    wrapper message {
         display: none;
+    }
+
+    wrapper.mobile {
+        transform: translateY(calc(.3 * var(--cardSize)));
     }
 }

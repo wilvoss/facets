@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.049',
+    version: '0.1.050',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -77,9 +77,9 @@ var app = new Vue({
         this.documentCssRoot.style.setProperty('--textureBlendMode', _wordset.textureBlendMode);
         this.documentCssRoot.style.setProperty('--hueTheme', _wordset.textureHue);
       } else {
-        this.documentCssRoot.style.setProperty('--texture2', 'url(../images/facets-dark.png)');
-        this.documentCssRoot.style.setProperty('--textureSize', '530px');
-        this.documentCssRoot.style.setProperty('--textureBlendMode', 'luminosity');
+        this.documentCssRoot.style.setProperty('--texture2', 'linear-gradient(0deg, hsla(var(--appBackgroundDarkestHSL), .3) 0%, hsla(var(--appBackgroundDarkestHSL), 0) 20%, hsla(var(--appBackgroundDarkestHSL), 0) 80%, hsla(var(--appBackgroundDarkestHSL), 1) 100%)');
+        this.documentCssRoot.style.setProperty('--textureSize', 'cover');
+        this.documentCssRoot.style.setProperty('--textureBlendMode', 'overlay');
         this.documentCssRoot.style.setProperty('--hueTheme', '205');
       }
     },
@@ -285,11 +285,18 @@ var app = new Vue({
       }
     },
 
+    HandleBodyPointerDown(e) {
+      this.ghostX = e.clientX;
+      this.ghostY = e.clientY;
+    },
+
     HandleCardPointerDown(e, _card) {
       note('HandleCardPointerDown() called');
       if (e !== null) {
         e.preventDefault();
         e.stopPropagation();
+        this.ghostX = e.clientX;
+        this.ghostY = e.clientY;
         if (e.target.hasPointerCapture(e.pointerId)) {
           e.target.releasePointerCapture(e.pointerId);
         }
@@ -390,7 +397,7 @@ var app = new Vue({
 
       _card.isSelected = _card.words.length === 0 ? false : selectedState;
 
-      if (document.body.offsetHeight <= 650 && !this.showModal) {
+      if (document.body.offsetHeight <= 660 && !this.showModal) {
         this.showModal = true;
       }
 
@@ -726,6 +733,18 @@ var app = new Vue({
           if (!this.isGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
             this.FillParkingLot();
           }
+          // else {
+          //   if (!this.isGuessing && !this.trayIsRotating) {
+          //     switch (e.target.id) {
+          //       case 'hint0':
+          //         document.getElementById(e.shiftKey ? 'hint2' : 'hint1').focus();
+          //         break;
+          //       default:
+          //         document.getElementById('hint0').focus();
+          //         break;
+          //     }
+          //   }
+          // }
           if (this.showModal && (this.showSettings || this.showIntro)) {
             this.SubmitSettings(e);
           }
@@ -734,12 +753,10 @@ var app = new Vue({
           note('HandleKeyDownEvent() called');
           e.preventDefault();
           if (!this.trayIsRotating) {
-            let newTarget = 'hint0';
             switch (e.target.id) {
               case 'hint0':
                 document.getElementById(e.shiftKey ? 'hint2' : 'hint1').focus();
                 break;
-
               default:
                 document.getElementById('hint0').focus();
                 break;
@@ -833,10 +850,10 @@ var app = new Vue({
     getPlayerMessage: function () {
       let text = this.player.name + ', you are guessing ' + this.puzzlePlayer.name + '\'s "' + this.guessingWordSet.name + '" puzzle!';
       if (!this.isGuessing) {
-        text = this.player.name + ', you are creating a  "' + this.guessingWordSet.name + '" puzzle!';
+        text = this.player.name + ', you are creating!';
       } else {
         if (this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id) {
-          text = this.player.name + ', you are guessing your own "' + this.guessingWordSet.name + '" puzzle!';
+          text = this.player.name + ', you are guessing your own puzzle!';
         } else if (this.player.id !== this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id) {
           text = this.player.name + ', you are reviewing ' + this.sendingPlayer.name + "'s guess!";
         }
