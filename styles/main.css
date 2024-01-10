@@ -17,7 +17,7 @@
     --hueMain: 215;
     --hueTheme: 215;
     --hueGuessing: 274;
-    --hueReviewing: 344;
+    --hueReviewing: 355;
     --hueHighlight: 140;
 
     --appBackgroundHSL: var(--hueTheme), 50%, 16%;
@@ -26,7 +26,7 @@
     --appForegroundHSL: var(--hueTheme), 100%, 100%;
     --linkColorLightHSL: var(--hueHighlight), 79%, 55%;
     --linkColorDarkHSL: var(--hueHighlight), 69%, 45%;
-    --messageColorHSL: var(--hueMain), 100%, 70%;
+    --messageColorHSL: 44, 100%, 70%;
     --highlightColorHSL: 50, 100%, 70%;
     --trayBackgroundHSL: var(--hueMain), 100%, 50%;
     --trayGuessingBackgroundHSL: var(--hueGuessing), 80%, 56%;
@@ -150,7 +150,6 @@ hintcard card {
     background: none;
     color: hsl(var(--appForegroundHSL));
     border: none;
-    box-shadow: none;
 }
 
 picker spot icon.recycle {
@@ -190,7 +189,6 @@ header subtitle, header subtitle button {
     cursor: default;
     text-align: center;
     color: hsla(var(--linkColorLightHSL), 1);
-    text-shadow: 0px 0px 3px black;
     display: flex;
     font-size: 70%;
     text-transform: uppercase;
@@ -225,17 +223,8 @@ header subtitle button.inline icon {
 
 message {
     display: block;
-    color: hsl(var(--hueMain), 100%, 70%);
-    text-shadow: 0px 0px 30px rgb(0, 0, 0);
+    color: hsl(var(--messageColorHSL));
     text-align: center;
-}
-
-.guessing message {
-    color: hsl(var(--hueGuessing), 100%, 80%);
-}
-
-.reviewing message {
-    color: hsl(var(--hueReviewing), 100%, 80%);
 }
 
 settings message {
@@ -604,7 +593,6 @@ spot.empty {
 
 spot.empty card {
     background: transparent;
-    box-shadow: none;
     cursor: default;
 }
 
@@ -661,7 +649,7 @@ cards spot:nth-child(4) card words word:nth-child(4) {
 }
 
 card.ghost {
-    background: rgba(0, 0, 0, .2);
+    background: rgba(0, 0, 0, .4);
     transition: 0ms ease-in 0ms opacity;
     position: fixed;
     top: calc(-.5 * var(--cardSize));
@@ -669,6 +657,15 @@ card.ghost {
     opacity: 0;
     pointer-events: none;
     z-index: 200;
+    border: 1px solid hsla(var(--hueMain), 100%, 70%, .7);
+}
+
+.guessing card.ghost {
+    border: 1px solid hsla(var(--hueGuessing), 100%, 70%, .7);
+}
+
+.reviewing card.ghost {
+    border: 1px solid hsla(var(--hueReviewing), 100%, 70%, .7);
 }
 
 card.ghost.show {
@@ -754,15 +751,24 @@ modal input, hints hint input {
 hints hint input {
     transform: rotateX(24deg) rotateY(0deg);
     transform-style: preserve-3d;
+    text-shadow: 0px -1px 1px rgba(0, 0, 0, .6);
 }
 
 hints hint input::placeholder {
-    color: hsla(var(--hueMain), 94%, 07%, 0);
-    text-shadow: none;
+    color: hsla(var(--hueMain), 70%, 48%, 1);
+}
+
+.guessing hints hint input::placeholder {
+    color: hsla(var(--hueGuessing), 70%, 48%, 1);
+}
+
+.reviewing hints hint input::placeholder {
+    color: hsla(var(--hueReviewing), 70%, 48%, 1);
 }
 
 modal input {
-    font-size: 300%;
+    font-family: 'Abel';
+    font-size: 200%;
     color: white;
 }
 
@@ -810,7 +816,6 @@ hints hint:nth-child(4) {
 
 card.empty {
     background: transparent;
-    box-shadow: none;
 }
 
 card menu {
@@ -919,7 +924,7 @@ wordset {
     align-items: center;
     -webkit-user-select: none;
     cursor: pointer;
-    background: hsla(var(--messageColorHSL), .1);
+    background: hsla(0, 0%, 0%, .2);
     border-radius: var(--borderRadius);
     transition: var(--mediumTransition) ease-in-out all;
     line-height: 110%;
@@ -932,7 +937,6 @@ wordset.selected {
 
 modal cards {
     background: none;
-    box-shadow: none;
     height: auto;
     pointer-events: all;
     transition: 0 linear all;
@@ -1024,7 +1028,7 @@ version {
     }
 }
 
-@media screen and (max-width:640px) {
+@media screen and (max-width:660px) {
 
     :root {
         --wordHeight: 26px;
@@ -1222,11 +1226,6 @@ version {
 
     hints hint:nth-child(4) {
         transform: translate(0px, calc(var(--cardSize) * -2.44));
-    }
-
-    hints hint input::placeholder {
-        color: hsl(var(--hueMain), 94%, 07%);
-        text-shadow: none;
     }
 
     section {

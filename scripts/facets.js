@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.056',
+    version: '0.1.057',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -570,7 +570,7 @@ var app = new Vue({
 
     /* END CARD MANIPULATION */
 
-    NewGame(e, _message = '') {
+    NewGame(e, _message = '', _rotate = true) {
       note('NewGame() called');
       document.title = 'Facets!';
       this.message = _message;
@@ -590,7 +590,9 @@ var app = new Vue({
       this.parkedCards = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
       this.hints = [new WordObject({}), new WordObject({}), new WordObject({}), new WordObject({})];
       this.CreateCardsForPlayer(null);
-      this.RotateTray(-4);
+      if (_rotate) {
+        this.RotateTray(-4);
+      }
     },
 
     HandlePointerMoveEvent(e) {
@@ -615,6 +617,9 @@ var app = new Vue({
         this.changeNameTitle = "Hello, what's your name?";
         this.showModal = true;
         this.showIntro = true;
+        setTimeout(() => {
+          document.getElementById('nameInput').focus();
+        }, 410);
       }
 
       this.wordSets.forEach((m) => {
@@ -657,12 +662,12 @@ var app = new Vue({
           document.title = 'Facets! - CHALLENGE';
           this.RestoreGame(boardPieces);
         } else if (!this.isGuessing) {
-          this.NewGame();
+          this.NewGame(null, '', false);
         }
       } catch (e) {
         warn(e.message);
         boardPieces = [];
-        this.NewGame(null, '😕 - Something went wrong.');
+        this.NewGame(null, '😕 - Something went wrong.', false);
       }
     },
 
@@ -710,6 +715,9 @@ var app = new Vue({
         e.stopPropagation();
       }
       this.player.name = this.tempName !== '' ? this.tempName.trim() : this.player.name;
+      if (!this.isGuessing) {
+        this.puzzlePlayer.name = this.player.name;
+      }
       localStorage.setItem('name', this.player.name);
       if (this.showSettings) {
         let wordSetChanged = false;
