@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.057',
+    version: '0.1.059',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -26,6 +26,8 @@ var app = new Vue({
     showArticle: false,
     showSettings: false,
     showIntro: false,
+    confirmation: { message: 'Did they have the right answer?', target: 'correct' },
+    showConfirmation: false,
     showTutorial: false,
     changeNameTitle: "What's your name?",
     emptyCard: new CardObject({ id: 'ghost' }),
@@ -87,7 +89,10 @@ var app = new Vue({
 
     HandleSubmitButtonPress() {
       note('HandleSubmitButtonPress() called');
-      if (this.isGuessing) {
+      if (this.player.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
+        this.showModal = true;
+        this.showConfirmation = true;
+      } else if (this.isGuessing) {
         this.ShareBoard();
       } else {
         this.FillParkingLot();
@@ -220,11 +225,26 @@ var app = new Vue({
       }
     },
 
-    ShareBoard() {
+    HandleYesNo(_target, _value) {
+      switch (_target) {
+        case 'correct':
+          this.ShareBoard(_value);
+          break;
+
+        default:
+          break;
+      }
+      this.showConfirmation = false;
+      this.showModal = false;
+    },
+
+    ShareBoard(gotIt = false) {
       note('ShareBoard() called');
       this.puzzleJustSent = this.shareURL === '';
-      let text = this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id ? 'Here\'s a new "' + this.guessingWordSet.name + '" puzzle to solve!' : "Here's my guess!";
+      let newPuzzleIcon = '🧠';
+      let text = this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id ? newPuzzleIcon + ' Here\'s a new "' + this.guessingWordSet.name + '" puzzle to solve!' : "🤔 Here's my guess!";
       let nailedIt = false;
+      document.getElementById('shareButton').focus();
       if (this.player.role === 'reviewer') {
         switch (this.getNumberOfCardsThatHaveBeenPlacedOnTray) {
           case 0:
@@ -240,8 +260,12 @@ var app = new Vue({
             text = '🤪 Not quite!';
             break;
           case 4:
-            text = '🔥 Nailed it!';
-            nailedIt = true;
+            if (gotIt) {
+              text = '🔥 Nailed it!';
+              nailedIt = true;
+            } else {
+              text = "☔️ Whelp, better luck next time. Here's the solution.";
+            }
             break;
           default:
             break;
@@ -498,6 +522,8 @@ var app = new Vue({
 
     ResetTrayAfterRotation() {
       note('ResetTrayAfterRotation() called');
+      this.trayIsRotating = false;
+      document.getElementById('parkingInput').value = '';
 
       if (this.trayRotation < 3) {
         if (this.trayRotation !== 0) {
@@ -565,7 +591,6 @@ var app = new Vue({
         this.ConstructURLForCurrentGame();
       }
       this.trayRotation = 0;
-      this.trayIsRotating = false;
     },
 
     /* END CARD MANIPULATION */
@@ -581,6 +606,7 @@ var app = new Vue({
       this.sendingPlayer.id = this.player.id;
       this.sendingPlayer.name = this.player.name;
       this.guessingWordSet = this.gameWordSet;
+      this.trayIsRotating = false;
       this.SetWordSetTheme(this.gameWordSet);
       this.shareURL = '';
       this.shareText = 'Send';
@@ -659,7 +685,7 @@ var app = new Vue({
         }
 
         if (boardPieces.length >= 40) {
-          document.title = 'Facets! - CHALLENGE';
+          document.title = 'Facets!';
           this.RestoreGame(boardPieces);
         } else if (!this.isGuessing) {
           this.NewGame(null, '', false);

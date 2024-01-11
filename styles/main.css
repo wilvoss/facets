@@ -748,6 +748,12 @@ modal input, hints hint input {
     font-size: 120%;
 }
 
+modal small {
+    display: block;
+    font-size: 70%;
+    opacity: .7;
+}
+
 hints hint input {
     transform: rotateX(24deg) rotateY(0deg);
     transform-style: preserve-3d;
@@ -882,7 +888,7 @@ modal.disabled, tutorial.disabled {
     opacity: 0;
 }
 
-modal settings, modal intro {
+modal settings, modal intro, modal confirmation {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -893,7 +899,7 @@ modal settings, modal intro {
 section {
     max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
     width: 100%;
-    background: hsla(var(--appBackgroundHSL), .3);
+    background: hsla(var(--appBackgroundHSL), .4);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -924,7 +930,7 @@ wordset {
     align-items: center;
     -webkit-user-select: none;
     cursor: pointer;
-    background: hsla(0, 0%, 0%, .2);
+    background: hsl(var(--appBackgroundHSL));
     border-radius: var(--borderRadius);
     transition: var(--mediumTransition) ease-in-out all;
     line-height: 110%;
