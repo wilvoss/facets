@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.059',
+    version: '0.1.060',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -22,6 +22,7 @@ var app = new Vue({
     tempUseWordSetThemes: false,
     gameWordSet: WordSets.find((m) => m.id === '100'),
     tempWordSets: [],
+    guessersName: '',
     guessingWordSet: WordSets.find((m) => m.id === '100'),
     showArticle: false,
     showSettings: false,
@@ -142,6 +143,7 @@ var app = new Vue({
       var urlParams = new URLSearchParams(window.location.search);
 
       this.sendingPlayer.name = urlParams.has('sendingName') ? urlParams.get('sendingName') : this.sendingPlayer.name;
+      this.guessersName = this.sendingPlayer.name;
       this.puzzlePlayer.name = urlParams.has('puzzleName') ? urlParams.get('puzzleName') : this.puzzlePlayer.name;
       this.sendingPlayer.id = urlParams.has('sendingID') ? parseInt(urlParams.get('sendingID')) : this.sendingPlayer.id;
       this.puzzlePlayer.id = urlParams.has('puzzleID') ? parseInt(urlParams.get('puzzleID')) : this.puzzlePlayer.id;
@@ -242,29 +244,29 @@ var app = new Vue({
       note('ShareBoard() called');
       this.puzzleJustSent = this.shareURL === '';
       let newPuzzleIcon = '🧠';
-      let text = this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id ? newPuzzleIcon + ' Here\'s a new "' + this.guessingWordSet.name + '" puzzle to solve!' : "🤔 Here's my guess!";
+      let text = this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id ? newPuzzleIcon + ' Here\'s a new "' + this.guessingWordSet.name + '" puzzle to solve!' : '🤔 ' + this.puzzlePlayer.name + ", here's my guess!";
       let nailedIt = false;
       document.getElementById('shareButton').focus();
       if (this.player.role === 'reviewer') {
         switch (this.getNumberOfCardsThatHaveBeenPlacedOnTray) {
           case 0:
-            text = '🤢 Oh boy, this is just sad.';
+            text = '🤢 Oh boy, ' + this.guessersName + ' this is just sad.';
             break;
           case 1:
-            text = '🫣 I guess one right is better than nothing?';
+            text = '🫣  ' + this.guessersName + ', I guess one right is better than nothing?';
             break;
           case 2:
-            text = '😱 Nope!';
+            text = '😱 ' + this.guessersName + ", you're missing a couple!";
             break;
           case 3:
-            text = '🤪 Not quite!';
+            text = '🤪  ' + this.guessersName + ', not quite!';
             break;
           case 4:
             if (gotIt) {
-              text = '🔥 Nailed it!';
+              text = '🔥  ' + this.guessersName + ', you nailed it!';
               nailedIt = true;
             } else {
-              text = "☔️ Whelp, better luck next time. Here's the solution.";
+              text = '☔️ Whelp ' + this.guessersName + ", better luck next time. Here's the solution.";
             }
             break;
           default:
@@ -600,6 +602,7 @@ var app = new Vue({
       document.title = 'Facets!';
       this.message = _message;
       this.puzzleJustSent = false;
+      this.guessersName = '';
       this.player.role = 'creator';
       this.puzzlePlayer.id = this.player.id;
       this.puzzlePlayer.name = this.player.name;

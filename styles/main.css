@@ -29,7 +29,7 @@
     --messageColorHSL: 44, 100%, 70%;
     --highlightColorHSL: 50, 100%, 70%;
     --trayBackgroundHSL: var(--hueMain), 100%, 50%;
-    --trayGuessingBackgroundHSL: var(--hueGuessing), 80%, 56%;
+    --trayGuessingBackgroundHSL: var(--hueGuessing), 76%, 48%;
     --trayReviewingBackgroundHSL: var(--hueReviewing), 100%, 54%;
 
     --longTransition: 400ms;
@@ -645,7 +645,7 @@ cards spot:nth-child(3) card words word:nth-child(1),
 cards spot:nth-child(3) card words word:nth-child(2),
 cards spot:nth-child(4) card words word:nth-child(1),
 cards spot:nth-child(4) card words word:nth-child(4) {
-    opacity: .4;
+    opacity: .7;
 }
 
 card.ghost {
