@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.061',
+    version: '0.1.062',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -27,6 +27,7 @@ var app = new Vue({
     showArticle: false,
     showSettings: false,
     showIntro: false,
+    showTutorial: false,
     confirmation: { message: 'Did they have the right answer?', target: 'correct' },
     showConfirmation: false,
     showTutorial: false,
@@ -68,6 +69,12 @@ var app = new Vue({
       e.preventDefault();
       e.stopPropagation();
       this.showModal = !this.showModal;
+    },
+
+    ToggleShowTutorial(e) {
+      e.stopPropagation();
+      e.preventDefault();
+      this.showTutorial = !this.showTutorial;
     },
 
     ToggleTempUseWordSetThemes() {

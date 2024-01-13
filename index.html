@@ -27,6 +27,14 @@
   <body>
     <app id="app" v-cloak :class="{guessing: isGuessing, reviewing: player.role === 'reviewer'}" @pointerdown="HandleBodyPointerDown(event)" @pointerup="HandleBodyPointerUp(event, isDragging ? draggedCard : getSelectedCard)">
       <input maxlength="0" :disabled="isGuessing" id="parkingInput" style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1" tabindex="-1" />
+      <modal :class="{disabled: !showTutorial}" class="tutorial">
+        <intro v-if="showTutorial">
+          <p><span style="color: hsl(var(--hueGuessing), 80%, 50%)">When the gem is an emerald,</span> you are guessing a puzzle a friend sent you. Drag the cards onto the gem and rotate them so that each large "clue" on the edge of the gem has two small words that make sense. Click the 🤔 button to send your guess.</p>
+          <p><span style="color: hsl(var(--hueMain), 100%, 60%)">When the gem is a sapphire,</span> you are creating a puzzle. Give 4 clues on the edges of the gem (tap) that you think connects the two words next to the clue. Click the 🧠 button to send the puzzle.</p>
+          <p><span style="color: hsl(var(--hueReviewing), 100%, 60%)">When the gem is a ruby,</span> you are reviewing a friend's guess. Remove any cards from the gem that are wrong. Click the 🧠 button to send back, even if you are just giving them the correct solution.</p>
+          <controls><button @click="ToggleShowTutorial(event)">Okay</button></controls>
+        </intro>
+      </modal>
       <modal :class="{disabled: !showModal}" @click="showModal = showSettings || showIntro ? true : false">
         <confirmation v-if="showConfirmation && showModal">
           <message>{{confirmation.message}}</message>
@@ -76,7 +84,6 @@
           </cards>
         </picker>
       </modal>
-      <tutorial :class="{disabled: !showTutorial}"> </tutorial>
       <wrapper>
         <controls>
           <button class="inline" @click="NewGame(event)"><span>New</span><icon class="add"></icon></button>
@@ -85,6 +92,7 @@
           <hgroup>
             <h1>{{gameName}}</h1>
             <subtitle>
+              <button class="inline" @click="ToggleShowTutorial(event)"><icon class="info"></icon>Tutorial</button>
               <button class="inline" @click="OpenSettings()">Settings<icon class="settings"></icon></button
             ></subtitle>
           </hgroup>
