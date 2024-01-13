@@ -91,8 +91,8 @@
         </header>
         <controls>
           <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: !isGuessing && getNumberOfHintsThatHaveBeenFilled !== 4}">
-            <icon class="share"></icon>
-            <span>Send</span>
+            <icon class="emoji">{{player.id!==puzzlePlayer.id ? '🤔' : '🧠' }}</icon>
+            <span>{{player.id !== puzzlePlayer.id ? 'Guess' : 'Send' }}</span>
           </button>
         </controls>
       </wrapper>

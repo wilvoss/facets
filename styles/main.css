@@ -16,7 +16,7 @@
 :root {
     --hueMain: 215;
     --hueTheme: 215;
-    --hueGuessing: 274;
+    --hueGuessing: 140;
     --hueReviewing: 355;
     --hueHighlight: 140;
 
@@ -29,7 +29,7 @@
     --messageColorHSL: 44, 100%, 70%;
     --highlightColorHSL: 50, 100%, 70%;
     --trayBackgroundHSL: var(--hueMain), 100%, 50%;
-    --trayGuessingBackgroundHSL: var(--hueGuessing), 76%, 48%;
+    --trayGuessingBackgroundHSL: var(--hueGuessing), 100%, 40%;
     --trayReviewingBackgroundHSL: var(--hueReviewing), 100%, 54%;
 
     --longTransition: 400ms;
@@ -91,6 +91,10 @@ h1, h2, h3, h4, h5 {
     margin-bottom: calc(2 * var(--defaultGap));
 }
 
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
 header h1 {
     margin-bottom: 0px;
 }
@@ -107,6 +111,15 @@ icon {
     width: var(--smallIconSize);
     height: var(--smallIconSize);
     pointer-events: none;
+}
+
+icon.emoji {
+    background-color: none;
+    padding: 0;
+    margin: 0;
+    width: auto;
+    height: auto;
+    line-height: inherit;
 }
 
 icon.share {
@@ -163,6 +176,10 @@ picker spot icon.recycle {
 
 controls button icon {
     background: hsl(var(--linkColorLightHSL));
+}
+
+controls button icon.emoji {
+    background: none;
 }
 
 header {
@@ -648,7 +665,7 @@ cards spot:nth-child(4) card words word:nth-child(4) {
     opacity: .7;
 }
 
-card.ghost {
+card.ghost, card.ghost.empty, .guessing card.ghost.empty, .reviewing card.ghost.empty {
     background: rgba(0, 0, 0, .4);
     transition: 0ms ease-in 0ms opacity;
     position: fixed;
@@ -1105,6 +1122,13 @@ version {
 
     modal controls button {
         padding: calc(.5 * var(--defaultGap));
+        font-size: 140%;
+    }
+
+
+    controls button icon.emoji {
+        background: none;
+        transform: translateY(-3px);
         font-size: 140%;
     }
 
