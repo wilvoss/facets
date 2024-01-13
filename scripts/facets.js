@@ -12,12 +12,14 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.064',
+    version: '0.1.065',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
     guessingCardCount: 4,
     tempName: '',
+    tempID: 0,
+    editID: false,
     useWordSetThemes: false,
     tempUseWordSetThemes: false,
     gameWordSet: WordSets.find((m) => m.id === '100'),
@@ -72,8 +74,10 @@ var app = new Vue({
     },
 
     ToggleShowTutorial(e) {
-      e.stopPropagation();
-      e.preventDefault();
+      if (e != null) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
       this.showTutorial = !this.showTutorial;
     },
 
@@ -645,6 +649,7 @@ var app = new Vue({
         this.player.id = getRandomInt(100000, 100000000);
         localStorage.setItem('userID', this.player.id);
       }
+      this.tempID = parseInt(this.player.id);
 
       let name = localStorage.getItem('name');
       if (name !== undefined && name !== null) {
@@ -738,9 +743,11 @@ var app = new Vue({
         e.preventDefault();
         e.stopPropagation();
       }
+      this.editID = false;
       this.showModal = false;
       this.showSettings = false;
       this.showIntro = false;
+      this.tempID = this.player.id;
       this.tempUseWordSetThemes = this.useWordSetThemes;
     },
 
@@ -764,12 +771,15 @@ var app = new Vue({
           this.NewGame();
           this.SetWordSetTheme(this.guessingWordSet);
         }
+        this.player.id = this.tempID;
         this.useWordSetThemes = this.tempUseWordSetThemes;
         this.SetWordSetTheme(this.guessingWordSet);
 
+        localStorage.setItem('userID', this.player.id);
         localStorage.setItem('useWordSetThemes', this.useWordSetThemes);
         localStorage.setItem('wordSet', this.gameWordSet.id);
       }
+      this.editID = false;
       this.showModal = false;
       this.showSettings = false;
       this.showIntro = false;
@@ -787,7 +797,7 @@ var app = new Vue({
             this.SubmitSettings(e);
           }
           if (this.showTutorial) {
-            this.ToggleShowTutorial();
+            this.ToggleShowTutorial(null);
           }
           break;
         case 'Tab':
@@ -807,7 +817,7 @@ var app = new Vue({
             this.CancelSettings(null);
           }
           if (this.showTutorial) {
-            this.ToggleShowTutorial();
+            this.ToggleShowTutorial(null);
           }
           break;
         default:

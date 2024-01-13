@@ -764,6 +764,16 @@ hints hint {
     perspective: var(--cardSize);
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
 modal input, hints hint input {
     text-align: center;
     outline: none;
@@ -952,7 +962,7 @@ settings input {
 }
 
 wordset {
-    padding: calc(.75 * var(--defaultGap)) var(--defaultGap);
+    padding: calc(.5 * var(--defaultGap)) var(--defaultGap);
     user-select: none;
     display: flex;
     justify-content: center;
@@ -961,14 +971,16 @@ wordset {
     -webkit-user-select: none;
     cursor: pointer;
     background: hsl(var(--appBackgroundHSL));
+    border: 1px solid hsla(var(--appForegroundHSL), .5);
     border-radius: var(--borderRadius);
     transition: var(--mediumTransition) ease-in-out all;
     line-height: 110%;
+    opacity: .8;
 }
 
 wordset.selected {
-    background: hsl(var(--appForegroundHSL));
-    color: hsla(var(--appBackgroundDarkHSL), 1);
+    border-color: hsl(var(--appForegroundHSL));
+    opacity: 1;
 }
 
 modal cards {

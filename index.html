@@ -34,6 +34,7 @@
           <p><span style="color: hsl(var(--hueGuessing), 80%, 50%)">When the gem is an emerald,</span> you are guessing a puzzle a friend sent you. Drag the cards onto the gem and rotate them so that each large "clue" on the edge of the gem has two small words that make sense. Click the 🤔 button to send your guess.</p>
           <p><span style="color: hsl(var(--hueMain), 100%, 60%)">When the gem is a sapphire,</span> you are creating a puzzle. Give 4 clues on the edges of the gem (tap) that you think connects the two words next to the clue. Click the 🧠 button to send the puzzle.</p>
           <p><span style="color: hsl(var(--hueReviewing), 100%, 60%)">When the gem is a ruby,</span> you are reviewing a friend's guess. Remove any cards from the gem that are wrong. Click the 🧠 button to send back, even if you are just giving them the correct solution.</p>
+          <p>If you play on multiple browsers, be sure change your player number in settings to be the same on each.</p>
           <controls><button @click="ToggleShowTutorial(event)">Okay</button></controls>
         </intro>
       </modal>
@@ -49,8 +50,18 @@
         </intro>
         <settings v-if="showSettings && showModal">
           <h2>Settings</h2>
-          <message>Your name<small>(id #{{player.id}})</small></message>
-          <section><input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" /></section>
+          <message>Your name</message>
+          <section>
+            <input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
+          </section>
+          <message>
+            Player #
+            <small>Update this number to match on all of your browsers.</small>
+          </message>
+          <section>
+            <input spellcheck="false" onpointerup="this.select()" inputmode="numeric" type="number" pattern="\d*" v-model="tempID" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="8" />
+          </section>
+
           <message>Puzzle category<small>{{isGuessing ? '(disabled while guessing)' : ''}}</small></message>
           <section :class="{disabled: isGuessing}">
             <wordsets>
@@ -62,7 +73,10 @@
             Use word themes
             <toggle></toggle>
           </checkbox> -->
-          <controls><button class="secondary" @click="CancelSettings(event)">Cancel</button><button @click="SubmitSettings(event)">Save</button></controls>
+          <controls>
+            <button class="secondary" @click="CancelSettings(event)">Cancel</button>
+            <button :disabled="tempID.toString().length !== 8" :class="{disabled: tempID.toString().length !== 8}" @click="SubmitSettings(event)">Save</button>
+          </controls>
           <version>Version {{version}}</version>
         </settings>
         <picker v-if="!showSettings && !showIntro && !showConfirmation && showModal">
