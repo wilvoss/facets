@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.063',
+    version: '0.1.064',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -786,6 +786,9 @@ var app = new Vue({
           if (this.showModal && (this.showSettings || this.showIntro)) {
             this.SubmitSettings(e);
           }
+          if (this.showTutorial) {
+            this.ToggleShowTutorial();
+          }
           break;
         case 'Tab':
           note('HandleKeyDownEvent() called');
@@ -802,6 +805,9 @@ var app = new Vue({
         case 'Escape':
           if (this.showModal && (this.showSettings || this.showIntro)) {
             this.CancelSettings(null);
+          }
+          if (this.showTutorial) {
+            this.ToggleShowTutorial();
           }
           break;
         default:

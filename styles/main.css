@@ -89,6 +89,7 @@ app {
 h1, h2, h3, h4, h5 {
     font-weight: normal;
     margin-bottom: calc(2 * var(--defaultGap));
+    font-family: "Theme";
 }
 
 button {
@@ -931,14 +932,11 @@ modal.tutorial intro {
 section {
     max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
     width: 100%;
-    background: hsla(var(--appBackgroundHSL), .4);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     text-align: center;
-    border-radius: calc(2 * var(--borderRadius));
-    padding: calc(1 * var(--defaultGap)) 0;
 }
 
 settings wordsets {

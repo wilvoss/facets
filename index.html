@@ -12,7 +12,7 @@
 
     <title>Facets</title>
 
-    <meta name="description" content="A game of matching facets of words with other words." />
+    <meta name="description" content="A game of connecting words that maybe don't connect so easily 💎." />
     <meta name="keywords" content="casual, video, game, boardgame" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="images/icon180-guessing.png" />
@@ -29,6 +29,7 @@
       <input maxlength="0" :disabled="isGuessing" id="parkingInput" style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1" tabindex="-1" />
       <modal :class="{disabled: !showTutorial}" class="tutorial">
         <intro v-if="showTutorial">
+          <h2>Tutorial</h2>
           <p>The challenge of FACETS is to connect different words that may or may not be easily connected.</p>
           <p><span style="color: hsl(var(--hueGuessing), 80%, 50%)">When the gem is an emerald,</span> you are guessing a puzzle a friend sent you. Drag the cards onto the gem and rotate them so that each large "clue" on the edge of the gem has two small words that make sense. Click the 🤔 button to send your guess.</p>
           <p><span style="color: hsl(var(--hueMain), 100%, 60%)">When the gem is a sapphire,</span> you are creating a puzzle. Give 4 clues on the edges of the gem (tap) that you think connects the two words next to the clue. Click the 🧠 button to send the puzzle.</p>
@@ -47,6 +48,7 @@
           <controls><button class="secondary" @click="CancelSettings(event)">Cancel</button><button @click="SubmitSettings(event)">Save</button></controls>
         </intro>
         <settings v-if="showSettings && showModal">
+          <h2>Settings</h2>
           <message>Your name<small>(id #{{player.id}})</small></message>
           <section><input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" /></section>
           <message>Puzzle category<small>{{isGuessing ? '(disabled while guessing)' : ''}}</small></message>
