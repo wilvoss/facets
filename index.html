@@ -31,10 +31,10 @@
         <intro v-if="showTutorial">
           <h2>Tutorial</h2>
           <p>The challenge of FACETS is to connect different words that may or may not be easily connected.</p>
-          <p><span style="color: hsl(var(--hueGuessing), 80%, 50%)">When the gem is an emerald,</span> you are guessing a puzzle a friend sent you. Drag the cards onto the gem and rotate them so that each large "clue" on the edge of the gem has two small words that make sense. Click the 🤔 button to send your guess.</p>
-          <p><span style="color: hsl(var(--hueMain), 100%, 60%)">When the gem is a sapphire,</span> you are creating a puzzle. Give 4 clues on the edges of the gem (tap) that you think connects the two words next to the clue. Click the 🧠 button to send the puzzle.</p>
-          <p><span style="color: hsl(var(--hueReviewing), 100%, 60%)">When the gem is a ruby,</span> you are reviewing a friend's guess. Remove any cards from the gem that are wrong. Click the 🧠 button to send back, even if you are just giving them the correct solution.</p>
-          <p>If you play on multiple browsers, be sure change your player number in settings to be the same on each.</p>
+          <p><span class="blueText">When the gem is a sapphire,</span> you are creating a puzzle. Give 4 clues on the edges of the gem (tap) that you think connects the two words next to the clue. Click the 🧠 button to send the puzzle.</p>
+          <p><span class="greenText">When the gem is an emerald,</span> you are guessing a puzzle a friend sent you. Drag the cards onto the gem and rotate them so that each large "clue" on the edge of the gem has two small words that make sense. Click the 🤔 button to send your guess.</p>
+          <p><span class="redText">When the gem is a ruby,</span> you are reviewing a friend's guess. Remove any cards from the gem that are wrong. Click the 🧠 button to send back, even if you are just giving them the correct solution.</p>
+          <p>If you play on multiple browsers, be sure to change your player number in settings to be the same on each.</p>
           <controls><button @click="ToggleShowTutorial(event)">Okay</button></controls>
         </intro>
       </modal>

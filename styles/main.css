@@ -88,7 +88,7 @@ app {
 
 h1, h2, h3, h4, h5 {
     font-weight: normal;
-    margin-bottom: calc(2 * var(--defaultGap));
+    margin: calc(2 * var(--defaultGap)) 0;
     font-family: "Theme";
 }
 
@@ -97,7 +97,7 @@ button {
 }
 
 header h1 {
-    margin-bottom: 0px;
+    margin: 0px;
 }
 
 icon {
@@ -254,6 +254,18 @@ message {
 p {
     margin: 0;
     line-height: 140%;
+}
+
+.blueText {
+    color: hsl(var(--hueMain), 100%, 60%);
+}
+
+.greenText {
+    color: hsl(var(--hueGuessing), 80%, 50%)
+}
+
+.redText {
+    color: hsl(var(--hueReviewing), 100%, 60%)
 }
 
 settings message {
@@ -917,7 +929,7 @@ modal, tutorial {
     flex-wrap: wrap;
     background: hsla(var(--appBackgroundDarkHSL), 1);
     opacity: 1;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     z-index: 300;
     transition: var(--mediumTransition) ease-in-out all;
