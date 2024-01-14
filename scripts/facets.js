@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.068',
+    version: '0.1.069',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -24,8 +24,10 @@ var app = new Vue({
     usePortraitLayout: false,
     useExtraCard: false,
     tempUseWordSetThemes: false,
+    tempWordSetName: '',
     tempUsePortraitLayout: false,
     tempUseExtraCard: false,
+    guessingWithExtraCard: false,
     gameWordSet: WordSets.find((m) => m.id === '100'),
     tempWordSets: [],
     guessersName: '',
@@ -78,6 +80,7 @@ var app = new Vue({
     },
 
     ToggleShowTutorial(e) {
+      note('ToggleShowTutorial() called');
       if (e != null) {
         e.stopPropagation();
         e.preventDefault();
@@ -86,18 +89,22 @@ var app = new Vue({
     },
 
     ToggleTempUseWordSetThemes() {
+      note('ToggleTempUseWordSetThemes() called');
       this.tempUseWordSetThemes = !this.tempUseWordSetThemes;
     },
 
     ToggleTempUsePortraitLayout() {
+      note('ToggleTempUsePortraitLayout() called');
       this.tempUsePortraitLayout = !this.tempUsePortraitLayout;
     },
 
     ToggleTempUseExtraCard() {
+      note('ToggleTempUseExtraCard() called');
       this.tempUseExtraCard = !this.tempUseExtraCard;
     },
 
     SetWordSetTheme(_wordset) {
+      note('SetWordSetTheme() called');
       if (this.useWordSetThemes) {
         this.documentCssRoot.style.setProperty('--texture2', 'url(' + _wordset.textureImage + ')');
         this.documentCssRoot.style.setProperty('--textureSize', _wordset.textureSize);
@@ -171,6 +178,7 @@ var app = new Vue({
       this.sendingPlayer.id = urlParams.has('sendingID') ? parseInt(urlParams.get('sendingID')) : this.sendingPlayer.id;
       this.puzzlePlayer.id = urlParams.has('puzzleID') ? parseInt(urlParams.get('puzzleID')) : this.puzzlePlayer.id;
       this.guessingWordSet = urlParams.has('wordSetID') ? this.wordSets.find((s) => s.id === urlParams.get('wordSetID')) : this.gameWordSet;
+      this.guessingCardCount = urlParams.has('useExtraCard') && JSON.parse(urlParams.get('useExtraCard')) ? 5 : 4;
 
       let corruptData = false;
       if (_boardArray.length >= 40) {
@@ -244,6 +252,7 @@ var app = new Vue({
         urlString += '&puzzleName=' + encodeURIComponent(this.puzzlePlayer.name);
         urlString += '&puzzleID=' + encodeURIComponent(this.puzzlePlayer.id);
         urlString += '&wordSetID=' + encodeURIComponent(this.guessingWordSet.id);
+        urlString += '&useExtraCard=' + encodeURIComponent(this.guessingCardCount === 5);
         urlString = window.location.origin + '?board=' + urlString + '&deletableCharacters=these';
         this.shareURL = urlString;
         history.pushState(null, null, this.shareURL);
@@ -267,7 +276,7 @@ var app = new Vue({
       note('ShareBoard() called');
       this.puzzleJustSent = this.shareURL === '';
       let newPuzzleIcon = '🧠';
-      let text = this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id ? newPuzzleIcon + ' Here\'s a new "' + this.guessingWordSet.name + '" puzzle to solve!' : '🤔 ' + this.puzzlePlayer.name + ", here's my guess!";
+      let text = this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id ? newPuzzleIcon + " Here's a new " + (this.guessingCardCount === 5 ? '5-card ' : '') + '"' + this.guessingWordSet.name + '" puzzle to solve!' : '🤔 ' + this.puzzlePlayer.name + ", here's my guess!";
       let nailedIt = false;
       document.getElementById('shareButton').focus();
       if (this.player.role === 'reviewer') {
@@ -632,6 +641,7 @@ var app = new Vue({
       this.sendingPlayer.id = this.player.id;
       this.sendingPlayer.name = this.player.name;
       this.guessingWordSet = this.gameWordSet;
+      this.guessingCardCount = this.useExtraCard ? 5 : 4;
       this.trayIsRotating = false;
       this.SetWordSetTheme(this.gameWordSet);
       this.shareURL = '';
@@ -742,11 +752,11 @@ var app = new Vue({
       this.showSettings = true;
       this.changeNameTitle = this.player.name + ", what's your new name?";
       this.tempWordSets = [];
+      // this.tempWordSetName = this.getCurrentSelectedTempWordSet.name;
       this.wordSets.forEach((set) => {
         this.tempWordSets.push(new WordSetObject(set));
       });
       this.tempName = this.player.name;
-      // this.ConstructURLForCurrentGame();
     },
 
     SelectWordSet(e, _wordSet) {
@@ -801,11 +811,13 @@ var app = new Vue({
         this.useWordSetThemes = this.tempUseWordSetThemes;
         this.usePortraitLayout = this.tempUsePortraitLayout;
         this.useExtraCard = this.tempUseExtraCard;
+        this.guessingCardCount = this.useExtraCard ? 5 : 4;
         this.SetWordSetTheme(this.guessingWordSet);
 
         localStorage.setItem('userID', this.player.id);
         localStorage.setItem('usePortraitLayout', this.usePortraitLayout);
         localStorage.setItem('useWordSetThemes', this.useWordSetThemes);
+        localStorage.setItem('useExtraCard', this.useExtraCard);
         localStorage.setItem('wordSet', this.gameWordSet.id);
       }
       this.editID = false;
@@ -936,6 +948,21 @@ var app = new Vue({
     getEnabledTempWordSets: function () {
       return this.tempWordSets.filter((set) => set.enabled);
     },
+    // getEnabledTempWordSetNames: function () {
+    //   let names = [];
+    //   this.wordSets.forEach((set) => {
+    //     if (set.enabled) {
+    //       names.push(set.name);
+    //     }
+    //   });
+    //   return names;
+    // },
+    // getEnabledWordSets: function () {
+    //   return this.wordSets.filter((set) => set.enabled);
+    // },
+    // getCurrentSelectedTempWordSet: function () {
+    //   return JSON.parse(JSON.stringify(this.getEnabledTempWordSets.find((set) => set.isSelected)));
+    // },
     getCurrentGameWordSet: async function () {
       let allWords = [];
       let fetchPromises = this.gameWordSet.data.map((url) => fetch(url).then((response) => response.json()));

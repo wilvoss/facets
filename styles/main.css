@@ -1003,6 +1003,7 @@ settings wordsets {
     gap: calc(.5 * var(--defaultGap));
     flex-wrap: wrap;
     justify-content: center;
+    margin-bottom: var(--defaultGap);
 }
 
 settings input {
@@ -1399,6 +1400,13 @@ version {
         transform: translateY(calc(.7 * var(--cardSize)));
         scale: .6;
     }
+
+    wrapper.mobile.extra, .portrait wrapper.mobile.extra {
+        transform: translateY(calc(.7 * var(--cardSize)));
+        scale: .5;
+
+    }
+
 
     wrapper.mobile parking, .portrait wrapper.mobile.parking {
         display: flex;

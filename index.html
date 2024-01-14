@@ -70,18 +70,20 @@
             </section>
           </leftright>
 
-          <message>Puzzle category<small>{{isGuessing ? '(disabled while guessing)' : ''}}</small></message>
+          <message>"New Game" settings<small>{{isGuessing ? '(disabled while guessing)' : ''}}</small></message>
+          <!-- <select v-model="tempWordSetName">
+            <option v-for="name in getEnabledTempWordSetNames" :value="name">{{name}}</option>
+          </select> -->
           <wordsets :class="{disabled: isGuessing}">
             <wordset @click="SelectWordSet(event, set)" :class="{selected: set.isSelected}" v-if="set.enabled" v-for="set in getEnabledTempWordSets">{{set.name}}</wordset>
           </wordsets>
 
-          <!-- <message>Gameplay</message> -->
-          <!-- <checkbox :class="{on: tempUseExtraCard}" @click="ToggleTempUseExtraCard()">
+          <checkbox title="Enable this if you want to send your puzzle with a random 5th card." :class="{on: tempUseExtraCard, disabled: isGuessing}" @click="ToggleTempUseExtraCard()">
             Extra card
             <toggle></toggle>
-          </checkbox> -->
+          </checkbox>
 
-          <message class="notMobile">Gameplay</message>
+          <message class="notMobile">Appearance</message>
           <checkbox class="notMobile" :class="{on: tempUsePortraitLayout}" @click="ToggleTempUsePortraitLayout()">
             Portrait mode
             <toggle></toggle>
@@ -195,7 +197,7 @@
           </spot>
         </parking>
       </wrapper>
-      <wrapper class="mobile">
+      <wrapper class="mobile" :class="{extra: guessingCardCount === 5}">
         <parking>
           <spot v-for="(card, index) in parkedCards" v-if="index < guessingCardCount" :class="{empty: card.words.length === 0, selected: card.isSelected}">
             <card @click="RotateCard(event, card, -1)" @pointerup="HandleCardPointerUp(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
