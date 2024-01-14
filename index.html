@@ -25,81 +25,70 @@
   </head>
 
   <body>
-    <app id="app" v-cloak :class="{guessing: isGuessing, reviewing: player.role === 'reviewer'}" @pointerdown="HandleBodyPointerDown(event)" @pointerup="HandleBodyPointerUp(event, isDragging ? draggedCard : getSelectedCard)">
+    <app id="app" v-cloak :class="{portrait: usePortraitLayout, guessing: isGuessing, reviewing: player.role === 'reviewer'}" @pointerdown="HandleBodyPointerDown(event)" @pointerup="HandleBodyPointerUp(event, isDragging ? draggedCard : getSelectedCard)">
       <input maxlength="0" :disabled="isGuessing" id="parkingInput" style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1" tabindex="-1" />
       <modal :class="{disabled: !showTutorial}" class="tutorial">
+        <h2>Tutorial</h2>
         <intro v-if="showTutorial">
-          <h2>Tutorial</h2>
           <p>The challenge of FACETS is to connect different words that may or may not be easily connected.</p>
           <p><span class="blueText">When the gem is a sapphire,</span> you are creating a puzzle. Give 4 clues on the edges of the gem (tap) that you think connects the two words next to the clue. Click the 🧠 button to send the puzzle.</p>
           <p><span class="greenText">When the gem is an emerald,</span> you are guessing a puzzle a friend sent you. Drag the cards onto the gem and rotate them so that each large "clue" on the edge of the gem has two small words that make sense. Click the 🤔 button to send your guess.</p>
           <p><span class="redText">When the gem is a ruby,</span> you are reviewing a friend's guess. Remove any cards from the gem that are wrong. Click the 🧠 button to send back, even if you are just giving them the correct solution.</p>
           <p>If you play on multiple browsers, be sure to change your player number in settings to be the same on each.</p>
-          <controls><button @click="ToggleShowTutorial(event)">Okay</button></controls>
+          <controls><button @click="ToggleShowTutorial(event)">Got it</button></controls>
         </intro>
       </modal>
-      <modal :class="{disabled: !showModal}" @click="showModal = showSettings || showIntro ? true : false">
-        <confirmation v-if="showConfirmation && showModal">
+      <modal :class="{disabled: !showConfirmation}" class="centered">
+        <confirmation v-if="showConfirmation">
           <message>{{confirmation.message}}</message>
           <controls><button class="secondary" @click="HandleYesNo(confirmation.target, false)">No</button><button @click="HandleYesNo(confirmation.target, true)">Yes</button></controls>
         </confirmation>
-        <intro v-if="showIntro && showModal">
-          <message>Hello! What's your name?</message>
+      </modal>
+      <modal :class="{disabled: !showIntro}" @click="showIntro = !showIntro" class="centered">
+        <h2>Hello!</h2>
+        <intro v-if="showIntro">
+          <message>What's your name?</message>
           <input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" v-model="tempName" />
-          <controls><button class="secondary" @click="CancelSettings(event)">Cancel</button><button @click="SubmitSettings(event)">Save</button></controls>
         </intro>
-        <settings v-if="showSettings && showModal">
-          <h2>Settings</h2>
-          <message>Your name</message>
-          <section>
-            <input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
-          </section>
-          <message>
-            Player #
-            <small>Update this number to match on all of your browsers.</small>
-          </message>
-          <section>
-            <input spellcheck="false" onpointerup="this.select()" inputmode="numeric" type="number" pattern="\d*" v-model="tempID" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="8" />
-          </section>
+        <controls><button @click="SubmitSettings(event)">Okay</button></controls>
+      </modal>
+      <modal :class="{disabled: !showSettings}">
+        <version>Version {{version}}</version>
+        <h2>Settings</h2>
+        <settings v-if="showSettings">
+          <message>Your profile</message>
+          <leftright>
+            <p>Your name</p>
+            <section>
+              <input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
+            </section>
+          </leftright>
+          <leftright>
+            <p>Player ID # <small>Match this on all browsers</small></p>
+            <section>
+              <input spellcheck="false" onpointerup="this.select()" inputmode="numeric" type="number" pattern="\d*" v-model="tempID" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="8" />
+            </section>
+          </leftright>
 
           <message>Puzzle category<small>{{isGuessing ? '(disabled while guessing)' : ''}}</small></message>
-          <section :class="{disabled: isGuessing}">
-            <wordsets>
-              <wordset @click="SelectWordSet(event, set)" :class="{selected: set.isSelected}" v-if="set.enabled" v-for="set in getEnabledTempWordSets">{{set.name}}</wordset>
-            </wordsets>
-          </section>
-          <!-- <message>Appearance</message>
-          <checkbox :class="{on: tempUseWordSetThemes}" @click="ToggleTempUseWordSetThemes()">
+          <wordsets :class="{disabled: isGuessing}">
+            <wordset @click="SelectWordSet(event, set)" :class="{selected: set.isSelected}" v-if="set.enabled" v-for="set in getEnabledTempWordSets">{{set.name}}</wordset>
+          </wordsets>
+
+          <message class="notMobile">Appearance</message>
+          <checkbox class="notMobile" :class="{on: tempUsePortraitLayout}" @click="ToggleTempUsePortraitLayout()">
+            Portrait mode
+            <toggle></toggle>
+          </checkbox>
+          <!-- <checkbox :class="{on: tempUseWordSetThemes}" @click="ToggleTempUseWordSetThemes()">
             Use word themes
             <toggle></toggle>
           </checkbox> -->
-          <controls>
-            <button class="secondary" @click="CancelSettings(event)">Cancel</button>
-            <button :disabled="tempID.toString().length !== 8" :class="{disabled: tempID.toString().length !== 8}" @click="SubmitSettings(event)">Save</button>
-          </controls>
-          <version>Version {{version}}</version>
         </settings>
-        <picker v-if="!showSettings && !showIntro && !showConfirmation && showModal">
-          <hintcard>
-            <card>
-              <words>
-                <word>{{hints[0].value}}</word>
-                <word>{{hints[1].value}}</word>
-                <word>{{hints[3].value}}</word>
-                <word>{{hints[2].value}}</word>
-              </words>
-            </card>
-          </hintcard>
-          <message>Choose a card</message>
-          <cards>
-            <card @click="HandlePickerCardClicked(event, card)" v-for="card in getAllCards" :disabled="!showModal" :class="{disabled: card.isInTray || !showModal}">
-              <words>
-                <word v-for="word in card.words">{{word.value}}</word>
-              </words>
-            </card>
-            <spot v-if="draggedCard && draggedCard.words.length > 0" :class="{disabled: !showModal}" class="empty" @click="HandlePickerCardClicked(event, null)"><icon class="recycle"></icon>Put back</spot>
-          </cards>
-        </picker>
+        <controls>
+          <button class="secondary" @click="CancelSettings(event)">Cancel</button>
+          <button :disabled="tempID.toString().length !== 8" title="Please only use numbers." :class="{disabled: tempID.toString().length !== 8}" @click="SubmitSettings(event)">Save</button>
+        </controls>
       </modal>
       <wrapper>
         <controls>
@@ -110,8 +99,8 @@
             <h1>{{gameName}}</h1>
             <subtitle>
               <button class="inline" @click="ToggleShowTutorial(event)"><icon class="info"></icon>Tutorial</button>
-              <button class="inline" @click="OpenSettings()">Settings<icon class="settings"></icon></button
-            ></subtitle>
+              <button class="inline" @click="OpenSettings()">Settings<icon class="settings"></icon></button>
+            </subtitle>
           </hgroup>
         </header>
         <controls>
@@ -161,7 +150,7 @@
           <diamond></diamond>
           <hints>
             <hint @pointerdown="RotateTrayBasedOnInputFocus(index)" v-for="(hint, index) in hints" :key="index">
-              <input spellcheck="false" :id="'hint' + index" :disabled="isGuessing || index > 0" v-model="hint.value" maxlength="14" :tabindex="index + 1" type="text" onfocus="this.placeholder=''" onblur="this.placeholder='tap'" placeholder="tap" />
+              <input spellcheck="false" :id="'hint' + index" type="text" title="Please only use alphanumeric characters." pattern="[A-Za-z0-9]*" :disabled="isGuessing || index > 0" v-model="hint.value" maxlength="14" :tabindex="index + 1" type="text" onfocus="this.placeholder=''" onblur="this.placeholder='tap'" placeholder="tap" />
             </hint>
           </hints>
           <cards :class="{disabled: showModal}">

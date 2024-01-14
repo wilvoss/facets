@@ -171,15 +171,6 @@ hintcard card {
     border: none;
 }
 
-picker spot icon.recycle {
-    width: var(--mediumIconSize);
-    height: var(--mediumIconSize);
-    mask-size: var(--mediumIconSize) var(--mediumIconSize);
-    -webkit-mask-size: var(--mediumIconSize) var(--mediumIconSize);
-    background-color: hsl(var(--linkColorDarkHSL));
-    opacity: .7;
-}
-
 controls button icon {
     background: hsl(var(--linkColorLightHSL));
 }
@@ -247,8 +238,16 @@ header subtitle button.inline icon {
 
 message {
     display: block;
+    border-top: 1px solid hsla(var(--appForegroundHSL), .1);
     color: hsl(var(--messageColorHSL));
     text-align: center;
+    width: 100%;
+}
+
+message:first-of-type {
+    margin-top: 0px;
+    padding-top: 0px;
+    border-top-color: hsla(var(--appForegroundHSL), 0);
 }
 
 p {
@@ -268,8 +267,9 @@ p {
     color: hsl(var(--hueReviewing), 100%, 60%)
 }
 
-settings message {
+modal message {
     margin-top: var(--defaultGap);
+    padding-top: var(--defaultGap);
 }
 
 message.clickable {
@@ -412,6 +412,7 @@ controls {
 modal controls {
     padding: calc(2 * var(--defaultGap)) 0;
     gap: calc(.5 * var(--defaultGap));
+    height: auto;
 }
 
 
@@ -573,6 +574,23 @@ wrapper.mobile {
     justify-content: center;
     align-items: center;
     display: none;
+}
+
+
+.portrait parking {
+    display: none;
+}
+
+.portrait wrapper.mobile {
+    display: flex;
+    height: auto;
+    transform: unset;
+    scale: 1;
+}
+
+wrapper.mobile parking {
+    display: flex;
+    width: 100%;
 }
 
 .mobile parking {
@@ -796,6 +814,9 @@ modal input, hints hint input {
     width: 100%;
     line-height: 120%;
     padding: 0;
+}
+
+modal input.large {
     font-size: 120%;
 }
 
@@ -803,6 +824,7 @@ modal small {
     display: block;
     font-size: 70%;
     opacity: .7;
+    line-height: 110%;
 }
 
 hints hint input {
@@ -825,8 +847,8 @@ hints hint input::placeholder {
 
 modal input {
     font-family: 'Abel';
-    font-size: 200%;
     color: white;
+    font-size: 110%;
 }
 
 hints hint input:disabled {
@@ -923,16 +945,23 @@ modal, tutorial {
     position: absolute;
     display: flex;
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: 100%;
     overflow-x: hidden;
     flex-wrap: wrap;
     background: hsla(var(--appBackgroundDarkHSL), 1);
     opacity: 1;
-    justify-content: start;
-    align-items: center;
     z-index: 300;
     transition: var(--mediumTransition) ease-in-out all;
+    gap: var(--defaultGap);
+}
+
+modal.centered {
+    justify-content: center;
+    gap: calc(4 * var(--defaultGap));
+    font-size: 130%;
 }
 
 modal.disabled, tutorial.disabled {
@@ -959,10 +988,13 @@ section {
     justify-content: center;
     align-items: center;
     text-align: center;
+    padding: calc(.5 * var(--defaultGap)) var(--defaultGap);
+    background: hsla(var(--appBackgroundHSL), 1);
 }
 
 settings wordsets {
     display: flex;
+    max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
     gap: calc(.5 * var(--defaultGap));
     flex-wrap: wrap;
     justify-content: center;
@@ -971,6 +1003,29 @@ settings wordsets {
 settings input {
     font-family: "Abel";
     font-size: inherit;
+}
+
+
+leftright {
+    display: flex;
+    width: calc(90%);
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin: 0px;
+    border-radius: var(--borderRadius);
+    gap: var(--defaultGap);
+}
+
+leftright message, leftright section, leftright p {
+    text-align: left;
+    width: calc(1 * var(--cardSize));
+    margin: 0;
+    border-radius: var(--borderRadius);
+}
+
+leftright section input {
+    text-align: left;
 }
 
 wordset {
@@ -983,15 +1038,16 @@ wordset {
     -webkit-user-select: none;
     cursor: pointer;
     background: hsl(var(--appBackgroundHSL));
-    border: 1px solid hsla(var(--appForegroundHSL), .5);
+    border: 1px dashed hsla(var(--appForegroundHSL), .2);
     border-radius: var(--borderRadius);
     transition: var(--mediumTransition) ease-in-out all;
     line-height: 110%;
-    opacity: .8;
+    opacity: .7;
+    -webkit-tap-highlight-color: transparent;
 }
 
 wordset.selected {
-    border-color: hsl(var(--appForegroundHSL));
+    border: 1px solid hsl(var(--appForegroundHSL));
     opacity: 1;
 }
 
@@ -1037,7 +1093,9 @@ modal::-webkit-scrollbar {
 version {
     text-align: center;
     font-size: 10px;
-    color: hsla(var(--hueMain), 45%, 55%);
+    color: hsla(var(--hueMain), 45%, 45%);
+    position: absolute;
+    bottom: 10px;
 }
 
 
@@ -1055,7 +1113,6 @@ version {
     controls {
         padding-top: 0;
         padding-bottom: 0;
-        height: 100%;
     }
 
     wrapper controls button {
@@ -1121,6 +1178,12 @@ version {
         overflow: hidden;
     }
 
+    modal {
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+
     wrapper {
         padding: calc(var(--defaultGap) / 4) 0 0;
         overflow: hidden;
@@ -1131,6 +1194,10 @@ version {
         margin-bottom: 0;
         gap: 0px;
         align-items: center;
+    }
+
+    .notMobile {
+        display: none;
     }
 
     message {
@@ -1145,7 +1212,6 @@ version {
     controls {
         padding: 0;
         width: 100%;
-        height: 100%;
     }
 
     wrapper controls button {
@@ -1276,7 +1342,6 @@ version {
     }
 
     hints hint input {
-        font-size: 130%;
         line-height: 120%;
     }
 
@@ -1306,28 +1371,26 @@ version {
         max-width: unset;
     }
 
-    settings input {
-        font-size: 130%;
-    }
-
     settings wordsets {
         gap: calc(.5 * var(--defaultGap));
     }
 
     wordset {
         padding: calc(.75 * var(--defaultGap)) var(--defaultGap);
-        font-size: 130%;
     }
 
-    parking {
+    parking, .portrait parking {
         display: none;
     }
 
-    wrapper.mobile {
+    wrapper.mobile, .portrait wrapper.mobile {
         display: flex;
+        height: 0px;
+        transform: translateY(calc(.7 * var(--cardSize)));
+        scale: .6;
     }
 
-    .mobile parking {
+    wrapper.mobile parking, .portrait wrapper.mobile.parking {
         display: flex;
         width: 100%;
     }

@@ -3,12 +3,12 @@ checkbox {
     line-height: 140%;
     flex-direction: row;
     justify-content: space-between;
-    padding: calc(.5 * var(--defaultGap)) calc(2 * var(--defaultGap));
+    padding: calc(.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
     cursor: pointer;
     max-width: calc(2 * var(--cardSize));
     width: 100%;
-    background: hsla(var(--appBackgroundHSL), .4);
-    border-radius: calc(2 * var(--borderRadius));
+    background: hsla(var(--appBackgroundHSL), 1);
+    border-radius: calc(1 * var(--borderRadius));
     align-items: center;
     -webkit-tap-highlight-color: transparent;
     transition: var(--mediumTransition) ease-in-out all;

@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.066',
+    version: '0.1.067',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -21,7 +21,9 @@ var app = new Vue({
     tempID: 0,
     editID: false,
     useWordSetThemes: false,
+    usePortraitLayout: false,
     tempUseWordSetThemes: false,
+    tempUsePortraitLayout: false,
     gameWordSet: WordSets.find((m) => m.id === '100'),
     tempWordSets: [],
     guessersName: '',
@@ -83,6 +85,10 @@ var app = new Vue({
 
     ToggleTempUseWordSetThemes() {
       this.tempUseWordSetThemes = !this.tempUseWordSetThemes;
+    },
+
+    ToggleTempUsePortraitLayout() {
+      this.tempUsePortraitLayout = !this.tempUsePortraitLayout;
     },
 
     SetWordSetTheme(_wordset) {
@@ -680,6 +686,12 @@ var app = new Vue({
         this.tempUseWordSetThemes = this.useWordSetThemes;
         this.SetWordSetTheme(this.gameWordSet);
       }
+
+      let usePortraitLayout = localStorage.getItem('usePortraitLayout');
+      if (usePortraitLayout !== undefined && usePortraitLayout !== null) {
+        this.usePortraitLayout = JSON.parse(usePortraitLayout);
+        this.tempUsePortraitLayout = this.usePortraitLayout;
+      }
     },
 
     LoadPage() {
@@ -749,6 +761,7 @@ var app = new Vue({
       this.showIntro = false;
       this.tempID = this.player.id;
       this.tempUseWordSetThemes = this.useWordSetThemes;
+      this.tempUsePortraitLayout = this.usePortraitLayout;
     },
 
     SubmitSettings(e) {
@@ -773,9 +786,11 @@ var app = new Vue({
         }
         this.player.id = this.tempID;
         this.useWordSetThemes = this.tempUseWordSetThemes;
+        this.usePortraitLayout = this.tempUsePortraitLayout;
         this.SetWordSetTheme(this.guessingWordSet);
 
         localStorage.setItem('userID', this.player.id);
+        localStorage.setItem('usePortraitLayout', this.usePortraitLayout);
         localStorage.setItem('useWordSetThemes', this.useWordSetThemes);
         localStorage.setItem('wordSet', this.gameWordSet.id);
       }
@@ -786,41 +801,44 @@ var app = new Vue({
     },
 
     HandleKeyDownEvent(e) {
-      switch (e.key) {
-        case 'Enter':
-          note('HandleKeyDownEvent() called');
-          e.preventDefault();
-          if (!this.isGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
-            this.FillParkingLot();
-          }
-          if (this.showModal && (this.showSettings || this.showIntro)) {
-            this.SubmitSettings(e);
-          }
-          if (this.showTutorial) {
-            this.ToggleShowTutorial(null);
-          }
-          break;
-        case 'Tab':
-          note('HandleKeyDownEvent() called');
-          e.preventDefault();
-          if (!this.trayIsRotating) {
-            this.RotateTray(e.shiftKey ? 1 : -1);
-          }
-          break;
-        case '-':
-        case '?':
-          e.preventDefault();
-          e.stopPropagation();
-          return;
-        case 'Escape':
-          if (this.showModal && (this.showSettings || this.showIntro)) {
-            this.CancelSettings(null);
-          }
-          if (this.showTutorial) {
-            this.ToggleShowTutorial(null);
-          }
-          break;
-        default:
+      if (!e.metaKey && !e.ctrlKey && !e.altKey) {
+        switch (e.key) {
+          case 'Enter':
+            note('HandleKeyDownEvent() called');
+            e.preventDefault();
+            if (!this.isGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
+              this.FillParkingLot();
+            }
+            if (this.showModal && (this.showSettings || this.showIntro)) {
+              this.SubmitSettings(e);
+            }
+            if (this.showTutorial) {
+              this.ToggleShowTutorial(null);
+            }
+            break;
+          case 'Tab':
+            note('HandleKeyDownEvent() called');
+            e.preventDefault();
+            if (!this.trayIsRotating) {
+              this.RotateTray(e.shiftKey ? 1 : -1);
+            }
+            break;
+          // case '-':
+          // case '?':
+          //   e.preventDefault();
+          //   e.stopPropagation();
+
+          //   return;
+          case 'Escape':
+            if (this.showModal && (this.showSettings || this.showIntro)) {
+              this.CancelSettings(null);
+            }
+            if (this.showTutorial) {
+              this.ToggleShowTutorial(null);
+            }
+            break;
+          default:
+        }
       }
     },
 
