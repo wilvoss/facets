@@ -65,12 +65,3 @@ checkbox.on toggle {
 checkbox.on toggle:before {
     transform: translateX(20px);
 }
-
-@media screen and (max-width:640px) {
-
-    checkbox {
-        font-size: 130%;
-        padding: calc(.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
-        max-width: calc((2 * var(--cardSize)) + (4 * var(--defaultGap)));
-    }
-}

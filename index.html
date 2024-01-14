@@ -75,7 +75,13 @@
             <wordset @click="SelectWordSet(event, set)" :class="{selected: set.isSelected}" v-if="set.enabled" v-for="set in getEnabledTempWordSets">{{set.name}}</wordset>
           </wordsets>
 
-          <message class="notMobile">Appearance</message>
+          <!-- <message>Gameplay</message> -->
+          <!-- <checkbox :class="{on: tempUseExtraCard}" @click="ToggleTempUseExtraCard()">
+            Extra card
+            <toggle></toggle>
+          </checkbox> -->
+
+          <message class="notMobile">Gameplay</message>
           <checkbox class="notMobile" :class="{on: tempUsePortraitLayout}" @click="ToggleTempUsePortraitLayout()">
             Portrait mode
             <toggle></toggle>

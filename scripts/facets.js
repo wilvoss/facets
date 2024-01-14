@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.067',
+    version: '0.1.068',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -22,8 +22,10 @@ var app = new Vue({
     editID: false,
     useWordSetThemes: false,
     usePortraitLayout: false,
+    useExtraCard: false,
     tempUseWordSetThemes: false,
     tempUsePortraitLayout: false,
+    tempUseExtraCard: false,
     gameWordSet: WordSets.find((m) => m.id === '100'),
     tempWordSets: [],
     guessersName: '',
@@ -89,6 +91,10 @@ var app = new Vue({
 
     ToggleTempUsePortraitLayout() {
       this.tempUsePortraitLayout = !this.tempUsePortraitLayout;
+    },
+
+    ToggleTempUseExtraCard() {
+      this.tempUseExtraCard = !this.tempUseExtraCard;
     },
 
     SetWordSetTheme(_wordset) {
@@ -238,7 +244,7 @@ var app = new Vue({
         urlString += '&puzzleName=' + encodeURIComponent(this.puzzlePlayer.name);
         urlString += '&puzzleID=' + encodeURIComponent(this.puzzlePlayer.id);
         urlString += '&wordSetID=' + encodeURIComponent(this.guessingWordSet.id);
-        urlString = window.location.origin + '?board=' + urlString;
+        urlString = window.location.origin + '?board=' + urlString + '&deletableCharacters=these';
         this.shareURL = urlString;
         history.pushState(null, null, this.shareURL);
       }
@@ -692,6 +698,12 @@ var app = new Vue({
         this.usePortraitLayout = JSON.parse(usePortraitLayout);
         this.tempUsePortraitLayout = this.usePortraitLayout;
       }
+
+      let useExtraCard = localStorage.getItem('useExtraCard');
+      if (useExtraCard !== undefined && useExtraCard !== null) {
+        this.useExtraCard = JSON.parse(useExtraCard);
+        this.tempUseExtraCard = this.useExtraCard;
+      }
     },
 
     LoadPage() {
@@ -762,6 +774,7 @@ var app = new Vue({
       this.tempID = this.player.id;
       this.tempUseWordSetThemes = this.useWordSetThemes;
       this.tempUsePortraitLayout = this.usePortraitLayout;
+      this.tempUseExtraCard = this.useExtraCard;
     },
 
     SubmitSettings(e) {
@@ -787,6 +800,7 @@ var app = new Vue({
         this.player.id = this.tempID;
         this.useWordSetThemes = this.tempUseWordSetThemes;
         this.usePortraitLayout = this.tempUsePortraitLayout;
+        this.useExtraCard = this.tempUseExtraCard;
         this.SetWordSetTheme(this.guessingWordSet);
 
         localStorage.setItem('userID', this.player.id);
@@ -823,12 +837,6 @@ var app = new Vue({
               this.RotateTray(e.shiftKey ? 1 : -1);
             }
             break;
-          // case '-':
-          // case '?':
-          //   e.preventDefault();
-          //   e.stopPropagation();
-
-          //   return;
           case 'Escape':
             if (this.showModal && (this.showSettings || this.showIntro)) {
               this.CancelSettings(null);

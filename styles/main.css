@@ -268,8 +268,9 @@ p {
 }
 
 modal message {
-    margin-top: var(--defaultGap);
+    margin-top: calc(1.5 * var(--defaultGap));
     padding-top: var(--defaultGap);
+    padding-bottom: calc(.5 * var(--defaultGap));
 }
 
 message.clickable {
@@ -950,7 +951,7 @@ modal, tutorial {
     width: 100%;
     height: 100%;
     overflow-x: hidden;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
     background: hsla(var(--appBackgroundDarkHSL), 1);
     opacity: 1;
     z-index: 300;
@@ -974,6 +975,10 @@ modal settings, modal intro, modal confirmation {
     justify-content: center;
     align-items: center;
     gap: calc(1 * var(--defaultGap));
+}
+
+modal settings {
+    gap: calc(.5 * var(--defaultGap));
 }
 
 modal.tutorial intro {
@@ -1091,11 +1096,12 @@ modal::-webkit-scrollbar {
 }
 
 version {
+    /* display: none; */
     text-align: center;
     font-size: 10px;
     color: hsla(var(--hueMain), 45%, 45%);
     position: absolute;
-    bottom: 10px;
+    top: 10px;
 }
 
 
@@ -1369,6 +1375,10 @@ version {
         width: calc(100% - (2 * var(--defaultGap)));
         margin: 0 var(--defaultGap);
         max-width: unset;
+    }
+
+    modal settings {
+        gap: calc(.5 * var(--defaultGap));
     }
 
     settings wordsets {
