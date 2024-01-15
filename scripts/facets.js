@@ -12,8 +12,9 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.070',
+    version: '0.1.071',
     gameName: 'Facets',
+    currentGameID: 0,
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
     guessingCardCount: 4,
@@ -640,7 +641,7 @@ var app = new Vue({
 
     /* END CARD MANIPULATION */
 
-    NewGame(e, _message = '', _rotate = true) {
+    async NewGame(e, _message = '', _rotate = true) {
       note('NewGame() called');
       document.title = 'Facets!';
       this.message = _message;
@@ -662,7 +663,9 @@ var app = new Vue({
       this.cards = [];
       this.parkedCards = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
       this.hints = [new WordObject({}), new WordObject({}), new WordObject({}), new WordObject({})];
-      this.CreateCardsForPlayer(null);
+      await this.CreateCardsForPlayer(null);
+      localStorage.setItem('currentGameID', { gameId: this.currentGameID });
+
       if (_rotate) {
         this.RotateTray(-4);
       }

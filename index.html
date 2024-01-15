@@ -7,7 +7,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, minimum-scale=1, maximum-scale=5, user-scalable=yes" />
     <meta name="theme-color" id="themeColor" content="rgb(5, 23, 36)" />
 
     <title>Facets</title>
@@ -26,7 +26,6 @@
 
   <body>
     <app id="app" v-cloak :class="{portrait: usePortraitLayout, guessing: isGuessing, reviewing: player.role === 'reviewer'}" @pointerdown="HandleBodyPointerDown(event)" @pointerup="HandleBodyPointerUp(event, isDragging ? draggedCard : getSelectedCard)">
-      <input maxlength="0" :disabled="isGuessing" id="parkingInput" style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1" tabindex="-1" />
       <modal :class="{disabled: !showTutorial}" class="tutorial">
         <h2>Tutorial</h2>
         <intro v-if="showTutorial">
@@ -137,6 +136,7 @@
         </card>
       </wrapper>
       <wrapper>
+        <input maxlength="0" :disabled="isGuessing" tabindex="-1" id="parkingInput" style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1" tabindex="-1" />
         <parking>
           <spot v-for="(card, index) in parkedCards" v-if="index < (guessingCardCount / 2)" :class="{empty: card.words.length === 0, selected: card.isSelected}">
             <rotators>

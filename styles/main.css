@@ -58,6 +58,7 @@ html {
     min-height: 100%;
     height: 100%;
     width: 100%;
+    overflow: hidden;
 }
 
 body {
@@ -304,7 +305,6 @@ nav ul li a:hover {
 }
 
 wrapper {
-    height: auto;
     width: 100%;
     max-width: 1124px;
     margin: 0 auto;
@@ -1167,6 +1167,7 @@ version {
     }
 
     modal {
+        font-size: 16px;
         flex-direction: column;
         justify-content: space-between;
         align-items: center;
@@ -1175,6 +1176,7 @@ version {
     wrapper {
         padding: calc(var(--defaultGap) / 4) 0 0;
         overflow: hidden;
+        max-width: 100%;
     }
 
     wrapper:first-of-type {
@@ -1254,9 +1256,10 @@ version {
     }
 
     rotators {
-        width: calc(100% + 1 * var(--defaultGap));
+        width: calc(100%);
         overflow: hidden;
         padding: calc(1.5 * var(--defaultGap)) 0;
+        margin: 0px;
     }
 
     spot rotators button {
@@ -1363,9 +1366,11 @@ version {
         gap: calc(.5 * var(--defaultGap));
     }
 
-    parking, .portrait parking {
+    parking, .portrait parking, parking spot, .portrait parking spot {
         display: none;
+        padding: 0px;
     }
+
 
     wrapper.mobile, .portrait wrapper.mobile {
         display: flex;
@@ -1385,6 +1390,10 @@ version {
         width: 100%;
     }
 
+    wrapper.mobile parking spot, .portrait wrapper.mobile.parking spot {
+        display: block;
+
+    }
 }
 
 @media screen and (max-height:670px) {
