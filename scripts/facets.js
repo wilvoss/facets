@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.072',
+    version: '0.1.073',
     gameName: 'Facets',
     currentGameID: 0,
     gameCatchphrase: 'A game of words!',
@@ -867,6 +867,9 @@ var app = new Vue({
               this.RotateTray(e.shiftKey ? 1 : -1);
             }
             break;
+          case '-':
+            e.preventDefault();
+            e.stopPropagation();
           case 'Escape':
             if (this.showModal && (this.showSettings || this.showIntro)) {
               this.CancelSettings(null);

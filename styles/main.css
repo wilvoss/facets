@@ -15,7 +15,7 @@
 
 :root {
     --hueMain: 215;
-    --hueTheme: 215;
+    --hueTheme: 205;
     --hueGuessing: 140;
     --hueReviewing: 355;
     --hueHighlight: 140;
@@ -48,10 +48,10 @@
     --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, .5);
 
 
-    --texture1: url(../images/texture.png);
-    --texture2: radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), .3) 0%, hsla(var(--appBackgroundDarkestHSL), 0) 40%, hsla(var(--appBackgroundDarkestHSL), 1) 80%);
-    --textureSize: cover;
-    --textureBlendMode: overlay;
+    --texture1: url(../images/defaultTexture.jpg);
+    --texture2: var(--texture1), radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), .3) 0%, hsla(var(--appBackgroundDarkestHSL), 0) 40%, hsla(var(--appBackgroundDarkestHSL), 1) 80%);
+    --textureSize: cover, cover;
+    --textureBlendMode: multiply, overlay;
 }
 
 html {
@@ -81,10 +81,11 @@ app {
     height: 100%;
     display: flex;
     flex-direction: column;
-    background: hsl(var(--appBackgroundHSL)) var(--texture2);
+    background-color: hsl(var(--appBackgroundHSL));
+    background-image: var(--texture2);
     background-size: var(--textureSize);
     background-blend-mode: var(--textureBlendMode);
-    background-position: left center;
+    background-position: center center;
 }
 
 h1, h2, h3, h4, h5 {
@@ -1083,11 +1084,12 @@ version {
     font-size: 10px;
     color: hsla(var(--hueMain), 45%, 45%);
     position: absolute;
-    top: 10px;
+    left: 10px;
+    top: 0px;
 }
 
 
-@media screen and (max-height:780px) {
+@media screen and (max-height:820px) {
 
     wrapper {
         padding: 0
@@ -1111,6 +1113,19 @@ version {
 
     modal controls {
         padding: calc(2 * var(--defaultGap)) 0;
+    }
+
+
+    message {
+        display: block;
+    }
+
+    modal message {
+        margin-top: calc(.5 * var(--defaultGap));
+        padding-top: calc(.5 * var(--defaultGap));
+        padding-bottom: calc(.5 * var(--defaultGap));
+        height: auto;
+        position: relative;
     }
 
     header {
@@ -1194,11 +1209,6 @@ version {
         position: absolute;
     }
 
-    modal message {
-        height: auto;
-        position: relative;
-    }
-
     controls {
         padding: 0;
         width: 100%;
@@ -1253,6 +1263,10 @@ version {
         font-size: 110%;
         text-align: center;
         line-height: 130%;
+    }
+
+    modal message {
+        position: relative;
     }
 
     rotators {
