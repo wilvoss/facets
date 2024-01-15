@@ -330,6 +330,11 @@ wrapper.columns {
     align-items: center;
 }
 
+.portrait wrapper.mobile.extra {
+    transform: translateY(calc(.1 * var(--cardSize)));
+    scale: .85;
+}
+
 [v-cloak] {
     transition: 0ms ease-out opacity;
     opacity: 0;
@@ -805,7 +810,7 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-modal input, hints hint input {
+modal input, hints hint input, modal select {
     text-align: center;
     outline: none;
     border: none;
@@ -846,10 +851,18 @@ hints hint input::placeholder {
     color: hsla(var(--hueReviewing), 70%, 48%, 1);
 }
 
-modal input {
+modal input, modal select {
     font-family: 'Abel';
     color: white;
     font-size: 110%;
+    text-align: left;
+}
+
+modal select {
+    width: 100%;
+    background: none;
+    outline: none;
+    -webkit-appearance: unset;
 }
 
 hints hint input:disabled {
@@ -997,15 +1010,6 @@ section {
     background: hsla(var(--appBackgroundHSL), 1);
 }
 
-settings wordsets {
-    display: flex;
-    max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
-    gap: calc(.5 * var(--defaultGap));
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: var(--defaultGap);
-}
-
 settings input {
     font-family: "Abel";
     font-size: inherit;
@@ -1014,7 +1018,7 @@ settings input {
 
 leftright {
     display: flex;
-    width: calc(90%);
+    width: calc(100%);
     flex-direction: row;
     justify-content: center;
     align-items: center;
@@ -1032,29 +1036,6 @@ leftright message, leftright section, leftright p {
 
 leftright section input {
     text-align: left;
-}
-
-wordset {
-    padding: calc(.5 * var(--defaultGap)) var(--defaultGap);
-    user-select: none;
-    display: flex;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
-    -webkit-user-select: none;
-    cursor: pointer;
-    background: hsl(var(--appBackgroundHSL));
-    border: 1px dashed hsla(var(--appForegroundHSL), .2);
-    border-radius: var(--borderRadius);
-    transition: var(--mediumTransition) ease-in-out all;
-    line-height: 110%;
-    opacity: .7;
-    -webkit-tap-highlight-color: transparent;
-}
-
-wordset.selected {
-    border: 1px solid hsl(var(--appForegroundHSL));
-    opacity: 1;
 }
 
 modal cards {
@@ -1382,14 +1363,6 @@ version {
         gap: calc(.5 * var(--defaultGap));
     }
 
-    settings wordsets {
-        gap: calc(.5 * var(--defaultGap));
-    }
-
-    wordset {
-        padding: calc(.75 * var(--defaultGap)) var(--defaultGap);
-    }
-
     parking, .portrait parking {
         display: none;
     }
@@ -1406,7 +1379,6 @@ version {
         scale: .5;
 
     }
-
 
     wrapper.mobile parking, .portrait wrapper.mobile.parking {
         display: flex;

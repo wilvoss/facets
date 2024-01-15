@@ -4,8 +4,9 @@ checkbox {
     flex-direction: row;
     justify-content: space-between;
     padding: calc(.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
+    /* margin: 0 calc(1 * var(--defaultGap)); */
     cursor: pointer;
-    max-width: calc(2 * var(--cardSize));
+    max-width: calc((100% - calc(2 * var(--defaultGap))));
     width: 100%;
     background: hsla(var(--appBackgroundHSL), 1);
     border-radius: calc(1 * var(--borderRadius));
@@ -19,7 +20,7 @@ checkbox toggle {
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    margin: 0px 8px;
+    margin: 0px;
     width: 46px;
     height: 26px;
     background: rgba(0, 0, 0, 0.6);

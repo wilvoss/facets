@@ -44,11 +44,11 @@
           <controls><button class="secondary" @click="HandleYesNo(confirmation.target, false)">No</button><button @click="HandleYesNo(confirmation.target, true)">Yes</button></controls>
         </confirmation>
       </modal>
-      <modal :class="{disabled: !showIntro}" @click="showIntro = !showIntro" class="centered">
+      <modal :class="{disabled: !showIntro}" class="centered">
         <h2>Hello!</h2>
         <intro v-if="showIntro">
           <message>What's your name?</message>
-          <input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" v-model="tempName" />
+          <input style="text-align: center" spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" v-model="tempName" />
         </intro>
         <controls><button @click="SubmitSettings(event)">Okay</button></controls>
       </modal>
@@ -71,13 +71,14 @@
           </leftright>
 
           <message>"New Game" settings<small>{{isGuessing ? '(disabled while guessing)' : ''}}</small></message>
-          <!-- <select v-model="tempWordSetName">
-            <option v-for="name in getEnabledTempWordSetNames" :value="name">{{name}}</option>
-          </select> -->
-          <wordsets :class="{disabled: isGuessing}">
-            <wordset @click="SelectWordSet(event, set)" :class="{selected: set.isSelected}" v-if="set.enabled" v-for="set in getEnabledTempWordSets">{{set.name}}</wordset>
-          </wordsets>
-
+          <leftright :class="{disabled: isGuessing}">
+            <p style="width: auto">Category</p>
+            <section style="width: 100%">
+              <select v-model="tempWordSetName">
+                <option v-for="name in getEnabledTempWordSetNames" :value="name">{{name}}</option>
+              </select>
+            </section>
+          </leftright>
           <checkbox title="Enable this if you want to send your puzzle with a random 5th card." :class="{on: tempUseExtraCard, disabled: isGuessing}" @click="ToggleTempUseExtraCard()">
             Extra card
             <toggle></toggle>

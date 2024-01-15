@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.069',
+    version: '0.1.070',
     gameName: 'Facets',
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -296,7 +296,6 @@ var app = new Vue({
           case 4:
             if (gotIt) {
               text = '🔥  ' + this.guessersName + ', you nailed it!';
-              nailedIt = true;
             } else {
               text = '☔️ Whelp ' + this.guessersName + ", better luck next time. Here's the solution.";
             }
@@ -313,9 +312,21 @@ var app = new Vue({
       };
       if (navigator.share) {
         navigator.share(_shareObject);
-      } else if (navigator.clipboard !== undefined) {
-        _shareObject = text;
-        navigator.clipboard.writeText(_shareObject);
+      } else if (navigator.clipboard) {
+        navigator.clipboard
+          .write([
+            new ClipboardItem({
+              'text/plain': new Blob([text], { type: 'text/plain' }),
+            }),
+          ])
+          .then(() => {
+            this.message = 'Sharing message copied to the clipboard.';
+          })
+          .catch((err) => {
+            console.error('Failed to copy text: ', err);
+          });
+      } else {
+        copyToClipboard(text);
         this.message = 'Sharing message copied to the clipboard.';
       }
     },
@@ -752,7 +763,7 @@ var app = new Vue({
       this.showSettings = true;
       this.changeNameTitle = this.player.name + ", what's your new name?";
       this.tempWordSets = [];
-      // this.tempWordSetName = this.getCurrentSelectedTempWordSet.name;
+      this.tempWordSetName = this.getCurrentSelectedTempWordSetName;
       this.wordSets.forEach((set) => {
         this.tempWordSets.push(new WordSetObject(set));
       });
@@ -799,6 +810,9 @@ var app = new Vue({
       }
       localStorage.setItem('name', this.player.name);
       if (this.showSettings) {
+        let newSelectedWordSet = this.tempWordSets.find((set) => set.name === this.tempWordSetName);
+        this.SelectWordSet(e, newSelectedWordSet);
+
         let wordSetChanged = false;
         wordSetChanged = this.wordSets.find((set) => set.isSelected === true).id !== this.tempWordSets.find((set) => set.isSelected === true).id;
         this.wordSets = this.tempWordSets;
@@ -807,6 +821,7 @@ var app = new Vue({
           this.NewGame();
           this.SetWordSetTheme(this.guessingWordSet);
         }
+
         this.player.id = this.tempID;
         this.useWordSetThemes = this.tempUseWordSetThemes;
         this.usePortraitLayout = this.tempUsePortraitLayout;
@@ -948,21 +963,18 @@ var app = new Vue({
     getEnabledTempWordSets: function () {
       return this.tempWordSets.filter((set) => set.enabled);
     },
-    // getEnabledTempWordSetNames: function () {
-    //   let names = [];
-    //   this.wordSets.forEach((set) => {
-    //     if (set.enabled) {
-    //       names.push(set.name);
-    //     }
-    //   });
-    //   return names;
-    // },
-    // getEnabledWordSets: function () {
-    //   return this.wordSets.filter((set) => set.enabled);
-    // },
-    // getCurrentSelectedTempWordSet: function () {
-    //   return JSON.parse(JSON.stringify(this.getEnabledTempWordSets.find((set) => set.isSelected)));
-    // },
+    getEnabledTempWordSetNames: function () {
+      let names = [];
+      this.wordSets.forEach((set) => {
+        if (set.enabled) {
+          names.push(set.name);
+        }
+      });
+      return names;
+    },
+    getCurrentSelectedTempWordSetName: function () {
+      return this.wordSets.find((set) => set.isSelected).name;
+    },
     getCurrentGameWordSet: async function () {
       let allWords = [];
       let fetchPromises = this.gameWordSet.data.map((url) => fetch(url).then((response) => response.json()));
