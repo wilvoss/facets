@@ -431,7 +431,7 @@ modal controls button {
 }
 
 modal controls button.secondary {
-    border-color: rgba(255, 255, 255, .4);
+    border-color: rgba(255, 255, 255, .5);
 }
 
 
@@ -1089,7 +1089,7 @@ version {
 }
 
 
-@media screen and (max-height:820px) {
+@media screen and (max-height:844px) {
 
     wrapper {
         padding: 0
@@ -1121,9 +1121,6 @@ version {
     }
 
     modal message {
-        margin-top: calc(.5 * var(--defaultGap));
-        padding-top: calc(.5 * var(--defaultGap));
-        padding-bottom: calc(.5 * var(--defaultGap));
         height: auto;
         position: relative;
     }
@@ -1426,5 +1423,11 @@ version {
 
     wrapper.mobile {
         transform: translateY(calc(.3 * var(--cardSize)));
+    }
+
+    modal message {
+        margin-top: calc(.5 * var(--defaultGap));
+        padding-top: calc(.5 * var(--defaultGap));
+        padding-bottom: calc(.5 * var(--defaultGap));
     }
 }
