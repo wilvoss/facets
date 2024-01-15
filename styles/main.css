@@ -649,30 +649,36 @@ spot {
     pointer-events: none;
 }
 
-spot.empty {
-    outline-color: hsla(var(--hueMain), 70%, 90%, 0);
+parking spot {
+    background: hsla(0, 0%, 0%, .3);
+    outline: 1px solid hsla(var(--hueMain), 100%, 70%, .7);
 }
 
-.guessing spot.empty {
-    outline-color: hsla(var(--hueMain), 70%, 90%, 0);
+.guessing parking spot {
+    outline: 1px solid hsla(var(--hueGuessing), 100%, 70%, .7);
 }
+
+.guessing.reviewing parking spot {
+    outline: 1px solid hsla(var(--hueReviewing), 100%, 70%, .7);
+}
+
 
 spot.empty card {
     background: transparent;
     cursor: default;
 }
 
-parking spot {
-    background: hsla(0, 0%, 0%, .3);
-    border: 1px solid hsla(var(--hueMain), 100%, 70%, .7);
+
+parking spot.empty {
+    outline-color: hsla(var(--hueMain), 100%, 70%, .2);
 }
 
-.guessing parking spot {
-    border: 1px solid hsla(var(--hueGuessing), 100%, 70%, .7);
+.guessing parking spot.empty {
+    outline-color: hsla(var(--hueGuessing), 100%, 70%, .2);
 }
 
-.reviewing parking spot {
-    border: 1px solid hsla(var(--hueReviewing), 100%, 70%, .7);
+.reviewing.guessing parking spot.empty {
+    outline-color: hsla(var(--hueReviewing), 100%, 70%, .2);
 }
 
 
