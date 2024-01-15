@@ -90,7 +90,7 @@ app {
 
 h1, h2, h3, h4, h5 {
     font-weight: normal;
-    margin: calc(2 * var(--defaultGap)) 0;
+    margin: calc(3 * var(--defaultGap)) 0 calc(2 * var(--defaultGap));
     font-family: "Theme";
 }
 
@@ -240,16 +240,19 @@ header subtitle button.inline icon {
 
 message {
     display: block;
-    border-top: 1px solid hsla(var(--appForegroundHSL), .1);
     color: hsl(var(--messageColorHSL));
     text-align: center;
     width: 100%;
 }
 
+modal message {
+    border-bottom: 1px solid hsla(var(--appForegroundHSL), .1);
+}
+
 message:first-of-type {
     margin-top: 0px;
     padding-top: 0px;
-    border-top-color: hsla(var(--appForegroundHSL), 0);
+    /* border-bottom-color: hsla(var(--appForegroundHSL), 0); */
 }
 
 p {
@@ -270,9 +273,11 @@ p {
 }
 
 modal message {
-    margin-top: calc(1.5 * var(--defaultGap));
+    margin-top: calc(1 * var(--defaultGap));
     padding-top: var(--defaultGap);
+    margin-bottom: calc(.5 * var(--defaultGap));
     padding-bottom: calc(.5 * var(--defaultGap));
+    border-bottom: 1px solid hsla(var(--appForegroundHSL), .1);
 }
 
 message.clickable {
@@ -417,9 +422,14 @@ controls {
 }
 
 modal controls {
-    padding: calc(2 * var(--defaultGap)) 0;
+    position: fixed;
+    bottom: 0px;
+    background-color: hsla(var(--appBackgroundHSL), 1);
+    box-shadow: 0px -10px 10px hsla(var(--appBackgroundDarkestHSL), 1);
+    padding: var(--defaultGap) 0;
     gap: calc(.5 * var(--defaultGap));
     height: auto;
+    width: 100%;
 }
 
 
@@ -966,7 +976,7 @@ modal, tutorial {
     position: absolute;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
     align-items: center;
     width: 100%;
     height: 100%;
@@ -999,6 +1009,7 @@ modal settings, modal intro, modal confirmation {
 
 modal settings {
     gap: calc(.5 * var(--defaultGap));
+    margin-bottom: 160px;
 }
 
 modal.tutorial intro {
@@ -1089,7 +1100,7 @@ version {
     text-align: center;
     font-size: 10px;
     color: hsla(var(--hueMain), 45%, 45%);
-    position: absolute;
+    position: fixed;
     left: 10px;
     top: 0px;
 }
@@ -1118,7 +1129,7 @@ version {
     }
 
     modal controls {
-        padding: calc(2 * var(--defaultGap)) 0;
+        /* padding: calc(2 * var(--defaultGap)) 0; */
     }
 
 
@@ -1187,8 +1198,9 @@ version {
     modal {
         font-size: 16px;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: start;
         align-items: center;
+        margin-bottom: 60px;
     }
 
     wrapper {

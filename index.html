@@ -55,7 +55,7 @@
         <version>Version {{version}}</version>
         <h2>Settings</h2>
         <settings v-if="showSettings">
-          <message>Your profile</message>
+          <message>Profile</message>
           <leftright>
             <p>Your name</p>
             <section>
@@ -120,7 +120,7 @@
       </wrapper>
       <wrapper>
         <message v-if="message !== ''">{{ message}}</message>
-        <message v-if="message === ''">{{getPlayerMessage}}</message>
+        <message @click="OpenSettings()" v-if="message === ''">{{getPlayerMessage}}</message>
       </wrapper>
       <wrapper>
         <rotators>
