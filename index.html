@@ -8,7 +8,7 @@
     <meta name="apple-touch-fullscreen" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, minimum-scale=1, maximum-scale=5, user-scalable=yes" />
-    <meta name="theme-color" id="themeColor" content="rgb(5, 23, 36)" />
+    <meta name="theme-color" id="themeColor" content="rgb(4, 11, 16)" />
 
     <title>Facets</title>
 
@@ -83,15 +83,15 @@
             <toggle></toggle>
           </checkbox>
 
-          <message class="notMobile">Appearance</message>
+          <message>Appearance</message>
           <checkbox class="notMobile" :class="{on: tempUsePortraitLayout}" @click="ToggleTempUsePortraitLayout()">
             Portrait mode
             <toggle></toggle>
           </checkbox>
-          <!-- <checkbox :class="{on: tempUseWordSetThemes}" @click="ToggleTempUseWordSetThemes()">
+          <checkbox :class="{on: tempUseWordSetThemes}" @click="ToggleTempUseWordSetThemes()">
             Backgrounds
             <toggle></toggle>
-          </checkbox> -->
+          </checkbox>
         </settings>
         <controls>
           <button class="secondary" @click="CancelSettings(event)">Cancel</button>

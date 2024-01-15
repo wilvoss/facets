@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.077',
+    version: '0.1.078',
     gameName: 'Facets',
     currentGameID: 0,
     gameCatchphrase: 'A game of words!',
@@ -114,7 +114,7 @@ var app = new Vue({
       } else {
         this.documentCssRoot.style.setProperty('--texture2', 'radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), .3) 0%, hsla(var(--appBackgroundDarkestHSL), 0) 40%, hsla(var(--appBackgroundDarkestHSL), 1) 80%)');
         this.documentCssRoot.style.setProperty('--textureSize', 'cover');
-        this.documentCssRoot.style.setProperty('--textureBlendMode', 'overlay');
+        this.documentCssRoot.style.setProperty('--textureBlendMode', 'normal');
         this.documentCssRoot.style.setProperty('--hueTheme', '205');
       }
     },

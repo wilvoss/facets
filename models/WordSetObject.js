@@ -3,13 +3,13 @@
 class WordSetObject {
   constructor(spec) {
     this.id = spec.id === undefined ? -1 : spec.id;
-    this.name = spec.name === undefined ? WordSetNames.all : spec.name;
+    this.name = spec.name === undefined ? '' : spec.name;
     this.isSelected = spec.isSelected === undefined ? false : spec.isSelected;
     this.data = spec.data === undefined ? [] : spec.data;
     this.textureImage = spec.textureImage === undefined ? '../images/common.jpg' : spec.textureImage;
     this.textureHue = spec.textureHue === undefined ? 205 : spec.textureHue;
-    this.textureSize = spec.textureSize === undefined ? 'cover' : spec.textureSize;
-    this.textureBlendMode = spec.textureBlendMode === undefined ? 'overlay' : spec.textureBlendMode;
+    this.textureSize = spec.textureSize === undefined ? '512px' : spec.textureSize;
+    this.textureBlendMode = spec.textureBlendMode === undefined ? 'multiply' : spec.textureBlendMode;
     this.enabled = spec.enabled === undefined ? true : spec.enabled;
   }
 }

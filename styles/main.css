@@ -22,7 +22,7 @@
 
     --appBackgroundHSL: var(--hueTheme), 50%, 16%;
     --appBackgroundDarkHSL: var(--hueTheme), 56%, 11%;
-    --appBackgroundDarkestHSL: var(--hueTheme), 56%, 8%;
+    --appBackgroundDarkestHSL: var(--hueTheme), 56%, 4%;
     --appForegroundHSL: var(--hueTheme), 100%, 100%;
     --linkColorLightHSL: var(--hueHighlight), 79%, 55%;
     --linkColorDarkHSL: var(--hueHighlight), 69%, 45%;
@@ -51,7 +51,7 @@
     --texture1: url(../images/defaultTexture.jpg);
     --texture2: radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), .3) 0%, hsla(var(--appBackgroundDarkestHSL), 0) 40%, hsla(var(--appBackgroundDarkestHSL), 1) 80%);
     --textureSize: cover;
-    --textureBlendMode: overlay;
+    --textureBlendMode: normal;
 }
 
 html {
@@ -68,7 +68,7 @@ body {
     color: hsl(var(--appForegroundHSL));
     line-height: 1.3em;
     margin: 0px 0px;
-    background: hsl(var(--appBackgroundHSL));
+    background: hsl(var(--appBackgroundDarkestHSL));
     width: 100%;
     height: 100%;
     display: block;
@@ -81,7 +81,7 @@ app {
     height: 100%;
     display: flex;
     flex-direction: column;
-    background-color: hsl(var(--appBackgroundHSL));
+    background: hsl(var(--appBackgroundHSL));
     background-image: var(--texture2);
     background-size: var(--textureSize);
     background-blend-mode: var(--textureBlendMode);
@@ -661,7 +661,7 @@ spot {
 }
 
 parking spot {
-    background: hsla(0, 0%, 0%, .3);
+    background: hsla(0, 0%, 0%, .5);
     outline: 1px solid hsla(var(--hueMain), 100%, 70%, .7);
 }
 
@@ -681,15 +681,18 @@ spot.empty card {
 
 
 parking spot.empty {
-    outline-color: hsla(var(--hueMain), 100%, 70%, .2);
+    /* outline-color: hsla(var(--hueMain), 100%, 70%, .7); */
+    outline-style: dashed;
 }
 
 .guessing parking spot.empty {
-    outline-color: hsla(var(--hueGuessing), 100%, 70%, .2);
+    /* outline-color: hsla(var(--hueGuessing), 100%, 70%, .7); */
+    outline-style: dashed;
 }
 
 .reviewing.guessing parking spot.empty {
-    outline-color: hsla(var(--hueReviewing), 100%, 70%, .2);
+    /* outline-color: hsla(var(--hueReviewing), 100%, 70%, .7); */
+    outline-style: dashed;
 }
 
 
@@ -1194,6 +1197,8 @@ version {
         width: 100%;
         height: 100%;
         overflow: hidden;
+        background-repeat: no-repeat;
+        background-size: cover;
     }
 
     modal {
