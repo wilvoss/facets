@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.080',
+    version: '0.1.081',
     gameName: 'Facets',
     currentGameID: 0,
     gameCatchphrase: 'A game of words!',
@@ -717,11 +717,11 @@ var app = new Vue({
         this.SetWordSetTheme(this.gameWordSet);
       }
 
-      let usePortraitLayout = localStorage.getItem('usePortraitLayout');
-      if (usePortraitLayout !== undefined && usePortraitLayout !== null) {
-        this.usePortraitLayout = JSON.parse(usePortraitLayout);
-        this.tempUsePortraitLayout = this.usePortraitLayout;
-      }
+      // let usePortraitLayout = localStorage.getItem('usePortraitLayout');
+      // if (usePortraitLayout !== undefined && usePortraitLayout !== null) {
+      //   this.usePortraitLayout = JSON.parse(usePortraitLayout);
+      //   this.tempUsePortraitLayout = this.usePortraitLayout;
+      // }
 
       let useExtraCard = localStorage.getItem('useExtraCard');
       if (useExtraCard !== undefined && useExtraCard !== null) {
@@ -737,7 +737,6 @@ var app = new Vue({
       this.longTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
       this.shortTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
 
-      let params = [];
       let boardPieces = [];
       try {
         if (window.location.search) {
@@ -758,6 +757,8 @@ var app = new Vue({
         boardPieces = [];
         this.NewGame(null, '😕 - Something went wrong.', false);
       }
+
+      this.usePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
     },
 
     OpenSettings() {
@@ -797,7 +798,7 @@ var app = new Vue({
       this.showIntro = false;
       this.tempID = this.player.id;
       this.tempUseWordSetThemes = this.useWordSetThemes;
-      this.tempUsePortraitLayout = this.usePortraitLayout;
+      // this.tempUsePortraitLayout = this.usePortraitLayout;
       this.tempUseExtraCard = this.useExtraCard;
     },
 
@@ -827,13 +828,13 @@ var app = new Vue({
 
         this.player.id = this.tempID;
         this.useWordSetThemes = this.tempUseWordSetThemes;
-        this.usePortraitLayout = this.tempUsePortraitLayout;
+        // this.usePortraitLayout = this.tempUsePortraitLayout;
         this.useExtraCard = this.tempUseExtraCard;
         this.guessingCardCount = this.useExtraCard ? 5 : 4;
         this.SetWordSetTheme(this.guessingWordSet);
 
         localStorage.setItem('userID', this.player.id);
-        localStorage.setItem('usePortraitLayout', this.usePortraitLayout);
+        // localStorage.setItem('usePortraitLayout', this.usePortraitLayout);
         localStorage.setItem('useWordSetThemes', this.useWordSetThemes);
         localStorage.setItem('useExtraCard', this.useExtraCard);
         localStorage.setItem('wordSet', this.gameWordSet.id);
@@ -913,6 +914,10 @@ var app = new Vue({
       });
       return false;
     },
+
+    HandleResize(){
+      this.usePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
+    }
   },
 
   mounted() {
@@ -920,6 +925,7 @@ var app = new Vue({
     window.addEventListener('keydown', this.HandleKeyDownEvent);
     window.addEventListener('pointermove', this.HandlePointerMoveEvent);
     window.addEventListener('visibilitychange', this.HandlePageVisibilityChange);
+    window.addEventListener('resize', this.HandleResize);
   },
 
   computed: {
