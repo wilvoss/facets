@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.078',
+    version: '0.1.079',
     gameName: 'Facets',
     currentGameID: 0,
     gameCatchphrase: 'A game of words!',
@@ -976,7 +976,7 @@ var app = new Vue({
           names.push(set.name);
         }
       });
-      return names;
+      return names.sort((a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'}));;
     },
     getCurrentSelectedTempWordSetName: function () {
       return this.wordSets.find((set) => set.isSelected).name;
