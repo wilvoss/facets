@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.082',
+    version: '0.1.083',
     gameName: 'Facets',
     currentGameID: 0,
     gameCatchphrase: 'A game of words!',
@@ -123,11 +123,23 @@ var app = new Vue({
       note('HandleSubmitButtonPress() called');
       if (this.player.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
         this.showModal = true;
+        this.confirmation = { message: 'Did they have the right answer?', target: 'correct' };
         this.showConfirmation = true;
       } else if (this.isGuessing) {
         this.ShareBoard();
       } else {
         this.FillParkingLot();
+      }
+    },
+
+    HandleNewGameClick() {
+      note('HandleNewGameClick() called');
+      if (this.isGuessing && this.player.role !== 'reviewer' && this.puzzlePlayer.id !== this.player.id) {
+        this.showModal = true;
+        this.confirmation = { message: 'Are you sure you want to create a new game?', target: 'newgame' };
+        this.showConfirmation = true;
+      } else {
+        this.NewGame();
       }
     },
 
@@ -265,7 +277,11 @@ var app = new Vue({
         case 'correct':
           this.ShareBoard(_value);
           break;
-
+        case 'newgame':
+          if (_value) {
+            this.NewGame(null);
+          }
+          break;
         default:
           break;
       }
@@ -658,7 +674,7 @@ var app = new Vue({
       this.SetWordSetTheme(this.gameWordSet);
       this.shareURL = '';
       this.shareText = 'Send';
-      history.replaceState(null, null, window.location.origin);
+      history.pushState(null, null, window.location.origin);
       this.isGuessing = false;
       this.cards = [];
       this.parkedCards = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
@@ -860,6 +876,9 @@ var app = new Vue({
             if (this.showTutorial) {
               this.ToggleShowTutorial(null);
             }
+            if (this.showConfirmation) {
+              this.HandleYesNo(this.confirmation.target, true);
+            }
             break;
           case 'Tab':
             note('HandleKeyDownEvent() called');
@@ -877,6 +896,9 @@ var app = new Vue({
             }
             if (this.showTutorial) {
               this.ToggleShowTutorial(null);
+            }
+            if (this.showConfirmation) {
+              this.HandleYesNo(this.confirmation.target, false);
             }
             break;
           default:
@@ -915,9 +937,9 @@ var app = new Vue({
       return false;
     },
 
-    HandleResize(){
+    HandleResize() {
       this.usePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
-    }
+    },
   },
 
   mounted() {
@@ -982,7 +1004,7 @@ var app = new Vue({
           names.push(set.name);
         }
       });
-      return names.sort((a, b) => a.localeCompare(b, undefined, {sensitivity: 'base'}));;
+      return names.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
     },
     getCurrentSelectedTempWordSetName: function () {
       return this.wordSets.find((set) => set.isSelected).name;
