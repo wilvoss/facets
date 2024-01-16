@@ -25,5 +25,6 @@ let Entertainment = new WordSetObject({ id: '8', name: 'Entertainment', data: ['
 let NounsVerbs = new WordSetObject({ id: '100', name: 'Nouns & Verbs', isSelected: true, data: [Nouns.data, Verbs.data], textureImage: '../images/common-alt2.jpg' });
 let Seasons = new WordSetObject({ id: '101', name: 'Seasons', data: [Winter.data, Spring.data, Summer.data, Fall.data], textureImage: '../images/seasons-alt2.jpg' });
 let Civilization = new WordSetObject({ id: '102', name: 'Civilization', data: ['../data/civilization.json'], textureImage: '../images/civilization-alt2.jpg' });
+let Prehistory = new WordSetObject({ id: '103', name: 'Prehistory', data: ['../data/prehistory.json'], textureImage: '../images/prehistory-alt2.jpg' });
 
-let WordSets = [NounsVerbs, Nouns, Verbs, Winter, Spring, Summer, Fall, Seasons, Entertainment, Science, Civilization];
+let WordSets = [NounsVerbs, Nouns, Verbs, Winter, Spring, Summer, Fall, Seasons, Entertainment, Science, Civilization, Prehistory];
