@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.084',
+    version: '0.1.085',
     gameName: 'Facets',
     currentGameID: 0,
     gameCatchphrase: 'A game of words!',
@@ -54,6 +54,7 @@ var app = new Vue({
     cards: [],
     parkedCards: [],
     hints: [],
+    parkingInputValue: '',
     player: new PlayerObject({}),
     puzzlePlayer: new PlayerObject({}),
     sendingPlayer: new PlayerObject({}),
@@ -312,7 +313,7 @@ var app = new Vue({
             break;
           case 4:
             if (gotIt) {
-              text = '🔥  ' + this.guessersName + ', you nailed it!';
+              text = '🔥 ' + this.guessersName + ', you nailed it!';
             } else {
               text = '☔️ Whelp ' + this.guessersName + ", better luck next time. Here's the solution.";
             }
@@ -575,7 +576,7 @@ var app = new Vue({
         if (!this.isGuessing) {
           setTimeout(() => {
             let hint0 = document.getElementById('hint0');
-            document.getElementById('parkingInput').value = '';
+            this.parkingInputValue = '';
             hint0.focus();
           }, this.longTransition);
         }
@@ -585,7 +586,7 @@ var app = new Vue({
     ResetTrayAfterRotation() {
       note('ResetTrayAfterRotation() called');
       this.trayIsRotating = false;
-      document.getElementById('parkingInput').value = '';
+      this.parkingInputValue = '';
 
       if (this.trayRotation < 3) {
         if (this.trayRotation !== 0) {

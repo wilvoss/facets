@@ -136,7 +136,7 @@
         </card>
       </wrapper>
       <wrapper>
-        <input maxlength="0" :disabled="isGuessing" tabindex="-1" id="parkingInput" style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1" tabindex="-1" />
+        <input maxlength="0" :disabled="isGuessing" tabindex="-1" id="parkingInput" style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1" v-model="parkingInputValue" tabindex="-1" />
         <parking>
           <spot v-for="(card, index) in parkedCards" v-if="index < (guessingCardCount / 2)" :class="{empty: card.words.length === 0, selected: card.isSelected}">
             <rotators>
