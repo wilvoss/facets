@@ -6,7 +6,7 @@ class WordSetObject {
     this.name = spec.name === undefined ? '' : spec.name;
     this.isSelected = spec.isSelected === undefined ? false : spec.isSelected;
     this.data = spec.data === undefined ? [] : spec.data;
-    this.textureImage = spec.textureImage === undefined ? '../images/common.jpg' : spec.textureImage;
+    this.textureImage = spec.textureImage === undefined ? '../images/common-alt.jpg' : spec.textureImage;
     this.textureHue = spec.textureHue === undefined ? 205 : spec.textureHue;
     this.textureSize = spec.textureSize === undefined ? '512px' : spec.textureSize;
     this.textureBlendMode = spec.textureBlendMode === undefined ? 'normal' : spec.textureBlendMode;
@@ -22,7 +22,7 @@ let Summer = new WordSetObject({ id: '5', name: 'Summer', data: ['data/summer.js
 let Fall = new WordSetObject({ id: '6', name: 'Fall', data: ['data/fall.json'], enabled: false });
 let Science = new WordSetObject({ id: '7', name: 'Science', data: ['data/science.json'], textureImage: '../images/science-alt.jpg' });
 let Entertainment = new WordSetObject({ id: '8', name: 'Entertainment', data: ['data/entertainment.json'], textureImage: '../images/entertainment-alt.jpg' });
-let NounsVerbs = new WordSetObject({ id: '100', name: 'Nouns & Verbs', isSelected: true, data: [Nouns.data, Verbs.data] });
+let NounsVerbs = new WordSetObject({ id: '100', name: 'Nouns & Verbs', isSelected: true, data: [Nouns.data, Verbs.data], textureImage: '../images/common-alt.jpg' });
 let Seasons = new WordSetObject({ id: '101', name: 'Seasons', data: [Winter.data, Spring.data, Summer.data, Fall.data], textureImage: '../images/seasons-alt.jpg' });
 let Civilization = new WordSetObject({ id: '102', name: 'Civilization', data: ['../data/civilization.json'], textureImage: '../images/civilization-alt.jpg' });
 
