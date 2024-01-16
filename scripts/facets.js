@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.087',
+    version: '0.1.088',
     gameName: 'Facets',
     currentGameID: 0,
     gameCatchphrase: 'A game of words!',
@@ -153,8 +153,9 @@ var app = new Vue({
       this.cards.concat(this.parkedCards).forEach((card) => {
         card.id = this.player.value + index++;
         card.rotation = (getRandomInt(0, 1) === 1 ? 1 : -1) * getRandomInt(0, 4);
-        this.ResetCardAfterRotation(false);
       });
+
+      this.ResetCardsAfterRotation(false);
 
       this.parkedCards = this.cards;
       let allUsedWords = [];
@@ -514,13 +515,13 @@ var app = new Vue({
         _card.rotation = _card.rotation + _inc;
         _card.isRotating = true;
         this.cardRotationTimeout = setTimeout(() => {
-          this.ResetCardAfterRotation();
+          this.ResetCardsAfterRotation();
         }, this.shortTransition);
       }
     },
 
-    ResetCardAfterRotation(_contructURL = true) {
-      note('ResetCardAfterRotation() called');
+    ResetCardsAfterRotation(_contructURL = true) {
+      note('ResetCardsAfterRotation() called');
 
       this.cards.concat(this.parkedCards).forEach((card) => {
         if (card.rotation !== 0) {
@@ -609,9 +610,7 @@ var app = new Vue({
 
         card0.rotation = card1.rotation = card2.rotation = card3.rotation = this.trayRotation;
 
-        this.cards.forEach((card) => {
-          this.ResetCardAfterRotation(false);
-        });
+        this.ResetCardsAfterRotation(false);
 
         switch (this.trayRotation) {
           case -1:
