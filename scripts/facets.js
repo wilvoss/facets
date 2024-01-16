@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.092',
+    version: '0.1.093',
     gameName: 'Facets',
     currentGameID: 0,
     gameCatchphrase: 'A game of words!',
@@ -699,7 +699,7 @@ var app = new Vue({
         id = JSON.parse(id);
         this.player.id = id;
       } else {
-        this.player.id = getRandomInt(100000, 100000000);
+        this.player.id = getRandomInt(10000000, 100000000);
         localStorage.setItem('userID', this.player.id);
       }
       this.tempID = parseInt(this.player.id);

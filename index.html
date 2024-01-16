@@ -101,7 +101,7 @@
         </settings>
         <controls>
           <button class="secondary" @click="CancelSettings(event)">Cancel</button>
-          <button :disabled="tempID.toString().length !== 8" title="Please only use numbers." :class="{disabled: tempID.toString().length !== 8}" @click="SubmitSettings(event)">Save</button>
+          <button :disabled="tempID.toString().length !== 8" title="Please only use numbers." :class="{disabled: tempID.toString().length < 6}" @click="SubmitSettings(event)">Save</button>
         </controls>
       </modal>
       <wrapper>
