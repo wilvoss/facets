@@ -280,6 +280,10 @@ modal message {
     border-bottom: 1px solid hsla(var(--appForegroundHSL), .1);
 }
 
+modal intro message {
+    margin-top: 0;
+}
+
 message.clickable {
     cursor: pointer;
 }
@@ -1022,6 +1026,10 @@ modal.tutorial intro {
     margin-bottom: 160px;
 }
 
+modal.turorial intro message {
+    margin-top: 0;
+}
+
 section {
     max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
     width: 100%;
@@ -1193,6 +1201,7 @@ version {
     p {
         font-size: 110%;
         padding: 0 var(--defaultGap);
+        width: calc(100% - (2 * var(--defaultGap)));
     }
 
     app {
@@ -1459,4 +1468,5 @@ version {
         padding-top: calc(.5 * var(--defaultGap));
         padding-bottom: calc(.5 * var(--defaultGap));
     }
+
 }
