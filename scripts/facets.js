@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.086',
+    version: '0.1.087',
     gameName: 'Facets',
     currentGameID: 0,
     gameCatchphrase: 'A game of words!',
@@ -153,7 +153,7 @@ var app = new Vue({
       this.cards.concat(this.parkedCards).forEach((card) => {
         card.id = this.player.value + index++;
         card.rotation = (getRandomInt(0, 1) === 1 ? 1 : -1) * getRandomInt(0, 4);
-        this.ResetCardAfterRotation(card);
+        this.ResetCardAfterRotation(false);
       });
 
       this.parkedCards = this.cards;
@@ -519,7 +519,7 @@ var app = new Vue({
       }
     },
 
-    ResetCardAfterRotation() {
+    ResetCardAfterRotation(_contructURL = true) {
       note('ResetCardAfterRotation() called');
 
       this.cards.concat(this.parkedCards).forEach((card) => {
@@ -533,8 +533,9 @@ var app = new Vue({
           card.rotation = 0;
         }
       });
-
-      this.ConstructURLForCurrentGame();
+      if (this.isGuessing && _contructURL) {
+        this.ConstructURLForCurrentGame();
+      }
     },
 
     RotateTrayBasedOnInputFocus(_index) {
@@ -609,7 +610,7 @@ var app = new Vue({
         card0.rotation = card1.rotation = card2.rotation = card3.rotation = this.trayRotation;
 
         this.cards.forEach((card) => {
-          this.ResetCardAfterRotation(card);
+          this.ResetCardAfterRotation(false);
         });
 
         switch (this.trayRotation) {
@@ -819,6 +820,12 @@ var app = new Vue({
       this.tempUseExtraCard = this.useExtraCard;
     },
 
+    HandleIntroButtonClick(e) {
+      note('HandleIntroButtonClick() called');
+      this.SubmitSettings(null);
+      this.ToggleShowTutorial(null);
+    },
+
     SubmitSettings(e) {
       note('SubmitSettings() called');
       if (e !== null) {
@@ -871,14 +878,14 @@ var app = new Vue({
             if (!this.isGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
               this.FillParkingLot();
             }
-            if (this.showModal && (this.showSettings || this.showIntro)) {
+            if (this.showSettings) {
               this.SubmitSettings(e);
-            }
-            if (this.showTutorial) {
+            } else if (this.showTutorial) {
               this.ToggleShowTutorial(null);
-            }
-            if (this.showConfirmation) {
+            } else if (this.showConfirmation) {
               this.HandleYesNo(this.confirmation.target, true);
+            } else if (this.showIntro) {
+              this.HandleIntroButtonClick(null);
             }
             break;
           case 'Tab':
@@ -892,13 +899,11 @@ var app = new Vue({
             e.preventDefault();
             e.stopPropagation();
           case 'Escape':
-            if (this.showModal && (this.showSettings || this.showIntro)) {
+            if (this.showSettings) {
               this.CancelSettings(null);
-            }
-            if (this.showTutorial) {
+            } else if (this.showTutorial) {
               this.ToggleShowTutorial(null);
-            }
-            if (this.showConfirmation) {
+            } else if (this.showConfirmation) {
               this.HandleYesNo(this.confirmation.target, false);
             }
             break;
@@ -941,6 +946,15 @@ var app = new Vue({
     HandleResize() {
       this.usePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
     },
+
+    HandlePopState() {
+      note('HandlePopState() called');
+      if (window.location.search) {
+        this.LoadPage();
+      } else {
+        this.NewGame(null);
+      }
+    },
   },
 
   mounted() {
@@ -949,6 +963,7 @@ var app = new Vue({
     window.addEventListener('pointermove', this.HandlePointerMoveEvent);
     window.addEventListener('visibilitychange', this.HandlePageVisibilityChange);
     window.addEventListener('resize', this.HandleResize);
+    window.addEventListener('popstate', this.HandlePopState);
   },
 
   computed: {
