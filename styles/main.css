@@ -259,6 +259,7 @@ message:first-of-type {
 p {
     margin: 0;
     line-height: 140%;
+    width: 100%;
 }
 
 .blueText {
@@ -668,14 +669,17 @@ spot {
 parking spot {
     background: hsla(0, 0%, 0%, .5);
     outline: 1px solid hsla(var(--hueMain), 100%, 70%, .7);
+    opacity: .5;
 }
 
 .guessing parking spot {
     outline: 1px solid hsla(var(--hueGuessing), 100%, 70%, .7);
+    opacity: 1;
 }
 
 .guessing.reviewing parking spot {
     outline: 1px solid hsla(var(--hueReviewing), 100%, 70%, .7);
+    opacity: 1;
 }
 
 
@@ -1293,6 +1297,7 @@ version {
 
     header subtitle button.inline {
         padding: 6px 2px;
+        text-wrap: nowrap;
     }
 
     message {
