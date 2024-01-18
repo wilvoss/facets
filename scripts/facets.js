@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.096',
+    version: '0.1.097',
     gameName: 'Facets',
     currentGameID: 0,
     gameCatchphrase: 'A game of words!',
@@ -268,7 +268,7 @@ var app = new Vue({
         urlString += '&puzzleID=' + encodeURIComponent(this.puzzlePlayer.id);
         urlString += '&wordSetID=' + encodeURIComponent(this.guessingWordSet.id);
         urlString += '&useExtraCard=' + encodeURIComponent(this.guessingCardCount === 5);
-        urlString = window.location.origin + '?board=' + urlString + '&deletableCharacters=these';
+        urlString = window.location.origin + window.location.pathname + '?board=' + urlString + '&deletableCharacters=these';
         this.shareURL = urlString;
         history.pushState(null, null, this.shareURL);
       }
@@ -675,7 +675,7 @@ var app = new Vue({
       this.SetWordSetTheme(this.gameWordSet);
       this.shareURL = '';
       this.shareText = 'Send';
-      history.pushState(null, null, window.location.origin);
+      history.pushState(null, null, window.location.origin + window.location.pathname);
       this.isGuessing = false;
       this.cards = [];
       this.parkedCards = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
