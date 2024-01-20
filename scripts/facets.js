@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.097',
+    version: '0.1.098',
     gameName: 'Facets',
     currentGameID: 0,
     gameCatchphrase: 'A game of words!',
@@ -332,18 +332,31 @@ var app = new Vue({
       if (navigator.share) {
         navigator.share(_shareObject);
       } else if (navigator.clipboard) {
-        navigator.clipboard
-          .write([
-            new ClipboardItem({
-              'text/plain': new Blob([text], { type: 'text/plain' }),
-            }),
-          ])
-          .then(() => {
-            this.message = 'Sharing message copied to the clipboard.';
-          })
-          .catch((err) => {
-            console.error('Failed to copy text: ', err);
-          });
+        if (window.ClipboardItem) {
+          // ClipboardItem is available
+          navigator.clipboard
+            .write([
+              new ClipboardItem({
+                'text/plain': new Blob([text], { type: 'text/plain' }),
+              }),
+            ])
+            .then(() => {
+              this.message = 'Sharing message copied to the clipboard.';
+            })
+            .catch((err) => {
+              console.error('Failed to copy text: ', err);
+            });
+        } else {
+          // ClipboardItem is not available, use writeText
+          navigator.clipboard
+            .writeText(text)
+            .then(() => {
+              this.message = 'Sharing message copied to the clipboard.';
+            })
+            .catch((err) => {
+              console.error('Failed to copy text: ', err);
+            });
+        }
       } else {
         copyToClipboard(text);
         this.message = 'Sharing message copied to the clipboard.';
