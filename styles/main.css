@@ -18,6 +18,7 @@
     --hueTheme: 205;
     --hueGuessing: 140;
     --hueReviewing: 355;
+    --hueSolved: 175;
     --hueHighlight: 140;
 
     --appBackgroundHSL: var(--hueTheme), 50%, 16%;
@@ -31,6 +32,7 @@
     --trayBackgroundHSL: var(--hueMain), 100%, 50%;
     --trayGuessingBackgroundHSL: var(--hueGuessing), 100%, 40%;
     --trayReviewingBackgroundHSL: var(--hueReviewing), 100%, 54%;
+    --traySolvedBackgroundHSL: var(--hueSolved), 100%, 40%;
 
     --longTransition: 400ms;
     --mediumTransition: 250ms;
@@ -274,6 +276,7 @@ p {
     color: hsl(var(--hueReviewing), 100%, 60%)
 }
 
+
 modal message {
     margin-top: calc(1 * var(--defaultGap));
     padding-top: var(--defaultGap);
@@ -394,6 +397,7 @@ tray diamond {
     background-size: 100% 100%;
     pointer-events: none;
     transform: translateY(-60px);
+    transition: var(--mediumTransition) ease-in-out background-color;
     z-index: -1;
 }
 
@@ -412,6 +416,11 @@ diamond.back {
 
 .reviewing diamond.back {
     background: hsl(var(--trayReviewingBackgroundHSL));
+}
+
+
+.solved.guessing diamond.back {
+    background: hsla(var(--traySolvedBackgroundHSL));
 }
 
 tray.rotating {
@@ -520,6 +529,10 @@ parking spot rotators button icon {
 
 .reviewing parking spot rotators button icon {
     background: hsla(var(--hueReviewing), 100%, 70%, 0.46);
+}
+
+.solved.guessing parking spot rotators button icon {
+    background: hsla(var(--hueSolved), 100%, 70%, 0.46);
 }
 
 cards spot:hover rotators button icon {
@@ -682,6 +695,11 @@ parking spot {
     opacity: 1;
 }
 
+.guessing.solved parking spot {
+    outline: 1px solid hsla(var(--hueSolved), 100%, 70%, .7);
+    opacity: 1;
+}
+
 
 spot.empty card {
     background: transparent;
@@ -732,6 +750,10 @@ cards card, .guessing cards card, .reviewing cards card {
     color: hsl(var(--hueReviewing), 94%, 90%);
 }
 
+.solved.guessing cards card {
+    color: hsl(var(--hueSolved), 94%, 90%);
+}
+
 cards spot:nth-child(1) card words word:nth-child(2),
 cards spot:nth-child(1) card words word:nth-child(3),
 cards spot:nth-child(2) card words word:nth-child(3),
@@ -757,6 +779,10 @@ card.ghost, card.ghost.empty, .guessing card.ghost.empty, .reviewing card.ghost.
 
 .guessing card.ghost {
     border: 1px solid hsla(var(--hueGuessing), 100%, 70%, .7);
+}
+
+.guessing.solved card.ghost {
+    border: 1px solid hsla(var(--hueSolved), 100%, 70%, .7);
 }
 
 .reviewing card.ghost {
@@ -882,6 +908,10 @@ hints hint input::placeholder {
     color: hsla(var(--hueReviewing), 70%, 48%, 1);
 }
 
+.solved.guessing hints hint input::placeholder {
+    color: hsla(var(--hueSolved), 70%, 48%, 1);
+}
+
 modal input, modal select {
     font-family: 'Abel';
     color: white;
@@ -908,6 +938,10 @@ hints hint input:disabled {
 
 .guessing.reviewing hints hint input:disabled {
     color: hsl(var(--hueReviewing), 94%, 80%);
+}
+
+.guessing.solved hints hint input:disabled {
+    color: hsl(var(--hueSolved), 94%, 80%);
 }
 
 .guessing input, .guessing hints hint input {

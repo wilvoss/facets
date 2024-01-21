@@ -12,9 +12,11 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.098',
+    version: '0.1.099',
     gameName: 'Facets',
     currentGameID: 0,
+    currentGameSol: '',
+    guessingGameSol: [],
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
     guessingCardCount: 4,
@@ -22,6 +24,8 @@ var app = new Vue({
     tempID: 0,
     editID: false,
     useWordSetThemes: false,
+    autoCheck: false,
+    tempAutoCheck: false,
     usePortraitLayout: false,
     useExtraCard: false,
     tempUseWordSetThemes: false,
@@ -105,6 +109,11 @@ var app = new Vue({
       this.tempUseExtraCard = !this.tempUseExtraCard;
     },
 
+    ToggleAutoCheck() {
+      note('ToggleAutoCheck() called');
+      this.tempAutoCheck = !this.tempAutoCheck;
+    },
+
     SetWordSetTheme(_wordset) {
       note('SetWordSetTheme() called');
       if (this.useWordSetThemes) {
@@ -127,9 +136,45 @@ var app = new Vue({
         this.confirmation = { message: 'Did they have the right answer?', target: 'correct' };
         this.showConfirmation = true;
       } else if (this.isGuessing) {
-        this.ShareBoard();
+        if (this.autoCheck && this.player.role !== 'reviewer' && this.isGuessing) {
+          this.IsCurrentGuessCorrect();
+        } else {
+          this.ShareBoard();
+        }
       } else {
         this.FillParkingLot();
+      }
+    },
+
+    IsCurrentGuessCorrect() {
+      note('IsCurrentGuessCorrect() called');
+      let hintValues = [];
+      this.hints.forEach((hint) => {
+        hintValues.push(hint.value);
+      });
+      let actualSol = this.currentGameSol.split('-');
+      let fullGuess = this.GetCurrentSolutionParamString().split('-');
+
+      let shiftedGuess = [];
+
+      for (let i = 0; i < actualSol.length; i += 3) {
+        for (let j = 0; j < fullGuess.length; j += 3) {
+          if (actualSol[i] === fullGuess[j]) {
+            shiftedGuess.push(fullGuess[j], fullGuess[j + 1], fullGuess[j + 2]);
+            break;
+          }
+        }
+      }
+      this.guessingGameSol = shiftedGuess.join('-');
+
+      if (this.currentGameSol === this.guessingGameSol) {
+        this.RotateTray(8);
+        this.message = 'You have solved the puzzle!';
+        return true;
+      } else {
+        this.message = 'Sorry, some cards are wrong - this UX will get better.';
+        // insert code to identify incorrect cards and remove from the board.
+        return false;
       }
     },
 
@@ -150,6 +195,7 @@ var app = new Vue({
       this.isGuessing = true;
       let temp = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
       let index = 0;
+      this.currentGameSol = this.GetCurrentSolutionParamString();
       this.cards.concat(this.parkedCards).forEach((card) => {
         card.id = this.player.value + index++;
         card.rotation = (getRandomInt(0, 1) === 1 ? 1 : -1) * getRandomInt(0, 4);
@@ -234,6 +280,12 @@ var app = new Vue({
           hint.value = _boardArray[index++];
         });
 
+        if (urlParams.has('sol')) {
+          this.currentGameSol = urlParams.get('sol');
+        } else {
+          this.currentGameSol = [];
+        }
+
         this.SetWordSetTheme(this.guessingWordSet);
         this.player.role = this.puzzlePlayer.id === this.player.id && this.player.id !== this.sendingPlayer.id ? 'reviewer' : 'guesser';
       }
@@ -244,9 +296,30 @@ var app = new Vue({
       }
     },
 
+    // CreateSolutionArray(_hints, _guesses) {
+    //   note('CreateSolutionArray() called');
+    //   log(_guesses);
+    //   let solIDs = _guesses.split('-');
+    //   let solArray = [];
+    //   solArray.push(_hints[0]);
+    //   solArray.push(solIDs[0]);
+    //   solArray.push(solIDs[1]);
+    //   solArray.push(_hints[1]);
+    //   solArray.push(solIDs[2]);
+    //   solArray.push(solIDs[3]);
+    //   solArray.push(_hints[2]);
+    //   solArray.push(solIDs[4]);
+    //   solArray.push(solIDs[5]);
+    //   solArray.push(_hints[3]);
+    //   solArray.push(solIDs[6]);
+    //   solArray.push(solIDs[7]);
+    //   return solArray;
+    // },
+
     ConstructURLForCurrentGame() {
       note('ConstructURLForCurrentGame() called');
       if (this.isGuessing) {
+        this.guessingGameSol = '';
         let urlString = '';
         this.cards.concat(this.parkedCards).forEach((card) => {
           if (card.words.length === 0) {
@@ -268,6 +341,7 @@ var app = new Vue({
         urlString += '&puzzleID=' + encodeURIComponent(this.puzzlePlayer.id);
         urlString += '&wordSetID=' + encodeURIComponent(this.guessingWordSet.id);
         urlString += '&useExtraCard=' + encodeURIComponent(this.guessingCardCount === 5);
+        urlString += '&sol=' + this.currentGameSol;
         urlString = window.location.origin + window.location.pathname + '?board=' + urlString + '&deletableCharacters=these';
         this.shareURL = urlString;
         history.pushState(null, null, this.shareURL);
@@ -758,6 +832,12 @@ var app = new Vue({
         this.useExtraCard = JSON.parse(useExtraCard);
         this.tempUseExtraCard = this.useExtraCard;
       }
+
+      let autoCheck = localStorage.getItem('autoCheck');
+      if (autoCheck !== undefined && autoCheck !== null) {
+        this.autoCheck = JSON.parse(autoCheck);
+        this.tempAutoCheck = this.autoCheck;
+      }
     },
 
     LoadPage() {
@@ -816,6 +896,30 @@ var app = new Vue({
       _wordSet.isSelected = true;
     },
 
+    GetCurrentSolutionParamString() {
+      note('GetCurrentSolutionParamString() called');
+      let params = [];
+      if (this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
+        params.push(this.hints[0].value);
+        params.push(this.cards[0].words[0].id);
+        params.push(this.cards[1].words[0].id);
+
+        params.push(this.hints[1].value);
+        params.push(this.cards[1].words[1].id);
+        params.push(this.cards[3].words[1].id);
+
+        params.push(this.hints[2].value);
+        params.push(this.cards[2].words[3].id);
+        params.push(this.cards[0].words[3].id);
+
+        params.push(this.hints[3].value);
+        params.push(this.cards[3].words[2].id);
+        params.push(this.cards[2].words[2].id);
+      }
+      let param = params.join('-');
+      return param;
+    },
+
     CancelSettings(e) {
       note('CancelSettings() called');
       if (e !== null) {
@@ -830,6 +934,7 @@ var app = new Vue({
       this.tempUseWordSetThemes = this.useWordSetThemes;
       // this.tempUsePortraitLayout = this.usePortraitLayout;
       this.tempUseExtraCard = this.useExtraCard;
+      this.tempAutoCheck = this.autoCheck;
     },
 
     HandleIntroButtonClick(e) {
@@ -866,6 +971,7 @@ var app = new Vue({
         this.useWordSetThemes = this.tempUseWordSetThemes;
         // this.usePortraitLayout = this.tempUsePortraitLayout;
         this.useExtraCard = this.tempUseExtraCard;
+        this.autoCheck = this.tempAutoCheck;
         this.guessingCardCount = this.useExtraCard ? 5 : 4;
         this.SetWordSetTheme(this.guessingWordSet);
 
@@ -873,6 +979,7 @@ var app = new Vue({
         // localStorage.setItem('usePortraitLayout', this.usePortraitLayout);
         localStorage.setItem('useWordSetThemes', this.useWordSetThemes);
         localStorage.setItem('useExtraCard', this.useExtraCard);
+        localStorage.setItem('autoCheck', this.autoCheck);
         localStorage.setItem('wordSet', this.gameWordSet.id);
       }
       this.editID = false;
@@ -1044,7 +1151,6 @@ var app = new Vue({
       try {
         let dataArrays = await Promise.all(fetchPromises);
         allWords = [].concat(...dataArrays);
-        console.log(allWords);
       } catch (error) {
         console.error('Error:', error);
       }
@@ -1058,7 +1164,6 @@ var app = new Vue({
       try {
         let dataArrays = await Promise.all(fetchPromises);
         allWords = [].concat(...dataArrays);
-        console.log(allWords);
       } catch (error) {
         console.error('Error:', error);
       }

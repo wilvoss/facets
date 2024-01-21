@@ -25,7 +25,7 @@
   </head>
 
   <body>
-    <app id="app" v-cloak :class="{portrait: usePortraitLayout, guessing: isGuessing, reviewing: player.role === 'reviewer'}" @pointerdown="HandleBodyPointerDown(event)" @pointerup="HandleBodyPointerUp(event, isDragging ? draggedCard : getSelectedCard)">
+    <app id="app" v-cloak :class="{solved: guessingGameSol === currentGameSol, portrait: usePortraitLayout, guessing: isGuessing, reviewing: player.role === 'reviewer'}" @pointerdown="HandleBodyPointerDown(event)" @pointerup="HandleBodyPointerUp(event, isDragging ? draggedCard : getSelectedCard)">
       <modal :class="{disabled: !showTutorial}" class="tutorial">
         <h2>Tutorial</h2>
         <intro v-if="showTutorial">
@@ -75,7 +75,7 @@
             </section>
           </leftright>
 
-          <message>Game creation<small>{{isGuessing ? '(disabled while guessing)' : ''}}</small></message>
+          <message>Creating<small>{{isGuessing ? '(disabled while guessing)' : ''}}</small></message>
           <leftright :class="{disabled: isGuessing}">
             <p style="width: auto">Category</p>
             <section style="width: 100%">
@@ -86,6 +86,11 @@
           </leftright>
           <checkbox title="Enable this if you want to send your puzzle with a random 5th card." :class="{on: tempUseExtraCard, disabled: isGuessing}" @click="ToggleTempUseExtraCard()">
             Extra card
+            <toggle></toggle>
+          </checkbox>
+          <message>Guessing</message>
+          <checkbox title="Enable this if you want the game to check instead of you sending it to your friend." :class="{on: tempAutoCheck}" @click="ToggleAutoCheck()">
+            Autocheck
             <toggle></toggle>
           </checkbox>
 
@@ -164,19 +169,19 @@
           <diamond class="back"></diamond>
           <diamond></diamond>
           <hints>
-            <hint @pointerdown="RotateTrayBasedOnInputFocus(index)" v-for="(hint, index) in hints" :key="index">
+            <hint @pointerdown="RotateTrayBasedOnInputFocus(index)" :id="'h' + index" v-for="(hint, index) in hints" :key="index">
               <input spellcheck="false" :id="'hint' + index" type="text" title="Please only use alphanumeric characters." pattern="[A-Za-z0-9]*" :disabled="isGuessing || index > 0" v-model="hint.value" maxlength="14" :tabindex="index + 1" type="text" onfocus="this.placeholder=''" onblur="this.placeholder='tap'" placeholder="tap" />
             </hint>
           </hints>
           <cards :class="{disabled: showModal}">
-            <spot v-for="(card, index) in cards" v-if="!card.isExtra" :class="{empty: card.words.length === 0, selected: card.isSelected}">
+            <spot v-for="(card, index) in cards" :id="'spot' + index" v-if="!card.isExtra" :class="{empty: card.words.length === 0, selected: card.isSelected}">
               <rotators>
                 <button class="clockwise" @click="RotateCard(event, card, 1)"><icon class="rotate"></icon></button>
                 <button class="anticlockwise" @click="RotateCard(event, card, -1)"><icon class="rotate"></icon></button>
               </rotators>
               <card @click="HandleCardClick(event, card)" @pointerup="HandleCardPointerUp(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
                 <words>
-                  <word v-for="word in card.words">{{word.value}}</word>
+                  <word v-for="(word, windex) in card.words" :id="'word' + windex">{{word.value}}</word>
                 </words>
               </card>
               <rotators>
@@ -222,6 +227,6 @@
     <script src="models/CardObject-min.js" type="text/javascript"></script>
     <script src="models/PlayerObject-min.js" type="text/javascript"></script>
     <script src="helpers/vue.min.js" type="text/javascript"></script>
-    <script src="scripts/facets-min.js" type="text/javascript"></script>
+    <script src="scripts/facets.js" type="text/javascript"></script>
   </body>
 </html>
