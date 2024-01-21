@@ -132,7 +132,7 @@
           </hgroup>
         </header>
         <controls>
-          <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: guessingGameSol === currentGameSol || (isGuessing && getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && player.id !== puzzlePlayer.id)}">
+          <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: guessingGameSol === currentGameSol || ( getNumberOfHintsThatHaveBeenFilled !== 4 && player.role === 'creator') || (getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && player.role !== 'reviewer')}">
             <span><icon class="emoji">{{player.id!==puzzlePlayer.id ? '🤔' : '🧠' }}</icon></span>
             {{getSubmitButtonText}}
           </button>
