@@ -293,7 +293,7 @@ p {
 }
 
 .blueText {
-    color: hsl(var(--hueMain), 100%, 60%);
+    color: hsl(var(--hueCreating), 100%, 60%);
 }
 
 .greenText {
@@ -1339,7 +1339,7 @@ version {
     }
 
     wrapper controls button {
-        width: auto;
+        padding: 0 0 var(--defaultGap)
     }
 
     .notMobile {
@@ -1360,10 +1360,20 @@ version {
         width: 100%;
     }
 
-    wrapper controls button {
+    wrapper controls {
+        padding: 0;
+        width: 100%;
+    }
+
+    wrapper controls button.inline {
         height: 100%;
-        padding: 0 var(--defaultGap) var(--defaultGap);
         text-align: left;
+        justify-content: start;
+        width: calc(0.45 * var(--cardSize));
+    }
+
+    wrapper controls:last-of-type button.inline {
+        justify-content: end;
     }
 
     wrapper controls button span {
@@ -1532,7 +1542,6 @@ version {
         padding: 0px;
     }
 
-
     wrapper.mobile, .portrait wrapper.mobile {
         display: flex;
         height: 0px;
@@ -1576,6 +1585,10 @@ version {
         transform: translateY(calc(-4 * var(--defaultGap)));
         position: fixed;
         bottom: var(--defaultGap);
+    }
+
+    words word {
+        letter-spacing: 1px;
     }
 
     modal message {

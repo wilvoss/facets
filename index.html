@@ -31,9 +31,9 @@
         <intro v-if="showTutorial">
           <message>Basic gameplay</message>
           <p>The challenge of "{{gameName}}" is to connect different words that may or may not be easily connected. You and your friends take turns guessing and giving puzzles over text, messages, or other social media apps.</p>
-          <p><span class="blueText">When the gem is a sapphire,</span> you are creating a puzzle. Give 4 clues on the edges of the gem (tap) that you think connects the two words next to the clue. Click the 🧠 button to send the puzzle to your friends.</p>
-          <p><span class="greenText">When the gem is an emerald,</span> you are guessing a puzzle a friend sent you. Drag the cards onto the gem and rotate them so that each large "clue" on the edge of the gem has two small words next to it that make sense. {{!autoCheck ? 'Click the 🤔 Send button to send your guess back to the puzzle\'s creator.' :'Click the 🤔 Guess button to automatically check your guess.'}}</p>
-          <p><span class="redText">When the gem is a ruby,</span> you are reviewing a friend's guess. Remove any cards from the gem that are wrong. Click the 🧠 button to send the puzzle back, even if you are just giving them the solution.</p>
+          <p><span class="blueText">When the gem is a sapphire,</span> you are creating a puzzle. Give 4 clues on the edges of the gem (tap) that you think connects the two words next to the clue. Click the "SEND" button to share the puzzle with your friends.</p>
+          <p><span class="greenText">When the gem is an emerald,</span> you are guessing a puzzle a friend sent you. Drag the cards onto the gem and rotate them so that each large "clue" on the edge of the gem has two small words next to it that make sense. {{!autoCheck ? 'Click the "SEND" button to send your guess back.' :'Click the "GUESS" button to automatically check your guess.'}}</p>
+          <p><span class="redText">When the gem is a ruby,</span> you are reviewing a friend's guess. Remove any cards from the gem that are wrong. Click the "SEND" button to send the puzzle back, even if you are just giving them the solution.</p>
           <message>Game controls</message>
           <p>A card is a group of four words around the edges of a small square.</p>
           <p>You can drag cards from one spot to another spot. While guessing or reviewing, you can rotate the cards by tapping on the curved arrows in the corner of each card.</p>
@@ -118,7 +118,9 @@
       </modal>
       <wrapper>
         <controls>
-          <button class="inline" @click="HandleNewGameClick()"><span>New</span><icon class="add"></icon></button>
+          <button class="inline" @click="HandleNewGameClick()">
+            New<span><icon class="add"></icon></span>
+          </button>
         </controls>
         <header>
           <hgroup>
@@ -131,8 +133,8 @@
         </header>
         <controls>
           <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: guessingGameSol === currentGameSol || (isGuessing && getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && player.id !== puzzlePlayer.id)}">
-            <icon class="emoji">{{player.id!==puzzlePlayer.id ? '🤔' : '🧠' }}</icon>
-            <span>{{getSubmitButtonText}}</span>
+            <span><icon class="emoji">{{player.id!==puzzlePlayer.id ? '🤔' : '🧠' }}</icon></span>
+            {{getSubmitButtonText}}
           </button>
         </controls>
       </wrapper>
@@ -150,7 +152,7 @@
         </rotators>
       </wrapper>
       <wrapper>
-        <card class="ghost selected" :style="{transform: 'translate(' + ghostX + 'px, ' + ghostY + 'px)'}" :class="{show: isDragging && !showModal, empty: draggedCard.words.length === 0}">
+        <card class="ghost selected" :style="{transform: 'translate(' + ghostX + 'px, ' + ghostY + 'px)'}" :class="{show: isDragging, empty: draggedCard.words.length === 0}">
           <words>
             <word v-for="word in draggedCard.words">{{word.value}}</word>
           </words>
