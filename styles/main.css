@@ -1309,6 +1309,11 @@ version {
         position: absolute;
     }
 
+    message icon.share {
+        scale: .9;
+        transform: translateY(0px)
+    }
+
     controls {
         padding: 0;
         width: 100%;
