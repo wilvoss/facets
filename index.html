@@ -131,11 +131,10 @@
         </controls>
       </wrapper>
       <wrapper>
-        <message @click="ShareWin()" style="cursor: pointer" v-if="message !== 'Sharing message copied to the clipboard.' && guessingGameSol === currentGameSol">
-          {{ message}}
-          <span><icon class="share"></icon></span>
+        <message @click="ShareWin()" v-if="message !== ''">
+          {{message}}
+          <span v-if="message !== 'Sharing message copied to the clipboard.'"><icon class="share"></icon></span>
         </message>
-        <message v-if="message === 'Sharing message copied to the clipboard.' || (guessingGameSol !== currentGameSol && message !== '')"> {{ message}} </message>
         <message @click="OpenSettings()" v-if="message === ''">{{getPlayerMessage}}</message>
       </wrapper>
       <wrapper>

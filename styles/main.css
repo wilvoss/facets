@@ -259,6 +259,19 @@ message {
     text-shadow: 0px -1px 2px black;
     text-align: center;
     width: 100%;
+    pointer-events: none;
+}
+
+message span {
+    display: none;
+}
+
+.solved message {
+    pointer-events: all;
+}
+
+.solved span {
+    display: inline;
 }
 
 modal message {
