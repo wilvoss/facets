@@ -270,7 +270,7 @@ message span {
     pointer-events: all;
 }
 
-.solved span {
+.solved message span {
     display: inline;
 }
 
