@@ -1572,8 +1572,10 @@ version {
         display: none;
     }
 
-    wrapper.mobile {
-        transform: translateY(calc(.3 * var(--cardSize)));
+    wrapper.mobile, .portrait wrapper.mobile {
+        transform: translateY(calc(-4 * var(--defaultGap)));
+        position: fixed;
+        bottom: var(--defaultGap);
     }
 
     modal message {
