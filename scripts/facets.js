@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.103',
+    version: '0.1.104',
     gameName: 'Facets',
     currentGameID: 0,
     currentGameSol: '',
@@ -137,7 +137,7 @@ var app = new Vue({
         this.confirmation = { message: 'Did they have the right answer?', target: 'correct' };
         this.showConfirmation = true;
       } else if (this.isGuessing) {
-        if (this.autoCheck && this.player.role !== 'reviewer' && this.isGuessing) {
+        if (this.autoCheck && this.player.role !== 'reviewer' && this.isGuessing && this.player.id !== this.puzzlePlayer.id) {
           this.IsCurrentGuessCorrect();
         } else {
           this.ShareBoard();

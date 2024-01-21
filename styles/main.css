@@ -914,6 +914,7 @@ modal small {
     font-size: 70%;
     opacity: .7;
     line-height: 110%;
+    max-width: calc(2 * var(--cardSize));
 }
 
 hints hint input {
@@ -1175,13 +1176,10 @@ modal::-webkit-scrollbar {
 }
 
 version {
-    /* display: none; */
     text-align: center;
-    font-size: 10px;
-    color: hsla(var(--hueMain), 45%, 45%);
-    position: fixed;
-    left: 10px;
-    top: 0px;
+    font-size: 12px;
+    color: hsla(var(--hueMain), 45%, 75%);
+    padding-top: var(--defaultGap);
 }
 
 
@@ -1282,6 +1280,13 @@ version {
         justify-content: start;
         align-items: center;
         margin-bottom: 60px;
+    }
+
+    modal small {
+        font-size: 12px;
+        padding: 0px;
+        width: 100%;
+        max-width: calc((2 * var(--cardSize)) + (3 * var(--defaultGap)));
     }
 
     wrapper {

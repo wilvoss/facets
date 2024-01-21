@@ -58,7 +58,6 @@
         <controls><button @click="HandleIntroButtonClick(event)">Next</button></controls>
       </modal>
       <modal :class="{disabled: !showSettings}">
-        <version>Version {{version}}</version>
         <h2>Settings</h2>
         <settings v-if="showSettings">
           <message>Profile</message>
@@ -76,10 +75,11 @@
           </leftright>
 
           <message>Guessing</message>
-          <checkbox title="Enable this if you want the game to check instead of you sending it to your friend." :class="{on: tempAutoCheck}" @click="ToggleAutoCheck()">
-            Autocheck
+          <checkbox title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{on: !tempAutoCheck}" @click="ToggleAutoCheck()">
+            Pass 'n play
             <toggle></toggle>
           </checkbox>
+          <small>Enable this if you want to send your guesses back to your friend instead of automatically getting feedback.</small>
 
           <message>Creating<small>{{isGuessing ? '(disabled while guessing)' : ''}}</small></message>
           <leftright :class="{disabled: isGuessing}">
@@ -104,6 +104,7 @@
             Category backgrounds
             <toggle></toggle>
           </checkbox>
+          <version>Version {{version}}</version>
         </settings>
         <controls>
           <button class="secondary" @click="CancelSettings(event)">Cancel</button>
@@ -124,7 +125,7 @@
           </hgroup>
         </header>
         <controls>
-          <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: guessingGameSol === currentGameSol || (!isGuessing && getNumberOfHintsThatHaveBeenFilled !== 4)}">
+          <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: guessingGameSol === currentGameSol || (isGuessing && getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && player.id !== puzzlePlayer.id)}">
             <icon class="emoji">{{player.id!==puzzlePlayer.id ? '🤔' : '🧠' }}</icon>
             <span>{{getSubmitButtonText}}</span>
           </button>
