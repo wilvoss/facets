@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.104',
+    version: '0.1.105',
     gameName: 'Facets',
     currentGameID: 0,
     currentGameSol: '',
@@ -26,6 +26,8 @@ var app = new Vue({
     editID: false,
     useWordSetThemes: false,
     autoCheck: true,
+    useMultiColoredGems: true,
+    tempUseMultiColoredGems: true,
     tempAutoCheck: true,
     usePortraitLayout: false,
     useExtraCard: false,
@@ -103,6 +105,11 @@ var app = new Vue({
     ToggleTempUsePortraitLayout() {
       note('ToggleTempUsePortraitLayout() called');
       this.tempUsePortraitLayout = !this.tempUsePortraitLayout;
+    },
+
+    ToggleTempUseMultiColoredGems() {
+      note('ToggleTempUsePortraitLayout() called');
+      this.tempUseMultiColoredGems = !this.tempUseMultiColoredGems;
     },
 
     ToggleTempUseExtraCard() {
@@ -863,6 +870,12 @@ var app = new Vue({
         this.autoCheck = JSON.parse(autoCheck);
         this.tempAutoCheck = this.autoCheck;
       }
+
+      let useMultiColoredGems = localStorage.getItem('useMultiColoredGems');
+      if (useMultiColoredGems !== undefined && useMultiColoredGems !== null) {
+        this.useMultiColoredGems = JSON.parse(useMultiColoredGems);
+        this.tempUseMultiColoredGems = this.useMultiColoredGems;
+      }
     },
 
     LoadPage() {
@@ -957,6 +970,7 @@ var app = new Vue({
       this.showIntro = false;
       this.tempID = this.player.id;
       this.tempUseWordSetThemes = this.useWordSetThemes;
+      this.tempUseMultiColoredGems = this.useMultiColoredGems;
       // this.tempUsePortraitLayout = this.usePortraitLayout;
       this.tempUseExtraCard = this.useExtraCard;
       this.tempAutoCheck = this.autoCheck;
@@ -997,6 +1011,7 @@ var app = new Vue({
         // this.usePortraitLayout = this.tempUsePortraitLayout;
         this.useExtraCard = this.tempUseExtraCard;
         this.autoCheck = this.tempAutoCheck;
+        this.useMultiColoredGems = this.tempUseMultiColoredGems;
         this.guessingCardCount = this.useExtraCard ? 5 : 4;
         this.SetWordSetTheme(this.guessingWordSet);
 
@@ -1005,6 +1020,7 @@ var app = new Vue({
         localStorage.setItem('useWordSetThemes', this.useWordSetThemes);
         localStorage.setItem('useExtraCard', this.useExtraCard);
         localStorage.setItem('autoCheck', this.autoCheck);
+        localStorage.setItem('useMultiColoredGems', this.useMultiColoredGems);
         localStorage.setItem('wordSet', this.gameWordSet.id);
       }
       this.editID = false;

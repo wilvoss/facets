@@ -25,7 +25,7 @@
   </head>
 
   <body>
-    <app id="app" v-cloak :class="{solved: guessingGameSol === currentGameSol, portrait: usePortraitLayout, guessing: isGuessing, reviewing: player.role === 'reviewer'}" @pointerdown="HandleBodyPointerDown(event)" @pointerup="HandleBodyPointerUp(event, isDragging ? draggedCard : getSelectedCard)">
+    <app id="app" v-cloak :class="{multicolor: useMultiColoredGems, solved: guessingGameSol === currentGameSol, portrait: usePortraitLayout, guessing: isGuessing, reviewing: player.role === 'reviewer', creating: player.role === 'creator'}" @pointerdown="HandleBodyPointerDown(event)" @pointerup="HandleBodyPointerUp(event, isDragging ? draggedCard : getSelectedCard)">
       <modal :class="{disabled: !showTutorial}" class="tutorial">
         <h2>Tutorial</h2>
         <intro v-if="showTutorial">
@@ -104,6 +104,11 @@
             Category backgrounds
             <toggle></toggle>
           </checkbox>
+          <checkbox :class="{on: !tempUseMultiColoredGems}" @click="ToggleTempUseMultiColoredGems()">
+            Monocolored gem
+            <toggle></toggle>
+          </checkbox>
+          <small>Enable this if you want the gem to remain green when you are creating, guessing, or reviewing.</small>
           <version>Version {{version}}</version>
         </settings>
         <controls>

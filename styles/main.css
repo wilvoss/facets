@@ -14,8 +14,9 @@
 }
 
 :root {
-    --hueMain: 215;
+    --hueMain: 140;
     --hueTheme: 205;
+    --hueCreating: 215;
     --hueGuessing: 140;
     --hueReviewing: 355;
     --hueSolved: 175;
@@ -30,6 +31,7 @@
     --messageColorHSL: 44, 100%, 70%;
     --highlightColorHSL: 50, 100%, 70%;
     --trayBackgroundHSL: var(--hueMain), 100%, 50%;
+    --trayCreatingBackgroundHSL: var(--hueCreating), 100%, 50%;
     --trayGuessingBackgroundHSL: var(--hueGuessing), 100%, 40%;
     --trayReviewingBackgroundHSL: var(--hueReviewing), 100%, 54%;
     --traySolvedBackgroundHSL: var(--hueSolved), 100%, 48%;
@@ -436,16 +438,20 @@ diamond.back {
     opacity: .8;
 }
 
-.guessing diamond.back {
+
+.multicolor.creating diamond.back {
+    background: hsl(var(--trayCreatingBackgroundHSL));
+}
+
+.multicolor.guessing diamond.back {
     background: hsl(var(--trayGuessingBackgroundHSL));
 }
 
-.reviewing diamond.back {
+.multicolor.reviewing diamond.back {
     background: hsl(var(--trayReviewingBackgroundHSL));
 }
 
-
-.solved.guessing diamond.back {
+.multicolor.solved.guessing diamond.back {
     background: hsla(var(--traySolvedBackgroundHSL));
 }
 
@@ -549,15 +555,19 @@ parking spot rotators button icon {
     background: hsla(var(--hueMain), 100%, 70%, 0.46);
 }
 
-.guessing parking spot rotators button icon {
+.multicolor.creating parking spot rotators button icon {
+    background: hsla(var(--hueCreating), 100%, 70%, 0.46);
+}
+
+.multicolor.guessing parking spot rotators button icon {
     background: hsla(var(--hueGuessing), 100%, 70%, 0.46);
 }
 
-.reviewing parking spot rotators button icon {
+.multicolor.reviewing parking spot rotators button icon {
     background: hsla(var(--hueReviewing), 100%, 70%, 0.46);
 }
 
-.solved.guessing parking spot rotators button icon {
+.multicolor.solved.guessing parking spot rotators button icon {
     background: hsla(var(--hueSolved), 100%, 70%, 0.46);
 }
 
@@ -711,17 +721,22 @@ parking spot {
     opacity: .5;
 }
 
-.guessing parking spot {
+.multicolor.creating parking spot {
+    outline: 1px solid hsla(var(--hueCreating), 100%, 70%, .7);
+    opacity: 1;
+}
+
+.multicolor.guessing parking spot {
     outline: 1px solid hsla(var(--hueGuessing), 100%, 70%, .7);
     opacity: 1;
 }
 
-.guessing.reviewing parking spot {
+.multicolor.guessing.reviewing parking spot {
     outline: 1px solid hsla(var(--hueReviewing), 100%, 70%, .7);
     opacity: 1;
 }
 
-.guessing.solved parking spot {
+.multicolor.guessing.solved parking spot {
     outline: 1px solid hsla(var(--hueSolved), 100%, 70%, .7);
     opacity: 1;
 }
@@ -763,20 +778,24 @@ card {
     touch-action: none;
 }
 
-cards card, .guessing cards card, .reviewing cards card {
+cards card, .multicolor.guessing cards card, .reviewing cards card {
     background: none;
     color: hsl(var(--hueMain), 100%, 86%);
 }
 
-.guessing cards card {
+.multicolor.creating cards card {
+    color: hsl(var(--hueCreating), 100%, 86%);
+}
+
+.multicolor.guessing cards card {
     color: hsl(var(--hueGuessing), 94%, 90%);
 }
 
-.reviewing cards card {
+.multicolor.reviewing cards card {
     color: hsl(var(--hueReviewing), 94%, 90%);
 }
 
-.solved.guessing cards card {
+.multicolor.solved.guessing cards card {
     color: hsl(var(--hueSolved), 94%, 90%);
 }
 
@@ -803,15 +822,19 @@ card.ghost, card.ghost.empty, .guessing card.ghost.empty, .reviewing card.ghost.
     border: 1px solid hsla(var(--hueMain), 100%, 70%, .7);
 }
 
-.guessing card.ghost {
+.multicolor.creating card.ghost {
+    border: 1px solid hsla(var(--hueCreating), 100%, 70%, .7);
+}
+
+.multicolor.guessing card.ghost {
     border: 1px solid hsla(var(--hueGuessing), 100%, 70%, .7);
 }
 
-.guessing.solved card.ghost {
+.multicolor.guessing.solved card.ghost {
     border: 1px solid hsla(var(--hueSolved), 100%, 70%, .7);
 }
 
-.reviewing card.ghost {
+.multicolor.reviewing card.ghost {
     border: 1px solid hsla(var(--hueReviewing), 100%, 70%, .7);
 }
 
@@ -923,19 +946,27 @@ hints hint input {
     text-shadow: 0px -1px 1px rgba(0, 0, 0, .6);
 }
 
+.multicolor.creating hints hint input {
+    color: hsla(var(--hueCreating), 100%, 70%, 1);
+}
+
 hints hint input::placeholder {
     color: hsla(var(--hueMain), 70%, 48%, 1);
 }
 
-.guessing hints hint input::placeholder {
+.multicolor.creating hints hint input::placeholder {
+    color: hsla(var(--hueCreating), 70%, 48%, 1);
+}
+
+.multicolor.guessing hints hint input::placeholder {
     color: hsla(var(--hueGuessing), 70%, 48%, 1);
 }
 
-.reviewing hints hint input::placeholder {
+.multicolor.reviewing hints hint input::placeholder {
     color: hsla(var(--hueReviewing), 70%, 48%, 1);
 }
 
-.solved.guessing hints hint input::placeholder {
+.multicolor.solved.guessing hints hint input::placeholder {
     color: hsla(var(--hueSolved), 70%, 48%, 1);
 }
 
@@ -958,16 +989,21 @@ hints hint input:disabled {
     color: hsl(var(--hueMain), 100%, 70%);
 }
 
-.guessing hints hint input:disabled {
+.multicolor.creating hints hint input:disabled {
+    opacity: 1;
+    color: hsl(var(--hueCreating), 100%, 70%);
+}
+
+.multicolor.guessing hints hint input:disabled {
     opacity: 1;
     color: hsl(var(--hueGuessing), 94%, 80%);
 }
 
-.guessing.reviewing hints hint input:disabled {
+.multicolor.guessing.reviewing hints hint input:disabled {
     color: hsl(var(--hueReviewing), 94%, 80%);
 }
 
-.guessing.solved hints hint input:disabled {
+.multicolor.guessing.solved hints hint input:disabled {
     color: hsl(var(--hueSolved), 94%, 80%);
 }
 
