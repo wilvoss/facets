@@ -32,7 +32,7 @@
           <message>Basic gameplay</message>
           <p>The challenge of "{{gameName}}" is to connect different words that may or may not be easily connected. You and your friends take turns guessing and giving puzzles over text, messages, or other social media apps.</p>
           <p><span class="blueText">When the gem is a sapphire,</span> you are creating a puzzle. Give 4 clues on the edges of the gem (tap) that you think connects the two words next to the clue. Click the 🧠 button to send the puzzle to your friends.</p>
-          <p><span class="greenText">When the gem is an emerald,</span> you are guessing a puzzle a friend sent you. Drag the cards onto the gem and rotate them so that each large "clue" on the edge of the gem has two small words next to it that make sense. Click the 🤔 button to send your guess back to the puzzle's creator.</p>
+          <p><span class="greenText">When the gem is an emerald,</span> you are guessing a puzzle a friend sent you. Drag the cards onto the gem and rotate them so that each large "clue" on the edge of the gem has two small words next to it that make sense. {{!autoCheck ? 'Click the 🤔 Send button to send your guess back to the puzzle\'s creator.' :'Click the 🤔 Guess button to automatically check your guess.'}}</p>
           <p><span class="redText">When the gem is a ruby,</span> you are reviewing a friend's guess. Remove any cards from the gem that are wrong. Click the 🧠 button to send the puzzle back, even if you are just giving them the solution.</p>
           <message>Game controls</message>
           <p>A card is a group of four words around the edges of a small square.</p>
@@ -75,6 +75,12 @@
             </section>
           </leftright>
 
+          <message>Guessing</message>
+          <checkbox title="Enable this if you want the game to check instead of you sending it to your friend." :class="{on: tempAutoCheck}" @click="ToggleAutoCheck()">
+            Autocheck
+            <toggle></toggle>
+          </checkbox>
+
           <message>Creating<small>{{isGuessing ? '(disabled while guessing)' : ''}}</small></message>
           <leftright :class="{disabled: isGuessing}">
             <p style="width: auto">Category</p>
@@ -86,11 +92,6 @@
           </leftright>
           <checkbox title="Enable this if you want to send your puzzle with a random 5th card." :class="{on: tempUseExtraCard, disabled: isGuessing}" @click="ToggleTempUseExtraCard()">
             Extra card
-            <toggle></toggle>
-          </checkbox>
-          <message>Guessing</message>
-          <checkbox title="Enable this if you want the game to check instead of you sending it to your friend." :class="{on: tempAutoCheck}" @click="ToggleAutoCheck()">
-            Autocheck
             <toggle></toggle>
           </checkbox>
 
@@ -123,14 +124,18 @@
           </hgroup>
         </header>
         <controls>
-          <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: !isGuessing && getNumberOfHintsThatHaveBeenFilled !== 4}">
+          <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: guessingGameSol === currentGameSol || (!isGuessing && getNumberOfHintsThatHaveBeenFilled !== 4)}">
             <icon class="emoji">{{player.id!==puzzlePlayer.id ? '🤔' : '🧠' }}</icon>
-            <span>{{player.id !== puzzlePlayer.id ? 'Guess' : 'Send' }}</span>
+            <span>{{getSubmitButtonText}}</span>
           </button>
         </controls>
       </wrapper>
       <wrapper>
-        <message v-if="message !== ''">{{ message}}</message>
+        <message @click="ShareWin()" style="cursor: pointer" v-if="message !== 'Sharing message copied to the clipboard.' && guessingGameSol === currentGameSol">
+          {{ message}}
+          <span><icon class="share"></icon></span>
+        </message>
+        <message v-if="message === 'Sharing message copied to the clipboard.' || (guessingGameSol !== currentGameSol && message !== '')"> {{ message}} </message>
         <message @click="OpenSettings()" v-if="message === ''">{{getPlayerMessage}}</message>
       </wrapper>
       <wrapper>

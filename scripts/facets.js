@@ -12,10 +12,11 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.099',
+    version: '0.1.100',
     gameName: 'Facets',
     currentGameID: 0,
     currentGameSol: '',
+    currentGuessCount: 0,
     guessingGameSol: [],
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -24,8 +25,8 @@ var app = new Vue({
     tempID: 0,
     editID: false,
     useWordSetThemes: false,
-    autoCheck: false,
-    tempAutoCheck: false,
+    autoCheck: true,
+    tempAutoCheck: true,
     usePortraitLayout: false,
     useExtraCard: false,
     tempUseWordSetThemes: false,
@@ -148,33 +149,54 @@ var app = new Vue({
 
     IsCurrentGuessCorrect() {
       note('IsCurrentGuessCorrect() called');
-      let hintValues = [];
-      this.hints.forEach((hint) => {
-        hintValues.push(hint.value);
-      });
-      let actualSol = this.currentGameSol.split('-');
-      let fullGuess = this.GetCurrentSolutionParamString().split('-');
+      if (this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
+        this.currentGuessCount++;
+        let hintValues = [];
+        this.hints.forEach((hint) => {
+          hintValues.push(hint.value);
+        });
+        let actualSol = this.currentGameSol.split('-');
+        let currentSol = this.GetCurrentSolutionParamString().split('-');
 
-      let shiftedGuess = [];
+        let mappedSol = [];
 
-      for (let i = 0; i < actualSol.length; i += 3) {
-        for (let j = 0; j < fullGuess.length; j += 3) {
-          if (actualSol[i] === fullGuess[j]) {
-            shiftedGuess.push(fullGuess[j], fullGuess[j + 1], fullGuess[j + 2]);
-            break;
+        for (let i = 0; i < actualSol.length; i += 3) {
+          for (let j = 0; j < currentSol.length; j += 3) {
+            if (actualSol[i] === currentSol[j]) {
+              mappedSol.push(currentSol[j], currentSol[j + 1], currentSol[j + 2]);
+              break;
+            }
           }
         }
-      }
-      this.guessingGameSol = shiftedGuess.join('-');
+        this.guessingGameSol = mappedSol.join('-');
 
-      if (this.currentGameSol === this.guessingGameSol) {
-        this.RotateTray(8);
-        this.message = 'You have solved the puzzle!';
-        return true;
-      } else {
-        this.message = 'Sorry, some cards are wrong - this UX will get better.';
+        if (this.currentGameSol === this.guessingGameSol) {
+          this.RotateTray(8);
+          // this.message = 'You have solved the puzzle!';
+          // return true;
+        }
+        // {
         // insert code to identify incorrect cards and remove from the board.
+        if (mappedSol[1] !== actualSol[1]) {
+          // find and remove the card with mappedSol[1]
+          let card = this.cards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[1])));
+          this.SwapCards(card, this.getFirstAvailableParkingSpot);
+        }
+        if (mappedSol[2] !== actualSol[2]) {
+          let card = this.cards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[2])));
+          this.SwapCards(card, this.getFirstAvailableParkingSpot);
+        }
+        if (mappedSol[10] !== actualSol[10]) {
+          let card = this.cards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[10])));
+          this.SwapCards(card, this.getFirstAvailableParkingSpot);
+        }
+        if (mappedSol[11] !== actualSol[11]) {
+          let card = this.cards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[11])));
+          this.SwapCards(card, this.getFirstAvailableParkingSpot);
+        }
+        this.message = this.GetMessageBasedOnTrayCount(true, this.player.name, false);
         return false;
+        // }
       }
     },
 
@@ -296,26 +318,6 @@ var app = new Vue({
       }
     },
 
-    // CreateSolutionArray(_hints, _guesses) {
-    //   note('CreateSolutionArray() called');
-    //   log(_guesses);
-    //   let solIDs = _guesses.split('-');
-    //   let solArray = [];
-    //   solArray.push(_hints[0]);
-    //   solArray.push(solIDs[0]);
-    //   solArray.push(solIDs[1]);
-    //   solArray.push(_hints[1]);
-    //   solArray.push(solIDs[2]);
-    //   solArray.push(solIDs[3]);
-    //   solArray.push(_hints[2]);
-    //   solArray.push(solIDs[4]);
-    //   solArray.push(solIDs[5]);
-    //   solArray.push(_hints[3]);
-    //   solArray.push(solIDs[6]);
-    //   solArray.push(solIDs[7]);
-    //   return solArray;
-    // },
-
     ConstructURLForCurrentGame() {
       note('ConstructURLForCurrentGame() called');
       if (this.isGuessing) {
@@ -365,43 +367,49 @@ var app = new Vue({
       this.showModal = false;
     },
 
-    ShareBoard(gotIt = false) {
-      note('ShareBoard() called');
-      this.puzzleJustSent = this.shareURL === '';
-      let newPuzzleIcon = '🧠';
-      let text = this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id ? newPuzzleIcon + " Here's a new " + (this.guessingCardCount === 5 ? '5-card ' : '') + '"' + this.guessingWordSet.name + '" puzzle to solve!' : '🤔 ' + this.puzzlePlayer.name + ", here's my guess!";
-      let nailedIt = false;
-      document.getElementById('shareButton').focus();
-      if (this.player.role === 'reviewer') {
-        switch (this.getNumberOfCardsThatHaveBeenPlacedOnTray) {
-          case 0:
-            text = '🤢 Oh boy, ' + this.guessersName + ' this is just sad.';
-            break;
-          case 1:
-            text = '🫣  ' + this.guessersName + ', I guess one right is better than nothing?';
-            break;
-          case 2:
-            text = '😱 ' + this.guessersName + ", you're missing a couple!";
-            break;
-          case 3:
-            text = '🤪  ' + this.guessersName + ', not quite!';
-            break;
-          case 4:
-            if (gotIt) {
-              text = '🔥 ' + this.guessersName + ', you nailed it!';
+    GetMessageBasedOnTrayCount(_gotIt, _name, _useName = true) {
+      note('GetMessageBasedOnTrayCount() called');
+      let name = _useName ? _name + ', ' : '';
+      switch (this.getNumberOfCardsThatHaveBeenPlacedOnTray) {
+        case 0:
+          return '🤢 Oh boy. ' + name + (!_useName ? 'This' : 'this') + ' is just sad.';
+        case 1:
+          return '🫣 ' + name + 'I guess one right is better than nothing?';
+        case 2:
+          return '😱 ' + name + (!_useName ? "You're" : "you're") + ' missing a couple!';
+        case 3:
+          return '🤪 ' + name + (!_useName ? 'Not' : 'not') + ' quite!';
+        case 4:
+          if (this.autoCheck) {
+            if (this.currentGuessCount === 1) {
+              return '🔥 ' + name + (!_useName ? 'You' : 'you') + ' nailed it in 1 try!';
             } else {
-              text = '☔️ Whelp ' + this.guessersName + ", better luck next time. Here's the solution.";
+              return '😀 Nice, ' + name + 'you got it in ' + this.currentGuessCount + ' tries!';
             }
-            break;
-          default:
-            break;
-        }
+          }
+          if (_gotIt) {
+            return '🔥 ' + name + (!_useName ? 'You' : 'you') + ' nailed it!';
+          } else {
+            return '☔️ Whelp ' + name + "better luck next time. Here's the solution.";
+          }
+          break;
+        default:
+          break;
       }
-      this.shareURL = '';
-      this.ConstructURLForCurrentGame();
-      text = text + (nailedIt ? '' : '\r\n' + this.shareURL);
+    },
+
+    ShareWin() {
+      note('ShareBoard() called');
+      let text = this.puzzlePlayer.name + ', I got it in ' + this.currentGuessCount + ' tries! 😀';
+      if (this.currentGuessCount === 1) {
+        text = this.puzzlePlayer.name + ', I got it in 1 try! 🔥';
+      }
+      this.ShareText(text);
+    },
+
+    ShareText(_text) {
       let _shareObject = {
-        text: text,
+        text: _text,
       };
       if (navigator.share) {
         navigator.share(_shareObject);
@@ -411,7 +419,7 @@ var app = new Vue({
           navigator.clipboard
             .write([
               new ClipboardItem({
-                'text/plain': new Blob([text], { type: 'text/plain' }),
+                'text/plain': new Blob([_text], { type: 'text/plain' }),
               }),
             ])
             .then(() => {
@@ -423,7 +431,7 @@ var app = new Vue({
         } else {
           // ClipboardItem is not available, use writeText
           navigator.clipboard
-            .writeText(text)
+            .writeText(_text)
             .then(() => {
               this.message = 'Sharing message copied to the clipboard.';
             })
@@ -432,9 +440,25 @@ var app = new Vue({
             });
         }
       } else {
-        copyToClipboard(text);
+        copyToClipboard(_text);
         this.message = 'Sharing message copied to the clipboard.';
       }
+    },
+
+    ShareBoard(gotIt = false) {
+      note('ShareBoard() called');
+      this.puzzleJustSent = this.shareURL === '';
+      let newPuzzleIcon = '🧠';
+      let text = this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id ? newPuzzleIcon + " Here's a new " + (this.guessingCardCount === 5 ? '5-card ' : '') + '"' + this.guessingWordSet.name + '" puzzle to solve!' : '🤔 ' + this.puzzlePlayer.name + ", here's my guess!";
+      let nailedIt = false;
+      document.getElementById('shareButton').focus();
+      if (this.player.role === 'reviewer') {
+        text = this.GetMessageBasedOnTrayCount(gotIt, this.guessersName);
+      }
+      this.shareURL = '';
+      this.ConstructURLForCurrentGame();
+      text = text + (nailedIt ? '' : '\r\n' + this.shareURL);
+      this.ShareText(text);
     },
 
     async CreateCardsForPlayer(_player) {
@@ -749,6 +773,7 @@ var app = new Vue({
       note('NewGame() called');
       document.title = 'Facets!';
       this.message = _message;
+      this.currentGuessCount = 0;
       this.puzzleJustSent = false;
       this.guessersName = '';
       this.player.role = 'creator';
@@ -1122,7 +1147,7 @@ var app = new Vue({
         text = this.player.name + ', you are creating a new "' + this.guessingWordSet.name + '" puzzle!';
       } else {
         if (this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id) {
-          text = this.player.name + ', you are guessing your own puzzle!';
+          text = this.player.name + ', this is your own puzzle!';
         } else if (this.player.id !== this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id) {
           text = this.player.name + ', you are reviewing ' + this.sendingPlayer.name + "'s guess!";
         }
@@ -1169,6 +1194,13 @@ var app = new Vue({
       }
 
       return allWords;
+    },
+    getSubmitButtonText: function () {
+      let text = 'Send';
+      if (this.player.id !== this.puzzlePlayer.id) {
+        text = this.autoCheck ? 'Guess' : text;
+      }
+      return text;
     },
   },
 });

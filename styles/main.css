@@ -32,7 +32,7 @@
     --trayBackgroundHSL: var(--hueMain), 100%, 50%;
     --trayGuessingBackgroundHSL: var(--hueGuessing), 100%, 40%;
     --trayReviewingBackgroundHSL: var(--hueReviewing), 100%, 54%;
-    --traySolvedBackgroundHSL: var(--hueSolved), 100%, 40%;
+    --traySolvedBackgroundHSL: var(--hueSolved), 100%, 48%;
 
     --longTransition: 400ms;
     --mediumTransition: 250ms;
@@ -130,6 +130,19 @@ icon.emoji {
 icon.share {
     mask-image: url(../images/icon-share.svg);
     -webkit-mask-image: url(../images/icon-share.svg);
+}
+
+message icon.share {
+    display: inline-block;
+    width: var(--extraSmallIconSize);
+    height: var(--extraSmallIconSize);
+    overflow: visible;
+    transform: translateY(-2px);
+    padding: 0;
+    background-color: hsl(var(--messageColorHSL));
+    mask-size: calc(.75 * var(--extraSmallIconSize)) calc(.75 * var(--extraSmallIconSize));
+    -webkit-mask-size: calc(.75 * var(--extraSmallIconSize)) calc(.75 * var(--extraSmallIconSize));
+
 }
 
 icon.info {
