@@ -96,6 +96,7 @@ h1, h2, h3, h4, h5 {
     font-weight: normal;
     margin: calc(3 * var(--defaultGap)) 0 calc(2 * var(--defaultGap));
     font-family: "Theme";
+    text-align: center;
 }
 
 h3 {
@@ -957,6 +958,7 @@ modal input.large {
 }
 
 modal small {
+    font-family: 'Abel';
     display: block;
     font-size: 70%;
     opacity: .7;
