@@ -198,6 +198,10 @@ controls button icon.emoji {
     background: none;
 }
 
+wrapper controls button span {
+    display: none;
+}
+
 header {
     padding: 0 calc(var(--defaultGap));
     width: auto;
@@ -222,12 +226,12 @@ header subtitle {
 header subtitle, header subtitle button {
     cursor: default;
     text-align: center;
-    color: hsla(var(--linkColorLightHSL), 1);
+    color: hsla(var(--appForegroundHSL), .8);
     display: flex;
     font-size: 70%;
     text-transform: uppercase;
     letter-spacing: 1px;
-    opacity: .9;
+    opacity: 1;
 }
 
 
@@ -250,7 +254,7 @@ header subtitle button.inline icon {
     height: var(--tinyIconSize);
     mask-size: var(--tinyIconSize) var(--tinyIconSize);
     -webkit-mask-size: var(--tinyIconSize) var(--tinyIconSize);
-    background: hsla(var(--linkColorLightHSL), 1);
+    background: hsla(var(--appForegroundHSL), .8);
     margin-top: -1px;
 
 }
@@ -301,7 +305,13 @@ p {
 }
 
 cta {
+    display: inline-block;
     font-family: 'Theme';
+    color: hsl(var(--linkColorLightHSL));
+    /* padding: 1px 8px; */
+    /* font-size: 16px; */
+    /* border: 1px solid hsla(var(--linkColorLightHSL), .5); */
+    /* border-radius: var(--borderRadius); */
 }
 
 .redText {

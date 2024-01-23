@@ -31,18 +31,18 @@
         <intro v-if="showTutorial">
           <p>The challenge of "{{gameName}}" is to connect different words that may or may not be easily connected. You and your friends take turns guessing and giving puzzles over text, messages, or other social media apps.</p>
           <message>Creating</message>
-          <p>Give 4 clues on the edges of the gem that you think connect the two words next to each clue.</p>
+          <p>Type four clues on the edges of the gem that you think connect the two words next to each clue.</p>
           <img src="./images/tut-1.svg" />
-          <p>You could give the clue "Timeline" to connect "Present" and "Past" in this example:</p>
+          <p>For example, you might give the clue "Timeline" to connect "Present" and "Past":</p>
           <img src="./images/tut-3.svg" />
-          <p>Once you've filled out all 4 clues, click the <cta>SEND</cta> button to share the puzzle with your friends.</p>
+          <p>Once you've filled out all four clues, click the <cta>SEND</cta> button to share the puzzle with your friends.</p>
           <message>Guessing</message>
           <p>Drag cards to the gem and rotate them so that each large "clue" on the edge of the gem that connects the two small words next to it.</p>
           <img src="./images/tut-2.svg" />
           <p v-if="!autoCheck">Click the <cta>SEND</cta> button to send your guess back to whoever sent it to you.</p>
           <p v-if="autoCheck">Click the <cta>Guess</cta> button to automatically check your guess.</p>
           <message>Reviewing</message>
-          <p>Remove incorrectly placed cards when you are reviewing a friend's guess.</p>
+          <p>When you are reviewing a friend's guess, remove incorrectly placed cards from the gem.</p>
           <img src="./images/tut-4.svg" />
           <p>Click the <cta>SEND</cta> button to send the puzzle back, even if you are just giving them the solution.</p>
           <message>Game controls</message>
