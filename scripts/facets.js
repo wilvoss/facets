@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.130',
+    version: '0.1.131',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -388,14 +388,13 @@ var app = new Vue({
         case 3:
           return '🤪 ' + name + (!_useName ? 'Not' : 'not') + ' quite!';
         case 4:
-          if (this.autoCheck) {
+          if (this.player.role !== 'reviewer') {
             if (this.currentGuessCount === 1) {
               return '🔥 ' + name + (!_useName ? 'You' : 'you') + ' nailed it in 1 try!';
             } else {
               return '😀 Nice, ' + name + 'you got it in ' + this.currentGuessCount + ' tries!';
             }
-          }
-          if (_gotIt) {
+          } else if (_gotIt) {
             return '🔥 ' + name + (!_useName ? 'You' : 'you') + ' nailed it!';
           } else {
             return '☔️ Whelp ' + name + "better luck next time. Here's the solution.";
@@ -465,7 +464,9 @@ var app = new Vue({
       }
       this.shareURL = '';
       this.ConstructURLForCurrentGame();
-      text = text + (nailedIt ? '' : '\r\n' + this.shareURL);
+      if (this.player.role !== 'reviewer' || !gotIt) {
+        text = text + (nailedIt ? '' : '\r\n' + this.shareURL);
+      }
       this.ShareText(text);
     },
 
