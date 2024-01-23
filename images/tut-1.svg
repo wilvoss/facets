@@ -4,14 +4,14 @@
 <g clip-path="url(#clip1_135_4596)">
 <path fill-rule="evenodd" clip-rule="evenodd" d="M36 217L153 217L189 181L189 64.0001L168.291 56.0352L189 64L153 28.0001L36 28.0001L0 64.0001L1.52588e-05 181L36 217Z" fill="#006AFF" fill-opacity="0.8"/>
 <g style="mix-blend-mode:luminosity">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M153 217L94.5 122.5L189 181L189 64L94.5 122.5L153 28L36 28L94.5 122.5L-5.11423e-06 64L-5.11423e-06 181L94.5 122.5L36 217L153 217Z" fill="url(#paint0_radial_135_4596)" fill-opacity="0.05"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M153 217L94.5 122.5L189 181L189 64L94.5 122.5L153 28L36 28L94.5 122.5L0 64L0 181L94.5 122.5L36 217L153 217Z" fill="url(#paint0_radial_135_4596)" fill-opacity="0.05"/>
 <path d="M36 28L153 28L164 53.0001L25 53.0001L36 28Z" fill="url(#paint1_linear_135_4596)" fill-opacity="0.51"/>
 <path d="M189 64L189 181L164 192L164 53.0001L189 64Z" fill="url(#paint2_linear_135_4596)" fill-opacity="0.51"/>
 <path d="M4.80827e-07 181L5.59506e-06 64L25 53L25 192L4.80827e-07 181Z" fill="url(#paint3_linear_135_4596)" fill-opacity="0.51"/>
 <path fill-rule="evenodd" clip-rule="evenodd" d="M164 192L25 192L25 53.0001L164 53.0001L164 192ZM164 192L176 173L176 72.0001L164 53.0001L145 41.0001L44 41.0001L25 53.0001L13 72.0001L13 173L25 192L44 204L145 204L164 192Z" fill="black" fill-opacity="0.05"/>
 <path d="M164 53.0001L94.5 53.0001L94.5 122.5L164 122.5L164 53.0001Z" fill="url(#paint4_linear_135_4596)"/>
 <path d="M94.5 122.5L94.5 53.0001L25 53.0001L25 122.5L94.5 122.5Z" fill="url(#paint5_linear_135_4596)"/>
-<path fill-rule="evenodd" clip-rule="evenodd" d="M94 192H95L95 123L164 123V122L95 122V53.0001H94V122L25 122V123L94 123L94 192Z" fill="black" fill-opacity="0.1"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M94 192H95L95 123L164 123V122L95 122V53.0001H94V122H25V123H94L94 192Z" fill="black" fill-opacity="0.1"/>
 <path d="M36 28L0 64L25 53L36 28Z" fill="url(#paint6_linear_135_4596)" fill-opacity="0.33"/>
 <path d="M189 64L153 28L164 53L189 64Z" fill="url(#paint7_linear_135_4596)" fill-opacity="0.33"/>
 </g>
@@ -69,8 +69,8 @@
 <stop offset="1" stop-color="#0B0A0A"/>
 </linearGradient>
 <linearGradient id="paint8_linear_135_4596" x1="94.5" y1="64.8475" x2="94.5" y2="90" gradientUnits="userSpaceOnUse">
-<stop stop-color="#040B10" stop-opacity="0"/>
-<stop offset="1" stop-color="#040B10"/>
+<stop stop-color="#00090F" stop-opacity="0"/>
+<stop offset="1" stop-color="#00090F"/>
 </linearGradient>
 <clipPath id="clip0_135_4596">
 <rect width="189" height="62" fill="white" transform="matrix(-1 0 0 -1 189 90)"/>

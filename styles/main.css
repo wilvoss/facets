@@ -109,7 +109,98 @@ settings h3 {
 }
 
 button {
+    cursor: pointer;
+    padding: calc(.75 * var(--defaultGap)) var(--defaultGap);
+    border-radius: var(--borderRadius);
+    color: hsl(var(--linkColorLightHSL));
+    background: hsl(var(--appBackgroundDarkHSL));
+    outline: none;
+    border: none;
     -webkit-tap-highlight-color: transparent;
+    font-family: 'Theme';
+    transition: var(--shortTransition) ease-in-out all;
+}
+
+button.secondary {
+    color: hsl(var(--hueTheme), 40%, 40%);
+    border-color: hsl(var(--hueTheme), 50%, 25%);
+}
+
+button.inline {
+    display: inline-flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: calc(var(--defaultGap) / 2);
+}
+
+button icon {
+    background: hsl(var(--linkColorLightHSL));
+}
+
+button icon.emoji {
+    background: none;
+}
+
+button.small {
+    font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
+    /* font-size: 85%; */
+    padding: 6px;
+    gap: 6px;
+    width: auto;
+    cursor: pointer;
+    text-align: center;
+    color: hsla(var(--linkColorDarkHSL), 1);
+    display: flex;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 1;
+}
+
+button.update {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
+    position: fixed;
+    bottom: 0px;
+    z-index: 99;
+    font-size: 75%;
+    padding: 8px var(--defaultGap) 6px;
+    background: hsla(var(--hueCreating), 80%, 10%, 1);
+    border: 1px solid hsl(var(--trayCreatingBackgroundHSL));
+    /* border-width: 1px 1px 0 1px; */
+    transform: translateY(32px);
+    color: hsl(var(--appForegroundHSL));
+    border-radius: var(--borderRadius);
+    transition: var(--longTransition) ease-in-out all;
+    box-shadow: 0px -4px 4px rgba(0, 0, 0, .5);
+}
+
+.creating button.update, .reviewing.guessing button.update {
+    background: hsla(var(--hueGuessing), 80%, 10%, 1);
+    border-color: hsl(var(--trayGuessingBackgroundHSL));
+}
+
+.creating.guessing button.update {
+    background: hsla(var(--hueCreating), 80%, 10%, 1);
+    border-color: hsl(var(--trayCreatingBackgroundHSL));
+}
+
+button.update.show {
+    transform: translateY(calc(-1 * var(--defaultGap)));
+}
+
+button.small icon, button.update icon {
+    width: var(--tinyIconSize);
+    height: var(--tinyIconSize);
+    mask-size: var(--tinyIconSize) var(--tinyIconSize);
+    -webkit-mask-size: var(--tinyIconSize) var(--tinyIconSize);
+    background: hsla(var(--linkColorDarkHSL), 1);
+    margin-top: -1px;
+}
+
+button.update icon {
+    background: hsl(var(--appForegroundHSL));
 }
 
 header h1 {
@@ -144,6 +235,11 @@ icon.share {
     -webkit-mask-image: url(../images/icon-share.svg);
 }
 
+icon.download {
+    mask-image: url(../images/icon-download.svg);
+    -webkit-mask-image: url(../images/icon-download.svg);
+}
+
 message icon.share {
     display: inline-block;
     width: var(--extraSmallIconSize);
@@ -154,7 +250,6 @@ message icon.share {
     background-color: hsl(var(--messageColorHSL));
     mask-size: calc(.75 * var(--extraSmallIconSize)) calc(.75 * var(--extraSmallIconSize));
     -webkit-mask-size: calc(.75 * var(--extraSmallIconSize)) calc(.75 * var(--extraSmallIconSize));
-
 }
 
 icon.info {
@@ -200,18 +295,6 @@ hintcard card {
     border: none;
 }
 
-controls button icon {
-    background: hsl(var(--linkColorLightHSL));
-}
-
-controls button icon.emoji {
-    background: none;
-}
-
-wrapper controls button span {
-    display: none;
-}
-
 header {
     padding: 0 calc(var(--defaultGap));
     width: auto;
@@ -233,40 +316,11 @@ header subtitle {
     gap: var(--defaultGap);
 }
 
-header subtitle, header subtitle button {
-    cursor: default;
-    text-align: center;
+
+header subtitle {
     color: hsla(var(--linkColorDarkHSL), 1);
     display: flex;
     font-size: 70%;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    opacity: 1;
-}
-
-
-header subtitle span, header subtitle button.inline {
-    padding: 6px;
-}
-
-header subtitle button.inline {
-    display: inline-flex;
-    outline: none;
-    border: none;
-    background: none;
-    font-size: 100%;
-    gap: 6px;
-    cursor: pointer;
-}
-
-header subtitle button.inline icon {
-    width: var(--tinyIconSize);
-    height: var(--tinyIconSize);
-    mask-size: var(--tinyIconSize) var(--tinyIconSize);
-    -webkit-mask-size: var(--tinyIconSize) var(--tinyIconSize);
-    background: hsla(var(--linkColorDarkHSL), 1);
-    margin-top: -1px;
-
 }
 
 message {
@@ -409,21 +463,6 @@ wrapper.columns {
     opacity: 0;
 }
 
-button {
-    font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
-    font-size: 75%;
-    cursor: pointer;
-    width: auto;
-}
-
-button.inline {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-    gap: calc(var(--defaultGap) / 2);
-}
-
 .clockwise {
     transform: scaleX(-1);
 }
@@ -501,41 +540,24 @@ modal controls {
     border-top: 1px solid hsla(var(--appBackgroundHSL), 1);
     backdrop-filter: blur(9px);
     -webkit-backdrop-filter: blur(9px);
-    /* box-shadow: 0px -10px 10px hsla(var(--appBackgroundDarkestHSL), .5); */
     padding: var(--defaultGap) 0;
     gap: calc(.5 * var(--defaultGap));
     height: auto;
     width: 100%;
 }
 
-
 modal controls button {
-    padding: calc(.75 * var(--defaultGap)) var(--defaultGap);
     border: 1px solid hsla(var(--linkColorDarkHSL), .3);
-    border-radius: var(--borderRadius);
     font-size: 100%;
-    background: hsl(var(--appBackgroundDarkHSL));
+    width: var(--cardSize);
 }
 
-modal controls button.secondary {
-    border-color: hsl(var(--hueTheme), 50%, 25%);
-}
-
-
-controls button {
-    outline: none;
-    border: none;
+wrapper controls button {
     background: none;
-    color: hsl(var(--linkColorLightHSL));
     font-size: 150%;
-    font-family: "Theme";
     width: var(--cardSize);
     height: 100%;
     padding: 0 var(--defaultGap) calc(var(--defaultGap) / 2);
-}
-
-controls button.secondary {
-    color: hsl(var(--hueTheme), 40%, 40%);
 }
 
 rotators {
@@ -558,9 +580,6 @@ rotators button {
     line-height: 100%;
     background: none;
     padding: calc(1.25 * var(--defaultGap));
-    color: hsl(var(--linkColorLightHSL));
-    border: none;
-    outline: none;
 }
 
 rotators button icon {
@@ -881,45 +900,6 @@ card.rotating {
     transition: var(--shortTransition) ease-in-out all;
 }
 
-card.dropped, card.selected.dropped {
-    animation: pulse var(--mediumTransition) ease-in-out;
-    -webkit-animation: pulse var(--mediumTransition) ease-in-out;
-}
-
-.empty card.dropped, cards .empty card.dropped {
-    animation: none;
-    -webkit-animation: none;
-}
-
-@keyframes pulse {
-    0% {
-        opacity: .9;
-    }
-
-    30% {
-        opacity: .9;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
-@-webkit-keyframes pulse {
-    0% {
-        opacity: .9;
-    }
-
-    30% {
-        opacity: .9;
-    }
-
-    100% {
-        opacity: 1;
-    }
-}
-
-
 hints {
     position: absolute;
     width: 100%;
@@ -967,7 +947,7 @@ modal input.large {
 }
 
 modal small {
-    font-family: 'Abel';
+    font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
     display: block;
     font-size: 70%;
     opacity: .7;
@@ -1012,7 +992,7 @@ hints hint input::placeholder {
 }
 
 modal input, modal select {
-    font-family: 'Abel';
+    font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
     color: white;
     font-size: 110%;
     text-align: left;
@@ -1195,7 +1175,7 @@ section {
 }
 
 settings input {
-    font-family: "Abel";
+    font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
     font-size: inherit;
 }
 
@@ -1290,15 +1270,9 @@ version {
     }
 
     wrapper controls button {
-        /* width: auto; */
         height: 100%;
         padding: 0 0 var(--defaultGap);
     }
-
-    modal controls {
-        /* padding: calc(2 * var(--defaultGap)) 0; */
-    }
-
 
     message {
         display: block;
@@ -1362,6 +1336,10 @@ version {
         height: 100%;
         overflow: hidden;
         background-size: calc(.75 * var(--textureSize));
+    }
+
+    button.update {
+        font-size: 100%;
     }
 
     modal {

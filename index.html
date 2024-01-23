@@ -1,26 +1,33 @@
 <!DOCTYPE html>
-<html lang="en">
+<html itemtype="https://schema.org/VideoGame" lang="en">
   <head>
     <meta charset="utf-8" />
     <meta content="x-content-type-options=nosniff" />
+
+    <title>Facets</title>
     <meta name="apple-mobile-web-app-title" content="Facets!" />
     <meta name="mobile-web-app-capable" content="no" />
     <meta name="apple-touch-fullscreen" content="no" />
     <meta name="apple-mobile-web-app-capable" content="no" />
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, minimum-scale=1, maximum-scale=5, user-scalable=yes" />
-    <meta name="theme-color" id="themeColor" content="rgb(4, 11, 16)" />
+    <meta name="theme-color" id="themeColor" content="rgb(0, 9, 15)" />
 
-    <title>Facets</title>
-
+    <meta name="keywords" content="Facets, Facets!, Big Tent Games, Games, Causual game, Puzzle game, Word game, Boardgame, Wil Voss" />
     <meta name="description" content="A game of connecting words that maybe don't connect so easily 💎." />
-    <meta name="keywords" content="casual, video, game, boardgame" />
 
     <link rel="apple-touch-icon" sizes="180x180" href="images/icon180.png" />
+    <!-- iPhone X (1125px x 2436px) -->
+    <!-- <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" href="images/apple-launch-1125x2436.png" /> -->
+    <!-- iPhone 8, 7, 6s, 6 (750px x 1334px) -->
+    <!-- <link rel="apple-touch-startup-image" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" href="images//apple-launch-750x1334.png" /> -->
     <link rel="icon" type="image/png" sizes="512x512" href="images/icon512-guessing.png" />
     <link rel="icon" type="image/png" sizes="128x128" href="favicon.png" />
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+
+    <link rel="manifest" href="manifest.webmanifest" />
+
     <link rel="stylesheet" href="styles/normalize.css" media="screen" />
-    <link rel="stylesheet" href="styles/main.css" media="screen" />
+    <link rel="stylesheet" href="styles/main-min.css" media="screen" />
     <link rel="stylesheet" href="styles/checkbox-min.css" media="screen" />
   </head>
 
@@ -29,7 +36,6 @@
       <modal :class="{disabled: !showTutorial}" class="tutorial">
         <h2>Tutorial</h2>
         <intro v-if="showTutorial">
-          <!-- <message>The basics</message> -->
           <p>The challenge of "{{gameName}}" is to connect different words that may or may not be easily connected. You and your friends take turns guessing and giving puzzles over text or chat messages.</p>
 
           <h3>Creating</h3>
@@ -37,8 +43,6 @@
           <img src="./images/tut-1.svg" />
           <p>In this easy example, you might use the word "Given" to connect "Present" and "Past", but "Timeline" is another possibility.</p>
           <img src="./images/tut-3.svg" />
-          <!-- <p>"Present" and "Past" are an easy pair, but some pairs are much harder to connect:</p>
-          <img src="./images/tut-5.svg" /> -->
           <p>Once you've filled out all 4 clues, click the <cta>SEND</cta> button to share the puzzle with your friends.</p>
 
           <h3>Guessing</h3>
@@ -136,25 +140,21 @@
         </controls>
       </modal>
       <wrapper>
+        <button :class="{show: newVersionAvailable}" title="There is an update available. Click to apply the update." class="pulse update inline" @click="HandleUpdateAppButtonClick">New Update<icon class="download"></icon></button>
         <controls>
-          <button class="inline" @click="HandleNewGameClick()">
-            New<span><icon class="add"></icon></span>
-          </button>
+          <button class="inline" @click="HandleNewGameClick()">New</button>
         </controls>
         <header>
           <hgroup>
             <h1>{{gameName}}</h1>
             <subtitle>
-              <button class="inline" @click="ToggleShowTutorial(event)"><icon class="info"></icon>Tutorial</button>
-              <button class="inline" @click="OpenSettings()">Settings<icon class="settings"></icon></button>
+              <button class="inline small" @click="ToggleShowTutorial(event)"><icon class="info"></icon>Tutorial</button>
+              <button class="inline small" @click="OpenSettings()">Settings<icon class="settings"></icon></button>
             </subtitle>
           </hgroup>
         </header>
         <controls>
-          <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: guessingGameSol === currentGameSol || ( getNumberOfHintsThatHaveBeenFilled !== 4 && player.role === 'creator') || (getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && player.role !== 'reviewer' && player.id !== puzzlePlayer.id)}">
-            <span><icon class="emoji">{{player.id!==puzzlePlayer.id ? '🤔' : '🧠' }}</icon></span>
-            {{getSubmitButtonText}}
-          </button>
+          <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: guessingGameSol === currentGameSol || ( getNumberOfHintsThatHaveBeenFilled !== 4 && player.role === 'creator') || (getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && player.role !== 'reviewer' && player.id !== puzzlePlayer.id)}">{{getSubmitButtonText}}</button>
         </controls>
       </wrapper>
       <wrapper>

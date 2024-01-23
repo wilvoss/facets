@@ -12,7 +12,8 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.127',
+    version: '0.1.128',
+    newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
     currentGameSol: '',
@@ -853,6 +854,14 @@ var app = new Vue({
         this.SetWordSetTheme(this.gameWordSet);
       }
 
+      let _newVersionAvailable = localStorage.getItem('newVersionAvailable');
+      try {
+        if (_newVersionAvailable !== undefined && _newVersionAvailable !== null) {
+          this.newVersionAvailable = JSON.parse(_newVersionAvailable);
+        }
+      } catch (_error) {
+        error('_newVersionAvailable error: ' + _error);
+      }
       // let usePortraitLayout = localStorage.getItem('usePortraitLayout');
       // if (usePortraitLayout !== undefined && usePortraitLayout !== null) {
       //   this.usePortraitLayout = JSON.parse(usePortraitLayout);
@@ -1115,9 +1124,46 @@ var app = new Vue({
         this.NewGame(null);
       }
     },
+
+    HandleUpdateAppButtonClick() {
+      note('HandleUpdateAppButtonClick() called');
+      this.newVersionAvailable = false;
+      localStorage.setItem('newVersionAvailable', this.newVersionAvailable);
+      if (this.serviceWorker !== '') {
+        this.serviceWorker.postMessage({ action: 'skipWaiting' });
+      } else {
+        window.location.reload(true);
+      }
+    },
+
+    HandleServiceWorkerRegistration() {
+      note('HandleServiceWorkerRegistration() called');
+      if ('serviceWorker' in navigator) {
+        // Register the service worker
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          reg.addEventListener('updatefound', () => {
+            // An updated service worker has appeared in reg.installing!
+            this.serviceWorker = reg.installing;
+            this.serviceWorker.addEventListener('statechange', () => {
+              // Has service worker state changed?
+              switch (this.serviceWorker.state) {
+                case 'installed':
+                  // There is a new service worker available, show the notification
+                  if (navigator.serviceWorker.controller) {
+                    this.newVersionAvailable = true;
+                    localStorage.setItem('newVersionAvailable', this.newVersionAvailable);
+                  }
+                  break;
+              }
+            });
+          });
+        });
+      }
+    },
   },
 
   mounted() {
+    // this.HandleServiceWorkerRegistration();
     this.LoadPage();
     window.addEventListener('keydown', this.HandleKeyDownEvent);
     window.addEventListener('pointermove', this.HandlePointerMoveEvent);
