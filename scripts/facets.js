@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.131',
+    version: '0.1.132',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -792,6 +792,7 @@ var app = new Vue({
       this.sendingPlayer.name = this.player.name;
       this.guessingWordSet = this.gameWordSet;
       this.guessingCardCount = this.useExtraCard ? 5 : 4;
+      this.guessingGameSol = '';
       this.trayIsRotating = false;
       this.SetWordSetTheme(this.gameWordSet);
       this.shareURL = '';
