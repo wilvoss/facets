@@ -150,6 +150,7 @@ button.small {
     width: auto;
     cursor: pointer;
     text-align: center;
+    background: none;
     color: hsla(var(--linkColorDarkHSL), 1);
     display: flex;
     text-transform: uppercase;
@@ -169,7 +170,7 @@ button.update {
     background: hsla(var(--hueCreating), 80%, 10%, 1);
     border: 1px solid hsl(var(--trayCreatingBackgroundHSL));
     /* border-width: 1px 1px 0 1px; */
-    transform: translateY(32px);
+    transform: translateY(38px);
     color: hsl(var(--appForegroundHSL));
     border-radius: var(--borderRadius);
     transition: var(--longTransition) ease-in-out all;
@@ -1274,6 +1275,17 @@ version {
         padding: 0 0 var(--defaultGap);
     }
 
+    wrapper.mobile, .portrait wrapper.mobile {
+        transform: translateY(calc(-4 * var(--defaultGap)));
+        position: fixed;
+        bottom: var(--defaultGap);
+    }
+
+    wrapper.mobile.extra, .portrait wrapper.mobile.extra {
+        scale: .6;
+        transform: translateY(calc(-3 * var(--defaultGap)));
+    }
+
     message {
         display: block;
     }
@@ -1427,6 +1439,12 @@ version {
 
     wrapper controls:last-of-type button {
         text-align: right;
+    }
+
+    wrapper.mobile, .portrait wrapper.mobile {
+        transform: translateY(calc(-4 * var(--defaultGap)));
+        position: fixed;
+        bottom: var(--defaultGap);
     }
 
     modal controls button {
@@ -1590,12 +1608,11 @@ version {
     wrapper.mobile, .portrait wrapper.mobile {
         display: flex;
         height: 0px;
-        transform: translateY(calc(.7 * var(--cardSize)));
         scale: .6;
     }
 
     wrapper.mobile.extra, .portrait wrapper.mobile.extra {
-        transform: translateY(calc(.7 * var(--cardSize)));
+        /* transform: translateY(calc(.7 * var(--cardSize))); */
         scale: .5;
 
     }
@@ -1626,11 +1643,7 @@ version {
         display: none;
     }
 
-    wrapper.mobile, .portrait wrapper.mobile {
-        transform: translateY(calc(-4 * var(--defaultGap)));
-        position: fixed;
-        bottom: var(--defaultGap);
-    }
+
 
     words word {
         letter-spacing: 1px;
