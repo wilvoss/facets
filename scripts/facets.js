@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.125',
+    version: '0.1.126',
     gameName: 'Facets',
     currentGameID: 0,
     currentGameSol: '',
@@ -211,7 +211,7 @@ var app = new Vue({
       note('HandleNewGameClick() called');
       if (this.isGuessing && this.player.role !== 'reviewer' && this.puzzlePlayer.id !== this.player.id) {
         this.showModal = true;
-        this.confirmation = { message: 'Are you sure you want to create a new game?', target: 'newgame' };
+        this.confirmation = { message: 'Are you sure you want <br/>to create a new game?', target: 'newgame' };
         this.showConfirmation = true;
       } else {
         this.NewGame();

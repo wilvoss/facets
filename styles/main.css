@@ -792,6 +792,11 @@ parking spot.empty {
     outline-style: dashed;
 }
 
+.creating parking spot.empty {
+    /* outline-color: hsla(var(--hueReviewing), 100%, 70%, .7); */
+    opacity: .4;
+}
+
 
 card {
     background: transparent;
@@ -812,19 +817,19 @@ cards card, .multicolor.guessing cards card, .reviewing cards card {
     color: hsl(var(--hueMain), 100%, 86%);
 }
 
-.multicolor.creating cards card {
+.multicolor.creating card {
     color: hsl(var(--hueCreating), 100%, 86%);
 }
 
-.multicolor.guessing cards card {
+.multicolor.guessing card {
     color: hsl(var(--hueGuessing), 94%, 90%);
 }
 
-.multicolor.reviewing cards card {
+.multicolor.guessing.reviewing card {
     color: hsl(var(--hueReviewing), 94%, 90%);
 }
 
-.multicolor.solved.guessing cards card {
+.multicolor.solved.guessing card {
     color: hsl(var(--hueSolved), 94%, 90%);
 }
 
@@ -1142,6 +1147,11 @@ modal.centered {
     font-size: 130%;
 }
 
+modal.centered intro, modal.centered confirmation {
+    margin-bottom: var(--cardSize);
+
+}
+
 modal.disabled, tutorial.disabled {
     opacity: 0;
 }
@@ -1360,6 +1370,10 @@ version {
         justify-content: start;
         align-items: center;
         margin-bottom: 60px;
+    }
+
+    confirmation {
+        max-width: 90%;
     }
 
     modal.tutorial intro {
