@@ -22,9 +22,9 @@
     --hueSolved: 175;
     --hueHighlight: 140;
 
-    --appBackgroundHSL: var(--hueTheme), 50%, 14%;
-    --appBackgroundDarkHSL: var(--hueTheme), 56%, 10%;
-    --appBackgroundDarkestHSL: var(--hueTheme), 56%, 4%;
+    --appBackgroundHSL: var(--hueTheme), 100%, 11%;
+    --appBackgroundDarkHSL: var(--hueTheme), 100%, 8%;
+    --appBackgroundDarkestHSL: var(--hueTheme), 100%, 3%;
     --appForegroundHSL: var(--hueTheme), 100%, 100%;
     --linkColorLightHSL: var(--hueHighlight), 79%, 55%;
     --linkColorDarkHSL: var(--hueHighlight), 69%, 45%;
@@ -236,7 +236,7 @@ header subtitle {
 header subtitle, header subtitle button {
     cursor: default;
     text-align: center;
-    color: hsla(var(--appForegroundHSL), .8);
+    color: hsla(var(--linkColorDarkHSL), 1);
     display: flex;
     font-size: 70%;
     text-transform: uppercase;
@@ -264,7 +264,7 @@ header subtitle button.inline icon {
     height: var(--tinyIconSize);
     mask-size: var(--tinyIconSize) var(--tinyIconSize);
     -webkit-mask-size: var(--tinyIconSize) var(--tinyIconSize);
-    background: hsla(var(--appForegroundHSL), .8);
+    background: hsla(var(--linkColorDarkHSL), 1);
     margin-top: -1px;
 
 }
@@ -495,7 +495,7 @@ controls {
 modal controls {
     position: fixed;
     bottom: 0px;
-    background-color: hsla(var(--appBackgroundDarkHSL), .96);
+    background-color: hsla(var(--appBackgroundDarkHSL), 1);
     backdrop-filter: blur(4px);
     box-shadow: 0px -10px 10px hsla(var(--appBackgroundDarkestHSL), 1);
     padding: var(--defaultGap) 0;
