@@ -15,15 +15,15 @@
 
 :root {
     --hueMain: 140;
-    --hueTheme: 205;
+    --hueTheme: 215;
     --hueCreating: 215;
     --hueGuessing: 140;
     --hueReviewing: 355;
     --hueSolved: 175;
     --hueHighlight: 140;
 
-    --appBackgroundHSL: var(--hueTheme), 50%, 16%;
-    --appBackgroundDarkHSL: var(--hueTheme), 56%, 11%;
+    --appBackgroundHSL: var(--hueTheme), 50%, 14%;
+    --appBackgroundDarkHSL: var(--hueTheme), 56%, 10%;
     --appBackgroundDarkestHSL: var(--hueTheme), 56%, 4%;
     --appForegroundHSL: var(--hueTheme), 100%, 100%;
     --linkColorLightHSL: var(--hueHighlight), 79%, 55%;
