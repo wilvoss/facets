@@ -1640,10 +1640,9 @@ version {
     }
 
     wrapper message {
-        display: none;
+        margin-top: 8px;
+        font-size: 100%;
     }
-
-
 
     words word {
         letter-spacing: 1px;
