@@ -501,7 +501,7 @@ modal controls {
     border-top: 1px solid hsla(var(--appBackgroundHSL), 1);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    box-shadow: 0px -10px 10px hsla(var(--appBackgroundDarkestHSL), 1);
+    box-shadow: 0px -10px 10px hsla(var(--appBackgroundDarkestHSL), .5);
     padding: var(--defaultGap) 0;
     gap: calc(.5 * var(--defaultGap));
     height: auto;
