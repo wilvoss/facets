@@ -300,6 +300,10 @@ p {
     color: hsl(var(--hueGuessing), 80%, 50%)
 }
 
+cta {
+    font-family: 'Theme';
+}
+
 .redText {
     color: hsl(var(--hueReviewing), 100%, 60%)
 }
@@ -937,7 +941,12 @@ modal small {
     font-size: 70%;
     opacity: .7;
     line-height: 110%;
-    max-width: calc(2 * var(--cardSize));
+    width: 100%;
+    max-width: calc((2 * var(--cardSize)) + (2 * var(--defaultGap)));
+}
+
+modal settings message small {
+    max-width: unset;
 }
 
 hints hint input {
@@ -1128,6 +1137,10 @@ modal.tutorial intro {
     margin-bottom: 160px;
 }
 
+modal img {
+    width: 100%;
+}
+
 modal.turorial intro message {
     margin-top: 0;
 }
@@ -1170,6 +1183,10 @@ leftright message, leftright section, leftright p {
 
 leftright section input {
     text-align: left;
+}
+
+leftright p {
+    padding-left: var(--defaultGap);
 }
 
 modal cards {
@@ -1316,6 +1333,10 @@ version {
         justify-content: start;
         align-items: center;
         margin-bottom: 60px;
+    }
+
+    modal img {
+        width: 90%;
     }
 
     modal small {

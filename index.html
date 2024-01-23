@@ -29,17 +29,29 @@
       <modal :class="{disabled: !showTutorial}" class="tutorial">
         <h2>Tutorial</h2>
         <intro v-if="showTutorial">
-          <message>Basic gameplay</message>
           <p>The challenge of "{{gameName}}" is to connect different words that may or may not be easily connected. You and your friends take turns guessing and giving puzzles over text, messages, or other social media apps.</p>
-          <p><span class="blueText">When the gem is a sapphire,</span> you are creating a puzzle. Give 4 clues on the edges of the gem (tap) that you think connects the two words next to the clue. Click the "SEND" button to share the puzzle with your friends.</p>
-          <p><span class="greenText">When the gem is an emerald,</span> you are guessing a puzzle a friend sent you. Drag the cards onto the gem and rotate them so that each large "clue" on the edge of the gem has two small words next to it that make sense. {{!autoCheck ? 'Click the "SEND" button to send your guess back.' :'Click the "GUESS" button to automatically check your guess.'}}</p>
-          <p><span class="redText">When the gem is a ruby,</span> you are reviewing a friend's guess. Remove any cards from the gem that are wrong. Click the "SEND" button to send the puzzle back, even if you are just giving them the solution.</p>
+          <message>Creating</message>
+          <p>Give 4 clues on the edges of the gem that you think connect the two words next to each clue.</p>
+          <img src="./images/tut-1.svg" />
+          <p>You could give the clue "Timeline" to connect "Present" and "Past" in this example:</p>
+          <img src="./images/tut-3.svg" />
+          <p>Once you've filled out all 4 clues, click the <cta>SEND</cta> button to share the puzzle with your friends.</p>
+          <message>Guessing</message>
+          <p>Drag cards to the gem and rotate them so that each large "clue" on the edge of the gem that connects the two small words next to it.</p>
+          <img src="./images/tut-2.svg" />
+          <p v-if="!autoCheck">Click the <cta>SEND</cta> button to send your guess back to whoever sent it to you.</p>
+          <p v-if="autoCheck">Click the <cta>Guess</cta> button to automatically check your guess.</p>
+          <message>Reviewing</message>
+          <p>When you are reviewing a friend's guess. In this instance, your friend rotated the first card so that "Present" isn't connected to the clue "Timeline". Remove this card and any other cards that are wrong.</p>
+          <img src="./images/tut-4.svg" />
+          <p>Click the <cta>SEND</cta> button to send the puzzle back, even if you are just giving them the solution.</p>
           <message>Game controls</message>
           <p>A card is a group of four words around the edges of a small square.</p>
           <p>You can drag cards from one spot to another spot. While guessing or reviewing, you can rotate the cards by tapping on the curved arrows in the corner of each card.</p>
           <p>The gem has 4 large clues around its edges. At any time, you can tap on a clue or either of the two large curved arrows above the gem to rotate it.</p>
           <message>Advanced info</message>
-          <p>If you play on multiple browsers, be sure to change your player number in settings to be the same on each so that you can review any game you sent to anyone on any device 🤓.</p>
+          <p>If you play on multiple browsers, be sure to change your player ID # in settings to be the same on each so that you can review any game you sent to anyone on any device 🤓.</p>
+          <p>For a more emotionally satisfying (and humorous) game, enable "Pass 'n play" in the settings. This mode prevents the game from checking your guesses. Instead, it gives you a way to share your guess with the puzzle's creator.</p>
           <controls><button @click="ToggleShowTutorial(event)">Got it</button></controls>
         </intro>
       </modal>
@@ -94,12 +106,9 @@
             Extra card
             <toggle></toggle>
           </checkbox>
+          <small :class="{disabled: isGuessing}">Enable this if you want to send your puzzle with a random 5th card.</small>
 
           <message>Appearance</message>
-          <!-- <checkbox class="notMobile" :class="{on: tempUsePortraitLayout}" @click="ToggleTempUsePortraitLayout()">
-            Portrait mode
-            <toggle></toggle>
-          </checkbox> -->
           <checkbox :class="{on: tempUseWordSetThemes}" @click="ToggleTempUseWordSetThemes()">
             Category backgrounds
             <toggle></toggle>
