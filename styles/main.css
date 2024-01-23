@@ -98,6 +98,15 @@ h1, h2, h3, h4, h5 {
     font-family: "Theme";
 }
 
+h3 {
+    margin: var(--defaultGap) 0 0;
+    color: hsl(var(--messageColorHSL));
+}
+
+settings h3 {
+    margin: calc(2 * var(--defaultGap)) 0 var(--defaultGap);
+}
+
 button {
     -webkit-tap-highlight-color: transparent;
 }
@@ -284,7 +293,7 @@ modal message {
     border-bottom: 1px solid hsla(var(--appForegroundHSL), .1);
 }
 
-message:first-of-type {
+settings message:first-of-type {
     margin-top: 0px;
     padding-top: 0px;
     /* border-bottom-color: hsla(var(--appForegroundHSL), 0); */
@@ -500,6 +509,7 @@ modal controls button {
     border: 1px solid hsla(var(--linkColorDarkHSL), .3);
     border-radius: var(--borderRadius);
     font-size: 100%;
+    background: hsl(var(--appBackgroundHSL));
 }
 
 modal controls button.secondary {
@@ -520,7 +530,7 @@ controls button {
 }
 
 controls button.secondary {
-    color: rgba(255, 255, 255, .4);
+    color: rgba(255, 255, 255, .5);
 }
 
 rotators {
