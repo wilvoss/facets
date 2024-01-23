@@ -294,7 +294,7 @@ modal message {
     border-bottom: 1px solid hsla(var(--appForegroundHSL), .1);
 }
 
-settings message:first-of-type {
+settings h3:first-of-type {
     margin-top: 0px;
     padding-top: 0px;
     /* border-bottom-color: hsla(var(--appForegroundHSL), 0); */
