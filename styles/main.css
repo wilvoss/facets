@@ -290,9 +290,11 @@ message span {
     display: inline;
 }
 
-modal message {
+/* modal h3 {
+    width: 100%;
+    padding-bottom: calc(.5 * var(--defaultGap));
     border-bottom: 1px solid hsla(var(--appForegroundHSL), .1);
-}
+} */
 
 settings h3:first-of-type {
     margin-top: 0px;
@@ -334,7 +336,7 @@ modal message {
     padding-top: var(--defaultGap);
     margin-bottom: calc(.5 * var(--defaultGap));
     padding-bottom: calc(.5 * var(--defaultGap));
-    border-bottom: 1px solid hsla(var(--appForegroundHSL), .1);
+    /* border-bottom: 1px solid hsla(var(--appForegroundHSL), .1); */
 }
 
 modal intro message {
@@ -495,8 +497,10 @@ controls {
 modal controls {
     position: fixed;
     bottom: 0px;
-    background-color: hsla(var(--appBackgroundDarkHSL), 1);
+    background-color: hsla(var(--appBackgroundDarkHSL), .9);
+    border-top: 1px solid hsla(var(--appBackgroundHSL), 1);
     backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     box-shadow: 0px -10px 10px hsla(var(--appBackgroundDarkestHSL), 1);
     padding: var(--defaultGap) 0;
     gap: calc(.5 * var(--defaultGap));
@@ -510,11 +514,11 @@ modal controls button {
     border: 1px solid hsla(var(--linkColorDarkHSL), .3);
     border-radius: var(--borderRadius);
     font-size: 100%;
-    background: hsl(var(--appBackgroundHSL));
+    background: hsl(var(--appBackgroundDarkHSL));
 }
 
 modal controls button.secondary {
-    border-color: rgba(255, 255, 255, .2);
+    border-color: hsl(var(--hueTheme), 50%, 25%);
 }
 
 
@@ -531,7 +535,7 @@ controls button {
 }
 
 controls button.secondary {
-    color: rgba(255, 255, 255, .5);
+    color: hsl(var(--hueTheme), 40%, 40%);
 }
 
 rotators {
@@ -962,13 +966,14 @@ modal small {
     display: block;
     font-size: 70%;
     opacity: .7;
-    line-height: 150%;
+    line-height: 120%;
     width: 100%;
     max-width: calc((2 * var(--cardSize)) + (2 * var(--defaultGap)));
 }
 
-modal settings message small {
+modal settings h3 small {
     max-width: unset;
+    padding-top: calc(.25 * var(--defaultGap));
 }
 
 hints hint input {
@@ -1155,7 +1160,7 @@ modal settings {
 }
 
 modal.tutorial intro {
-    max-width: calc(var(--cardSize) * 3);
+    max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
     margin-bottom: 160px;
 }
 
@@ -1355,6 +1360,11 @@ version {
         justify-content: start;
         align-items: center;
         margin-bottom: 60px;
+    }
+
+    modal.tutorial intro {
+        max-width: calc(var(--cardSize) * 3);
+
     }
 
     modal img {
