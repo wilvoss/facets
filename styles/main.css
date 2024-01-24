@@ -537,10 +537,10 @@ controls {
 modal controls {
     position: fixed;
     bottom: 0px;
-    background-color: hsla(var(--appBackgroundDarkHSL), .8);
+    background-color: hsla(var(--appBackgroundDarkHSL), .7);
     border-top: 1px solid hsla(var(--appBackgroundHSL), 1);
-    backdrop-filter: blur(9px);
-    -webkit-backdrop-filter: blur(9px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
     padding: var(--defaultGap) 0;
     gap: calc(.5 * var(--defaultGap));
     height: auto;
