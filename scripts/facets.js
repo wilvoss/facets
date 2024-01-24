@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.139',
+    version: '0.1.140',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -480,7 +480,11 @@ var app = new Vue({
       var corsflareUrl = 'https://worker-cold-butterfly-c870.bigtentgames.workers.dev/';
       var requestUrl = corsflareUrl + '?u=' + encodeURIComponent(longUrl);
 
-      fetch(requestUrl)
+      fetch(requestUrl, {
+        headers: {
+          Host: new URL(longUrl).hostname,
+        },
+      })
         .then((response) => {
           if (!response.ok) {
             throw new Error('Server error: ' + response.status);
