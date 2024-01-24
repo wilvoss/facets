@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.135',
+    version: '0.1.136',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -312,6 +312,9 @@ var app = new Vue({
 
         if (urlParams.has('sol')) {
           this.currentGameSol = urlParams.get('sol');
+          if (urlParams.has('final')) {
+            this.guessingGameSol = this.currentGameSol;
+          }
         } else {
           this.currentGameSol = [];
         }
@@ -326,7 +329,7 @@ var app = new Vue({
       }
     },
 
-    ConstructURLForCurrentGame() {
+    ConstructURLForCurrentGame(_isFinal) {
       note('ConstructURLForCurrentGame() called');
       if (this.isGuessing) {
         this.guessingGameSol = '';
@@ -352,6 +355,9 @@ var app = new Vue({
         urlString += '&wordSetID=' + encodeURIComponent(this.guessingWordSet.id);
         urlString += '&useExtraCard=' + encodeURIComponent(this.guessingCardCount === 5);
         urlString += '&sol=' + encodeURIComponent(this.currentGameSol);
+        if (_isFinal) {
+          urlString += '&final=true';
+        }
         urlString = window.location.origin + window.location.pathname + '?board=' + urlString + '&deletableCharacters=these';
         this.shareURL = urlString;
         history.pushState(null, null, this.shareURL);
@@ -452,19 +458,21 @@ var app = new Vue({
       }
     },
 
-    ShareBoard(gotIt = false) {
+    ShareBoard(_gotIt = false) {
       note('ShareBoard() called');
       this.puzzleJustSent = this.shareURL === '';
       let newPuzzleIcon = '🧠';
       let text = this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id ? newPuzzleIcon + " Here's a new " + (this.guessingCardCount === 5 ? '5-card ' : '') + '"' + this.guessingWordSet.name + '" puzzle to solve!' : '🤔 ' + this.puzzlePlayer.name + ", here's my guess!";
       let nailedIt = false;
+      let isFinal = false;
       document.getElementById('shareButton').focus();
       if (this.player.role === 'reviewer') {
-        text = this.GetMessageBasedOnTrayCount(gotIt, this.guessersName);
+        text = this.GetMessageBasedOnTrayCount(_gotIt, this.guessersName);
+        isFinal = true;
       }
       this.shareURL = '';
-      this.ConstructURLForCurrentGame();
-      if (this.player.role !== 'reviewer' || !gotIt) {
+      this.ConstructURLForCurrentGame(isFinal);
+      if (this.player.role !== 'reviewer' || !_gotIt) {
         text = text + (nailedIt ? '' : '\r\n' + this.shareURL);
       }
       this.ShareText(text);
