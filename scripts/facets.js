@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.137',
+    version: '0.1.138',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -471,7 +471,7 @@ var app = new Vue({
       document.getElementById('shareButton').focus();
       if (this.player.role === 'reviewer') {
         text = this.GetMessageBasedOnTrayCount(_gotIt, this.guessersName);
-        isFinal = true;
+        isFinal = this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4;
       }
       this.shareURL = '';
       this.ConstructURLForCurrentGame(isFinal);
