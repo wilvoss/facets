@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.134',
+    version: '0.1.135',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -351,7 +351,7 @@ var app = new Vue({
         urlString += '&puzzleID=' + encodeURIComponent(this.puzzlePlayer.id);
         urlString += '&wordSetID=' + encodeURIComponent(this.guessingWordSet.id);
         urlString += '&useExtraCard=' + encodeURIComponent(this.guessingCardCount === 5);
-        urlString += '&sol=' + this.currentGameSol;
+        urlString += '&sol=' + encodeURIComponent(this.currentGameSol);
         urlString = window.location.origin + window.location.pathname + '?board=' + urlString + '&deletableCharacters=these';
         this.shareURL = urlString;
         history.pushState(null, null, this.shareURL);
