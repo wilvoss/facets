@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.138',
+    version: '0.1.139',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -475,6 +475,21 @@ var app = new Vue({
       }
       this.shareURL = '';
       this.ConstructURLForCurrentGame(isFinal);
+
+      var longUrl = this.shareURL;
+      var corsflareUrl = 'https://worker-cold-butterfly-c870.bigtentgames.workers.dev/';
+      var requestUrl = corsflareUrl + '?u=' + encodeURIComponent(longUrl);
+
+      fetch(requestUrl)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Server error: ' + response.status);
+          }
+          return response.text();
+        })
+        .then((shortUrl) => announce(shortUrl))
+        .catch((error) => console.error('Error:', error));
+
       if (this.player.role !== 'reviewer' || !_gotIt) {
         text = text + (nailedIt ? '' : '\r\n' + this.shareURL);
       }
