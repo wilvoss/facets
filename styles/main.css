@@ -241,14 +241,21 @@ icon.download {
     -webkit-mask-image: url(../images/icon-download.svg);
 }
 
+
+
+message small {
+    color: hsl(var(--linkColorLightHSL));
+    /* display: block; */
+}
+
 message icon.share {
     display: inline-block;
     width: var(--extraSmallIconSize);
     height: var(--extraSmallIconSize);
     overflow: visible;
-    transform: translateY(-2px);
+    /* transform: translateY(-2px); */
     padding: 0;
-    background-color: hsl(var(--messageColorHSL));
+    background-color: hsl(var(--linkColorLightHSL));
     mask-size: calc(.75 * var(--extraSmallIconSize)) calc(.75 * var(--extraSmallIconSize));
     -webkit-mask-size: calc(.75 * var(--extraSmallIconSize)) calc(.75 * var(--extraSmallIconSize));
 }
@@ -1407,9 +1414,10 @@ version {
         position: absolute;
     }
 
+
     message icon.share {
         scale: .9;
-        transform: translateY(0px)
+        transform: translateY(0px);
     }
 
     controls {

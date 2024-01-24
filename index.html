@@ -158,9 +158,9 @@
         </controls>
       </wrapper>
       <wrapper>
-        <message @click="ShareWin()" v-if="message !== ''">
+        <message @click="ShareWin()" v-if="message !== ''" :style="{cursor: message !== 'Sharing message copied to the clipboard.' ? 'pointer' : 'default'}">
           {{message}}
-          <span v-if="message !== 'Sharing message copied to the clipboard.'"><icon class="share"></icon></span>
+          <small v-if="!isFinal && guessingGameSol === currentGameSol && message !== 'Sharing message copied to the clipboard.'"><icon class="share"></icon>(share)</small>
         </message>
         <message @click="OpenSettings()" v-if="message === ''">{{getPlayerMessage}}</message>
       </wrapper>

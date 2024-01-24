@@ -12,12 +12,13 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.136',
+    version: '0.1.137',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
     currentGameSol: '',
     currentGuessCount: 0,
+    isFinal: false,
     guessingGameSol: [],
     gameCatchphrase: 'A game of words!',
     wordSets: [...WordSets],
@@ -314,6 +315,8 @@ var app = new Vue({
           this.currentGameSol = urlParams.get('sol');
           if (urlParams.has('final')) {
             this.guessingGameSol = this.currentGameSol;
+            this.message = this.player.name + ", here's the solution.";
+            this.isFinal = true;
           }
         } else {
           this.currentGameSol = [];
@@ -791,6 +794,7 @@ var app = new Vue({
       document.title = 'Facets!';
       this.message = _message;
       this.currentGuessCount = 0;
+      this.isFinal = false;
       this.puzzleJustSent = false;
       this.guessersName = '';
       this.player.role = 'creator';
