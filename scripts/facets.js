@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.143',
+    version: '0.1.144',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -461,7 +461,7 @@ var app = new Vue({
       }
     },
 
-    ShareBoard(_gotIt = false) {
+    async ShareBoard(_gotIt = false) {
       note('ShareBoard() called');
       this.puzzleJustSent = this.shareURL === '';
       let newPuzzleIcon = '🧠';
@@ -479,7 +479,7 @@ var app = new Vue({
       var corsflareUrl = 'https://worker-cold-butterfly-c870.bigtentgames.workers.dev/';
       var requestUrl = corsflareUrl + encodeURIComponent(window.location.search);
 
-      fetch(requestUrl, {
+      await fetch(requestUrl, {
         headers: {
           Host: new URL(this.shareURL).hostname,
         },
