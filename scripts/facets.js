@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.144',
+    version: '',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -490,7 +490,7 @@ var app = new Vue({
           }
           return response.text();
         })
-        .then((shortUrl) => announce(shortUrl))
+        .then((shortUrl) => (this.shareURL = shortUrl))
         .catch((error) => console.error('Error:', error));
 
       if (this.player.role !== 'reviewer' || !_gotIt) {
