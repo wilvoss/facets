@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.146',
+    version: '0.1.147',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
