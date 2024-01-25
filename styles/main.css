@@ -104,6 +104,17 @@ h3 {
     color: hsl(var(--messageColorHSL));
 }
 
+a, a:hover, a:focus, a:visited, a:active {
+    text-align: center;
+    color: hsl(var(--linkColorLightHSL));
+    text-decoration: none;
+}
+
+a.inline {
+    display: inline-flex;
+    gap: 6px;
+}
+
 settings h3 {
     margin: calc(2 * var(--defaultGap)) 0 var(--defaultGap);
 }
@@ -144,7 +155,6 @@ button icon.emoji {
 
 button.small {
     font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
-    /* font-size: 85%; */
     padding: 6px;
     gap: 6px;
     width: auto;
@@ -242,10 +252,14 @@ icon.download {
 }
 
 
+icon.bmc {
+    mask-image: url(../images/icon-bmc.svg);
+    -webkit-mask-image: url(../images/icon-bmc.svg);
+}
+
 
 message small {
     color: hsl(var(--linkColorLightHSL));
-    /* display: block; */
 }
 
 message icon.share {
@@ -253,7 +267,6 @@ message icon.share {
     width: var(--extraSmallIconSize);
     height: var(--extraSmallIconSize);
     overflow: visible;
-    /* transform: translateY(-2px); */
     padding: 0;
     background-color: hsl(var(--linkColorLightHSL));
     mask-size: calc(.75 * var(--extraSmallIconSize)) calc(.75 * var(--extraSmallIconSize));
@@ -352,16 +365,10 @@ message span {
     display: inline;
 }
 
-/* modal h3 {
-    width: 100%;
-    padding-bottom: calc(.5 * var(--defaultGap));
-    border-bottom: 1px solid hsla(var(--appForegroundHSL), .1);
-} */
 
 settings h3:first-of-type {
     margin-top: 0px;
     padding-top: 0px;
-    /* border-bottom-color: hsla(var(--appForegroundHSL), 0); */
 }
 
 p {
@@ -407,32 +414,6 @@ modal intro message {
 
 message.clickable {
     cursor: pointer;
-}
-
-nav ul {
-    list-style-type: none;
-    padding: 0px;
-    margin: 0px;
-    text-align: center;
-
-}
-
-nav li {
-    display: inline-block;
-    margin: 0px;
-}
-
-nav ul li a {
-    display: inline-block;
-    margin: 0px;
-    text-transform: uppercase;
-    color: hsl(var(--linkColorLightHSL));
-    cursor: pointer;
-    padding: var(--defaultGap) calc(var(--defaultGap) * 2);
-}
-
-nav ul li a:hover {
-    color: white;
 }
 
 wrapper {
@@ -1258,6 +1239,8 @@ version {
     font-size: 12px;
     color: hsla(var(--hueMain), 45%, 75%);
     padding-top: var(--defaultGap);
+    display: flex;
+    gap: var(--defaultGap);
 }
 
 
