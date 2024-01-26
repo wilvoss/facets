@@ -163,7 +163,7 @@
           </hgroup>
         </header>
         <controls>
-          <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: guessingGameSol === currentGameSol && guessingGameSol !== '' || ( getNumberOfHintsThatHaveBeenFilled !== 4 && player.role === 'creator') || (getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && player.role !== 'reviewer' && player.id !== puzzlePlayer.id)}">{{getSubmitButtonText}}</button>
+          <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: guessingGameSol === currentGameSol && guessingGameSol !== '' || ( getNumberOfHintsThatHaveBeenFilled !== 4 && player.role === 'creator') || (getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && player.role !== 'reviewer' && player.id !== puzzlePlayer.id)}"><icon :class="{show: isGettingTinyURL}" class="spinner"></icon>{{getSubmitButtonText}}</button>
         </controls>
       </wrapper>
       <wrapper>

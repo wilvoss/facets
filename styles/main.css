@@ -278,6 +278,27 @@ icon.info {
     -webkit-mask-image: url(../images/icon-gradcap.svg);
 }
 
+icon.spinner {
+    mask-image: url(../images/icon-spinner.svg);
+    -webkit-mask-image: url(../images/icon-spinner.svg);
+    animation: spin 3s linear 0s infinite;
+    -webkit-animation: spin 3s linear 0s infinite;
+    transition: var(--mediumTransition) ease-in-out opacity;
+    transition-delay: 50ms;
+    opacity: 0;
+}
+
+icon.spinner.show {
+    transition-delay: 0ms;
+    opacity: 1;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 icon.add {
     mask-image: url(../images/icon-plus.svg);
     -webkit-mask-image: url(../images/icon-plus.svg);
