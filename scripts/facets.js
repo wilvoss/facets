@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.159',
+    version: '0.1.160',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -478,7 +478,6 @@ var app = new Vue({
         text = "🧠 Here's a new " + (this.guessingCardCount === 5 ? '5-card ' : '') + '"' + this.guessingWordSet.name + '" puzzle to solve!';
       } else if (this.player.role === 'reviewer') {
         text = this.GetMessageBasedOnTrayCount(_gotIt, this.guessersName);
-        isFinal = this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4;
       } else {
         text = '🤔 ' + this.puzzlePlayer.name + ", here's my guess!";
       }
@@ -488,7 +487,7 @@ var app = new Vue({
     async ShareBoard(_gotIt = false) {
       note('ShareBoard() called');
 
-      let isFinal = false;
+      let isFinal = this.player.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4;
       let text = this.GetShareTextBasedOnContext(_gotIt);
       this.ConstructAndSetShareURLForCurrentGame(isFinal);
 
