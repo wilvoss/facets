@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.158',
+    version: '0.1.159',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -181,11 +181,7 @@ var app = new Vue({
 
         if (this.currentGameSol === this.guessingGameSol) {
           this.RotateTray(8);
-          // this.message = 'You have solved the puzzle!';
-          // return true;
         }
-        // {
-        // insert code to identify incorrect cards and remove from the board.
         if (mappedSol[1] !== actualSol[1]) {
           // find and remove the card with mappedSol[1]
           let card = this.cards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[1])));
@@ -407,9 +403,6 @@ var app = new Vue({
           } else {
             return '☔️ Whelp ' + name + "better luck next time. Here's the solution.";
           }
-          break;
-        default:
-          break;
       }
     },
 
