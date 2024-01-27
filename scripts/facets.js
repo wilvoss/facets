@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.154',
+    version: '0.1.155',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -482,7 +482,6 @@ var app = new Vue({
       note('ShareBoard() called');
       //set or reset base variables
       this.shareURL = '';
-      this.isGettingTinyURL = true;
       let isFinal = false;
       let text = '';
 
@@ -498,10 +497,11 @@ var app = new Vue({
 
       this.ConstructURLForCurrentGame(isFinal);
 
-      if (isChromeAndiOSoriPadOS()) {
+      if (this.isChromeAndiOSoriPadOS) {
         // copy the message with the full-length url to the clipboard, this passes the security requirement for direct user interaction
         this.CopyTextToClipboard(text + '\r\n' + this.shareURL);
       } else {
+        this.isGettingTinyURL = true;
         var corsflareUrl = 'https://worker-cold-butterfly-c870.bigtentgames.workers.dev/';
         var requestUrl = corsflareUrl + encodeURIComponent(window.location.search);
 
@@ -918,11 +918,6 @@ var app = new Vue({
       } catch (_error) {
         error('_newVersionAvailable error: ' + _error);
       }
-      // let usePortraitLayout = localStorage.getItem('usePortraitLayout');
-      // if (usePortraitLayout !== undefined && usePortraitLayout !== null) {
-      //   this.usePortraitLayout = JSON.parse(usePortraitLayout);
-      //   this.tempUsePortraitLayout = this.usePortraitLayout;
-      // }
 
       let useExtraCard = localStorage.getItem('useExtraCard');
       if (useExtraCard !== undefined && useExtraCard !== null) {
@@ -1319,6 +1314,15 @@ var app = new Vue({
         text = this.autoCheck ? 'Guess' : text;
       }
       return text;
+    },
+
+    isChromeAndiOSoriPadOS: function () {
+      note('isChromeAndiOSoriPadOS() called');
+      var userAgent = navigator.userAgent || window.opera;
+      announce(userAgent);
+      var isChromeIOS = /CriOS/.test(userAgent) && /iPhone|iPad|iPod/.test(userAgent);
+      warn(isChromeIOS);
+      return isChromeIOS;
     },
   },
 });

@@ -60,10 +60,3 @@ function copyToClipboard(text) {
     document.body.removeChild(textarea);
   }
 }
-
-function isChromeAndiOSoriPadOS() {
-  var userAgent = navigator.userAgent || window.opera;
-  var isChromeIOS = /CriOS/.test(userAgent) && /iPhone|iPad|iPod/.test(userAgent);
-
-  return isChromeIOS && isIOS;
-}
