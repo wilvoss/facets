@@ -1127,7 +1127,6 @@ modal, tutorial {
     background: hsla(var(--appBackgroundDarkestHSL), 1);
     opacity: 1;
     z-index: 300;
-    transition: var(--mediumTransition) ease-in-out all;
     gap: var(--defaultGap);
 }
 
