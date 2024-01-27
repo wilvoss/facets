@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.156',
+    version: '0.1.157',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -498,8 +498,11 @@ var app = new Vue({
       this.ConstructURLForCurrentGame(isFinal);
 
       if (this.isChromeAndiOSoriPadOS) {
-        // copy the message with the full-length url to the clipboard, this passes the security requirement for direct user interaction
-        this.CopyTextToClipboard(text + '\r\n' + this.shareURL);
+        // share the message with the full-length url, because we
+        // aren't awaiting a promise for the tiny url, this passes
+        // the security requirement for direct user interaction
+        // that would otherwise trigger in Chrome on iOS and iPadOS
+        this.ShareText(text + '\r\n' + this.shareURL);
       } else {
         this.isGettingTinyURL = true;
         var corsflareUrl = 'https://worker-cold-butterfly-c870.bigtentgames.workers.dev/';
