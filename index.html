@@ -167,10 +167,12 @@
         </controls>
       </wrapper>
       <wrapper>
-        <message @click="ShareWin()" v-if="message !== ''" :style="{cursor: message !== 'Message copied to the clipboard.' ? 'pointer' : 'default'}">
+        <message v-if="message !== '' && message === 'Tap to copy minified message.'"> </message>
+        <message @click="ShareWin()" v-if="message !== '' && message === 'Message copied to the clipboard.'">
           {{message}}
-          <small v-if="!isFinal && guessingGameSol === currentGameSol && message !== 'Message copied to the clipboard.'"><icon class="share"></icon>(share)</small>
+          <small v-if="!isFinal && guessingGameSol === currentGameSol"><icon class="share"></icon>(share)</small>
         </message>
+        <message v-if="message !== '' && message.indexOf('clipboard') === -1"> </message>
         <message @click="OpenSettings()" v-if="message === ''">{{getPlayerMessage}}</message>
       </wrapper>
       <wrapper>

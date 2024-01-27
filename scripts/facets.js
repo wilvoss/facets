@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.157',
+    version: '0.1.158',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -331,8 +331,8 @@ var app = new Vue({
       }
     },
 
-    ConstructURLForCurrentGame(_isFinal) {
-      note('ConstructURLForCurrentGame() called');
+    ConstructAndSetShareURLForCurrentGame(_isFinal) {
+      note('ConstructAndSetShareURLForCurrentGame() called');
       if (this.isGuessing) {
         this.guessingGameSol = '';
         let urlString = '';
@@ -478,14 +478,9 @@ var app = new Vue({
       }
     },
 
-    async ShareBoard(_gotIt = false) {
-      note('ShareBoard() called');
-      //set or reset base variables
-      this.shareURL = '';
-      let isFinal = false;
+    GetShareTextBasedOnContext(_gotIt) {
+      note('GetShareTextBasedOnContext() called');
       let text = '';
-
-      // assign text based on context
       if (this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id) {
         text = "🧠 Here's a new " + (this.guessingCardCount === 5 ? '5-card ' : '') + '"' + this.guessingWordSet.name + '" puzzle to solve!';
       } else if (this.player.role === 'reviewer') {
@@ -494,8 +489,15 @@ var app = new Vue({
       } else {
         text = '🤔 ' + this.puzzlePlayer.name + ", here's my guess!";
       }
+      return text;
+    },
 
-      this.ConstructURLForCurrentGame(isFinal);
+    async ShareBoard(_gotIt = false) {
+      note('ShareBoard() called');
+
+      let isFinal = false;
+      let text = this.GetShareTextBasedOnContext(_gotIt);
+      this.ConstructAndSetShareURLForCurrentGame(isFinal);
 
       if (this.isChromeAndiOSoriPadOS) {
         // share the message with the full-length url, because we
@@ -633,7 +635,7 @@ var app = new Vue({
       this.isDragging = false;
       this.draggedCard = this.emptyCard;
 
-      this.ConstructURLForCurrentGame();
+      this.ConstructAndSetShareURLForCurrentGame();
     },
 
     HandleCardClick(e, _card) {
@@ -712,7 +714,7 @@ var app = new Vue({
         }
       });
       if (this.isGuessing && _contructURL) {
-        this.ConstructURLForCurrentGame();
+        this.ConstructAndSetShareURLForCurrentGame();
       }
     },
 
@@ -828,7 +830,7 @@ var app = new Vue({
             break;
         }
 
-        this.ConstructURLForCurrentGame();
+        this.ConstructAndSetShareURLForCurrentGame();
       }
       this.trayRotation = 0;
     },
