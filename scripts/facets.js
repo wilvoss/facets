@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.160',
+    version: '0.1.161',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -938,7 +938,7 @@ var app = new Vue({
     LoadPage() {
       note('LoadPage() called');
       this.HandlePageVisibilityChange();
-      announce('Player ' + this.player.id + ' has initiated the app.');
+      announce('Player ' + this.player.id + ' has initiated the game - version v' + this.version);
       this.longTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
       this.shortTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
 
