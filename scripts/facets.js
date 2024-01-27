@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.153',
+    version: '0.1.154',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -69,7 +69,6 @@ var app = new Vue({
     puzzlePlayer: new PlayerObject({}),
     sendingPlayer: new PlayerObject({}),
     shareText: 'Send',
-    puzzleJustSent: false,
     isGuessing: false,
     trayRotation: 0,
     trayIsRotating: false,
@@ -276,7 +275,6 @@ var app = new Vue({
       let corruptData = false;
       if (_boardArray.length >= 40) {
         this.shareURL = window.location.href;
-        this.puzzleJustSent = false;
         let allWords = await this.getGuessingGameWordSet;
 
         this.cards = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
@@ -416,7 +414,7 @@ var app = new Vue({
     },
 
     ShareWin() {
-      note('ShareBoard() called');
+      note('ShareWin() called');
       let text = this.puzzlePlayer.name + ', I got it in ' + this.currentGuessCount + ' tries! 😀';
       if (this.currentGuessCount === 1) {
         text = this.puzzlePlayer.name + ', I got it in 1 try! 🔥';
@@ -424,13 +422,8 @@ var app = new Vue({
       this.ShareText(text);
     },
 
-    ShareText(_text) {
-      let _shareObject = {
-        text: _text,
-      };
-      if (navigator.share) {
-        navigator.share(_shareObject);
-      } else if (navigator.clipboard) {
+    async CopyTextToClipboard(_text) {
+      if (navigator.clipboard) {
         if (window.ClipboardItem) {
           // ClipboardItem is available
           navigator.clipboard
@@ -440,67 +433,95 @@ var app = new Vue({
               }),
             ])
             .then(() => {
-              this.message = 'Sharing message copied to the clipboard.';
+              console.log('Message copied via navigator.clipboard.write');
             })
             .catch((err) => {
-              console.error('Failed to copy text: ', err);
+              this.message = 'Message failed to copy to clipboard.';
+              console.error('Failed to copy text via navigator.clipboard.write: ', err);
             });
         } else {
           // ClipboardItem is not available, use writeText
-          navigator.clipboard
+          await navigator.clipboard
             .writeText(_text)
             .then(() => {
-              this.message = 'Sharing message copied to the clipboard.';
+              console.log(this.message + ' Via navigator.clipboard.writeText');
             })
             .catch((err) => {
-              console.error('Failed to copy text: ', err);
+              this.message = 'Message failed to copy to clipboard.';
+              console.error('Failed to copy text via navigator.clipboard.writeText: ', err);
             });
         }
       } else {
         copyToClipboard(_text);
-        this.message = 'Sharing message copied to the clipboard.';
+        console.log('Message copied via exec.command');
+      }
+      this.message = 'Message copied to the clipboard.';
+    },
+
+    async ShareText(_text) {
+      note('ShareText() called');
+      let _shareObject = {
+        text: _text,
+      };
+      if (navigator.share) {
+        await navigator
+          .share(_shareObject)
+          .then((result) => {
+            console.log('Message shared via navigator.share()');
+          })
+          .catch((err) => {
+            console.error('Failed to share via navigator.share(): ', err);
+          });
+      } else {
+        // fall back to clipboard
+        this.CopyTextToClipboard(_text);
       }
     },
 
     async ShareBoard(_gotIt = false) {
       note('ShareBoard() called');
-      this.puzzleJustSent = this.shareURL === '';
-      this.isGettingTinyURL = !this.autoCheck || this.player.id === this.puzzlePlayer.id;
-      let newPuzzleIcon = '🧠';
-      let text = this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id ? newPuzzleIcon + " Here's a new " + (this.guessingCardCount === 5 ? '5-card ' : '') + '"' + this.guessingWordSet.name + '" puzzle to solve!' : '🤔 ' + this.puzzlePlayer.name + ", here's my guess!";
-      let nailedIt = false;
+      //set or reset base variables
+      this.shareURL = '';
+      this.isGettingTinyURL = true;
       let isFinal = false;
-      document.getElementById('shareButton').focus();
-      if (this.player.role === 'reviewer') {
+      let text = '';
+
+      // assign text based on context
+      if (this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id) {
+        text = "🧠 Here's a new " + (this.guessingCardCount === 5 ? '5-card ' : '') + '"' + this.guessingWordSet.name + '" puzzle to solve!';
+      } else if (this.player.role === 'reviewer') {
         text = this.GetMessageBasedOnTrayCount(_gotIt, this.guessersName);
         isFinal = this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4;
+      } else {
+        text = '🤔 ' + this.puzzlePlayer.name + ", here's my guess!";
       }
-      this.shareURL = '';
+
       this.ConstructURLForCurrentGame(isFinal);
 
-      var corsflareUrl = 'https://worker-cold-butterfly-c870.bigtentgames.workers.dev/';
-      var requestUrl = corsflareUrl + encodeURIComponent(window.location.search);
+      if (isChromeAndiOSoriPadOS()) {
+        // copy the message with the full-length url to the clipboard, this passes the security requirement for direct user interaction
+        this.CopyTextToClipboard(text + '\r\n' + this.shareURL);
+      } else {
+        var corsflareUrl = 'https://worker-cold-butterfly-c870.bigtentgames.workers.dev/';
+        var requestUrl = corsflareUrl + encodeURIComponent(window.location.search);
 
-      await fetch(requestUrl, {
-        headers: {
-          Host: new URL(this.shareURL).hostname,
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Server error: ' + response.status);
-          }
-          return response.text();
+        await fetch(requestUrl, {
+          headers: {
+            Host: new URL(this.shareURL).hostname,
+          },
         })
-        .then((shortUrl) => (this.shareURL = shortUrl))
-        .catch((error) => console.error('Error:', error));
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Server error: ' + response.status);
+            }
+            return response.text();
+          })
+          .then((shortUrl) => (this.shareURL = shortUrl))
+          .catch((error) => console.error('Error:', error));
 
-      this.isGettingTinyURL = false;
-
-      if (this.player.role !== 'reviewer' || !_gotIt) {
-        text = text + (nailedIt ? '' : '\r\n' + this.shareURL);
+        this.isGettingTinyURL = false;
+        this.ShareText(text + '\r\n' + this.shareURL);
       }
-      this.ShareText(text);
     },
 
     async CreateCardsForPlayer(_player) {
@@ -817,7 +838,6 @@ var app = new Vue({
       this.message = _message;
       this.currentGuessCount = 0;
       this.isFinal = false;
-      this.puzzleJustSent = false;
       this.guessersName = '';
       this.player.role = 'creator';
       this.puzzlePlayer.id = this.player.id;
