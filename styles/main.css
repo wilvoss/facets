@@ -262,6 +262,7 @@ icon.bmc {
 
 message small {
     color: hsl(var(--linkColorLightHSL));
+    line-height: 100%;
 }
 
 message icon.share {
