@@ -43,6 +43,7 @@
     --cardSize: 180px;
     --wordHeight: 30px;
     --wordScale: 1;
+    --wordAlignment: end;
     --defaultGap: 20px;
     --borderRadius: 5px;
     --tinyIconSize: 13px;
@@ -1086,14 +1087,22 @@ words {
 word {
     display: flex;
     justify-content: center;
-    align-items: end;
+    align-items: baseline;
     position: absolute;
     text-align: center;
     width: var(--cardSize);
     overflow: visible;
-    height: var(--wordHeight);
+    height: calc(var(--wordHeight) - 10px);
+    padding-top: 10px;
     font-size: calc(var(--wordScale) * 90%);
     text-transform: capitalize;
+    line-height: 100%;
+}
+
+cards word {
+    height: calc(var(--wordHeight) - 2px);
+    padding-top: 2px;
+
 }
 
 word:nth-child(1) {
@@ -1553,14 +1562,14 @@ version {
     }
 
     word {
+        height: calc(var(--wordHeight) - 5px);
+        padding-top: 5px;
         font-size: calc(var(--wordScale) * 100%);
-        line-height: 180%;
     }
 
     cards word {
         align-items: start;
         font-size: calc(var(--wordScale) * 100%);
-        line-height: 100%;
     }
 
     word:nth-child(2) {

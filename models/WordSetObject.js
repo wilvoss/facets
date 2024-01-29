@@ -12,6 +12,7 @@ class WordSetObject {
     this.textureBlendMode = spec.textureBlendMode === undefined ? 'normal' : spec.textureBlendMode;
     this.enabled = spec.enabled === undefined ? true : spec.enabled;
     this.startsWithVowel = spec.startsWithVowel === undefined ? false : spec.startsWithVowel;
+    this.wordAlignement = spec.wordAlignement === undefined ? 'end' : spec.wordAlignement;
     this.scale = spec.scale === undefined ? 1 : spec.scale;
   }
 }
@@ -24,7 +25,7 @@ let Summer = new WordSetObject({ id: '5', name: 'Summer', data: ['./data/summer.
 let Fall = new WordSetObject({ id: '6', name: 'Fall', data: ['./data/fall.json'], enabled: false });
 let Science = new WordSetObject({ id: '7', name: 'Science', data: ['./data/science.json'], textureImage: '../images/science-alt2.jpg' });
 let Entertainment = new WordSetObject({ id: '8', name: 'Entertainment', startsWithVowel: true, data: ['./data/entertainment.json'], textureImage: '../images/entertainment-alt2.jpg' });
-let CommonEmoji = new WordSetObject({ id: '9', name: 'Emoji', startsWithVowel: true, data: ['./data/common-emoji.json'], scale: 1.9 });
+let CommonEmoji = new WordSetObject({ id: '9', name: 'Emoji', startsWithVowel: true, data: ['./data/common-emoji.json'], scale: 1.9, wordAlignement: 'start' });
 let NounsVerbs = new WordSetObject({ id: '100', name: 'Nouns & Verbs', isSelected: true, data: [Nouns.data, Verbs.data], textureImage: '../images/common-alt2.jpg' });
 let Seasons = new WordSetObject({ id: '101', name: 'Seasons', data: [Winter.data, Spring.data, Summer.data, Fall.data], textureImage: '../images/seasons-alt2.jpg' });
 let Civilization = new WordSetObject({ id: '102', name: 'Civilization', data: ['./data/civilization.json'], textureImage: '../images/civilization-alt2.jpg' });

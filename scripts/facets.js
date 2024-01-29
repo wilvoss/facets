@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.169',
+    version: '0.1.170',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -138,6 +138,7 @@ var app = new Vue({
         this.documentCssRoot.style.setProperty('--hueTheme', '205');
       }
       this.documentCssRoot.style.setProperty('--wordScale', _wordset.scale);
+      // this.documentCssRoot.style.setProperty('--wordAlignment', _wordset.wordAlignment);
     },
 
     HandleSubmitButtonPress() {
@@ -992,6 +993,7 @@ var app = new Vue({
       });
       _wordSet.isSelected = true;
       this.documentCssRoot.style.setProperty('--wordScale', _wordSet.scale);
+      // this.documentCssRoot.style.setProperty('--wordAlignment', _wordSet.wordAlignment);
     },
 
     GetCurrentSolutionParamString() {
