@@ -955,6 +955,10 @@ modal input, hints hint input, modal select {
     -webkit-tap-highlight-color: transparent;
 }
 
+modal select option {
+    color: unset;
+}
+
 modal input.large {
     font-size: 120%;
 }
