@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.163',
+    version: '0.1.164',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -475,7 +475,7 @@ var app = new Vue({
       note('GetShareTextBasedOnContext() called');
       let text = '';
       if (this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id) {
-        text = "🧠 Here's a new " + (this.guessingCardCount === 5 ? '5-card ' : '') + '"' + this.guessingWordSet.name + '" puzzle to solve!';
+        text = '🧠 I created a ' + (this.guessingCardCount === 5 ? '5-card ' : '') + '"' + this.guessingWordSet.name + '" word puzzle for you to solve!';
       } else if (this.player.role === 'reviewer') {
         text = this.GetMessageBasedOnTrayCount(_gotIt, this.guessersName);
       } else {
@@ -496,7 +496,7 @@ var app = new Vue({
         // aren't awaiting a promise for the tiny url, this passes
         // the security requirement for direct user interaction
         // that would otherwise trigger in Chrome on iOS and iPadOS
-        this.ShareText(text + '\r\n' + this.shareURL);
+        this.ShareText(text + '\r\n<' + this.shareURL + '>');
       } else {
         this.isGettingTinyURL = true;
         var corsflareUrl = 'https://worker-cold-butterfly-c870.bigtentgames.workers.dev/';
@@ -517,7 +517,7 @@ var app = new Vue({
           .catch((error) => console.error('Error:', error));
 
         this.isGettingTinyURL = false;
-        this.ShareText(text + '\r\n' + this.shareURL);
+        this.ShareText(text + '\r\n<' + this.shareURL + '>');
       }
     },
 
