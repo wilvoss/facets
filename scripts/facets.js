@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.165',
+    version: '0.1.166',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -46,7 +46,7 @@ var app = new Vue({
     showArticle: false,
     showSettings: false,
     showIntro: false,
-    showTutorial: false,
+    showOOBE: false,
     confirmation: { message: 'Did they have the right answer?', target: 'correct' },
     showConfirmation: false,
     showTutorial: false,
@@ -874,6 +874,7 @@ var app = new Vue({
       } else {
         this.player.id = getRandomInt(10000000, 100000000);
         localStorage.setItem('userID', this.player.id);
+        this.showOOBE = window.location.search !== '';
       }
       this.tempID = parseInt(this.player.id);
 
@@ -1036,7 +1037,7 @@ var app = new Vue({
     HandleIntroButtonClick(e) {
       note('HandleIntroButtonClick() called');
       this.SubmitSettings(null);
-      this.ToggleShowTutorial(null);
+      this.showOOBE = true;
     },
 
     SubmitSettings(e) {
@@ -1098,6 +1099,7 @@ var app = new Vue({
             if (this.showSettings) {
               this.SubmitSettings(e);
             } else if (this.showTutorial) {
+              this.showOOBE = false;
               this.ToggleShowTutorial(null);
             } else if (this.showConfirmation) {
               this.HandleYesNo(this.confirmation.target, true);
@@ -1116,6 +1118,7 @@ var app = new Vue({
             e.preventDefault();
             e.stopPropagation();
           case 'Escape':
+            this.showOOBE = false;
             if (this.showSettings) {
               this.CancelSettings(null);
             } else if (this.showTutorial) {

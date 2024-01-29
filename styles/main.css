@@ -399,7 +399,7 @@ p {
 }
 
 .blueText {
-    color: hsl(var(--hueCreating), 100%, 60%);
+    color: hsl(var(--hueCreating), 100%, 68%);
 }
 
 .greenText {
@@ -429,7 +429,7 @@ modal message {
     /* border-bottom: 1px solid hsla(var(--appForegroundHSL), .1); */
 }
 
-modal intro message {
+modal section message {
     margin-top: 0;
 }
 
@@ -1136,7 +1136,7 @@ modal.centered {
     font-size: 130%;
 }
 
-modal.centered intro, modal.centered confirmation {
+modal.centered section, modal.centered confirmation {
     margin-bottom: var(--cardSize);
 
 }
@@ -1145,7 +1145,7 @@ modal.disabled, tutorial.disabled {
     opacity: 0;
 }
 
-modal settings, modal intro, modal confirmation {
+modal settings, modal section, modal confirmation {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1158,8 +1158,11 @@ modal settings {
     margin-bottom: 160px;
 }
 
-modal.tutorial intro {
+modal.tutorial section {
     max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
+}
+
+modal.tutorial section:last-of-type {
     margin-bottom: 160px;
 }
 
@@ -1167,11 +1170,11 @@ modal img {
     width: 100%;
 }
 
-modal.turorial intro message {
+modal.turorial section message {
     margin-top: 0;
 }
 
-section {
+callout {
     max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
     width: 100%;
     display: flex;
@@ -1200,14 +1203,14 @@ leftright {
     gap: var(--defaultGap);
 }
 
-leftright message, leftright section, leftright p {
+leftright message, leftright callout, leftright p {
     text-align: left;
     width: calc(1 * var(--cardSize));
     margin: 0;
     border-radius: var(--borderRadius);
 }
 
-leftright section input {
+leftright callout input {
     text-align: left;
 }
 
@@ -1376,7 +1379,7 @@ version {
         max-width: 90%;
     }
 
-    modal.tutorial intro {
+    modal.tutorial section {
         max-width: calc(var(--cardSize) * 3);
 
     }
@@ -1601,7 +1604,7 @@ version {
         transform: translate(0px, calc(var(--cardSize) * -2.44));
     }
 
-    section {
+    callout {
         width: calc(100% - (2 * var(--defaultGap)));
         margin: 0 var(--defaultGap);
         max-width: unset;
