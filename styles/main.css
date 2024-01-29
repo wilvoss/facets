@@ -42,6 +42,7 @@
 
     --cardSize: 180px;
     --wordHeight: 30px;
+    --wordScale: 1;
     --defaultGap: 20px;
     --borderRadius: 5px;
     --tinyIconSize: 13px;
@@ -1089,9 +1090,9 @@ word {
     position: absolute;
     text-align: center;
     width: var(--cardSize);
-    overflow: hidden;
+    overflow: visible;
     height: var(--wordHeight);
-    font-size: 90%;
+    font-size: calc(var(--wordScale) * 90%);
     text-transform: capitalize;
 }
 
@@ -1552,13 +1553,13 @@ version {
     }
 
     word {
-        font-size: 100%;
+        font-size: calc(var(--wordScale) * 100%);
         line-height: 180%;
     }
 
     cards word {
         align-items: start;
-        font-size: 100%;
+        font-size: calc(var(--wordScale) * 100%);
         line-height: 100%;
     }
 
