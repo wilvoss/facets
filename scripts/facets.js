@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.173',
+    version: '0.1.174',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -909,6 +909,8 @@ var app = new Vue({
         this.tempUseWordSetThemes = this.useWordSetThemes;
         this.SetWordSetTheme(this.gameWordSet);
       }
+
+      this.documentCssRoot.style.setProperty('--wordScale', this.gameWordSet.scale);
 
       let _newVersionAvailable = localStorage.getItem('newVersionAvailable');
       try {
