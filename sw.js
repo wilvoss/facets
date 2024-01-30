@@ -1,4 +1,4 @@
-const CACHE_VERSION = '0.1.177';
+const CACHE_VERSION = '0.1.178';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
@@ -6,6 +6,7 @@ const cacheFiles = [
   './',
   '',
   'data/civilization.json',
+  'data/common-emoji.json',
   'data/entertainment.json',
   'data/fall.json',
   'data/nouns.json',
@@ -25,11 +26,8 @@ const cacheFiles = [
   'images/diamond-back.svg',
   'images/diamond.svg',
   'images/entertainment-alt2.jpg',
-  'images/icon-bmc.svg',
   'images/icon-download.svg',
-  'images/icon-gradcap.svg',
   'images/icon-rotatearrow.svg',
-  'images/icon-settings.svg',
   'images/icon-share.svg',
   'images/icon-spinner.svg',
   'images/nouns-alt2.jpg',
