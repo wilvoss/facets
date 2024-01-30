@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.174',
+    version: '0.1.175',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -320,6 +320,7 @@ var app = new Vue({
         }
 
         this.SetWordSetTheme(this.guessingWordSet);
+        this.documentCssRoot.style.setProperty('--wordScale', this.guessingWordSet.scale);
         this.player.role = this.puzzlePlayer.id === this.player.id && this.player.id !== this.sendingPlayer.id ? 'reviewer' : 'guesser';
       }
       this.isGuessing = true;
@@ -910,7 +911,11 @@ var app = new Vue({
         this.SetWordSetTheme(this.gameWordSet);
       }
 
-      this.documentCssRoot.style.setProperty('--wordScale', this.gameWordSet.scale);
+      if (this.isGuessing) {
+        this.documentCssRoot.style.setProperty('--wordScale', this.guessingWordSet.scale);
+      } else {
+        this.documentCssRoot.style.setProperty('--wordScale', this.gameWordSet.scale);
+      }
 
       let _newVersionAvailable = localStorage.getItem('newVersionAvailable');
       try {
