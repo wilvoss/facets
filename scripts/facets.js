@@ -12,7 +12,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.176',
+    version: '0.1.177',
     newVersionAvailable: false,
     gameName: 'Facets',
     currentGameID: 0,
@@ -50,6 +50,7 @@ var app = new Vue({
     confirmation: { message: 'Did they have the right answer?', target: 'correct' },
     showConfirmation: false,
     showTutorial: false,
+    showInfo: false,
     changeNameTitle: "What's your name?",
     emptyCard: new CardObject({ id: 'ghost' }),
     draggedCard: new CardObject({}),
@@ -84,12 +85,6 @@ var app = new Vue({
   },
 
   methods: {
-    ToggleShowModal(e) {
-      e.preventDefault();
-      e.stopPropagation();
-      this.showModal = !this.showModal;
-    },
-
     ToggleShowTutorial(e) {
       note('ToggleShowTutorial() called');
       if (e != null) {
@@ -97,6 +92,15 @@ var app = new Vue({
         e.preventDefault();
       }
       this.showTutorial = !this.showTutorial;
+    },
+
+    ToggleShowInfo(e) {
+      note('ToggleShowInfo() called');
+      if (e != null) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
+      this.showInfo = !this.showInfo;
     },
 
     ToggleTempUseWordSetThemes() {
@@ -976,8 +980,8 @@ var app = new Vue({
       this.usePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
     },
 
-    OpenSettings() {
-      note('OpenSettings() called');
+    ShowSettings() {
+      note('ShowSettings() called');
       this.showModal = true;
       this.showSettings = true;
       this.changeNameTitle = this.player.name + ", what's your new name?";
@@ -1116,6 +1120,8 @@ var app = new Vue({
               this.HandleYesNo(this.confirmation.target, true);
             } else if (this.showIntro) {
               this.HandleIntroButtonClick(null);
+            } else if (this.showInfo) {
+              this.showInfo = false;
             }
             break;
           case 'Tab':
@@ -1136,6 +1142,8 @@ var app = new Vue({
               this.ToggleShowTutorial(null);
             } else if (this.showConfirmation) {
               this.HandleYesNo(this.confirmation.target, false);
+            } else if (this.showInfo) {
+              this.showInfo = false;
             }
             break;
           default:

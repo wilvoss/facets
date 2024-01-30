@@ -35,14 +35,14 @@
       <modal v-if="showOOBE" class="tutorial">
         <h2>Quick Guide</h2>
         <section v-if="isGuessing">
-          <p>{{player.name}}, when your friend created this word puzzle, they were given word-pairs that they had to connect with single-word clues.</p>
+          <p>{{player.name}}, when your friend created this word puzzle, they were given word-pairs (or Emoji-pairs) that they had to connect with single-word clues.</p>
           <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with.</p>
           <p>Anatomy of a solved puzzle:</p>
           <img src="./images/tut-6.svg" />
         </section>
         <section v-if="!isGuessing">
           <p>{{player.name}}, you are about to create a word puzzle that you will send to your friends via text, email or social media.</p>
-          <p class="blueText">It's your job to come up with clues that connect the 4 word-pairs that are displayed on the edges of a gem.</p>
+          <p class="blueText">It's your job to come up with clues that connect the four word-pairs (or Emoji-pairs) that are displayed on the edges of a gem.</p>
           <p>Anatomy of a puzzle:</p>
           <img src="./images/tut-7.svg" />
           <p>When you are satisfied with your 4 clues, hit the <cta>Send</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
@@ -53,20 +53,16 @@
         </section>
       </modal>
       <modal v-if="showTutorial" class="tutorial">
-        <h2>Tutorial</h2>
         <section>
+          <h2>Guide</h2>
           <p>In this game you are either <span class="blueText">creating</span> a word puzzle to send to your friends or <span class="greenText">guessing</span> the solution to a word puzzle that a friend sent to you.</p>
           <p>There is no single player mode. The game requires sharing between friends via text, chat, email, or some other social media.</p>
-        </section>
-        <section>
           <h3>Creating</h3>
-          <p>When creating a new puzzle, it's your job to come up with clues that connect the 4 word-pairs that are displayed on the edges of a gem.</p>
+          <p>When creating a new puzzle, it's your job to come up with clues that connect the four word-pairs that are displayed on the edges of a gem.</p>
           <p>Anatomy of a puzzle:</p>
           <img src="./images/tut-7.svg" />
           <p>When you are satisfied with your 4 clues, hit the <cta>Send</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
           <p>They're gonna have to recreate your puzzle based on your clues! 🧠</p>
-        </section>
-        <section>
           <h3>Guessing</h3>
           <p>When your friend created this word puzzle, they were given word-pairs that they had to connect with single word clues.</p>
           <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with.</p>
@@ -74,14 +70,10 @@
           <img src="./images/tut-6.svg" />
           <p v-if="!autoCheck">Click the <cta>SEND</cta> button to send your guess back to whoever sent it to you.</p>
           <p v-if="autoCheck">Click the <cta>Guess</cta> button to automatically check your guess.</p>
-        </section>
-        <section>
           <h3>Reviewing</h3>
           <p>If your friends have "Pass 'n play" enabled in settings, they'll send their guesses back to you. When reviewing, remove incorrectly placed cards from the gem.</p>
           <img src="./images/tut-4.svg" />
           <p>Click the <cta>SEND</cta> button to send the puzzle back, even if you are just giving them the solution.</p>
-        </section>
-        <section>
           <h3>Controls</h3>
           <p>A card is a group of four words around the edges of a small outlined square.</p>
           <p>You can drag cards from one spot to another spot. While guessing or reviewing, you can rotate the cards by tapping on the curved arrows in the corner of each card.</p>
@@ -89,9 +81,8 @@
           <p>The gem has 4 large clues around its edges. At any time, you can tap on a clue or either of the two large curved arrows above the gem to rotate it.</p>
           <h3>Advanced</h3>
           <p>If you play on multiple browsers, be sure to change your player ID # in settings to be the same on each so that you can review any game you sent to anyone on any device 🤓.</p>
-
-          <controls><button @click="ToggleShowTutorial(event)">Got it</button></controls>
         </section>
+        <controls><button @click="ToggleShowTutorial(event)">Got it</button></controls>
       </modal>
       <modal v-if="showConfirmation" class="centered">
         <confirmation>
@@ -113,9 +104,37 @@
         </section>
         <controls><button @click="HandleIntroButtonClick(event)">Next</button></controls>
       </modal>
-      <modal :class="{disabled: !showSettings}">
-        <h2>Settings</h2>
-        <settings v-if="showSettings">
+      <modal v-if="showInfo">
+        <section>
+          <h2>Info</h2>
+          <h3>Created by</h3>
+          <credit>Wil Voss</credit>
+          <h3>Feedback and ideas</h3>
+          <credit>Perdis Hawkins</credit>
+          <credit>Jerry Hoffmeister</credit>
+          <credit>Chris Lehan</credit>
+          <credit>Elaine Soennichsen</credit>
+          <credit>Kathleen Voss</credit>
+          <credit>Sonna Voss</credit>
+          <message>Thank you for making this game better!</message>
+          <h3>How can you help?</h3>
+          <a class="button secondary small inline" class="inline" :href="'mailto:bigtentgames@icloud.com?subject=Feedback - Facets! v' + version">Give feedback!</a>
+          -
+          <a href="https://github.com/wilvoss/facets/issues" class="inline" target="_blank">Submit a bug!</a>
+          -
+          <a href="https://www.buymeacoffee.com/wilvoss" class="inline" target="_blank">Buy me a coffee! </a>
+          -
+          <version>
+            <span>Version {{version}}</span>
+            <span>|</span>
+            <span><a href="https://bigtentgames.com/#privacy" target="_blank">Privacy Policy</a></span>
+          </version>
+        </section>
+        <controls><button @click="showInfo = false">Cool</button></controls>
+      </modal>
+      <modal v-if="showSettings">
+        <section v-if="showSettings">
+          <h2>Preferences</h2>
           <h3>Profile</h3>
           <leftright>
             <p>Your name</p>
@@ -163,18 +182,7 @@
             <toggle></toggle>
           </checkbox>
           <small>Enable this if you want the gem to remain green when you are creating, guessing, or reviewing.</small>
-          <h3>Improvements</h3>
-          <leftright>
-            <a href="https://github.com/wilvoss/facets/issues" target="_blank">Submit a bug!</a> -
-            <a href="https://www.buymeacoffee.com/wilvoss" class="inline" target="_blank">Buy me a coffee! </a>
-          </leftright>
-
-          <version>
-            <span>Version {{version}}</span>
-            <span>|</span>
-            <span><a href="https://bigtentgames.com/#privacy" target="_blank">Privacy Policy</a></span>
-          </version>
-        </settings>
+        </section>
         <controls>
           <button class="secondary" @click="CancelSettings(event)">Cancel</button>
           <button :disabled="tempID.toString().length !== 8" title="Please only use numbers." :class="{disabled: tempID.toString().length < 6}" @click="SubmitSettings(event)">Save</button>
@@ -189,8 +197,9 @@
           <hgroup>
             <h1>{{gameName}}</h1>
             <subtitle>
-              <button class="inline small" @click="ToggleShowTutorial(event)"><icon class="info"></icon>Tutorial</button>
-              <button class="inline small" @click="OpenSettings()">Settings<icon class="settings"></icon></button>
+              <button class="inline small" @click="ToggleShowTutorial(event)">Guide</button>
+              <button class="inline small" @click="showInfo = true">Info</button>
+              <button class="inline small" @click="ShowSettings()">Prefs</button>
             </subtitle>
           </hgroup>
         </header>
@@ -208,7 +217,7 @@
           </small>
         </message>
         <message v-if="message !== '' && message.toLowerCase().indexOf('message') !== -1"> {{message}} </message>
-        <message @click="OpenSettings()" v-if="message === ''">{{getPlayerMessage}}</message>
+        <message v-if="message === ''">{{getPlayerMessage}}</message>
       </wrapper>
       <wrapper>
         <rotators>

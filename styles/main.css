@@ -117,7 +117,7 @@ a.inline {
     gap: 6px;
 }
 
-settings h3 {
+section h3 {
     margin: calc(2 * var(--defaultGap)) 0 var(--defaultGap);
 }
 
@@ -222,15 +222,15 @@ header h1 {
 
 icon {
     display: block;
-    mask-size: var(--smallIconSize) var(--smallIconSize);
-    -webkit-mask-size: var(--smallIconSize) var(--smallIconSize);
+    width: var(--smallIconSize);
+    height: var(--smallIconSize);
+    mask-size: calc(.75 * var(--smallIconSize)) calc(.75 * var(--smallIconSize));
+    -webkit-mask-size: calc(.75 * var(--smallIconSize)) calc(.75 * var(--smallIconSize));
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
     mask-position: center;
     -webkit-mask-position: center;
-    background-color: white;
-    width: var(--smallIconSize);
-    height: var(--smallIconSize);
+    background-color: hsl(var(--linkColorLightHSL));
     pointer-events: none;
 }
 
@@ -248,6 +248,12 @@ icon.share {
     -webkit-mask-image: url(../images/icon-share.svg);
 }
 
+
+icon.alert {
+    mask-image: url(../images/icon-alert.svg);
+    -webkit-mask-image: url(../images/icon-alert.svg);
+}
+
 icon.download {
     mask-image: url(../images/icon-download.svg);
     -webkit-mask-image: url(../images/icon-download.svg);
@@ -257,6 +263,11 @@ icon.download {
 icon.bmc {
     mask-image: url(../images/icon-bmc.svg);
     -webkit-mask-image: url(../images/icon-bmc.svg);
+}
+
+icon.feedback {
+    mask-image: url(../images/icon-feedback.svg);
+    -webkit-mask-image: url(../images/icon-feedback.svg);
 }
 
 
@@ -390,7 +401,7 @@ message span {
 }
 
 
-settings h3:first-of-type {
+h2+h3:first-of-type {
     margin-top: 0px;
     padding-top: 0px;
 }
@@ -973,7 +984,7 @@ modal small {
     max-width: calc((2 * var(--cardSize)) + (2 * var(--defaultGap)));
 }
 
-modal settings h3 small {
+modal section h3 small {
     max-width: unset;
     padding-top: calc(.25 * var(--defaultGap));
 }
@@ -1129,7 +1140,7 @@ word:nth-child(4) {
     rotate: -90deg;
 }
 
-modal, tutorial {
+modal {
     position: absolute;
     display: flex;
     flex-direction: column;
@@ -1156,11 +1167,11 @@ modal.centered section, modal.centered confirmation {
 
 }
 
-modal.disabled, tutorial.disabled {
+modal.disabled {
     opacity: 0;
 }
 
-modal settings, modal section, modal confirmation {
+modal section, modal confirmation {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -1168,25 +1179,15 @@ modal settings, modal section, modal confirmation {
     gap: calc(1 * var(--defaultGap));
 }
 
-modal settings {
+modal section {
     gap: calc(.5 * var(--defaultGap));
     margin-bottom: 160px;
-}
-
-modal.tutorial section {
     max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
-}
-
-modal.tutorial section:last-of-type {
-    margin-bottom: 160px;
 }
 
 modal img {
     width: 100%;
-}
-
-modal.turorial section message {
-    margin-top: 0;
+    margin: var(--defaultGap) 0;
 }
 
 callout {
@@ -1201,7 +1202,7 @@ callout {
     background: hsla(var(--appBackgroundHSL), 1);
 }
 
-settings input {
+section input {
     font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
     font-size: inherit;
 }
@@ -1394,7 +1395,7 @@ version {
         max-width: 90%;
     }
 
-    modal.tutorial section {
+    modal section {
         max-width: calc(var(--cardSize) * 3);
 
     }
@@ -1625,7 +1626,7 @@ version {
         max-width: unset;
     }
 
-    modal settings {
+    modal section {
         gap: calc(.5 * var(--defaultGap));
     }
 
