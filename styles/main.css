@@ -112,6 +112,11 @@ a, a:hover, a:focus, a:visited, a:active {
     text-decoration: none;
 }
 
+a.padded {
+    padding-top: var(--defaultGap);
+    padding-bottom: var(--defaultGap);
+}
+
 a.inline {
     display: inline-flex;
     gap: 6px;
@@ -1276,7 +1281,7 @@ modal::-webkit-scrollbar {
 version {
     text-align: center;
     font-size: 12px;
-    color: hsla(var(--hueMain), 45%, 75%);
+    color: hsla(var(--hueMain), 100%, 100%);
     padding-top: var(--defaultGap);
     display: flex;
     gap: var(--defaultGap);
