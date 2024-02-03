@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.181',
+    appDataVersion: '0.1.182',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -1094,7 +1094,7 @@ var app = new Vue({
           case 'Enter':
             note('HandleKeyDownEvent() called');
             e.preventDefault();
-            if (!this.appStateIsGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
+            if (!this.appStateShowSettings && !this.appStateShowTutorial && !this.appStateShowIntro && !this.appStateShowInfo && !this.appStateShowConfirmation && !this.appStateIsGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
               this.FillParkingLot();
             }
             if (this.appStateShowSettings) {
