@@ -12,75 +12,69 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    version: '0.1.180',
-    newVersionAvailable: false,
-    gameName: 'Facets',
-    currentGameID: 0,
-    isGettingTinyURL: false,
-    currentGameSol: '',
-    currentGuessCount: 0,
-    isFinal: false,
-    guessingGameSol: [],
-    gameCatchphrase: 'A game of words!',
-    wordSets: [...WordSets],
-    guessingCardCount: 4,
+    // app data
+    appDataVersion: '0.1.181',
+    appDataCards: [],
+    appDataCardsParked: [],
+    appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
+    appDataDraggedCard: new CardObject({}),
+    appDataEmptyCard: new CardObject({ id: 'ghost' }),
+    appDataGameCatchphrase: 'A game of words!',
+    appDataGameName: 'Facets',
+    appDataGhostX: 0,
+    appDataGhostY: 0,
+    appDataHints: [],
+    appDataMessage: '',
+    appDataParkingInputValue: '',
+    appDataPlayerCurrent: new PlayerObject({}),
+    appDataPlayerCreator: new PlayerObject({}),
+    appDataPlayerSender: new PlayerObject({}),
+    appDataShareURL: '',
+    appDataTimeoutCardRotation: null,
+    appDataTimeoutTrayRotation: null,
+    appDataTransitionLong: 0,
+    appDataTransitionShort: 0,
+    appDataWordSets: [...WordSets],
+    // app state
+    appStateIsDragging: false,
+    appStateIsGettingTinyURL: false,
+    appStateIsGuessing: false,
+    appStateIsModalShowing: false,
+    appStateIsNewVersionAvailable: false,
+    appStateShowConfirmation: false,
+    appStateShowInfo: false,
+    appStateShowIntro: false,
+    appStateShowOOBE: false,
+    appStateShowSettings: false,
+    appStateShowTutorial: false,
+    appStateTrayIsRotating: false,
+    appStateTrayRotation: 0,
+    appStateUsePortraitLayout: false,
+    // current game
+    currentGameGuessCount: 0,
+    currentGameGuessersName: '',
+    currentGameGuessingCardCount: 4,
+    currentGameGuessingWordSet: WordSets.find((m) => m.id === '100'),
+    currentGameReviewIsFinal: false,
+    currentGameSolutionActual: '',
+    currentGameSolutionGuessing: [],
+    currentGameWordSet: WordSets.find((m) => m.id === '100'),
+    // user settings
+    userSettingsAutoCheck: true,
+    userSettingsUseExtraCard: false,
+    userSettingsUseMultiColoredGems: true,
+    userSettingsUseWordSetThemes: false,
+    // temp user settings
     tempName: '',
     tempID: 0,
-    editID: false,
-    useWordSetThemes: false,
-    autoCheck: true,
-    useMultiColoredGems: true,
     tempUseMultiColoredGems: true,
     tempAutoCheck: true,
-    usePortraitLayout: false,
-    useExtraCard: false,
     tempUseWordSetThemes: false,
     tempWordSetName: '',
     tempUsePortraitLayout: false,
     tempUseExtraCard: false,
-    guessingWithExtraCard: false,
-    gameWordSet: WordSets.find((m) => m.id === '100'),
     tempWordSets: [],
-    guessersName: '',
-    guessingWordSet: WordSets.find((m) => m.id === '100'),
-    showArticle: false,
-    showSettings: false,
-    showIntro: false,
-    showOOBE: false,
-    confirmation: { message: 'Did they have the right answer?', target: 'correct' },
-    showConfirmation: false,
-    showTutorial: false,
-    showInfo: false,
-    changeNameTitle: "What's your name?",
-    emptyCard: new CardObject({ id: 'ghost' }),
-    draggedCard: new CardObject({}),
-    ghostX: 0,
-    ghostY: 0,
-    ghostOffsetX: 0,
-    ghostOffsetY: 0,
-    shareURL: '',
-    targetCard: null,
-    year: new Date().getFullYear(),
-    actualCards: [],
-    cards: [],
-    parkedCards: [],
-    hints: [],
-    parkingInputValue: '',
-    player: new PlayerObject({}),
-    puzzlePlayer: new PlayerObject({}),
-    sendingPlayer: new PlayerObject({}),
-    shareText: 'Send',
-    isGuessing: false,
-    trayRotation: 0,
-    trayIsRotating: false,
-    longTransition: 0,
-    shortTransition: 0,
-    showModal: false,
-    modalContainer: null,
-    message: '',
-    trayRotationTimeout: null,
-    cardRotationTimeout: null,
-    isDragging: false,
+    // DOM reference
     documentCssRoot: document.querySelector(':root'),
   },
 
@@ -91,7 +85,7 @@ var app = new Vue({
         e.stopPropagation();
         e.preventDefault();
       }
-      this.showTutorial = !this.showTutorial;
+      this.appStateShowTutorial = !this.appStateShowTutorial;
     },
 
     ToggleShowInfo(e) {
@@ -100,7 +94,7 @@ var app = new Vue({
         e.stopPropagation();
         e.preventDefault();
       }
-      this.showInfo = !this.showInfo;
+      this.appStateShowInfo = !this.appStateShowInfo;
     },
 
     ToggleTempUseWordSetThemes() {
@@ -130,7 +124,7 @@ var app = new Vue({
 
     SetWordSetTheme(_wordset) {
       note('SetWordSetTheme() called');
-      if (this.useWordSetThemes) {
+      if (this.userSettingsUseWordSetThemes) {
         this.documentCssRoot.style.setProperty('--texture2', 'url(' + _wordset.textureImage + ')');
         this.documentCssRoot.style.setProperty('--textureSize', _wordset.textureSize);
         this.documentCssRoot.style.setProperty('--textureBlendMode', _wordset.textureBlendMode);
@@ -142,17 +136,16 @@ var app = new Vue({
         this.documentCssRoot.style.setProperty('--hueTheme', '205');
       }
       this.documentCssRoot.style.setProperty('--wordScale', _wordset.scale);
-      // this.documentCssRoot.style.setProperty('--wordAlignment', _wordset.wordAlignment);
     },
 
     HandleSubmitButtonPress() {
       note('HandleSubmitButtonPress() called');
-      if (this.player.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
-        this.showModal = true;
-        this.confirmation = { message: 'Did they have the right answer?', target: 'correct' };
-        this.showConfirmation = true;
-      } else if (this.isGuessing) {
-        if (this.autoCheck && this.player.role !== 'reviewer' && this.isGuessing && this.player.id !== this.puzzlePlayer.id) {
+      if (this.appDataPlayerCurrent.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
+        this.appStateIsModalShowing = true;
+        this.appDataConfirmationObject = { message: 'Did they have the right answer?', target: 'correct' };
+        this.appStateShowConfirmation = true;
+      } else if (this.appStateIsGuessing) {
+        if (this.userSettingsAutoCheck && this.appDataPlayerCurrent.role !== 'reviewer' && this.appStateIsGuessing && this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
           this.IsCurrentGuessCorrect();
         } else {
           this.ShareBoard();
@@ -165,12 +158,12 @@ var app = new Vue({
     IsCurrentGuessCorrect() {
       note('IsCurrentGuessCorrect() called');
       if (this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
-        this.currentGuessCount++;
+        this.currentGameGuessCount++;
         let hintValues = [];
-        this.hints.forEach((hint) => {
+        this.appDataHints.forEach((hint) => {
           hintValues.push(hint.value);
         });
-        let actualSol = this.currentGameSol.split('-');
+        let actualSol = this.currentGameSolutionActual.split('-');
         let currentSol = this.GetCurrentSolutionParamString().split('-');
 
         let mappedSol = [];
@@ -183,29 +176,29 @@ var app = new Vue({
             }
           }
         }
-        this.guessingGameSol = mappedSol.join('-');
+        this.currentGameSolutionGuessing = mappedSol.join('-');
 
-        if (this.currentGameSol === this.guessingGameSol) {
+        if (this.currentGameSolutionActual === this.currentGameSolutionGuessing) {
           this.RotateTray(8);
         }
         if (mappedSol[1] !== actualSol[1]) {
           // find and remove the card with mappedSol[1]
-          let card = this.cards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[1])));
+          let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[1])));
           this.SwapCards(card, this.getFirstAvailableParkingSpot);
         }
         if (mappedSol[2] !== actualSol[2]) {
-          let card = this.cards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[2])));
+          let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[2])));
           this.SwapCards(card, this.getFirstAvailableParkingSpot);
         }
         if (mappedSol[10] !== actualSol[10]) {
-          let card = this.cards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[10])));
+          let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[10])));
           this.SwapCards(card, this.getFirstAvailableParkingSpot);
         }
         if (mappedSol[11] !== actualSol[11]) {
-          let card = this.cards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[11])));
+          let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[11])));
           this.SwapCards(card, this.getFirstAvailableParkingSpot);
         }
-        this.message = this.GetMessageBasedOnTrayCount(true, this.player.name, false);
+        this.appDataMessage = this.GetMessageBasedOnTrayCount(true, this.appDataPlayerCurrent.name, false);
         return false;
         // }
       }
@@ -213,10 +206,10 @@ var app = new Vue({
 
     HandleNewGameClick() {
       note('HandleNewGameClick() called');
-      if (this.isGuessing && this.player.role !== 'reviewer' && this.puzzlePlayer.id !== this.player.id) {
-        this.showModal = true;
-        this.confirmation = { message: 'Are you sure you want <br/>to create a new game?', target: 'newgame' };
-        this.showConfirmation = true;
+      if (this.appStateIsGuessing && this.appDataPlayerCurrent.role !== 'reviewer' && this.appDataPlayerCreator.id !== this.appDataPlayerCurrent.id) {
+        this.appStateIsModalShowing = true;
+        this.appDataConfirmationObject = { message: 'Are you sure you want <br/>to create a new game?', target: 'newgame' };
+        this.appStateShowConfirmation = true;
       } else {
         this.NewGame();
       }
@@ -224,41 +217,41 @@ var app = new Vue({
 
     async FillParkingLot() {
       note('FillParkingLot() called');
-      this.puzzlePlayer.id = this.player.id;
-      this.isGuessing = true;
+      this.appDataPlayerCreator.id = this.appDataPlayerCurrent.id;
+      this.appStateIsGuessing = true;
       let temp = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
       let index = 0;
-      this.currentGameSol = this.GetCurrentSolutionParamString();
-      this.cards.concat(this.parkedCards).forEach((card) => {
-        card.id = this.player.value + index++;
+      this.currentGameSolutionActual = this.GetCurrentSolutionParamString();
+      this.appDataCards.concat(this.appDataCardsParked).forEach((card) => {
+        card.id = this.appDataPlayerCurrent.value + index++;
         card.rotation = (getRandomInt(0, 1) === 1 ? 1 : -1) * getRandomInt(0, 4);
       });
 
       this.ResetCardsAfterRotation(false);
 
-      this.parkedCards = this.cards;
+      this.appDataCardsParked = this.appDataCards;
       let allUsedWords = [];
-      this.cards.forEach((card) => {
+      this.appDataCards.forEach((card) => {
         card.words.forEach((word) => {
           allUsedWords.push(word);
         });
       });
       let wordset = await this.getCurrentGameWordSet;
 
-      if (this.guessingCardCount === 5) {
-        this.parkedCards.push(new CardObject({ words: getUniqueWords(wordset, 4, getJustWords(allUsedWords)) }));
+      if (this.currentGameGuessingCardCount === 5) {
+        this.appDataCardsParked.push(new CardObject({ words: getUniqueWords(wordset, 4, getJustWords(allUsedWords)) }));
       }
 
-      for (let i = this.parkedCards.length - 1; i > 0; i--) {
+      for (let i = this.appDataCardsParked.length - 1; i > 0; i--) {
         let j = Math.floor(Math.random() * (i + 1));
-        [this.parkedCards[i], this.parkedCards[j]] = [this.parkedCards[j], this.parkedCards[i]];
+        [this.appDataCardsParked[i], this.appDataCardsParked[j]] = [this.appDataCardsParked[j], this.appDataCardsParked[i]];
       }
-      if (this.guessingCardCount === 4) {
-        this.parkedCards.push(new CardObject({}));
+      if (this.currentGameGuessingCardCount === 4) {
+        this.appDataCardsParked.push(new CardObject({}));
       }
-      this.parkedCards.push(new CardObject({}));
+      this.appDataCardsParked.push(new CardObject({}));
 
-      this.cards = temp;
+      this.appDataCards = temp;
       this.ShareBoard();
     },
 
@@ -266,25 +259,25 @@ var app = new Vue({
       note('RestoreGame() called');
       var urlParams = new URLSearchParams(window.location.search);
 
-      this.sendingPlayer.name = urlParams.has('sendingName') ? urlParams.get('sendingName') : this.sendingPlayer.name;
-      this.guessersName = this.sendingPlayer.name;
-      this.puzzlePlayer.name = urlParams.has('puzzleName') ? urlParams.get('puzzleName') : this.puzzlePlayer.name;
-      this.sendingPlayer.id = urlParams.has('sendingID') ? parseInt(urlParams.get('sendingID')) : this.sendingPlayer.id;
-      this.puzzlePlayer.id = urlParams.has('puzzleID') ? parseInt(urlParams.get('puzzleID')) : this.puzzlePlayer.id;
-      this.guessingWordSet = urlParams.has('wordSetID') ? this.wordSets.find((s) => s.id === urlParams.get('wordSetID')) : this.gameWordSet;
-      this.guessingCardCount = urlParams.has('useExtraCard') && JSON.parse(urlParams.get('useExtraCard')) ? 5 : 4;
+      this.appDataPlayerSender.name = urlParams.has('sendingName') ? urlParams.get('sendingName') : this.appDataPlayerSender.name;
+      this.currentGameGuessersName = this.appDataPlayerSender.name;
+      this.appDataPlayerCreator.name = urlParams.has('puzzleName') ? urlParams.get('puzzleName') : this.appDataPlayerCreator.name;
+      this.appDataPlayerSender.id = urlParams.has('sendingID') ? parseInt(urlParams.get('sendingID')) : this.appDataPlayerSender.id;
+      this.appDataPlayerCreator.id = urlParams.has('puzzleID') ? parseInt(urlParams.get('puzzleID')) : this.appDataPlayerCreator.id;
+      this.currentGameGuessingWordSet = urlParams.has('wordSetID') ? this.appDataWordSets.find((s) => s.id === urlParams.get('wordSetID')) : this.currentGameWordSet;
+      this.currentGameGuessingCardCount = urlParams.has('useExtraCard') && JSON.parse(urlParams.get('useExtraCard')) ? 5 : 4;
 
       let corruptData = false;
       if (_boardArray.length >= 40) {
-        this.shareURL = window.location.href;
+        this.appDataShareURL = window.location.href;
         let allWords = await this.getGuessingGameWordSet;
 
-        this.cards = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
-        this.parkedCards = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
-        this.hints = [new WordObject({}), new WordObject({}), new WordObject({}), new WordObject({})];
+        this.appDataCards = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
+        this.appDataCardsParked = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
+        this.appDataHints = [new WordObject({}), new WordObject({}), new WordObject({}), new WordObject({})];
         let index = 0;
 
-        this.cards.forEach((card) => {
+        this.appDataCards.forEach((card) => {
           for (let x = 0; x < 4; x++) {
             if (_boardArray[index] !== '') {
               let word = allWords.find((_word) => _word.id === parseInt(_boardArray[index]));
@@ -296,7 +289,7 @@ var app = new Vue({
             index++;
           }
         });
-        this.parkedCards.forEach((card) => {
+        this.appDataCardsParked.forEach((card) => {
           for (let x = 0; x < 4; x++) {
             if (_boardArray[index] !== '') {
               let word = allWords.find((_word) => _word.id === parseInt(_boardArray[index]));
@@ -308,38 +301,38 @@ var app = new Vue({
             index++;
           }
         });
-        this.hints.forEach((hint) => {
+        this.appDataHints.forEach((hint) => {
           hint.value = _boardArray[index++];
         });
 
         if (urlParams.has('sol')) {
-          this.currentGameSol = urlParams.get('sol');
+          this.currentGameSolutionActual = urlParams.get('sol');
           if (urlParams.has('final')) {
-            this.guessingGameSol = this.currentGameSol;
-            this.message = this.player.name + ", here's the solution.";
-            this.isFinal = true;
+            this.currentGameSolutionGuessing = this.currentGameSolutionActual;
+            this.appDataMessage = this.appDataPlayerCurrent.name + ", here's the solution.";
+            this.currentGameReviewIsFinal = true;
           }
         } else {
-          this.currentGameSol = [];
+          this.currentGameSolutionActual = [];
         }
 
-        this.SetWordSetTheme(this.guessingWordSet);
-        this.documentCssRoot.style.setProperty('--wordScale', this.guessingWordSet.scale);
-        this.player.role = this.puzzlePlayer.id === this.player.id && this.player.id !== this.sendingPlayer.id ? 'reviewer' : 'guesser';
+        this.SetWordSetTheme(this.currentGameGuessingWordSet);
+        this.documentCssRoot.style.setProperty('--wordScale', this.currentGameGuessingWordSet.scale);
+        this.appDataPlayerCurrent.role = this.appDataPlayerCreator.id === this.appDataPlayerCurrent.id && this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id ? 'reviewer' : 'guesser';
       }
-      this.isGuessing = true;
+      this.appStateIsGuessing = true;
       if (corruptData) {
         announce('the data was corrupt');
         this.NewGame(null, '😕 - Something went wrong.');
       }
     },
 
-    ConstructAndSetShareURLForCurrentGame(_isFinal) {
+    ConstructAndSetShareURLForCurrentGame(_currentGameReviewIsFinal) {
       note('ConstructAndSetShareURLForCurrentGame() called');
-      if (this.isGuessing) {
-        this.guessingGameSol = '';
+      if (this.appStateIsGuessing) {
+        this.currentGameSolutionGuessing = '';
         let urlString = '';
-        this.cards.concat(this.parkedCards).forEach((card) => {
+        this.appDataCards.concat(this.appDataCardsParked).forEach((card) => {
           if (card.words.length === 0) {
             urlString += '----';
           }
@@ -348,24 +341,24 @@ var app = new Vue({
           });
         });
 
-        this.hints.forEach((hint, index) => {
-          urlString += hint.value + (index === this.hints.length - 1 ? '' : '-');
+        this.appDataHints.forEach((hint, index) => {
+          urlString += hint.value + (index === this.appDataHints.length - 1 ? '' : '-');
         });
 
         urlString = encodeURIComponent(urlString);
-        urlString += '&sendingName=' + encodeURIComponent(this.player.name);
-        urlString += '&sendingID=' + encodeURIComponent(this.player.id);
-        urlString += '&puzzleName=' + encodeURIComponent(this.puzzlePlayer.name);
-        urlString += '&puzzleID=' + encodeURIComponent(this.puzzlePlayer.id);
-        urlString += '&wordSetID=' + encodeURIComponent(this.guessingWordSet.id);
-        urlString += '&useExtraCard=' + encodeURIComponent(this.guessingCardCount === 5);
-        urlString += '&sol=' + encodeURIComponent(this.currentGameSol);
-        if (_isFinal) {
+        urlString += '&sendingName=' + encodeURIComponent(this.appDataPlayerCurrent.name);
+        urlString += '&sendingID=' + encodeURIComponent(this.appDataPlayerCurrent.id);
+        urlString += '&puzzleName=' + encodeURIComponent(this.appDataPlayerCreator.name);
+        urlString += '&puzzleID=' + encodeURIComponent(this.appDataPlayerCreator.id);
+        urlString += '&wordSetID=' + encodeURIComponent(this.currentGameGuessingWordSet.id);
+        urlString += '&useExtraCard=' + encodeURIComponent(this.currentGameGuessingCardCount === 5);
+        urlString += '&sol=' + encodeURIComponent(this.currentGameSolutionActual);
+        if (_currentGameReviewIsFinal) {
           urlString += '&final=true';
         }
         urlString = window.location.origin + window.location.pathname + '?board=' + urlString + '&deletableCharacters=these';
-        this.shareURL = urlString;
-        history.pushState(null, null, this.shareURL);
+        this.appDataShareURL = urlString;
+        history.pushState(null, null, this.appDataShareURL);
       }
     },
 
@@ -382,8 +375,8 @@ var app = new Vue({
         default:
           break;
       }
-      this.showConfirmation = false;
-      this.showModal = false;
+      this.appStateShowConfirmation = false;
+      this.appStateIsModalShowing = false;
     },
 
     GetMessageBasedOnTrayCount(_gotIt, _name, _useName = true) {
@@ -399,11 +392,11 @@ var app = new Vue({
         case 3:
           return '🤪 ' + name + (!_useName ? 'Not' : 'not') + ' quite!';
         case 4:
-          if (this.player.role !== 'reviewer') {
-            if (this.currentGuessCount === 1) {
+          if (this.appDataPlayerCurrent.role !== 'reviewer') {
+            if (this.currentGameGuessCount === 1) {
               return '🔥 ' + name + (!_useName ? 'You' : 'you') + ' nailed it in 1 try!';
             } else {
-              return '😀 Nice, ' + name + 'you got it in ' + this.currentGuessCount + ' tries!';
+              return '😀 Nice, ' + name + 'you got it in ' + this.currentGameGuessCount + ' tries!';
             }
           } else if (_gotIt) {
             return '🔥 ' + name + (!_useName ? 'You' : 'you') + ' nailed it!';
@@ -415,9 +408,9 @@ var app = new Vue({
 
     ShareWin() {
       note('ShareWin() called');
-      let text = this.puzzlePlayer.name + ', I got it in ' + this.currentGuessCount + ' tries! 😀';
-      if (this.currentGuessCount === 1) {
-        text = this.puzzlePlayer.name + ', I got it in 1 try! 🔥';
+      let text = this.appDataPlayerCreator.name + ', I got it in ' + this.currentGameGuessCount + ' tries! 😀';
+      if (this.currentGameGuessCount === 1) {
+        text = this.appDataPlayerCreator.name + ', I got it in 1 try! 🔥';
       }
       this.ShareText(text);
     },
@@ -436,7 +429,7 @@ var app = new Vue({
               console.log('Message copied via navigator.clipboard.write');
             })
             .catch((err) => {
-              this.message = 'Message failed to copy to clipboard.';
+              this.appDataMessage = 'Message failed to copy to clipboard.';
               console.error('Failed to copy text via navigator.clipboard.write: ', err);
             });
         } else {
@@ -444,10 +437,10 @@ var app = new Vue({
           await navigator.clipboard
             .writeText(_text)
             .then(() => {
-              console.log(this.message + ' Via navigator.clipboard.writeText');
+              console.log(this.appDataMessage + ' Via navigator.clipboard.writeText');
             })
             .catch((err) => {
-              this.message = 'Message failed to copy to clipboard.';
+              this.appDataMessage = 'Message failed to copy to clipboard.';
               console.error('Failed to copy text via navigator.clipboard.writeText: ', err);
             });
         }
@@ -455,7 +448,7 @@ var app = new Vue({
         copyToClipboard(_text);
         console.log('Message copied via exec.command');
       }
-      this.message = 'Message copied to the clipboard.';
+      this.appDataMessage = 'Message copied to the clipboard.';
     },
 
     async ShareText(_text) {
@@ -481,12 +474,12 @@ var app = new Vue({
     GetShareTextBasedOnContext(_gotIt) {
       note('GetShareTextBasedOnContext() called');
       let text = '';
-      if (this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id) {
-        text = '🧠 I created ' + (this.guessingWordSet.startsWithVowel ? 'an ' : 'a ') + (this.guessingCardCount === 5 ? '5-card ' : '') + '"' + this.guessingWordSet.name + '" word puzzle for you to solve!';
-      } else if (this.player.role === 'reviewer') {
-        text = this.GetMessageBasedOnTrayCount(_gotIt, this.guessersName);
+      if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
+        text = '🧠 I created ' + (this.currentGameGuessingWordSet.startsWithVowel ? 'an ' : 'a ') + (this.currentGameGuessingCardCount === 5 ? '5-card ' : '') + '"' + this.currentGameGuessingWordSet.name + '" word puzzle for you to solve!';
+      } else if (this.appDataPlayerCurrent.role === 'reviewer') {
+        text = this.GetMessageBasedOnTrayCount(_gotIt, this.currentGameGuessersName);
       } else {
-        text = '🤔 ' + this.puzzlePlayer.name + ", here's my guess!";
+        text = '🤔 ' + this.appDataPlayerCreator.name + ", here's my guess!";
       }
       return text;
     },
@@ -494,24 +487,24 @@ var app = new Vue({
     async ShareBoard(_gotIt = false) {
       note('ShareBoard() called');
 
-      let isFinal = this.player.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4;
+      let currentGameReviewIsFinal = this.appDataPlayerCurrent.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4;
       let text = this.GetShareTextBasedOnContext(_gotIt);
-      this.ConstructAndSetShareURLForCurrentGame(isFinal);
+      this.ConstructAndSetShareURLForCurrentGame(currentGameReviewIsFinal);
 
       if (this.isChromeAndiOSoriPadOS) {
-        // share the message with the full-length url, because we
+        // share the appDataMessage with the full-length url, because we
         // aren't awaiting a promise for the tiny url, this passes
         // the security requirement for direct user interaction
         // that would otherwise trigger in Chrome on iOS and iPadOS
-        this.ShareText(text + ' <' + this.shareURL + '>');
+        this.ShareText(text + ' <' + this.appDataShareURL + '>');
       } else {
-        this.isGettingTinyURL = true;
+        this.appStateIsGettingTinyURL = true;
         var corsflareUrl = 'https://worker-cold-butterfly-c870.bigtentgames.workers.dev/';
         var requestUrl = corsflareUrl + encodeURIComponent(window.location.search);
 
         await fetch(requestUrl, {
           headers: {
-            Host: new URL(this.shareURL).hostname,
+            Host: new URL(this.appDataShareURL).hostname,
           },
         })
           .then((response) => {
@@ -520,15 +513,15 @@ var app = new Vue({
             }
             return response.text();
           })
-          .then((shortUrl) => (this.shareURL = shortUrl))
+          .then((shortUrl) => (this.appDataShareURL = shortUrl))
           .catch((error) => console.error('Error:', error));
 
-        this.isGettingTinyURL = false;
-        this.ShareText(text + ' <' + this.shareURL + '>');
+        this.appStateIsGettingTinyURL = false;
+        this.ShareText(text + ' <' + this.appDataShareURL + '>');
       }
     },
 
-    async CreateCardsForPlayer(_player) {
+    async CreateCardsForPlayer(_appDataPlayerCurrent) {
       note('CreateCardsForPlayer() called');
       let wordset = await this.getCurrentGameWordSet;
       let words = getUniqueWords(wordset);
@@ -541,7 +534,7 @@ var app = new Vue({
           card.position = 3;
         }
         card.words = words.slice(0 + x * 4, 4 + x * 4);
-        this.cards.push(card);
+        this.appDataCards.push(card);
       }
     },
 
@@ -549,17 +542,17 @@ var app = new Vue({
 
     HandleBodyPointerUp(e, _card) {
       note('HandleBodyPointerUp() called');
-      if (!this.showModal) {
-        this.isDragging = false;
-        this.draggedCard = this.emptyCard;
+      if (!this.appStateIsModalShowing) {
+        this.appStateIsDragging = false;
+        this.appDataDraggedCard = this.appDataEmptyCard;
       } else {
-        this.draggedCard.isSelected = false;
+        this.appDataDraggedCard.isSelected = false;
       }
     },
 
     HandleBodyPointerDown(e) {
-      this.ghostX = e.clientX;
-      this.ghostY = e.clientY;
+      this.appDataGhostX = e.clientX;
+      this.appDataGhostY = e.clientY;
     },
 
     HandleCardPointerDown(e, _card) {
@@ -567,31 +560,31 @@ var app = new Vue({
       if (e !== null) {
         e.preventDefault();
         e.stopPropagation();
-        this.ghostX = e.clientX;
-        this.ghostY = e.clientY;
+        this.appDataGhostX = e.clientX;
+        this.appDataGhostY = e.clientY;
         if (e.target.hasPointerCapture(e.pointerId)) {
           e.target.releasePointerCapture(e.pointerId);
         }
       }
 
-      this.draggedCard = _card;
-      this.isDragging = true;
+      this.appDataDraggedCard = _card;
+      this.appStateIsDragging = true;
     },
 
     HandleCardPointerUp(e, _card) {
       note('HandleCardPointerUp() called');
       e.preventDefault();
       e.stopPropagation();
-      this.message = '';
+      this.appDataMessage = '';
 
       if (this.getSelectedCard && this.getSelectedCard === _card) {
-        this.draggedCard = this.emptyCard;
-        this.isDragging = false;
+        this.appDataDraggedCard = this.appDataEmptyCard;
+        this.appStateIsDragging = false;
         return;
       }
 
-      if (this.draggedCard.words.length > 0) {
-        this.SwapCards(_card, this.draggedCard);
+      if (this.appDataDraggedCard.words.length > 0) {
+        this.SwapCards(_card, this.appDataDraggedCard);
       }
     },
 
@@ -599,14 +592,14 @@ var app = new Vue({
       note('HandlePickerCardClicked() called');
       e.preventDefault();
       e.stopPropagation();
-      this.message = '';
+      this.appDataMessage = '';
 
       if (_card === null) {
         _card = this.getFirstAvailableParkingSpot;
       }
 
-      this.SwapCards(_card, this.draggedCard);
-      this.showModal = false;
+      this.SwapCards(_card, this.appDataDraggedCard);
+      this.appStateIsModalShowing = false;
     },
 
     SwapCards(_card1, _card2) {
@@ -626,13 +619,13 @@ var app = new Vue({
       _card2.justDropped = true;
 
       setTimeout(() => {
-        this.cards.concat(this.parkedCards).forEach((card) => {
+        this.appDataCards.concat(this.appDataCardsParked).forEach((card) => {
           card.justDropped = false;
         });
-      }, this.longTransition);
+      }, this.appDataTransitionLong);
 
-      this.isDragging = false;
-      this.draggedCard = this.emptyCard;
+      this.appStateIsDragging = false;
+      this.appDataDraggedCard = this.appDataEmptyCard;
 
       this.ConstructAndSetShareURLForCurrentGame();
     },
@@ -653,15 +646,14 @@ var app = new Vue({
       }
 
       let selectedState = !_card.isSelected;
-      warn(this.draggedCard.words.length > 0);
 
-      this.cards.forEach((card) => {
+      this.appDataCards.forEach((card) => {
         card.isSelected = false;
         card.isInTray = true;
         card.justDropped = false;
       });
 
-      this.parkedCards.forEach((card) => {
+      this.appDataCardsParked.forEach((card) => {
         card.isSelected = false;
         card.isInTray = false;
         card.justDropped = false;
@@ -669,13 +661,13 @@ var app = new Vue({
 
       _card.isSelected = _card.words.length === 0 ? false : selectedState;
 
-      if (document.body.offsetHeight <= 660 && !this.showModal) {
-        this.showModal = true;
+      if (document.body.offsetHeight <= 660 && !this.appStateIsModalShowing) {
+        this.appStateIsModalShowing = true;
       }
 
       if (_card.isSelected) {
-        this.draggedCard = _card;
-        warn('draggedCard card has been assigned on card click');
+        this.appDataDraggedCard = _card;
+        warn('appDataDraggedCard card has been assigned on card click');
       }
     },
 
@@ -683,25 +675,25 @@ var app = new Vue({
       note('RotateCard() called');
       e.preventDefault();
       e.stopPropagation();
-      if (this.isGuessing) {
-        this.message = '';
-        if (this.cardRotationTimeout) {
-          clearTimeout(this.cardRotationTimeout);
-          this.cardRotationTimeout = null;
+      if (this.appStateIsGuessing) {
+        this.appDataMessage = '';
+        if (this.appDataTimeoutCardRotation) {
+          clearTimeout(this.appDataTimeoutCardRotation);
+          this.appDataTimeoutCardRotation = null;
         }
         _card.isSelected = false;
         _card.rotation = _card.rotation + _inc;
         _card.isRotating = true;
-        this.cardRotationTimeout = setTimeout(() => {
+        this.appDataTimeoutCardRotation = setTimeout(() => {
           this.ResetCardsAfterRotation();
-        }, this.shortTransition);
+        }, this.appDataTransitionShort);
       }
     },
 
     ResetCardsAfterRotation(_contructURL = true) {
       note('ResetCardsAfterRotation() called');
 
-      this.cards.concat(this.parkedCards).forEach((card) => {
+      this.appDataCards.concat(this.appDataCardsParked).forEach((card) => {
         if (card.rotation !== 0) {
           card.isRotating = false;
           let len = card.words.length;
@@ -712,7 +704,7 @@ var app = new Vue({
           card.rotation = 0;
         }
       });
-      if (this.isGuessing && _contructURL) {
+      if (this.appStateIsGuessing && _contructURL) {
         this.ConstructAndSetShareURLForCurrentGame();
       }
     },
@@ -739,91 +731,91 @@ var app = new Vue({
 
     RotateTray(_inc) {
       note('RotateTray() called');
-      if (!this.trayIsRotating) {
-        this.message = '';
-        this.trayIsRotating = true;
-        if (this.trayRotationTimeout) {
-          clearTimeout(this.trayRotationTimeout);
-          this.trayRotationTimeout = null;
+      if (!this.appStateTrayIsRotating) {
+        this.appDataMessage = '';
+        this.appStateTrayIsRotating = true;
+        if (this.appDataTimeoutTrayRotation) {
+          clearTimeout(this.appDataTimeoutTrayRotation);
+          this.appDataTimeoutTrayRotation = null;
         }
         if (this.getSelectedCard) this.getSelectedCard.isSelected = false;
-        this.trayRotation = this.trayRotation + _inc;
+        this.appStateTrayRotation = this.appStateTrayRotation + _inc;
         document.getElementById('parkingInput').focus();
-        this.cardtrayRotationTimeoutRotationTimeout = setTimeout(() => {
+        this.appDataTimeoutTrayRotation = setTimeout(() => {
           this.ResetTrayAfterRotation();
-        }, this.longTransition);
+        }, this.appDataTransitionLong);
 
-        if (!this.isGuessing) {
+        if (!this.appStateIsGuessing) {
           setTimeout(() => {
             let hint0 = document.getElementById('hint0');
-            this.parkingInputValue = '';
+            this.appDataParkingInputValue = '';
             hint0.focus();
-          }, this.longTransition);
+          }, this.appDataTransitionLong);
         }
       }
     },
 
     ResetTrayAfterRotation() {
       note('ResetTrayAfterRotation() called');
-      this.trayIsRotating = false;
-      this.parkingInputValue = '';
+      this.appStateTrayIsRotating = false;
+      this.appDataParkingInputValue = '';
 
-      if (this.trayRotation < 3) {
-        if (this.trayRotation !== 0) {
-          let len = this.hints.length;
+      if (this.appStateTrayRotation < 3) {
+        if (this.appStateTrayRotation !== 0) {
+          let len = this.appDataHints.length;
           if (len > 0) {
-            let shift = ((this.trayRotation % len) + len) % len;
-            this.hints = this.hints.slice(-shift).concat(this.hints.slice(0, -shift));
+            let shift = ((this.appStateTrayRotation % len) + len) % len;
+            this.appDataHints = this.appDataHints.slice(-shift).concat(this.appDataHints.slice(0, -shift));
           }
         }
 
-        let hint0 = this.hints[0];
-        let hint1 = this.hints[1];
-        let hint2 = this.hints[2];
-        let hint3 = this.hints[3];
-        let card0 = this.cards[0];
-        let card1 = this.cards[1];
-        let card2 = this.cards[2];
-        let card3 = this.cards[3];
+        let hint0 = this.appDataHints[0];
+        let hint1 = this.appDataHints[1];
+        let hint2 = this.appDataHints[2];
+        let hint3 = this.appDataHints[3];
+        let card0 = this.appDataCards[0];
+        let card1 = this.appDataCards[1];
+        let card2 = this.appDataCards[2];
+        let card3 = this.appDataCards[3];
 
-        card0.rotation = card1.rotation = card2.rotation = card3.rotation = this.trayRotation;
+        card0.rotation = card1.rotation = card2.rotation = card3.rotation = this.appStateTrayRotation;
 
         this.ResetCardsAfterRotation(false);
 
-        switch (this.trayRotation) {
+        switch (this.appStateTrayRotation) {
           case -1:
-            this.hints[0] = hint0;
-            this.hints[1] = hint2;
-            this.hints[2] = hint3;
-            this.hints[3] = hint1;
+            this.appDataHints[0] = hint0;
+            this.appDataHints[1] = hint2;
+            this.appDataHints[2] = hint3;
+            this.appDataHints[3] = hint1;
 
-            this.cards[0] = card1;
-            this.cards[2] = card0;
-            this.cards[1] = card3;
-            this.cards[3] = card2;
+            this.appDataCards[0] = card1;
+            this.appDataCards[2] = card0;
+            this.appDataCards[1] = card3;
+            this.appDataCards[3] = card2;
             break;
           case 1:
-            this.hints[0] = hint3;
-            this.hints[1] = hint1;
-            this.hints[2] = hint0;
-            this.hints[3] = hint2;
+            this.appDataHints[0] = hint3;
+            this.appDataHints[1] = hint1;
+            this.appDataHints[2] = hint0;
+            this.appDataHints[3] = hint2;
 
-            this.cards[0] = card2;
-            this.cards[1] = card0;
-            this.cards[2] = card3;
-            this.cards[3] = card1;
+            this.appDataCards[0] = card2;
+            this.appDataCards[1] = card0;
+            this.appDataCards[2] = card3;
+            this.appDataCards[3] = card1;
             break;
           case 2:
           case -2:
-            this.hints[0] = hint1;
-            this.hints[1] = hint0;
-            this.hints[2] = hint3;
-            this.hints[3] = hint2;
+            this.appDataHints[0] = hint1;
+            this.appDataHints[1] = hint0;
+            this.appDataHints[2] = hint3;
+            this.appDataHints[3] = hint2;
 
-            this.cards[0] = card3;
-            this.cards[1] = card2;
-            this.cards[2] = card1;
-            this.cards[3] = card0;
+            this.appDataCards[0] = card3;
+            this.appDataCards[1] = card2;
+            this.appDataCards[2] = card1;
+            this.appDataCards[3] = card0;
             break;
           default:
             break;
@@ -831,37 +823,35 @@ var app = new Vue({
 
         this.ConstructAndSetShareURLForCurrentGame();
       }
-      this.trayRotation = 0;
+      this.appStateTrayRotation = 0;
     },
 
     /* END CARD MANIPULATION */
 
-    async NewGame(e, _message = '', _rotate = true) {
+    async NewGame(e, _appDataMessage = '', _rotate = true) {
       note('NewGame() called');
       document.title = 'Facets!';
-      this.message = _message;
-      this.currentGuessCount = 0;
-      this.isFinal = false;
-      this.guessersName = '';
-      this.player.role = 'creator';
-      this.puzzlePlayer.id = this.player.id;
-      this.puzzlePlayer.name = this.player.name;
-      this.sendingPlayer.id = this.player.id;
-      this.sendingPlayer.name = this.player.name;
-      this.guessingWordSet = this.gameWordSet;
-      this.guessingCardCount = this.useExtraCard ? 5 : 4;
-      this.guessingGameSol = '';
-      this.trayIsRotating = false;
-      this.SetWordSetTheme(this.gameWordSet);
-      this.shareURL = '';
-      this.shareText = 'Send';
+      this.appDataMessage = _appDataMessage;
+      this.currentGameGuessCount = 0;
+      this.currentGameReviewIsFinal = false;
+      this.currentGameGuessersName = '';
+      this.appDataPlayerCurrent.role = 'creator';
+      this.appDataPlayerCreator.id = this.appDataPlayerCurrent.id;
+      this.appDataPlayerCreator.name = this.appDataPlayerCurrent.name;
+      this.appDataPlayerSender.id = this.appDataPlayerCurrent.id;
+      this.appDataPlayerSender.name = this.appDataPlayerCurrent.name;
+      this.currentGameGuessingWordSet = this.currentGameWordSet;
+      this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
+      this.currentGameSolutionGuessing = '';
+      this.appStateTrayIsRotating = false;
+      this.SetWordSetTheme(this.currentGameWordSet);
+      this.appDataShareURL = '';
       history.pushState(null, null, window.location.origin + window.location.pathname);
-      this.isGuessing = false;
-      this.cards = [];
-      this.parkedCards = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
-      this.hints = [new WordObject({}), new WordObject({}), new WordObject({}), new WordObject({})];
+      this.appStateIsGuessing = false;
+      this.appDataCards = [];
+      this.appDataCardsParked = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
+      this.appDataHints = [new WordObject({}), new WordObject({}), new WordObject({}), new WordObject({})];
       await this.CreateCardsForPlayer(null);
-      localStorage.setItem('currentGameID', { gameId: this.currentGameID });
 
       if (_rotate) {
         this.RotateTray(-4);
@@ -869,92 +859,91 @@ var app = new Vue({
     },
 
     HandlePointerMoveEvent(e) {
-      this.ghostX = e.clientX;
-      this.ghostY = e.clientY;
+      this.appDataGhostX = e.clientX;
+      this.appDataGhostY = e.clientY;
     },
 
     HandlePageVisibilityChange() {
       let id = localStorage.getItem('userID');
       if (id !== undefined && id !== null) {
         id = JSON.parse(id);
-        this.player.id = id;
+        this.appDataPlayerCurrent.id = id;
       } else {
-        this.player.id = getRandomInt(10000000, 100000000);
-        localStorage.setItem('userID', this.player.id);
-        this.showOOBE = window.location.search !== '';
+        this.appDataPlayerCurrent.id = getRandomInt(10000000, 100000000);
+        localStorage.setItem('userID', this.appDataPlayerCurrent.id);
+        this.appStateShowOOBE = window.location.search !== '';
       }
-      this.tempID = parseInt(this.player.id);
+      this.tempID = parseInt(this.appDataPlayerCurrent.id);
 
       let name = localStorage.getItem('name');
       if (name !== undefined && name !== null) {
-        this.player.name = name;
+        this.appDataPlayerCurrent.name = name;
       } else {
-        this.changeNameTitle = "Hello, what's your name?";
-        this.showModal = true;
-        this.showIntro = true;
+        this.appStateIsModalShowing = true;
+        this.appStateShowIntro = true;
         setTimeout(() => {
           document.getElementById('nameInput').focus();
         }, 410);
       }
 
-      this.wordSets.forEach((m) => {
+      this.appDataWordSets.forEach((m) => {
         m.isSelected = false;
       });
       let setID = localStorage.getItem('wordSet');
-      if (setID !== undefined && setID !== null && this.wordSets.find((m) => m.id === setID)) {
-        this.gameWordSet = this.wordSets.find((m) => m.id === setID);
+      if (setID !== undefined && setID !== null && this.appDataWordSets.find((m) => m.id === setID)) {
+        this.currentGameWordSet = this.appDataWordSets.find((m) => m.id === setID);
       } else {
-        this.gameWordSet = WordSets.find((m) => m.id === '100');
+        this.currentGameWordSet = WordSets.find((m) => m.id === '100');
       }
-      this.gameWordSet.isSelected = true;
+      this.currentGameWordSet.isSelected = true;
 
       let useThemes = localStorage.getItem('useWordSetThemes');
       if (useThemes !== undefined && useThemes !== null) {
-        this.useWordSetThemes = JSON.parse(useThemes);
-        this.tempUseWordSetThemes = this.useWordSetThemes;
-        this.SetWordSetTheme(this.gameWordSet);
+        this.userSettingsUseWordSetThemes = JSON.parse(useThemes);
+        this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
+        this.SetWordSetTheme(this.currentGameWordSet);
       }
 
-      if (this.isGuessing) {
-        this.documentCssRoot.style.setProperty('--wordScale', this.guessingWordSet.scale);
+      if (this.appStateIsGuessing) {
+        this.documentCssRoot.style.setProperty('--wordScale', this.currentGameGuessingWordSet.scale);
       } else {
-        this.documentCssRoot.style.setProperty('--wordScale', this.gameWordSet.scale);
+        this.documentCssRoot.style.setProperty('--wordScale', this.currentGameWordSet.scale);
       }
 
-      let _newVersionAvailable = localStorage.getItem('newVersionAvailable');
+      let _appStateIsNewVersionAvailable = localStorage.getItem('newVersionAvailable');
       try {
-        if (_newVersionAvailable !== undefined && _newVersionAvailable !== null) {
-          this.newVersionAvailable = JSON.parse(_newVersionAvailable);
+        if (_appStateIsNewVersionAvailable !== undefined && _appStateIsNewVersionAvailable !== null) {
+          this.appStateIsNewVersionAvailable = JSON.parse(_appStateIsNewVersionAvailable);
         }
       } catch (_error) {
         error('_newVersionAvailable error: ' + _error);
       }
 
-      let useExtraCard = localStorage.getItem('useExtraCard');
-      if (useExtraCard !== undefined && useExtraCard !== null) {
-        this.useExtraCard = JSON.parse(useExtraCard);
-        this.tempUseExtraCard = this.useExtraCard;
+      let userSettingsUseExtraCard = localStorage.getItem('useExtraCard');
+      if (userSettingsUseExtraCard !== undefined && userSettingsUseExtraCard !== null) {
+        this.userSettingsUseExtraCard = JSON.parse(userSettingsUseExtraCard);
+        this.tempUseExtraCard = this.userSettingsUseExtraCard;
       }
 
-      let autoCheck = localStorage.getItem('autoCheck');
-      if (autoCheck !== undefined && autoCheck !== null) {
-        this.autoCheck = JSON.parse(autoCheck);
-        this.tempAutoCheck = this.autoCheck;
+      let userSettingsAutoCheck = localStorage.getItem('autoCheck');
+      if (userSettingsAutoCheck !== undefined && userSettingsAutoCheck !== null) {
+        this.userSettingsAutoCheck = JSON.parse(userSettingsAutoCheck);
+        this.tempAutoCheck = this.userSettingsAutoCheck;
       }
 
-      let useMultiColoredGems = localStorage.getItem('useMultiColoredGems');
-      if (useMultiColoredGems !== undefined && useMultiColoredGems !== null) {
-        this.useMultiColoredGems = JSON.parse(useMultiColoredGems);
-        this.tempUseMultiColoredGems = this.useMultiColoredGems;
+      let userSettingsUseMultiColoredGems = localStorage.getItem('useMultiColoredGems');
+      if (userSettingsUseMultiColoredGems !== undefined && userSettingsUseMultiColoredGems !== null) {
+        this.userSettingsUseMultiColoredGems = JSON.parse(userSettingsUseMultiColoredGems);
+        this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
       }
     },
 
     LoadPage() {
       note('LoadPage() called');
       this.HandlePageVisibilityChange();
-      announce('Player ' + this.player.id + ' has initiated the game - version v' + this.version);
-      this.longTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
-      this.shortTransition = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
+      announce('Player ' + this.appDataPlayerCurrent.id + ' has initiated the game - appDataVersion v' + this.appDataVersion);
+      this.appDataTransitionLong = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
+      this.appDataTransitionShort = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
 
       let boardPieces = [];
       try {
@@ -968,7 +957,7 @@ var app = new Vue({
         if (boardPieces.length >= 40) {
           document.title = 'Facets!';
           this.RestoreGame(boardPieces);
-        } else if (!this.isGuessing) {
+        } else if (!this.appStateIsGuessing) {
           this.NewGame(null, '', false);
         }
       } catch (e) {
@@ -977,20 +966,19 @@ var app = new Vue({
         this.NewGame(null, '😕 - Something went wrong.', false);
       }
 
-      this.usePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
+      this.appStateUsePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
     },
 
     ShowSettings() {
       note('ShowSettings() called');
-      this.showModal = true;
-      this.showSettings = true;
-      this.changeNameTitle = this.player.name + ", what's your new name?";
+      this.appStateIsModalShowing = true;
+      this.appStateShowSettings = true;
       this.tempWordSets = [];
       this.tempWordSetName = this.getCurrentSelectedTempWordSetName;
-      this.wordSets.forEach((set) => {
+      this.appDataWordSets.forEach((set) => {
         this.tempWordSets.push(new WordSetObject(set));
       });
-      this.tempName = this.player.name;
+      this.tempName = this.appDataPlayerCurrent.name;
     },
 
     SelectWordSet(e, _wordSet) {
@@ -1011,21 +999,21 @@ var app = new Vue({
       note('GetCurrentSolutionParamString() called');
       let params = [];
       if (this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
-        params.push(this.hints[0].value);
-        params.push(this.cards[0].words[0].id);
-        params.push(this.cards[1].words[0].id);
+        params.push(this.appDataHints[0].value);
+        params.push(this.appDataCards[0].words[0].id);
+        params.push(this.appDataCards[1].words[0].id);
 
-        params.push(this.hints[1].value);
-        params.push(this.cards[1].words[1].id);
-        params.push(this.cards[3].words[1].id);
+        params.push(this.appDataHints[1].value);
+        params.push(this.appDataCards[1].words[1].id);
+        params.push(this.appDataCards[3].words[1].id);
 
-        params.push(this.hints[2].value);
-        params.push(this.cards[2].words[3].id);
-        params.push(this.cards[0].words[3].id);
+        params.push(this.appDataHints[2].value);
+        params.push(this.appDataCards[2].words[3].id);
+        params.push(this.appDataCards[0].words[3].id);
 
-        params.push(this.hints[3].value);
-        params.push(this.cards[3].words[2].id);
-        params.push(this.cards[2].words[2].id);
+        params.push(this.appDataHints[3].value);
+        params.push(this.appDataCards[3].words[2].id);
+        params.push(this.appDataCards[2].words[2].id);
       }
       let param = params.join('-');
       return param;
@@ -1037,22 +1025,21 @@ var app = new Vue({
         e.preventDefault();
         e.stopPropagation();
       }
-      this.editID = false;
-      this.showModal = false;
-      this.showSettings = false;
-      this.showIntro = false;
-      this.tempID = this.player.id;
-      this.tempUseWordSetThemes = this.useWordSetThemes;
-      this.tempUseMultiColoredGems = this.useMultiColoredGems;
-      // this.tempUsePortraitLayout = this.usePortraitLayout;
-      this.tempUseExtraCard = this.useExtraCard;
-      this.tempAutoCheck = this.autoCheck;
+      this.appStateIsModalShowing = false;
+      this.appStateShowSettings = false;
+      this.appStateShowIntro = false;
+      this.tempID = this.appDataPlayerCurrent.id;
+      this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
+      this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
+      // this.tempUsePortraitLayout = this.appStateUsePortraitLayout;
+      this.tempUseExtraCard = this.userSettingsUseExtraCard;
+      this.tempAutoCheck = this.userSettingsAutoCheck;
     },
 
     HandleIntroButtonClick(e) {
       note('HandleIntroButtonClick() called');
       this.SubmitSettings(null);
-      this.showOOBE = true;
+      this.appStateShowOOBE = true;
     },
 
     SubmitSettings(e) {
@@ -1061,45 +1048,44 @@ var app = new Vue({
         e.preventDefault();
         e.stopPropagation();
       }
-      this.player.name = this.tempName !== '' ? this.tempName.trim() : this.player.name;
-      if (!this.isGuessing) {
-        this.puzzlePlayer.name = this.player.name;
+      this.appDataPlayerCurrent.name = this.tempName !== '' ? this.tempName.trim() : this.appDataPlayerCurrent.name;
+      if (!this.appStateIsGuessing) {
+        this.appDataPlayerCreator.name = this.appDataPlayerCurrent.name;
       }
-      localStorage.setItem('name', this.player.name);
-      if (this.showSettings) {
+      localStorage.setItem('name', this.appDataPlayerCurrent.name);
+      if (this.appStateShowSettings) {
         let newSelectedWordSet = this.tempWordSets.find((set) => set.name === this.tempWordSetName);
         this.SelectWordSet(e, newSelectedWordSet);
 
         let wordSetChanged = false;
-        wordSetChanged = this.wordSets.find((set) => set.isSelected === true).id !== this.tempWordSets.find((set) => set.isSelected === true).id;
-        this.wordSets = this.tempWordSets;
-        this.gameWordSet = this.wordSets.find((set) => set.isSelected === true);
-        if (wordSetChanged && !this.isGuessing) {
+        wordSetChanged = this.appDataWordSets.find((set) => set.isSelected === true).id !== this.tempWordSets.find((set) => set.isSelected === true).id;
+        this.appDataWordSets = this.tempWordSets;
+        this.currentGameWordSet = this.appDataWordSets.find((set) => set.isSelected === true);
+        if (wordSetChanged && !this.appStateIsGuessing) {
           this.NewGame();
-          this.SetWordSetTheme(this.guessingWordSet);
+          this.SetWordSetTheme(this.currentGameGuessingWordSet);
         }
 
-        this.player.id = this.tempID;
-        this.useWordSetThemes = this.tempUseWordSetThemes;
-        // this.usePortraitLayout = this.tempUsePortraitLayout;
-        this.useExtraCard = this.tempUseExtraCard;
-        this.autoCheck = this.tempAutoCheck;
-        this.useMultiColoredGems = this.tempUseMultiColoredGems;
-        this.guessingCardCount = this.useExtraCard ? 5 : 4;
-        this.SetWordSetTheme(this.guessingWordSet);
+        this.appDataPlayerCurrent.id = this.tempID;
+        this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
+        // this.appStateUsePortraitLayout = this.tempUsePortraitLayout;
+        this.userSettingsUseExtraCard = this.tempUseExtraCard;
+        this.userSettingsAutoCheck = this.tempAutoCheck;
+        this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
+        this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
+        this.SetWordSetTheme(this.currentGameGuessingWordSet);
 
-        localStorage.setItem('userID', this.player.id);
-        // localStorage.setItem('usePortraitLayout', this.usePortraitLayout);
-        localStorage.setItem('useWordSetThemes', this.useWordSetThemes);
-        localStorage.setItem('useExtraCard', this.useExtraCard);
-        localStorage.setItem('autoCheck', this.autoCheck);
-        localStorage.setItem('useMultiColoredGems', this.useMultiColoredGems);
-        localStorage.setItem('wordSet', this.gameWordSet.id);
+        localStorage.setItem('userID', this.appDataPlayerCurrent.id);
+        // localStorage.setItem('appStateUsePortraitLayout', this.appStateUsePortraitLayout);
+        localStorage.setItem('useWordSetThemes', this.userSettingsUseWordSetThemes);
+        localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
+        localStorage.setItem('autoCheck', this.userSettingsAutoCheck);
+        localStorage.setItem('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
+        localStorage.setItem('wordSet', this.currentGameWordSet.id);
       }
-      this.editID = false;
-      this.showModal = false;
-      this.showSettings = false;
-      this.showIntro = false;
+      this.appStateIsModalShowing = false;
+      this.appStateShowSettings = false;
+      this.appStateShowIntro = false;
     },
 
     HandleKeyDownEvent(e) {
@@ -1108,26 +1094,26 @@ var app = new Vue({
           case 'Enter':
             note('HandleKeyDownEvent() called');
             e.preventDefault();
-            if (!this.isGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
+            if (!this.appStateIsGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
               this.FillParkingLot();
             }
-            if (this.showSettings) {
+            if (this.appStateShowSettings) {
               this.SubmitSettings(e);
-            } else if (this.showTutorial) {
-              this.showOOBE = false;
+            } else if (this.appStateShowTutorial) {
+              this.appStateShowOOBE = false;
               this.ToggleShowTutorial(null);
-            } else if (this.showConfirmation) {
-              this.HandleYesNo(this.confirmation.target, true);
-            } else if (this.showIntro) {
+            } else if (this.appStateShowConfirmation) {
+              this.HandleYesNo(this.appDataConfirmationObject.target, true);
+            } else if (this.appStateShowIntro) {
               this.HandleIntroButtonClick(null);
-            } else if (this.showInfo) {
-              this.showInfo = false;
+            } else if (this.appStateShowInfo) {
+              this.appStateShowInfo = false;
             }
             break;
           case 'Tab':
             note('HandleKeyDownEvent() called');
             e.preventDefault();
-            if (!this.trayIsRotating) {
+            if (!this.appStateTrayIsRotating) {
               this.RotateTray(e.shiftKey ? 1 : -1);
             }
             break;
@@ -1135,15 +1121,15 @@ var app = new Vue({
             e.preventDefault();
             e.stopPropagation();
           case 'Escape':
-            this.showOOBE = false;
-            if (this.showSettings) {
+            this.appStateShowOOBE = false;
+            if (this.appStateShowSettings) {
               this.CancelSettings(null);
-            } else if (this.showTutorial) {
+            } else if (this.appStateShowTutorial) {
               this.ToggleShowTutorial(null);
-            } else if (this.showConfirmation) {
-              this.HandleYesNo(this.confirmation.target, false);
-            } else if (this.showInfo) {
-              this.showInfo = false;
+            } else if (this.appStateShowConfirmation) {
+              this.HandleYesNo(this.appDataConfirmationObject.target, false);
+            } else if (this.appStateShowInfo) {
+              this.appStateShowInfo = false;
             }
             break;
           default:
@@ -1174,7 +1160,7 @@ var app = new Vue({
       if (!_card.words || _card.words.length === 0) {
         return false;
       }
-      this.cards.forEach((card) => {
+      this.appDataCards.forEach((card) => {
         if (this.GetUniqueCardId(card.words) === this.GetUniqueCardId(_card.words)) {
           return true;
         }
@@ -1183,7 +1169,7 @@ var app = new Vue({
     },
 
     HandleResize() {
-      this.usePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
+      this.appStateUsePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
     },
 
     HandlePopState() {
@@ -1197,8 +1183,8 @@ var app = new Vue({
 
     HandleUpdateAppButtonClick() {
       note('HandleUpdateAppButtonClick() called');
-      this.newVersionAvailable = false;
-      localStorage.setItem('newVersionAvailable', this.newVersionAvailable);
+      this.appStateIsNewVersionAvailable = false;
+      localStorage.setItem('newVersionAvailable', this.appStateIsNewVersionAvailable);
       if (this.serviceWorker !== '') {
         this.serviceWorker.postMessage({ action: 'skipWaiting' });
       } else {
@@ -1220,8 +1206,8 @@ var app = new Vue({
                 case 'installed':
                   // There is a new service worker available, show the notification
                   if (navigator.serviceWorker.controller) {
-                    this.newVersionAvailable = true;
-                    localStorage.setItem('newVersionAvailable', this.newVersionAvailable);
+                    this.appStateIsNewVersionAvailable = true;
+                    localStorage.setItem('newVersionAvailable', this.appStateIsNewVersionAvailable);
                   }
                   break;
               }
@@ -1244,13 +1230,13 @@ var app = new Vue({
 
   computed: {
     getSelectedCard: function () {
-      return this.cards.concat(this.parkedCards).find((card) => card.isSelected === true);
+      return this.appDataCards.concat(this.appDataCardsParked).find((card) => card.isSelected === true);
     },
     getAllPlayerCards: function (_value) {
-      return this.cards.concat(this.parkedCards).find((card) => card.id.indexOf(_value === 0));
+      return this.appDataCards.concat(this.appDataCardsParked).find((card) => card.id.indexOf(_value === 0));
     },
     getAllCards: function () {
-      let newArray = this.cards.concat(this.parkedCards).filter((card) => card.words.length > 0);
+      let newArray = this.appDataCards.concat(this.appDataCardsParked).filter((card) => card.words.length > 0);
 
       newArray.forEach((card) => {
         card.id = this.GetUniqueCardId(card.words);
@@ -1259,29 +1245,29 @@ var app = new Vue({
       return newArray;
     },
     getFirstThreeParkedCards: function () {
-      return this.parkedCards.splice(0, 3);
+      return this.appDataCardsParked.splice(0, 3);
     },
     getNumberOfCardsThatHaveBeenPlacedOnTray: function () {
-      return this.cards === undefined ? 0 : this.cards.filter((card) => card.words.length > 0).length;
+      return this.appDataCards === undefined ? 0 : this.appDataCards.filter((card) => card.words.length > 0).length;
     },
     getNumberOfHintsThatHaveBeenFilled: function () {
-      return this.hints === undefined ? 0 : this.hints.filter((hint) => hint.value != '').length;
+      return this.appDataHints === undefined ? 0 : this.appDataHints.filter((hint) => hint.value != '').length;
     },
     getUniqueCardId: function (_words) {
       return this.GetUniqueCardId(_words);
     },
     getFirstAvailableParkingSpot: function () {
-      return this.parkedCards.find((card) => card.words.length === 0);
+      return this.appDataCardsParked.find((card) => card.words.length === 0);
     },
     getPlayerMessage: function () {
-      let text = this.player.name + ', you are guessing ' + this.puzzlePlayer.name + '\'s "' + this.guessingWordSet.name + '" puzzle!';
-      if (!this.isGuessing) {
-        text = this.player.name + ', you are creating a new "' + this.guessingWordSet.name + '" puzzle!';
+      let text = this.appDataPlayerCurrent.name + ', you are guessing ' + this.appDataPlayerCreator.name + '\'s "' + this.currentGameGuessingWordSet.name + '" puzzle!';
+      if (!this.appStateIsGuessing) {
+        text = this.appDataPlayerCurrent.name + ', you are creating a new "' + this.currentGameGuessingWordSet.name + '" puzzle!';
       } else {
-        if (this.player.id === this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id) {
-          text = this.player.name + ', this is your own puzzle!';
-        } else if (this.player.id !== this.sendingPlayer.id && this.player.id === this.puzzlePlayer.id) {
-          text = this.player.name + ', you are reviewing ' + this.sendingPlayer.name + "'s guess!";
+        if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
+          text = this.appDataPlayerCurrent.name + ', this is your own puzzle!';
+        } else if (this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
+          text = this.appDataPlayerCurrent.name + ', you are reviewing ' + this.appDataPlayerSender.name + "'s guess!";
         }
       }
       return text;
@@ -1291,7 +1277,7 @@ var app = new Vue({
     },
     getEnabledTempWordSetNames: function () {
       let names = [];
-      this.wordSets.forEach((set) => {
+      this.appDataWordSets.forEach((set) => {
         if (set.enabled) {
           names.push(set.name);
         }
@@ -1299,11 +1285,11 @@ var app = new Vue({
       return names.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
     },
     getCurrentSelectedTempWordSetName: function () {
-      return this.wordSets.find((set) => set.isSelected).name;
+      return this.appDataWordSets.find((set) => set.isSelected).name;
     },
     getCurrentGameWordSet: async function () {
       let allWords = [];
-      let fetchPromises = this.gameWordSet.data.map((url) => fetch(url).then((response) => response.json()));
+      let fetchPromises = this.currentGameWordSet.data.map((url) => fetch(url).then((response) => response.json()));
 
       try {
         let dataArrays = await Promise.all(fetchPromises);
@@ -1316,7 +1302,7 @@ var app = new Vue({
     },
     getGuessingGameWordSet: async function () {
       let allWords = [];
-      let fetchPromises = this.guessingWordSet.data.map((url) => fetch(url).then((response) => response.json()));
+      let fetchPromises = this.currentGameGuessingWordSet.data.map((url) => fetch(url).then((response) => response.json()));
 
       try {
         let dataArrays = await Promise.all(fetchPromises);
@@ -1329,8 +1315,8 @@ var app = new Vue({
     },
     getSubmitButtonText: function () {
       let text = 'Send';
-      if (this.player.id !== this.puzzlePlayer.id) {
-        text = this.autoCheck ? 'Guess' : text;
+      if (this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
+        text = this.userSettingsAutoCheck ? 'Guess' : text;
       }
       return text;
     },
