@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.182',
+    appDataVersion: '0.1.183',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -79,6 +79,7 @@ var app = new Vue({
   },
 
   methods: {
+    /* === STATE MANAGEMENT === */
     ToggleShowTutorial(e) {
       note('ToggleShowTutorial() called');
       if (e != null) {
@@ -122,6 +123,19 @@ var app = new Vue({
       this.tempAutoCheck = !this.tempAutoCheck;
     },
 
+    ShowSettings() {
+      note('ShowSettings() called');
+      this.appStateIsModalShowing = true;
+      this.appStateShowSettings = true;
+      this.tempWordSets = [];
+      this.tempWordSetName = this.getCurrentSelectedTempWordSetName;
+      this.appDataWordSets.forEach((set) => {
+        this.tempWordSets.push(new WordSetObject(set));
+      });
+      this.tempName = this.appDataPlayerCurrent.name;
+    },
+
+    /* === DATA MANAGEMENT === */
     SetWordSetTheme(_wordset) {
       note('SetWordSetTheme() called');
       if (this.userSettingsUseWordSetThemes) {
@@ -136,23 +150,6 @@ var app = new Vue({
         this.documentCssRoot.style.setProperty('--hueTheme', '205');
       }
       this.documentCssRoot.style.setProperty('--wordScale', _wordset.scale);
-    },
-
-    HandleSubmitButtonPress() {
-      note('HandleSubmitButtonPress() called');
-      if (this.appDataPlayerCurrent.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
-        this.appStateIsModalShowing = true;
-        this.appDataConfirmationObject = { message: 'Did they have the right answer?', target: 'correct' };
-        this.appStateShowConfirmation = true;
-      } else if (this.appStateIsGuessing) {
-        if (this.userSettingsAutoCheck && this.appDataPlayerCurrent.role !== 'reviewer' && this.appStateIsGuessing && this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
-          this.IsCurrentGuessCorrect();
-        } else {
-          this.ShareBoard();
-        }
-      } else {
-        this.FillParkingLot();
-      }
     },
 
     IsCurrentGuessCorrect() {
@@ -201,17 +198,6 @@ var app = new Vue({
         this.appDataMessage = this.GetMessageBasedOnTrayCount(true, this.appDataPlayerCurrent.name, false);
         return false;
         // }
-      }
-    },
-
-    HandleNewGameClick() {
-      note('HandleNewGameClick() called');
-      if (this.appStateIsGuessing && this.appDataPlayerCurrent.role !== 'reviewer' && this.appDataPlayerCreator.id !== this.appDataPlayerCurrent.id) {
-        this.appStateIsModalShowing = true;
-        this.appDataConfirmationObject = { message: 'Are you sure you want <br/>to create a new game?', target: 'newgame' };
-        this.appStateShowConfirmation = true;
-      } else {
-        this.NewGame();
       }
     },
 
@@ -327,38 +313,118 @@ var app = new Vue({
       }
     },
 
-    ConstructAndSetShareURLForCurrentGame(_currentGameReviewIsFinal) {
-      note('ConstructAndSetShareURLForCurrentGame() called');
-      if (this.appStateIsGuessing) {
-        this.currentGameSolutionGuessing = '';
-        let urlString = '';
-        this.appDataCards.concat(this.appDataCardsParked).forEach((card) => {
-          if (card.words.length === 0) {
-            urlString += '----';
-          }
-          card.words.forEach((word) => {
-            urlString += word.id + '-';
-          });
-        });
-
-        this.appDataHints.forEach((hint, index) => {
-          urlString += hint.value + (index === this.appDataHints.length - 1 ? '' : '-');
-        });
-
-        urlString = encodeURIComponent(urlString);
-        urlString += '&sendingName=' + encodeURIComponent(this.appDataPlayerCurrent.name);
-        urlString += '&sendingID=' + encodeURIComponent(this.appDataPlayerCurrent.id);
-        urlString += '&puzzleName=' + encodeURIComponent(this.appDataPlayerCreator.name);
-        urlString += '&puzzleID=' + encodeURIComponent(this.appDataPlayerCreator.id);
-        urlString += '&wordSetID=' + encodeURIComponent(this.currentGameGuessingWordSet.id);
-        urlString += '&useExtraCard=' + encodeURIComponent(this.currentGameGuessingCardCount === 5);
-        urlString += '&sol=' + encodeURIComponent(this.currentGameSolutionActual);
-        if (_currentGameReviewIsFinal) {
-          urlString += '&final=true';
+    async CreateCardsForPlayer(_appDataPlayerCurrent) {
+      note('CreateCardsForPlayer() called');
+      let wordset = await this.getCurrentGameWordSet;
+      let words = getUniqueWords(wordset);
+      for (let x = 0; x < 4; x++) {
+        const card = new CardObject({ position: x });
+        if (x === 3) {
+          card.position = 2;
         }
-        urlString = window.location.origin + window.location.pathname + '?board=' + urlString + '&deletableCharacters=these';
-        this.appDataShareURL = urlString;
-        history.pushState(null, null, this.appDataShareURL);
+        if (x === 2) {
+          card.position = 3;
+        }
+        card.words = words.slice(0 + x * 4, 4 + x * 4);
+        this.appDataCards.push(card);
+      }
+    },
+
+    SelectWordSet(e, _wordSet) {
+      note('SelectWordSet() called');
+      if (e !== null) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      this.tempWordSets.forEach((set) => {
+        set.isSelected = false;
+      });
+      _wordSet.isSelected = true;
+      this.documentCssRoot.style.setProperty('--wordScale', _wordSet.scale);
+      // this.documentCssRoot.style.setProperty('--wordAlignment', _wordSet.wordAlignment);
+    },
+
+    GetCurrentSolutionParamString() {
+      note('GetCurrentSolutionParamString() called');
+      let params = [];
+      if (this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
+        params.push(this.appDataHints[0].value);
+        params.push(this.appDataCards[0].words[0].id);
+        params.push(this.appDataCards[1].words[0].id);
+
+        params.push(this.appDataHints[1].value);
+        params.push(this.appDataCards[1].words[1].id);
+        params.push(this.appDataCards[3].words[1].id);
+
+        params.push(this.appDataHints[2].value);
+        params.push(this.appDataCards[2].words[3].id);
+        params.push(this.appDataCards[0].words[3].id);
+
+        params.push(this.appDataHints[3].value);
+        params.push(this.appDataCards[3].words[2].id);
+        params.push(this.appDataCards[2].words[2].id);
+      }
+      let param = params.join('-');
+      return param;
+    },
+
+    GetUniqueCardId(_words) {
+      if (_words.length === 0) {
+        return 0;
+      }
+      let letters = '';
+      _words.forEach((word) => {
+        letters += word.value.toLowerCase();
+      });
+      letters = letters.split('');
+      letters = letters.sort();
+      letters = letters.join('');
+      let prime = 1000000007; // a large prime number
+      let hash = 0;
+      for (let i = 0; i < letters.length; i++) {
+        hash = (hash * 26 + (letters.charCodeAt(i) - 'a'.charCodeAt(0) + 1)) % prime;
+      }
+      return hash;
+    },
+
+    CheckIfCardIsInTray(_card) {
+      if (!_card.words || _card.words.length === 0) {
+        return false;
+      }
+      this.appDataCards.forEach((card) => {
+        if (this.GetUniqueCardId(card.words) === this.GetUniqueCardId(_card.words)) {
+          return true;
+        }
+      });
+      return false;
+    },
+
+    /* === HANDLERS === */
+    HandleSubmitButtonPress() {
+      note('HandleSubmitButtonPress() called');
+      if (this.appDataPlayerCurrent.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
+        this.appStateIsModalShowing = true;
+        this.appDataConfirmationObject = { message: 'Did they have the right answer?', target: 'correct' };
+        this.appStateShowConfirmation = true;
+      } else if (this.appStateIsGuessing) {
+        if (this.userSettingsAutoCheck && this.appDataPlayerCurrent.role !== 'reviewer' && this.appStateIsGuessing && this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
+          this.IsCurrentGuessCorrect();
+        } else {
+          this.ShareBoard();
+        }
+      } else {
+        this.FillParkingLot();
+      }
+    },
+
+    HandleNewGameClick() {
+      note('HandleNewGameClick() called');
+      if (this.appStateIsGuessing && this.appDataPlayerCurrent.role !== 'reviewer' && this.appDataPlayerCreator.id !== this.appDataPlayerCurrent.id) {
+        this.appStateIsModalShowing = true;
+        this.appDataConfirmationObject = { message: 'Are you sure you want <br/>to create a new game?', target: 'newgame' };
+        this.appStateShowConfirmation = true;
+      } else {
+        this.NewGame();
       }
     },
 
@@ -379,33 +445,316 @@ var app = new Vue({
       this.appStateIsModalShowing = false;
     },
 
-    GetMessageBasedOnTrayCount(_gotIt, _name, _useName = true) {
-      note('GetMessageBasedOnTrayCount() called');
-      let name = _useName ? _name + ', ' : '';
-      switch (this.getNumberOfCardsThatHaveBeenPlacedOnTray) {
-        case 0:
-          return '🤢 Oh boy. ' + name + (!_useName ? 'This' : 'this') + ' is just sad.';
-        case 1:
-          return '🫣 ' + name + 'I guess one right is better than nothing?';
-        case 2:
-          return '😱 ' + name + (!_useName ? "You're" : "you're") + ' missing a couple!';
-        case 3:
-          return '🤪 ' + name + (!_useName ? 'Not' : 'not') + ' quite!';
-        case 4:
-          if (this.appDataPlayerCurrent.role !== 'reviewer') {
-            if (this.currentGameGuessCount === 1) {
-              return '🔥 ' + name + (!_useName ? 'You' : 'you') + ' nailed it in 1 try!';
-            } else {
-              return '😀 Nice, ' + name + 'you got it in ' + this.currentGameGuessCount + ' tries!';
-            }
-          } else if (_gotIt) {
-            return '🔥 ' + name + (!_useName ? 'You' : 'you') + ' nailed it!';
-          } else {
-            return '☔️ Whelp ' + name + "better luck next time. Here's the solution.";
-          }
+    HandlePointerMoveEvent(e) {
+      this.appDataGhostX = e.clientX;
+      this.appDataGhostY = e.clientY;
+    },
+
+    HandlePageVisibilityChange() {
+      let id = localStorage.getItem('userID');
+      if (id !== undefined && id !== null) {
+        id = JSON.parse(id);
+        this.appDataPlayerCurrent.id = id;
+      } else {
+        this.appDataPlayerCurrent.id = getRandomInt(10000000, 100000000);
+        localStorage.setItem('userID', this.appDataPlayerCurrent.id);
+        this.appStateShowOOBE = window.location.search !== '';
+      }
+      this.tempID = parseInt(this.appDataPlayerCurrent.id);
+
+      let name = localStorage.getItem('name');
+      if (name !== undefined && name !== null) {
+        this.appDataPlayerCurrent.name = name;
+      } else {
+        this.appStateIsModalShowing = true;
+        this.appStateShowIntro = true;
+        setTimeout(() => {
+          document.getElementById('nameInput').focus();
+        }, 410);
+      }
+
+      this.appDataWordSets.forEach((m) => {
+        m.isSelected = false;
+      });
+      let setID = localStorage.getItem('wordSet');
+      if (setID !== undefined && setID !== null && this.appDataWordSets.find((m) => m.id === setID)) {
+        this.currentGameWordSet = this.appDataWordSets.find((m) => m.id === setID);
+      } else {
+        this.currentGameWordSet = WordSets.find((m) => m.id === '100');
+      }
+      this.currentGameWordSet.isSelected = true;
+
+      let useThemes = localStorage.getItem('useWordSetThemes');
+      if (useThemes !== undefined && useThemes !== null) {
+        this.userSettingsUseWordSetThemes = JSON.parse(useThemes);
+        this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
+        this.SetWordSetTheme(this.currentGameWordSet);
+      }
+
+      if (this.appStateIsGuessing) {
+        this.documentCssRoot.style.setProperty('--wordScale', this.currentGameGuessingWordSet.scale);
+      } else {
+        this.documentCssRoot.style.setProperty('--wordScale', this.currentGameWordSet.scale);
+      }
+
+      let _appStateIsNewVersionAvailable = localStorage.getItem('newVersionAvailable');
+      try {
+        if (_appStateIsNewVersionAvailable !== undefined && _appStateIsNewVersionAvailable !== null) {
+          this.appStateIsNewVersionAvailable = JSON.parse(_appStateIsNewVersionAvailable);
+        }
+      } catch (_error) {
+        error('_newVersionAvailable error: ' + _error);
+      }
+
+      let userSettingsUseExtraCard = localStorage.getItem('useExtraCard');
+      if (userSettingsUseExtraCard !== undefined && userSettingsUseExtraCard !== null) {
+        this.userSettingsUseExtraCard = JSON.parse(userSettingsUseExtraCard);
+        this.tempUseExtraCard = this.userSettingsUseExtraCard;
+      }
+
+      let userSettingsAutoCheck = localStorage.getItem('autoCheck');
+      if (userSettingsAutoCheck !== undefined && userSettingsAutoCheck !== null) {
+        this.userSettingsAutoCheck = JSON.parse(userSettingsAutoCheck);
+        this.tempAutoCheck = this.userSettingsAutoCheck;
+      }
+
+      let userSettingsUseMultiColoredGems = localStorage.getItem('useMultiColoredGems');
+      if (userSettingsUseMultiColoredGems !== undefined && userSettingsUseMultiColoredGems !== null) {
+        this.userSettingsUseMultiColoredGems = JSON.parse(userSettingsUseMultiColoredGems);
+        this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
       }
     },
 
+    HandleBodyPointerUp(e, _card) {
+      note('HandleBodyPointerUp() called');
+      if (!this.appStateIsModalShowing) {
+        this.appStateIsDragging = false;
+        this.appDataDraggedCard = this.appDataEmptyCard;
+      } else {
+        this.appDataDraggedCard.isSelected = false;
+      }
+    },
+
+    HandleBodyPointerDown(e) {
+      this.appDataGhostX = e.clientX;
+      this.appDataGhostY = e.clientY;
+    },
+
+    HandleCardPointerDown(e, _card) {
+      note('HandleCardPointerDown() called');
+      if (e !== null) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.appDataGhostX = e.clientX;
+        this.appDataGhostY = e.clientY;
+        if (e.target.hasPointerCapture(e.pointerId)) {
+          e.target.releasePointerCapture(e.pointerId);
+        }
+      }
+
+      this.appDataDraggedCard = _card;
+      this.appStateIsDragging = true;
+    },
+
+    HandleCardPointerUp(e, _card) {
+      note('HandleCardPointerUp() called');
+      e.preventDefault();
+      e.stopPropagation();
+      this.appDataMessage = '';
+
+      if (this.getSelectedCard && this.getSelectedCard === _card) {
+        this.appDataDraggedCard = this.appDataEmptyCard;
+        this.appStateIsDragging = false;
+        return;
+      }
+
+      if (this.appDataDraggedCard.words.length > 0) {
+        this.SwapCards(_card, this.appDataDraggedCard);
+      }
+    },
+
+    HandlePickerCardClicked(e, _card) {
+      note('HandlePickerCardClicked() called');
+      e.preventDefault();
+      e.stopPropagation();
+      this.appDataMessage = '';
+
+      if (_card === null) {
+        _card = this.getFirstAvailableParkingSpot;
+      }
+
+      this.SwapCards(_card, this.appDataDraggedCard);
+      this.appStateIsModalShowing = false;
+    },
+
+    CancelSettings(e) {
+      note('CancelSettings() called');
+      if (e !== null) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      this.appStateIsModalShowing = false;
+      this.appStateShowSettings = false;
+      this.appStateShowIntro = false;
+      this.tempID = this.appDataPlayerCurrent.id;
+      this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
+      this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
+      // this.tempUsePortraitLayout = this.appStateUsePortraitLayout;
+      this.tempUseExtraCard = this.userSettingsUseExtraCard;
+      this.tempAutoCheck = this.userSettingsAutoCheck;
+    },
+
+    HandleIntroButtonClick(e) {
+      note('HandleIntroButtonClick() called');
+      this.SubmitSettings(null);
+      this.appStateShowOOBE = true;
+    },
+
+    SubmitSettings(e) {
+      note('SubmitSettings() called');
+      if (e !== null) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      this.appDataPlayerCurrent.name = this.tempName !== '' ? this.tempName.trim() : this.appDataPlayerCurrent.name;
+      if (!this.appStateIsGuessing) {
+        this.appDataPlayerCreator.name = this.appDataPlayerCurrent.name;
+      }
+      localStorage.setItem('name', this.appDataPlayerCurrent.name);
+      if (this.appStateShowSettings) {
+        let newSelectedWordSet = this.tempWordSets.find((set) => set.name === this.tempWordSetName);
+        this.SelectWordSet(e, newSelectedWordSet);
+
+        let wordSetChanged = false;
+        wordSetChanged = this.appDataWordSets.find((set) => set.isSelected === true).id !== this.tempWordSets.find((set) => set.isSelected === true).id;
+        this.appDataWordSets = this.tempWordSets;
+        this.currentGameWordSet = this.appDataWordSets.find((set) => set.isSelected === true);
+        if (wordSetChanged && !this.appStateIsGuessing) {
+          this.NewGame();
+          this.SetWordSetTheme(this.currentGameGuessingWordSet);
+        }
+
+        this.appDataPlayerCurrent.id = this.tempID;
+        this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
+        // this.appStateUsePortraitLayout = this.tempUsePortraitLayout;
+        this.userSettingsUseExtraCard = this.tempUseExtraCard;
+        this.userSettingsAutoCheck = this.tempAutoCheck;
+        this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
+        this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
+        this.SetWordSetTheme(this.currentGameGuessingWordSet);
+
+        localStorage.setItem('userID', this.appDataPlayerCurrent.id);
+        // localStorage.setItem('appStateUsePortraitLayout', this.appStateUsePortraitLayout);
+        localStorage.setItem('useWordSetThemes', this.userSettingsUseWordSetThemes);
+        localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
+        localStorage.setItem('autoCheck', this.userSettingsAutoCheck);
+        localStorage.setItem('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
+        localStorage.setItem('wordSet', this.currentGameWordSet.id);
+      }
+      this.appStateIsModalShowing = false;
+      this.appStateShowSettings = false;
+      this.appStateShowIntro = false;
+    },
+
+    HandleKeyDownEvent(e) {
+      if (!e.metaKey && !e.ctrlKey && !e.altKey) {
+        switch (e.key) {
+          case 'Enter':
+            note('HandleKeyDownEvent() called');
+            e.preventDefault();
+            if (!this.appStateShowSettings && !this.appStateShowTutorial && !this.appStateShowIntro && !this.appStateShowInfo && !this.appStateShowConfirmation && !this.appStateIsGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
+              this.FillParkingLot();
+            }
+            if (this.appStateShowSettings) {
+              this.SubmitSettings(e);
+            } else if (this.appStateShowTutorial) {
+              this.appStateShowOOBE = false;
+              this.ToggleShowTutorial(null);
+            } else if (this.appStateShowConfirmation) {
+              this.HandleYesNo(this.appDataConfirmationObject.target, true);
+            } else if (this.appStateShowIntro) {
+              this.HandleIntroButtonClick(null);
+            } else if (this.appStateShowInfo) {
+              this.appStateShowInfo = false;
+            }
+            break;
+          case 'Tab':
+            note('HandleKeyDownEvent() called');
+            e.preventDefault();
+            if (!this.appStateTrayIsRotating) {
+              this.RotateTray(e.shiftKey ? 1 : -1);
+            }
+            break;
+          case '-':
+            e.preventDefault();
+            e.stopPropagation();
+          case 'Escape':
+            this.appStateShowOOBE = false;
+            if (this.appStateShowSettings) {
+              this.CancelSettings(null);
+            } else if (this.appStateShowTutorial) {
+              this.ToggleShowTutorial(null);
+            } else if (this.appStateShowConfirmation) {
+              this.HandleYesNo(this.appDataConfirmationObject.target, false);
+            } else if (this.appStateShowInfo) {
+              this.appStateShowInfo = false;
+            }
+            break;
+          default:
+        }
+      }
+    },
+
+    HandleResize() {
+      this.appStateUsePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
+    },
+
+    HandlePopState() {
+      note('HandlePopState() called');
+      if (window.location.search) {
+        this.LoadPage();
+      } else {
+        this.NewGame(null);
+      }
+    },
+
+    HandleUpdateAppButtonClick() {
+      note('HandleUpdateAppButtonClick() called');
+      this.appStateIsNewVersionAvailable = false;
+      localStorage.setItem('newVersionAvailable', this.appStateIsNewVersionAvailable);
+      if (this.serviceWorker !== '') {
+        this.serviceWorker.postMessage({ action: 'skipWaiting' });
+      } else {
+        window.location.reload(true);
+      }
+    },
+
+    HandleServiceWorkerRegistration() {
+      note('HandleServiceWorkerRegistration() called');
+      if ('serviceWorker' in navigator) {
+        // Register the service worker
+        navigator.serviceWorker.register('./sw.js').then((reg) => {
+          reg.addEventListener('updatefound', () => {
+            // An updated service worker has appeared in reg.installing!
+            this.serviceWorker = reg.installing;
+            this.serviceWorker.addEventListener('statechange', () => {
+              // Has service worker state changed?
+              switch (this.serviceWorker.state) {
+                case 'installed':
+                  // There is a new service worker available, show the notification
+                  if (navigator.serviceWorker.controller) {
+                    this.appStateIsNewVersionAvailable = true;
+                    localStorage.setItem('newVersionAvailable', this.appStateIsNewVersionAvailable);
+                  }
+                  break;
+              }
+            });
+          });
+        });
+      }
+    },
+
+    /* === COMMUNICATION === */
     ShareWin() {
       note('ShareWin() called');
       let text = this.appDataPlayerCreator.name + ', I got it in ' + this.currentGameGuessCount + ' tries! 😀';
@@ -471,19 +820,6 @@ var app = new Vue({
       }
     },
 
-    GetShareTextBasedOnContext(_gotIt) {
-      note('GetShareTextBasedOnContext() called');
-      let text = '';
-      if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
-        text = '🧠 I created ' + (this.currentGameGuessingWordSet.startsWithVowel ? 'an ' : 'a ') + (this.currentGameGuessingCardCount === 5 ? '5-card ' : '') + '"' + this.currentGameGuessingWordSet.name + '" word puzzle for you to solve!';
-      } else if (this.appDataPlayerCurrent.role === 'reviewer') {
-        text = this.GetMessageBasedOnTrayCount(_gotIt, this.currentGameGuessersName);
-      } else {
-        text = '🤔 ' + this.appDataPlayerCreator.name + ", here's my guess!";
-      }
-      return text;
-    },
-
     async ShareBoard(_gotIt = false) {
       note('ShareBoard() called');
 
@@ -521,87 +857,82 @@ var app = new Vue({
       }
     },
 
-    async CreateCardsForPlayer(_appDataPlayerCurrent) {
-      note('CreateCardsForPlayer() called');
-      let wordset = await this.getCurrentGameWordSet;
-      let words = getUniqueWords(wordset);
-      for (let x = 0; x < 4; x++) {
-        const card = new CardObject({ position: x });
-        if (x === 3) {
-          card.position = 2;
+    ConstructAndSetShareURLForCurrentGame(_currentGameReviewIsFinal) {
+      note('ConstructAndSetShareURLForCurrentGame() called');
+      if (this.appStateIsGuessing) {
+        this.currentGameSolutionGuessing = '';
+        let urlString = '';
+        this.appDataCards.concat(this.appDataCardsParked).forEach((card) => {
+          if (card.words.length === 0) {
+            urlString += '----';
+          }
+          card.words.forEach((word) => {
+            urlString += word.id + '-';
+          });
+        });
+
+        this.appDataHints.forEach((hint, index) => {
+          urlString += hint.value + (index === this.appDataHints.length - 1 ? '' : '-');
+        });
+
+        urlString = encodeURIComponent(urlString);
+        urlString += '&sendingName=' + encodeURIComponent(this.appDataPlayerCurrent.name);
+        urlString += '&sendingID=' + encodeURIComponent(this.appDataPlayerCurrent.id);
+        urlString += '&puzzleName=' + encodeURIComponent(this.appDataPlayerCreator.name);
+        urlString += '&puzzleID=' + encodeURIComponent(this.appDataPlayerCreator.id);
+        urlString += '&wordSetID=' + encodeURIComponent(this.currentGameGuessingWordSet.id);
+        urlString += '&useExtraCard=' + encodeURIComponent(this.currentGameGuessingCardCount === 5);
+        urlString += '&sol=' + encodeURIComponent(this.currentGameSolutionActual);
+        if (_currentGameReviewIsFinal) {
+          urlString += '&final=true';
         }
-        if (x === 2) {
-          card.position = 3;
-        }
-        card.words = words.slice(0 + x * 4, 4 + x * 4);
-        this.appDataCards.push(card);
+        urlString = window.location.origin + window.location.pathname + '?board=' + urlString + '&deletableCharacters=these';
+        this.appDataShareURL = urlString;
+        history.pushState(null, null, this.appDataShareURL);
       }
+    },
+
+    GetMessageBasedOnTrayCount(_gotIt, _name, _useName = true) {
+      note('GetMessageBasedOnTrayCount() called');
+      let name = _useName ? _name + ', ' : '';
+      switch (this.getNumberOfCardsThatHaveBeenPlacedOnTray) {
+        case 0:
+          return '🤢 Oh boy. ' + name + (!_useName ? 'This' : 'this') + ' is just sad.';
+        case 1:
+          return '🫣 ' + name + 'I guess one right is better than nothing?';
+        case 2:
+          return '😱 ' + name + (!_useName ? "You're" : "you're") + ' missing a couple!';
+        case 3:
+          return '🤪 ' + name + (!_useName ? 'Not' : 'not') + ' quite!';
+        case 4:
+          if (this.appDataPlayerCurrent.role !== 'reviewer') {
+            if (this.currentGameGuessCount === 1) {
+              return '🔥 ' + name + (!_useName ? 'You' : 'you') + ' nailed it in 1 try!';
+            } else {
+              return '😀 Nice, ' + name + 'you got it in ' + this.currentGameGuessCount + ' tries!';
+            }
+          } else if (_gotIt) {
+            return '🔥 ' + name + (!_useName ? 'You' : 'you') + ' nailed it!';
+          } else {
+            return '☔️ Whelp ' + name + "better luck next time. Here's the solution.";
+          }
+      }
+    },
+
+    GetShareTextBasedOnContext(_gotIt) {
+      note('GetShareTextBasedOnContext() called');
+      let text = '';
+      if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
+        text = '🧠 I created ' + (this.currentGameGuessingWordSet.startsWithVowel ? 'an ' : 'a ') + (this.currentGameGuessingCardCount === 5 ? '5-card ' : '') + '"' + this.currentGameGuessingWordSet.name + '" word puzzle for you to solve!';
+      } else if (this.appDataPlayerCurrent.role === 'reviewer') {
+        text = this.GetMessageBasedOnTrayCount(_gotIt, this.currentGameGuessersName);
+      } else {
+        text = '🤔 ' + this.appDataPlayerCreator.name + ", here's my guess!";
+      }
+      return text;
     },
 
     /* === CARD MANIPULATION === */
-
-    HandleBodyPointerUp(e, _card) {
-      note('HandleBodyPointerUp() called');
-      if (!this.appStateIsModalShowing) {
-        this.appStateIsDragging = false;
-        this.appDataDraggedCard = this.appDataEmptyCard;
-      } else {
-        this.appDataDraggedCard.isSelected = false;
-      }
-    },
-
-    HandleBodyPointerDown(e) {
-      this.appDataGhostX = e.clientX;
-      this.appDataGhostY = e.clientY;
-    },
-
-    HandleCardPointerDown(e, _card) {
-      note('HandleCardPointerDown() called');
-      if (e !== null) {
-        e.preventDefault();
-        e.stopPropagation();
-        this.appDataGhostX = e.clientX;
-        this.appDataGhostY = e.clientY;
-        if (e.target.hasPointerCapture(e.pointerId)) {
-          e.target.releasePointerCapture(e.pointerId);
-        }
-      }
-
-      this.appDataDraggedCard = _card;
-      this.appStateIsDragging = true;
-    },
-
-    HandleCardPointerUp(e, _card) {
-      note('HandleCardPointerUp() called');
-      e.preventDefault();
-      e.stopPropagation();
-      this.appDataMessage = '';
-
-      if (this.getSelectedCard && this.getSelectedCard === _card) {
-        this.appDataDraggedCard = this.appDataEmptyCard;
-        this.appStateIsDragging = false;
-        return;
-      }
-
-      if (this.appDataDraggedCard.words.length > 0) {
-        this.SwapCards(_card, this.appDataDraggedCard);
-      }
-    },
-
-    HandlePickerCardClicked(e, _card) {
-      note('HandlePickerCardClicked() called');
-      e.preventDefault();
-      e.stopPropagation();
-      this.appDataMessage = '';
-
-      if (_card === null) {
-        _card = this.getFirstAvailableParkingSpot;
-      }
-
-      this.SwapCards(_card, this.appDataDraggedCard);
-      this.appStateIsModalShowing = false;
-    },
-
     SwapCards(_card1, _card2) {
       note('SwapCards() called');
 
@@ -826,8 +1157,7 @@ var app = new Vue({
       this.appStateTrayRotation = 0;
     },
 
-    /* END CARD MANIPULATION */
-
+    /* === INITIALIZATION === */
     async NewGame(e, _appDataMessage = '', _rotate = true) {
       note('NewGame() called');
       document.title = 'Facets!';
@@ -855,86 +1185,6 @@ var app = new Vue({
 
       if (_rotate) {
         this.RotateTray(-4);
-      }
-    },
-
-    HandlePointerMoveEvent(e) {
-      this.appDataGhostX = e.clientX;
-      this.appDataGhostY = e.clientY;
-    },
-
-    HandlePageVisibilityChange() {
-      let id = localStorage.getItem('userID');
-      if (id !== undefined && id !== null) {
-        id = JSON.parse(id);
-        this.appDataPlayerCurrent.id = id;
-      } else {
-        this.appDataPlayerCurrent.id = getRandomInt(10000000, 100000000);
-        localStorage.setItem('userID', this.appDataPlayerCurrent.id);
-        this.appStateShowOOBE = window.location.search !== '';
-      }
-      this.tempID = parseInt(this.appDataPlayerCurrent.id);
-
-      let name = localStorage.getItem('name');
-      if (name !== undefined && name !== null) {
-        this.appDataPlayerCurrent.name = name;
-      } else {
-        this.appStateIsModalShowing = true;
-        this.appStateShowIntro = true;
-        setTimeout(() => {
-          document.getElementById('nameInput').focus();
-        }, 410);
-      }
-
-      this.appDataWordSets.forEach((m) => {
-        m.isSelected = false;
-      });
-      let setID = localStorage.getItem('wordSet');
-      if (setID !== undefined && setID !== null && this.appDataWordSets.find((m) => m.id === setID)) {
-        this.currentGameWordSet = this.appDataWordSets.find((m) => m.id === setID);
-      } else {
-        this.currentGameWordSet = WordSets.find((m) => m.id === '100');
-      }
-      this.currentGameWordSet.isSelected = true;
-
-      let useThemes = localStorage.getItem('useWordSetThemes');
-      if (useThemes !== undefined && useThemes !== null) {
-        this.userSettingsUseWordSetThemes = JSON.parse(useThemes);
-        this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
-        this.SetWordSetTheme(this.currentGameWordSet);
-      }
-
-      if (this.appStateIsGuessing) {
-        this.documentCssRoot.style.setProperty('--wordScale', this.currentGameGuessingWordSet.scale);
-      } else {
-        this.documentCssRoot.style.setProperty('--wordScale', this.currentGameWordSet.scale);
-      }
-
-      let _appStateIsNewVersionAvailable = localStorage.getItem('newVersionAvailable');
-      try {
-        if (_appStateIsNewVersionAvailable !== undefined && _appStateIsNewVersionAvailable !== null) {
-          this.appStateIsNewVersionAvailable = JSON.parse(_appStateIsNewVersionAvailable);
-        }
-      } catch (_error) {
-        error('_newVersionAvailable error: ' + _error);
-      }
-
-      let userSettingsUseExtraCard = localStorage.getItem('useExtraCard');
-      if (userSettingsUseExtraCard !== undefined && userSettingsUseExtraCard !== null) {
-        this.userSettingsUseExtraCard = JSON.parse(userSettingsUseExtraCard);
-        this.tempUseExtraCard = this.userSettingsUseExtraCard;
-      }
-
-      let userSettingsAutoCheck = localStorage.getItem('autoCheck');
-      if (userSettingsAutoCheck !== undefined && userSettingsAutoCheck !== null) {
-        this.userSettingsAutoCheck = JSON.parse(userSettingsAutoCheck);
-        this.tempAutoCheck = this.userSettingsAutoCheck;
-      }
-
-      let userSettingsUseMultiColoredGems = localStorage.getItem('useMultiColoredGems');
-      if (userSettingsUseMultiColoredGems !== undefined && userSettingsUseMultiColoredGems !== null) {
-        this.userSettingsUseMultiColoredGems = JSON.parse(userSettingsUseMultiColoredGems);
-        this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
       }
     },
 
@@ -967,254 +1217,6 @@ var app = new Vue({
       }
 
       this.appStateUsePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
-    },
-
-    ShowSettings() {
-      note('ShowSettings() called');
-      this.appStateIsModalShowing = true;
-      this.appStateShowSettings = true;
-      this.tempWordSets = [];
-      this.tempWordSetName = this.getCurrentSelectedTempWordSetName;
-      this.appDataWordSets.forEach((set) => {
-        this.tempWordSets.push(new WordSetObject(set));
-      });
-      this.tempName = this.appDataPlayerCurrent.name;
-    },
-
-    SelectWordSet(e, _wordSet) {
-      note('SelectWordSet() called');
-      if (e !== null) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      this.tempWordSets.forEach((set) => {
-        set.isSelected = false;
-      });
-      _wordSet.isSelected = true;
-      this.documentCssRoot.style.setProperty('--wordScale', _wordSet.scale);
-      // this.documentCssRoot.style.setProperty('--wordAlignment', _wordSet.wordAlignment);
-    },
-
-    GetCurrentSolutionParamString() {
-      note('GetCurrentSolutionParamString() called');
-      let params = [];
-      if (this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
-        params.push(this.appDataHints[0].value);
-        params.push(this.appDataCards[0].words[0].id);
-        params.push(this.appDataCards[1].words[0].id);
-
-        params.push(this.appDataHints[1].value);
-        params.push(this.appDataCards[1].words[1].id);
-        params.push(this.appDataCards[3].words[1].id);
-
-        params.push(this.appDataHints[2].value);
-        params.push(this.appDataCards[2].words[3].id);
-        params.push(this.appDataCards[0].words[3].id);
-
-        params.push(this.appDataHints[3].value);
-        params.push(this.appDataCards[3].words[2].id);
-        params.push(this.appDataCards[2].words[2].id);
-      }
-      let param = params.join('-');
-      return param;
-    },
-
-    CancelSettings(e) {
-      note('CancelSettings() called');
-      if (e !== null) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      this.appStateIsModalShowing = false;
-      this.appStateShowSettings = false;
-      this.appStateShowIntro = false;
-      this.tempID = this.appDataPlayerCurrent.id;
-      this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
-      this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
-      // this.tempUsePortraitLayout = this.appStateUsePortraitLayout;
-      this.tempUseExtraCard = this.userSettingsUseExtraCard;
-      this.tempAutoCheck = this.userSettingsAutoCheck;
-    },
-
-    HandleIntroButtonClick(e) {
-      note('HandleIntroButtonClick() called');
-      this.SubmitSettings(null);
-      this.appStateShowOOBE = true;
-    },
-
-    SubmitSettings(e) {
-      note('SubmitSettings() called');
-      if (e !== null) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      this.appDataPlayerCurrent.name = this.tempName !== '' ? this.tempName.trim() : this.appDataPlayerCurrent.name;
-      if (!this.appStateIsGuessing) {
-        this.appDataPlayerCreator.name = this.appDataPlayerCurrent.name;
-      }
-      localStorage.setItem('name', this.appDataPlayerCurrent.name);
-      if (this.appStateShowSettings) {
-        let newSelectedWordSet = this.tempWordSets.find((set) => set.name === this.tempWordSetName);
-        this.SelectWordSet(e, newSelectedWordSet);
-
-        let wordSetChanged = false;
-        wordSetChanged = this.appDataWordSets.find((set) => set.isSelected === true).id !== this.tempWordSets.find((set) => set.isSelected === true).id;
-        this.appDataWordSets = this.tempWordSets;
-        this.currentGameWordSet = this.appDataWordSets.find((set) => set.isSelected === true);
-        if (wordSetChanged && !this.appStateIsGuessing) {
-          this.NewGame();
-          this.SetWordSetTheme(this.currentGameGuessingWordSet);
-        }
-
-        this.appDataPlayerCurrent.id = this.tempID;
-        this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
-        // this.appStateUsePortraitLayout = this.tempUsePortraitLayout;
-        this.userSettingsUseExtraCard = this.tempUseExtraCard;
-        this.userSettingsAutoCheck = this.tempAutoCheck;
-        this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
-        this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
-        this.SetWordSetTheme(this.currentGameGuessingWordSet);
-
-        localStorage.setItem('userID', this.appDataPlayerCurrent.id);
-        // localStorage.setItem('appStateUsePortraitLayout', this.appStateUsePortraitLayout);
-        localStorage.setItem('useWordSetThemes', this.userSettingsUseWordSetThemes);
-        localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
-        localStorage.setItem('autoCheck', this.userSettingsAutoCheck);
-        localStorage.setItem('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
-        localStorage.setItem('wordSet', this.currentGameWordSet.id);
-      }
-      this.appStateIsModalShowing = false;
-      this.appStateShowSettings = false;
-      this.appStateShowIntro = false;
-    },
-
-    HandleKeyDownEvent(e) {
-      if (!e.metaKey && !e.ctrlKey && !e.altKey) {
-        switch (e.key) {
-          case 'Enter':
-            note('HandleKeyDownEvent() called');
-            e.preventDefault();
-            if (!this.appStateShowSettings && !this.appStateShowTutorial && !this.appStateShowIntro && !this.appStateShowInfo && !this.appStateShowConfirmation && !this.appStateIsGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
-              this.FillParkingLot();
-            }
-            if (this.appStateShowSettings) {
-              this.SubmitSettings(e);
-            } else if (this.appStateShowTutorial) {
-              this.appStateShowOOBE = false;
-              this.ToggleShowTutorial(null);
-            } else if (this.appStateShowConfirmation) {
-              this.HandleYesNo(this.appDataConfirmationObject.target, true);
-            } else if (this.appStateShowIntro) {
-              this.HandleIntroButtonClick(null);
-            } else if (this.appStateShowInfo) {
-              this.appStateShowInfo = false;
-            }
-            break;
-          case 'Tab':
-            note('HandleKeyDownEvent() called');
-            e.preventDefault();
-            if (!this.appStateTrayIsRotating) {
-              this.RotateTray(e.shiftKey ? 1 : -1);
-            }
-            break;
-          case '-':
-            e.preventDefault();
-            e.stopPropagation();
-          case 'Escape':
-            this.appStateShowOOBE = false;
-            if (this.appStateShowSettings) {
-              this.CancelSettings(null);
-            } else if (this.appStateShowTutorial) {
-              this.ToggleShowTutorial(null);
-            } else if (this.appStateShowConfirmation) {
-              this.HandleYesNo(this.appDataConfirmationObject.target, false);
-            } else if (this.appStateShowInfo) {
-              this.appStateShowInfo = false;
-            }
-            break;
-          default:
-        }
-      }
-    },
-
-    GetUniqueCardId(_words) {
-      if (_words.length === 0) {
-        return 0;
-      }
-      let letters = '';
-      _words.forEach((word) => {
-        letters += word.value.toLowerCase();
-      });
-      letters = letters.split('');
-      letters = letters.sort();
-      letters = letters.join('');
-      let prime = 1000000007; // a large prime number
-      let hash = 0;
-      for (let i = 0; i < letters.length; i++) {
-        hash = (hash * 26 + (letters.charCodeAt(i) - 'a'.charCodeAt(0) + 1)) % prime;
-      }
-      return hash;
-    },
-
-    CheckIfCardIsInTray(_card) {
-      if (!_card.words || _card.words.length === 0) {
-        return false;
-      }
-      this.appDataCards.forEach((card) => {
-        if (this.GetUniqueCardId(card.words) === this.GetUniqueCardId(_card.words)) {
-          return true;
-        }
-      });
-      return false;
-    },
-
-    HandleResize() {
-      this.appStateUsePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
-    },
-
-    HandlePopState() {
-      note('HandlePopState() called');
-      if (window.location.search) {
-        this.LoadPage();
-      } else {
-        this.NewGame(null);
-      }
-    },
-
-    HandleUpdateAppButtonClick() {
-      note('HandleUpdateAppButtonClick() called');
-      this.appStateIsNewVersionAvailable = false;
-      localStorage.setItem('newVersionAvailable', this.appStateIsNewVersionAvailable);
-      if (this.serviceWorker !== '') {
-        this.serviceWorker.postMessage({ action: 'skipWaiting' });
-      } else {
-        window.location.reload(true);
-      }
-    },
-
-    HandleServiceWorkerRegistration() {
-      note('HandleServiceWorkerRegistration() called');
-      if ('serviceWorker' in navigator) {
-        // Register the service worker
-        navigator.serviceWorker.register('./sw.js').then((reg) => {
-          reg.addEventListener('updatefound', () => {
-            // An updated service worker has appeared in reg.installing!
-            this.serviceWorker = reg.installing;
-            this.serviceWorker.addEventListener('statechange', () => {
-              // Has service worker state changed?
-              switch (this.serviceWorker.state) {
-                case 'installed':
-                  // There is a new service worker available, show the notification
-                  if (navigator.serviceWorker.controller) {
-                    this.appStateIsNewVersionAvailable = true;
-                    localStorage.setItem('newVersionAvailable', this.appStateIsNewVersionAvailable);
-                  }
-                  break;
-              }
-            });
-          });
-        });
-      }
     },
   },
 
