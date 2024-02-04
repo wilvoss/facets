@@ -1,0 +1,1 @@
+function HandleOnLoadEvent(n){}window.addEventListener("load",HandleOnLoadEvent);

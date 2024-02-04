@@ -300,9 +300,9 @@ icon.info {
 icon.spinner {
     mask-image: url(../images/icon-spinner.svg);
     -webkit-mask-image: url(../images/icon-spinner.svg);
-    animation: spin 3s linear 0s infinite;
-    -webkit-animation: spin 3s linear 0s infinite;
-    transition: var(--mediumTransition) ease-in-out opacity;
+    animation: spin 1s steps(11, start) infinite;
+    -webkit-animation: spin 1s steps(11, start) infinite;
+    transition: var(--mediumTransition) linear opacity;
     transition-delay: 50ms;
     opacity: 0;
 }
@@ -313,9 +313,12 @@ icon.spinner.show {
 }
 
 @keyframes spin {
+
+
     100% {
         transform: rotate(360deg);
     }
+
 }
 
 icon.add {
@@ -983,7 +986,8 @@ modal small {
     font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
     display: block;
     font-size: 70%;
-    opacity: .7;
+    /* opacity: .7; */
+    color: hsl(0, 0%, 65%);
     line-height: 120%;
     width: 100%;
     max-width: calc((2 * var(--cardSize)) + (2 * var(--defaultGap)));
