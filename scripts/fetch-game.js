@@ -13,12 +13,7 @@ async function HandleOnLoadEvent(_e) {
       }
       return response.text();
     })
-    .then(
-      (shortUrl) =>
-        function () {
-          window.location.href = window.location.hostname + '/' + shortUrl;
-        },
-    )
+    .then((shortUrl) => console.log(shortUrl))
     .catch((error) => console.error('Error:', error));
 }
 
