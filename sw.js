@@ -1,4 +1,4 @@
-const CACHE_VERSION = '0.1.197';
+const CACHE_VERSION = '0.1.198';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
@@ -23,6 +23,7 @@ const cacheFiles = [
   'helpers/console-enhancer-min.js',
   'images/diamond-back.svg',
   'images/diamond.svg',
+  'images/facets_og.png',
   'images/icon-download.svg',
   'images/icon-rotatearrow.svg',
   'images/icon-share.svg',
