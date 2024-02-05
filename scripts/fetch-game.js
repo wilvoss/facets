@@ -1,7 +1,7 @@
 async function HandleOnLoadEvent(_e) {
   var corsflareUrl = 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
   var requestUrl = corsflareUrl + encodeURIComponent(window.location.search.split('?')[1]);
-  console.log(requestUrl);
+
   await fetch(requestUrl, {
     headers: {
       Host: window.location.hostname,
@@ -14,7 +14,12 @@ async function HandleOnLoadEvent(_e) {
       }
       return response.text();
     })
-    .then((shortUrl) => console.log(shortUrl))
+    .then(
+      (shortUrl) =>
+        function () {
+          location.href = location.origin + '/' + shortUrl;
+        },
+    )
     .catch((error) => console.error('Error:', error));
 }
 
