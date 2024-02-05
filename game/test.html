@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html itemtype="https://schema.org/VideoGame" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="x-content-type-options=nosniff" />
+
+    <title>test</title>
+  </head>
+
+  <body>
+    <button onclick="GetGame()">Get game</button>
+
+    <script type="text/javascript">
+      async function GetGame() {
+        this.appStateIsGettingTinyURL = true;
+        var corsflareUrl = 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
+        var requestUrl = corsflareUrl + encodeURIComponent('?board=----------------3224-3268-3124-2662-3186-2968-2668-3256-3264-3097-2688-2659-3115-2675-2774-2827---------fkj-ldksj-lfkj-ldfj&sendingName=Wil&sendingID=80766756&puzzleName=Wil&puzzleID=80766756&wordSetID=9&useExtraCard=false&sol=fkj-2688-2774-ldksj-2827-3224-lfkj-3186-3097-ldfj-3268-3256&deletableCharacters=these');
+
+        await fetch(requestUrl, {
+          method: 'POST',
+          headers: {
+            Host: window.location.hostname,
+            Origin: window.location.origin,
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Server error: ' + response.status);
+            }
+            return response.text();
+          })
+          .then((shortUrlParam) => console.log(shortUrlParam))
+          .catch((error) => console.error('Error:', error));
+      }
+    </script>
+  </body>
+</html>

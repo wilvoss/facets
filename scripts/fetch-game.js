@@ -5,14 +5,14 @@ async function HandleOnLoadEvent(_e) {
   // Validate and sanitize the URL
   var requestUrl;
   try {
-    requestUrl = new URL(decodeURIComponent(rawUrl));
+    requestUrl = new URL(decodeURIComponent(window.location));
   } catch (_) {
-    console.error('Invalid URL:', rawUrl);
+    console.error('Invalid URL:', requestUrl);
     HandleError();
     return;
   }
 
-  requestUrl = corsflareUrl + encodeURIComponent(requestUrl);
+  requestUrl = corsflareUrl + encodeURIComponent(rawUrl);
 
   await fetch(requestUrl, {
     headers: {
@@ -27,8 +27,8 @@ async function HandleOnLoadEvent(_e) {
       }
       return response.text();
     })
-    .then((shortUrl) => {
-      location.href = location.origin + '/' + shortUrl;
+    .then((searchParams) => {
+      location.href = location.origin + '/' + searchParams;
     })
     .catch((error) => {
       HandleError();
