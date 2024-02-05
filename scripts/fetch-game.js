@@ -5,6 +5,7 @@ async function HandleOnLoadEvent(_e) {
   await fetch(requestUrl, {
     headers: {
       Host: window.location.hostname,
+      Origin: window.location.origin,
     },
   })
     .then((response) => {
