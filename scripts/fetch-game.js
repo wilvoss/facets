@@ -28,7 +28,7 @@ async function HandleOnLoadEvent(_e) {
       return response.text();
     })
     .then((searchParams) => {
-      location.href = location.origin + '/' + searchParams;
+      location.href = location.origin + '/?' + searchParams;
     })
     .catch((error) => {
       HandleError();
