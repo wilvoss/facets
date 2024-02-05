@@ -1,4 +1,4 @@
-const CACHE_VERSION = '0.1.196';
+const CACHE_VERSION = '0.1.197';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support

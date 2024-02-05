@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.196',
+    appDataVersion: '0.1.197',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -864,21 +864,22 @@ var app = new Vue({
       if (this.appStateIsGuessing) {
         this.currentGameSolutionGuessing = '';
         let urlString = '';
+        let boardString = '';
         this.appDataCards.concat(this.appDataCardsParked).forEach((card) => {
           if (card.words.length === 0) {
-            urlString += '----';
+            boardString += '----';
           }
           card.words.forEach((word) => {
-            urlString += word.id + '-';
+            boardString += word.id + '-';
           });
         });
 
         this.appDataHints.forEach((hint, index) => {
-          urlString += hint.value + (index === this.appDataHints.length - 1 ? '' : '-');
+          boardString += hint.value + (index === this.appDataHints.length - 1 ? '' : '-');
         });
 
         urlString = encodeURIComponent(urlString);
-        urlString += '&sendingName=' + encodeURIComponent(this.appDataPlayerCurrent.name);
+        urlString += '?sendingName=' + encodeURIComponent(this.appDataPlayerCurrent.name);
         urlString += '&sendingID=' + encodeURIComponent(this.appDataPlayerCurrent.id);
         urlString += '&puzzleName=' + encodeURIComponent(this.appDataPlayerCreator.name);
         urlString += '&puzzleID=' + encodeURIComponent(this.appDataPlayerCreator.id);
@@ -888,7 +889,7 @@ var app = new Vue({
         if (_currentGameReviewIsFinal) {
           urlString += '&final=true';
         }
-        urlString = window.location.origin + window.location.pathname + '?board=' + urlString + '&deletableCharacters=these';
+        urlString = window.location.origin + window.location.pathname + urlString + '&board=' + boardString;
         this.appDataShareURL = urlString;
         history.pushState(null, null, this.appDataShareURL);
       }
