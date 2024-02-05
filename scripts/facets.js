@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.195',
+    appDataVersion: '0.1.196',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -835,12 +835,14 @@ var app = new Vue({
         this.ShareText(text + ' <' + this.appDataShareURL + '>');
       } else {
         this.appStateIsGettingTinyURL = true;
-        var corsflareUrl = 'https://worker-cold-butterfly-c870.bigtentgames.workers.dev/';
-        var requestUrl = corsflareUrl + encodeURIComponent(window.location.search);
+        var corsflareUrl = 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
+        var requestUrl = corsflareUrl + location.search.substring(1);
 
         await fetch(requestUrl, {
+          method: 'POST',
           headers: {
-            Host: new URL(this.appDataShareURL).hostname,
+            Host: window.location.hostname,
+            Origin: window.location.origin,
           },
         })
           .then((response) => {
@@ -849,7 +851,7 @@ var app = new Vue({
             }
             return response.text();
           })
-          .then((shortUrl) => (this.appDataShareURL = shortUrl))
+          .then((shortUrlParam) => (this.appDataShareURL = location.origin + '/game/?' + shortUrlParam))
           .catch((error) => console.error('Error:', error));
 
         this.appStateIsGettingTinyURL = false;
