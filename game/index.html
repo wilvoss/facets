@@ -25,6 +25,19 @@
 
     <link rel="stylesheet" href="../styles/normalize.css" media="screen" />
     <link rel="stylesheet" href="../styles/main-min.css" media="screen" />
+    <style>
+      button.loading {
+        cursor: default;
+        background: none;
+        font-family: 'Abel';
+        pointer-events: none;
+      }
+      modal controls.hide,
+      button.hide,
+      message.hide {
+        display: none;
+      }
+    </style>
   </head>
 
   <body>
@@ -37,8 +50,11 @@
             don't connect so easily. 💎
           </small>
         </h2>
-
-        <button style="cursor: default; background: none; font-family: 'Abel'" class="inline">Loading<icon class="spinner show"></icon></button>
+        <message id="message" class="hide">There was a problem</message>
+        <button class="inline loading" id="loadingButton">Loading<icon class="spinner show"></icon></button>
+        <controls id="controls" class="hide">
+          <button onclick="location.href = location.origin" id="loadingButton">Okay</button>
+        </controls>
       </section>
     </modal>
 

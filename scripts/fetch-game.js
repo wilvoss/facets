@@ -1,6 +1,18 @@
 async function HandleOnLoadEvent(_e) {
   var corsflareUrl = 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
-  var requestUrl = corsflareUrl + encodeURIComponent(window.location.search.split('?')[1]);
+  var rawUrl = window.location.search.split('?')[1];
+
+  // Validate and sanitize the URL
+  var requestUrl;
+  try {
+    requestUrl = new URL(decodeURIComponent(rawUrl));
+  } catch (_) {
+    console.error('Invalid URL:', rawUrl);
+    HandleError();
+    return;
+  }
+
+  requestUrl = corsflareUrl + encodeURIComponent(requestUrl);
 
   await fetch(requestUrl, {
     headers: {
@@ -10,6 +22,7 @@ async function HandleOnLoadEvent(_e) {
   })
     .then((response) => {
       if (!response.ok) {
+        HandleError();
         throw new Error('Server error: ' + response.status);
       }
       return response.text();
@@ -17,7 +30,20 @@ async function HandleOnLoadEvent(_e) {
     .then((shortUrl) => {
       location.href = location.origin + '/' + shortUrl;
     })
-    .catch((error) => console.error('Error:', error));
+    .catch((error) => {
+      HandleError();
+      console.error('Error:', error);
+    });
+}
+
+function HandleError() {
+  let button = document.getElementById('loadingButton');
+  let controls = document.getElementById('controls');
+  let message = document.getElementById('message');
+
+  message.className = '';
+  controls.className = '';
+  button.className = 'hide';
 }
 
 window.addEventListener('load', HandleOnLoadEvent);
