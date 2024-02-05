@@ -14,12 +14,9 @@ async function HandleOnLoadEvent(_e) {
       }
       return response.text();
     })
-    .then(
-      (shortUrl) =>
-        function () {
-          location.href = location.origin + '/' + shortUrl;
-        },
-    )
+    .then((shortUrl) => {
+      location.href = location.origin + '/' + shortUrl;
+    })
     .catch((error) => console.error('Error:', error));
 }
 
