@@ -187,7 +187,6 @@ button.update {
     padding: 8px var(--defaultGap) 6px;
     background: hsla(var(--hueCreating), 80%, 10%, 1);
     border: 1px solid hsl(var(--trayCreatingBackgroundHSL));
-    /* border-width: 1px 1px 0 1px; */
     transform: translateY(38px);
     color: hsl(var(--appForegroundHSL));
     border-radius: var(--borderRadius);
@@ -376,13 +375,17 @@ header h1 {
     line-height: 84%;
 }
 
-header subtitle {
+subtitle {
     justify-content: center;
+    align-items: center;
     gap: var(--defaultGap);
+    position: absolute;
+    left: 0;
+    width: 100%
 }
 
 
-header subtitle {
+subtitle {
     color: hsla(var(--linkColorDarkHSL), 1);
     display: flex;
     font-size: 70%;
@@ -433,10 +436,6 @@ cta {
     display: inline-block;
     font-family: 'Theme';
     color: hsl(var(--linkColorLightHSL));
-    /* padding: 1px 8px; */
-    /* font-size: 16px; */
-    /* border: 1px solid hsla(var(--linkColorLightHSL), .5); */
-    /* border-radius: var(--borderRadius); */
 }
 
 .redText {
@@ -449,7 +448,6 @@ modal message {
     padding-top: var(--defaultGap);
     margin-bottom: calc(.5 * var(--defaultGap));
     padding-bottom: calc(.5 * var(--defaultGap));
-    /* border-bottom: 1px solid hsla(var(--appForegroundHSL), .1); */
 }
 
 modal section message {
@@ -590,7 +588,7 @@ wrapper controls button {
     font-size: 150%;
     width: var(--cardSize);
     height: 100%;
-    padding: 0 var(--defaultGap) calc(var(--defaultGap) / 2);
+    padding: 10px var(--defaultGap);
 }
 
 rotators {
@@ -830,22 +828,18 @@ spot.empty card {
 
 
 parking spot.empty {
-    /* outline-color: hsla(var(--hueMain), 100%, 70%, .7); */
     outline-style: dashed;
 }
 
 .guessing parking spot.empty {
-    /* outline-color: hsla(var(--hueGuessing), 100%, 70%, .7); */
     outline-style: dashed;
 }
 
 .reviewing.guessing parking spot.empty {
-    /* outline-color: hsla(var(--hueReviewing), 100%, 70%, .7); */
     outline-style: dashed;
 }
 
 .creating parking spot.empty {
-    /* outline-color: hsla(var(--hueReviewing), 100%, 70%, .7); */
     opacity: .4;
 }
 
@@ -1179,7 +1173,6 @@ modal {
     width: 100%;
     height: 100%;
     overflow-x: hidden;
-    /* flex-wrap: wrap; */
     background: hsla(var(--appBackgroundDarkestHSL), 1);
     opacity: 1;
     z-index: 300;
@@ -1331,7 +1324,7 @@ version {
 
     wrapper controls button {
         height: 100%;
-        padding: 0 0 var(--defaultGap);
+        padding: 10px 0;
     }
 
     wrapper.mobile, .portrait wrapper.mobile {
@@ -1364,7 +1357,7 @@ version {
         font-size: 180%;
     }
 
-    header subtitle {
+    subtitle {
         font-size: 70%;
         justify-content: center;
     }
@@ -1449,13 +1442,12 @@ version {
 
     wrapper:first-of-type {
         padding: calc(var(--defaultGap) / 1) 0;
-        margin-bottom: 0;
         gap: 0px;
         align-items: center;
     }
 
     wrapper controls button {
-        padding: 0 0 var(--defaultGap)
+        padding: 10px 0;
     }
 
     .notMobile {
@@ -1529,12 +1521,11 @@ version {
         font-size: 280%;
     }
 
-    header subtitle {
-        justify-content: space-between;
+    subtitle {
         font-size: 100%;
     }
 
-    header subtitle button.inline {
+    subtitle button.inline {
         padding: 6px 2px;
         text-wrap: nowrap;
     }
@@ -1672,7 +1663,6 @@ version {
     }
 
     wrapper.mobile.extra, .portrait wrapper.mobile.extra {
-        /* transform: translateY(calc(.7 * var(--cardSize))); */
         scale: .5;
 
     }
