@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.209',
+    appDataVersion: '0.1.210',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -37,6 +37,7 @@ var app = new Vue({
     appDataTransitionShort: 0,
     appDataWordSets: [...WordSets],
     // app state
+    appStateForceAutoCheck: false,
     appStateIsDragging: false,
     appStateIsGettingTinyURL: false,
     appStateIsGuessing: false,
@@ -276,7 +277,7 @@ var app = new Vue({
       this.appDataPlayerCreator.id = urlParams.has('puzzleID') ? parseInt(urlParams.get('puzzleID')) : this.appDataPlayerCreator.id;
       this.currentGameGuessingWordSet = urlParams.has('wordSetID') ? this.appDataWordSets.find((s) => s.id === urlParams.get('wordSetID')) : this.currentGameWordSet;
       this.currentGameGuessingCardCount = urlParams.has('useExtraCard') && JSON.parse(urlParams.get('useExtraCard')) ? 5 : 4;
-
+      this.appStateForceAutoCheck = appDataPlayerCreator.id === 0;
       let corruptData = false;
       if (_boardArray.length >= 40) {
         this.appDataShareURL = window.location.href;
@@ -431,7 +432,7 @@ var app = new Vue({
         this.appDataConfirmationObject = { message: 'Did they have the right answer?', target: 'correct' };
         this.appStateShowConfirmation = true;
       } else if (this.appStateIsGuessing) {
-        if (this.userSettingsAutoCheck && this.appDataPlayerCurrent.role !== 'reviewer' && this.appStateIsGuessing && this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
+        if ((this.appStateForceAutoCheck || this.userSettingsAutoCheck) && this.appDataPlayerCurrent.role !== 'reviewer' && this.appStateIsGuessing && this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
           this.IsCurrentGuessCorrect();
         } else {
           this.ShareBoard();
@@ -444,9 +445,9 @@ var app = new Vue({
     HandleOldGameClick(_game) {
       let stringArray = ['?'];
       stringArray.push('sendingName=Player');
-      stringArray.push('&sendingID=-1');
+      stringArray.push('&sendingID=' + _game.sendingID);
       stringArray.push('&puzzleName=Player');
-      stringArray.push('&puzzleID=-1');
+      stringArray.push('&puzzleID=' + _game.puzzleID);
       stringArray.push('&wordSetID=' + _game.wordSetID);
       stringArray.push('&useExtraCard=' + _game.useExtraCard);
       stringArray.push('&sol=' + _game.sol);
@@ -1218,6 +1219,7 @@ var app = new Vue({
       this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
       this.currentGameSolutionGuessing = '';
       this.appStateTrayIsRotating = false;
+      this.appStateForceAutoCheck = false;
       this.SetWordSetTheme(this.currentGameWordSet);
       this.appDataShareURL = '';
       history.pushState(null, null, window.location.origin + window.location.pathname);
@@ -1362,7 +1364,7 @@ var app = new Vue({
     getSubmitButtonText: function () {
       let text = 'Send';
       if (this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
-        text = this.userSettingsAutoCheck ? 'Guess' : text;
+        text = this.userSettingsAutoCheck || this.appStateForceAutoCheck ? 'Guess' : text;
       }
       return text;
     },
