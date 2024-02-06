@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.216',
+    appDataVersion: '0.1.217',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -40,6 +40,7 @@ var app = new Vue({
     appStateForceAutoCheck: false,
     appStateIsDragging: false,
     appStateIsGettingTinyURL: false,
+    appStateIsGettingLast10Games: false,
     appStateIsGuessing: false,
     appStateIsModalShowing: false,
     appStateIsNewVersionAvailable: false,
@@ -409,6 +410,7 @@ var app = new Vue({
 
     async GetLast10GlobalCreatedGames() {
       if (this.appStateShowGlobalCreated && this.appDataGlobalCreatedGames.length === 0) {
+        this.appStateIsGettingLast10Games = true;
         var requestUrl = 'https://worker-falling-frost-2926.bigtentgames.workers.dev/';
         await fetch(requestUrl, {
           headers: {
@@ -418,13 +420,20 @@ var app = new Vue({
         })
           .then((response) => {
             if (!response.ok) {
+              this.appStateIsGettingLast10Games = false;
               throw new Error('Server error: ' + response.status);
             }
             return response.text();
           })
-          .then((payload) => (this.appDataGlobalCreatedGames = JSON.parse(payload)))
-          .catch((error) => console.error('Error:', error));
+          .then((payload) => {
+            this.appDataGlobalCreatedGames = JSON.parse(payload);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            this.appStateIsGettingLast10Games = false;
+          });
       }
+      this.appStateIsGettingLast10Game = false;
     },
 
     /* === HANDLERS === */

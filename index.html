@@ -194,11 +194,17 @@
           <button :disabled="tempID.toString().length !== 8" title="Please only use numbers." :class="{disabled: tempID.toString().length < 6}" @click="SubmitSettings(event)">Save</button>
         </controls>
       </modal>
-      <modal v-if="appStateShowGlobalCreated" class="tutorial">
+      <modal v-if="appStateShowGlobalCreated">
         <section>
-          <h2>Global Created Games</h2>
-          <p>Check here for the last 10 games posted by folks around the world.</p>
-          <icon v-if="getCreatedGamesWithWordSetNames.length === 0" class="spinner show"></icon>
+          <h2>Global Games</h2>
+          <p>Check here for the last 10 games created by players around the world.</p>
+          <icon v-if="appStateIsGettingLast10Games" class="spinner show"></icon>
+          <message style="padding: calc(2 * var(--defaultGap)) 0" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0">
+            <p>😢</p>
+            <p>There are no recent puzzles to display.</p>
+          </message>
+
+          <button v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0" @click="ToggleShowGlobalCreated(); HandleNewGameClick()">Create One!</button>
           <gamelinks>
             <p @click="HandleOldGameClick(game)" v-for="game in getCreatedGamesWithWordSetNames">
               <a href=""><small>{{game.name}}</small>{{game.hints}}</a>
