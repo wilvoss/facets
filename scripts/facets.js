@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.202',
+    appDataVersion: '0.1.203',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -1352,7 +1352,12 @@ var app = new Vue({
       }
       return text;
     },
-
+    getCreatedGamesWithWordSetNames: function () {
+      return this.appDataGlobalCreatedGames.map((game) => {
+        const newArray = this.appDataWordSets.find((set) => set.id === game.wordSetID);
+        return newArray ? { ...game, name: newArray.name } : game;
+      });
+    },
     isChromeAndiOSoriPadOS: function () {
       note('isChromeAndiOSoriPadOS() called');
       var userAgent = navigator.userAgent || window.opera;
