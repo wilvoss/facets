@@ -197,7 +197,7 @@
       <modal v-if="appStateShowGlobalCreated" class="tutorial">
         <section>
           <h2>Global Created Games</h2>
-          <p v-for="game in getCreatedGamesWithWordSetNames"><small>({{game.name}})</small>{{game.hints}}</p>
+          <p v-for="game in getCreatedGamesWithWordSetNames"><small>{{game.name}}</small>{{game.hints}}</p>
           <controls><button @click="appStateShowInfo = false">Cool</button></controls>
         </section>
       </modal>
