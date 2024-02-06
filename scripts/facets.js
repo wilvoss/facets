@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.219',
+    appDataVersion: '0.1.220',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -378,6 +378,7 @@ var app = new Vue({
     },
 
     GetUniqueCardId(_words) {
+      note('GetUniqueCardId() called');
       if (_words.length === 0) {
         return 0;
       }
@@ -397,6 +398,7 @@ var app = new Vue({
     },
 
     CheckIfCardIsInTray(_card) {
+      note('CheckIfCardIsInTray() called');
       if (!_card.words || _card.words.length === 0) {
         return false;
       }
@@ -409,8 +411,9 @@ var app = new Vue({
     },
 
     async GetLast10GlobalCreatedGames() {
+      note('GetLast10GlobalCreatedGames() called');
+      this.appStateIsGettingLast10Games = true;
       if (this.appStateShowGlobalCreated && this.appDataGlobalCreatedGames.length === 0) {
-        this.appStateIsGettingLast10Games = true;
         var requestUrl = 'https://worker-falling-frost-2926.bigtentgames.workers.dev/';
         await fetch(requestUrl, {
           headers: {
@@ -433,7 +436,7 @@ var app = new Vue({
             this.appStateIsGettingLast10Games = false;
           });
       }
-      this.appStateIsGettingLast10Game = false;
+      this.appStateIsGettingLast10Games = false;
     },
 
     /* === HANDLERS === */
