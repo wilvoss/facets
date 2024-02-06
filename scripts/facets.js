@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.213',
+    appDataVersion: '0.1.214',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -445,15 +445,15 @@ var app = new Vue({
     HandleOldGameClick(_game) {
       let stringArray = ['?'];
       stringArray.push('sendingName=a Player');
-      stringArray.push('&sendingID=' + _game.sendingID);
+      stringArray.push('&sendingID=' + encodeURIComponent(_game.sendingID));
       stringArray.push('&puzzleName=a Player');
-      stringArray.push('&puzzleID=' + _game.puzzleID);
-      stringArray.push('&wordSetID=' + _game.wordSetID);
-      stringArray.push('&useExtraCard=' + _game.useExtraCard);
-      stringArray.push('&sol=' + _game.sol);
-      stringArray.push('&board=' + _game.board);
+      stringArray.push('&puzzleID=' + encodeURIComponent(_game.puzzleID));
+      stringArray.push('&wordSetID=' + encodeURIComponent(_game.wordSetID));
+      stringArray.push('&useExtraCard=' + encodeURIComponent(_game.useExtraCard));
+      stringArray.push('&sol=' + encodeURIComponent(_game.sol));
+      stringArray.push('&board=' + encodeURIComponent(_game.board));
       let searchString = stringArray.join('');
-      let url = location.origin + encodeURIComponent(searchString);
+      let url = location.origin + searchString;
       console.log(url);
       history.pushState(null, null, url);
     },
