@@ -196,8 +196,8 @@
       </modal>
       <modal v-if="appStateShowGlobalCreated">
         <section>
-          <h2>Global Games</h2>
-          <p>Check here for the last 10 puzzles created by players around the world within the last week.</p>
+          <h2>Game Feed</h2>
+          <p>Check here for the 10 most recent puzzles created by players around the world within the last 7 days.</p>
           <icon v-if="appStateIsGettingLast10Games" class="spinner show"></icon>
           <message style="padding: calc(2 * var(--defaultGap)) 0" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0">
             <p>😢</p>
@@ -223,7 +223,7 @@
             <h1>{{appDataGameName}}</h1>
             <subtitle>
               <button class="inline small" @click="ToggleShowTutorial(event)">Guide</button>
-              <button class="inline small" @click="ToggleShowGlobalCreated()">Global</button>
+              <button class="inline small" @click="ToggleShowGlobalCreated()">Feed</button>
               <button class="inline small" @click="appStateShowInfo = true">Info</button>
               <button class="inline small" @click="ShowSettings()">Prefs</button>
             </subtitle>
