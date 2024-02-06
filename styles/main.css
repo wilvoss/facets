@@ -983,6 +983,8 @@ modal input.large {
 }
 
 modal gamelinks {
+    display: block;
+    margin-top: var(--defaultGap);
     counter-reset: my-badass-counter;
     width: 100%;
 }
