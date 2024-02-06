@@ -991,6 +991,10 @@ modal gamelinks {
 
 modal gamelinks p {
     text-align: left;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: var(--defaultGap);
 }
 
@@ -999,6 +1003,22 @@ modal gamelinks p small:before {
     counter-increment: my-badass-counter;
     display: inline-block;
     padding-right: 6px;
+}
+
+modal gamelinks p button.inline {
+    display: block;
+    z-index: 300;
+    padding: 6px 10px 10px;
+
+}
+
+modal gamelinks p button.inline icon {
+    opacity: .5;
+    background-color: hsl(var(--messageColorHSL));
+}
+
+modal gamelinks p button.inline:hover icon {
+    opacity: 1;
 }
 
 modal gamelinks small {

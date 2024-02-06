@@ -209,8 +209,10 @@
           <gamelinks>
             <p @click="HandleOldGameClick(game)" v-for="game in getCreatedGamesWithWordSetNames">
               <a href=""><small>{{game.name}}{{game.useExtraCard === "true" ? ' (5-cards)' : ''}}</small>{{game.hints}}</a>
+              <button title="Report this puzzle for offensive language." @click="ReportPuzzle(game)" class="small inline"><icon class="alert"></icon></button>
             </p>
           </gamelinks>
+
           <controls><button @click="appStateShowGlobalCreated = false">Okay</button></controls>
         </section>
       </modal>

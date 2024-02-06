@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.001',
+    appDataVersion: '1.0.002',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -920,6 +920,10 @@ var app = new Vue({
         this.appStateIsGettingTinyURL = false;
         this.ShareText(text + ' <' + this.appDataShareURL + '>');
       }
+    },
+
+    ReportPuzzle(_game) {
+      location.href = 'mailto:bigtentgames@icloud.com?subject=Facets Puzzle Reported&body=Puzzle ID# ' + _game.key + '%0D%0A This puzzle contains offensive language.%0D%0A' + _game.hints;
     },
 
     ConstructAndSetShareURLForCurrentGame(_currentGameReviewIsFinal) {
