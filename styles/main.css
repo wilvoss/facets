@@ -380,6 +380,7 @@ subtitle {
     align-items: center;
     gap: var(--defaultGap);
     position: absolute;
+    z-index: 200;
     left: 0;
     width: 100%
 }
@@ -389,6 +390,10 @@ subtitle {
     color: hsla(var(--linkColorDarkHSL), 1);
     display: flex;
     font-size: 70%;
+}
+
+subtitle button.small {
+    padding: 12px 6px;
 }
 
 message {
@@ -1526,7 +1531,7 @@ version {
     }
 
     subtitle button.inline {
-        padding: 6px 2px;
+        padding: 12px 2px;
         text-wrap: nowrap;
     }
 
