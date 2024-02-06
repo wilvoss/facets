@@ -197,8 +197,11 @@
       <modal v-if="appStateShowGlobalCreated" class="tutorial">
         <section>
           <h2>Global Created Games</h2>
+          <p>Check here for the latest games posted by folks around the world.</p>
           <icon v-if="getCreatedGamesWithWordSetNames.length === 0" class="spinner show"></icon>
-          <p @click="HandleOldGameClick(game)" v-for="game in getCreatedGamesWithWordSetNames"><small>{{game.name}}</small>{{game.hints}}</p>
+          <p @click="HandleOldGameClick(game)" v-for="game in getCreatedGamesWithWordSetNames">
+            <a><small style="text-align: left">{{game.name}}</small>{{game.hints}}</a>
+          </p>
           <controls><button @click="appStateShowGlobalCreated = false">Okay</button></controls>
         </section>
       </modal>

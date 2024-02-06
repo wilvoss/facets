@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.208',
+    appDataVersion: '0.1.209',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -451,7 +451,7 @@ var app = new Vue({
       stringArray.push('&useExtraCard=' + _game.useExtraCard);
       stringArray.push('&sol=' + _game.sol);
       stringArray.push('&board=' + _game.board);
-      let searchString = stringArray.join();
+      let searchString = stringArray.join('');
       location.href = location.origin + searchString;
     },
 
