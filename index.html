@@ -157,7 +157,7 @@
           </leftright>
 
           <h3>Guessing<small>{{appStateForceAutoCheck ? '(disabled while solving anonymous puzzle)' : ''}}</small></h3>
-          <checkbox :class="{disabled: appStateForceAutoCheck}" title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{on: !tempAutoCheck}" @click="ToggleAutoCheck()">
+          <checkbox title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{disabled: appStateForceAutoCheck, on: !tempAutoCheck}" @click="ToggleAutoCheck()">
             Pass 'n play
             <toggle></toggle>
           </checkbox>
