@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.201',
+    appDataVersion: '0.1.202',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -108,7 +108,7 @@ var app = new Vue({
             }
             return response.text();
           })
-          .then((payload) => (this.appDataGlobalCreatedGames = payload))
+          .then((payload) => (this.appDataGlobalCreatedGames = JSON.parse(payload)))
           .catch((error) => console.error('Error:', error));
       }
     },
