@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.214',
+    appDataVersion: '0.1.215',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -94,24 +94,7 @@ var app = new Vue({
 
     async ToggleShowGlobalCreated() {
       this.appStateShowGlobalCreated = !this.appStateShowGlobalCreated;
-
-      var requestUrl = 'https://worker-falling-frost-2926.bigtentgames.workers.dev/';
-      if (this.appStateShowGlobalCreated) {
-        await fetch(requestUrl, {
-          headers: {
-            Host: window.location.hostname,
-            Origin: window.location.origin,
-          },
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('Server error: ' + response.status);
-            }
-            return response.text();
-          })
-          .then((payload) => (this.appDataGlobalCreatedGames = JSON.parse(payload)))
-          .catch((error) => console.error('Error:', error));
-      }
+      this.GetLast10GlobalCreatedGames();
     },
 
     ToggleShowInfo(e) {
@@ -422,6 +405,26 @@ var app = new Vue({
         }
       });
       return false;
+    },
+
+    async GetLast10GlobalCreatedGames() {
+      if (this.appStateShowGlobalCreated && this.appDataGlobalCreatedGames.length === 0) {
+        var requestUrl = 'https://worker-falling-frost-2926.bigtentgames.workers.dev/';
+        await fetch(requestUrl, {
+          headers: {
+            Host: window.location.hostname,
+            Origin: window.location.origin,
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Server error: ' + response.status);
+            }
+            return response.text();
+          })
+          .then((payload) => (this.appDataGlobalCreatedGames = JSON.parse(payload)))
+          .catch((error) => console.error('Error:', error));
+      }
     },
 
     /* === HANDLERS === */
