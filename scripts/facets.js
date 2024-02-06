@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.210',
+    appDataVersion: '0.1.211',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -277,7 +277,7 @@ var app = new Vue({
       this.appDataPlayerCreator.id = urlParams.has('puzzleID') ? parseInt(urlParams.get('puzzleID')) : this.appDataPlayerCreator.id;
       this.currentGameGuessingWordSet = urlParams.has('wordSetID') ? this.appDataWordSets.find((s) => s.id === urlParams.get('wordSetID')) : this.currentGameWordSet;
       this.currentGameGuessingCardCount = urlParams.has('useExtraCard') && JSON.parse(urlParams.get('useExtraCard')) ? 5 : 4;
-      this.appStateForceAutoCheck = appDataPlayerCreator.id === 0;
+      this.appStateForceAutoCheck = this.appDataPlayerCreator.id === 0;
       let corruptData = false;
       if (_boardArray.length >= 40) {
         this.appDataShareURL = window.location.href;
