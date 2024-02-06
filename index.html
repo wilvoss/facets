@@ -198,7 +198,7 @@
         <section>
           <h2>Global Created Games</h2>
           <icon v-if="getCreatedGamesWithWordSetNames.length === 0" class="spinner show"></icon>
-          <p v-for="game in getCreatedGamesWithWordSetNames"><small>{{game.name}}</small>{{game.hints}}</p>
+          <p @click="HandleOldGameClick(game)" v-for="game in getCreatedGamesWithWordSetNames"><small>{{game.name}}</small>{{game.hints}}</p>
           <controls><button @click="appStateShowGlobalCreated = false">Okay</button></controls>
         </section>
       </modal>

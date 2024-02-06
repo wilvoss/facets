@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.207',
+    appDataVersion: '0.1.208',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -439,6 +439,20 @@ var app = new Vue({
       } else {
         this.FillParkingLot();
       }
+    },
+
+    HandleOldGameClick(_game) {
+      let stringArray = ['?'];
+      stringArray.push('sendingName=Player');
+      stringArray.push('&sendingID=-1');
+      stringArray.push('&puzzleName=Player');
+      stringArray.push('&puzzleID=-1');
+      stringArray.push('&wordSetID=' + _game.wordSetID);
+      stringArray.push('&useExtraCard=' + _game.useExtraCard);
+      stringArray.push('&sol=' + _game.sol);
+      stringArray.push('&board=' + _game.board);
+      let searchString = stringArray.join();
+      location.href = location.origin + searchString;
     },
 
     HandleNewGameClick() {
