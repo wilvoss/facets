@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.199',
+    appDataVersion: '0.1.200',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -686,6 +686,8 @@ var app = new Vue({
             }
             break;
           case '-':
+          case '?':
+          case '&':
           case '=':
             e.preventDefault();
             e.stopPropagation();
