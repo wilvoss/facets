@@ -139,7 +139,7 @@
         <controls><button @click="appStateShowInfo = false">Cool</button></controls>
       </modal>
       <modal v-if="appStateShowSettings">
-        <section v-if="appStateShowSettings">
+        <section>
           <h2>Preferences</h2>
           <h3>Profile</h3>
           <leftright>
@@ -193,6 +193,13 @@
           <button class="secondary" @click="CancelSettings(event)">Cancel</button>
           <button :disabled="tempID.toString().length !== 8" title="Please only use numbers." :class="{disabled: tempID.toString().length < 6}" @click="SubmitSettings(event)">Save</button>
         </controls>
+      </modal>
+      <modal v-if="appStateShowGlobalCreated">
+        <section>
+          <h2>Global Created Games</h2>
+          <credit v-for="game in appDataGlobalCreatedGames">{{game.hints}}</credit>
+          <controls><button @click="appStateShowInfo = false">Cool</button></controls>
+        </section>
       </modal>
       <wrapper>
         <button :class="{show: appStateIsNewVersionAvailable}" title="There is an update available. Click to apply the update." class="pulse update inline" @click="HandleUpdateAppButtonClick">New Update<icon class="download"></icon></button>
