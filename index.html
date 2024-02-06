@@ -207,7 +207,7 @@
           <button v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0" @click="ToggleShowGlobalCreated(); HandleNewGameClick()">Create One!</button>
           <gamelinks>
             <p @click="HandleOldGameClick(game)" v-for="game in getCreatedGamesWithWordSetNames">
-              <a href=""><small>{{game.name}}{{game.useExtraCard ? '(5-cards)' : ''}}</small>{{game.hints}}</a>
+              <a href=""><small>{{game.name}}{{game.useExtraCard === "true" ? ' (5-cards)' : ''}}</small>{{game.hints}}</a>
             </p>
           </gamelinks>
           <controls><button @click="appStateShowGlobalCreated = false">Okay</button></controls>
