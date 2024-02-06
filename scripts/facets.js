@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '0.1.220',
+    appDataVersion: '0.1.221',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -732,6 +732,8 @@ var app = new Vue({
               this.HandleIntroButtonClick(null);
             } else if (this.appStateShowInfo) {
               this.appStateShowInfo = false;
+            } else if (this.appStateShowGlobalCreated) {
+              this.appStateShowGlobalCreated = false;
             }
             break;
           case 'Tab':
@@ -757,6 +759,8 @@ var app = new Vue({
               this.HandleYesNo(this.appDataConfirmationObject.target, false);
             } else if (this.appStateShowInfo) {
               this.appStateShowInfo = false;
+            } else if (this.appStateShowGlobalCreated) {
+              this.appStateShowGlobalCreated = false;
             }
             break;
           default:
