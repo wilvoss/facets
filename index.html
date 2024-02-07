@@ -212,6 +212,7 @@
               <button title="Report this puzzle for offensive language." @click="ReportPuzzle(game)" class="inline"><icon class="alert"></icon></button>
             </p>
           </gamelinks>
+          <button v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length > 0" @click="GetLast10GlobalCreatedGames();">Refresh</button>
 
           <controls><button @click="appStateShowGlobalCreated = false">Okay</button></controls>
         </section>
