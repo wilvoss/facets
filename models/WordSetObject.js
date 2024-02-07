@@ -33,7 +33,7 @@ let NounsVerbs = new WordSetObject({ id: '100', name: 'Nouns & Verbs', isSelecte
 let Seasons = new WordSetObject({ id: '101', name: 'Seasons', data: [Winter.data, Spring.data, Summer.data, Fall.data], textureImage: '../images/wallpapers/wallpapers/seasons.jpg' });
 let Civilization = new WordSetObject({ id: '102', name: 'Civilization', data: ['./data/civilization.json'], textureImage: '../images/wallpapers/civilization.jpg' });
 let Archeology = new WordSetObject({ id: '103', name: 'Archeology', startsWithVowel: true, data: ['./data/prehistory.json'], textureImage: '../images/wallpapers/prehistory.jpg' });
-let Sports = new WordSetObject({ id: '104', name: 'Sports', startsWithVowel: true, data: [Sport.data, Cities.data] });
+let Sports = new WordSetObject({ id: '104', name: 'Sports', startsWithVowel: true, data: [Sport.data, Cities.data], textureImage: '../images/wallpapers/sports.jpg' });
 let All = new WordSetObject({ id: '1000', name: 'All', startsWithVowel: true, data: [Winter.data, Spring.data, Summer.data, Fall.data, Entertainment.data, Science.data, Civilization.data, Archeology.data, Nouns.data, Verbs.data, Cities.data, Sport.data] });
 
 let WordSets = [NounsVerbs, Nouns, Verbs, Winter, Spring, Summer, Fall, Seasons, Entertainment, Science, Civilization, Archeology, CommonEmoji, Sports, All];
