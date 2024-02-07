@@ -580,6 +580,7 @@ modal controls {
     gap: calc(.5 * var(--defaultGap));
     height: auto;
     width: 100%;
+    z-index: 100;
 }
 
 modal controls button {
