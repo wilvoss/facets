@@ -985,7 +985,6 @@ modal input.large {
 
 modal gamelinks {
     display: block;
-    margin-top: var(--defaultGap);
     counter-reset: my-badass-counter;
     width: 100%;
 }
@@ -997,6 +996,10 @@ modal gamelinks p {
     justify-content: space-between;
     align-items: center;
     margin-bottom: var(--defaultGap);
+}
+
+modal gamelinks p a, modal gamelinks p a:hover, modal gamelinks p a:active, modal gamelinks p a:focus, modal gamelinks p a:visited {
+    color: hsl(var(--messageColorHSL));
 }
 
 modal gamelinks p small:before {
