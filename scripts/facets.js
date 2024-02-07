@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.009',
+    appDataVersion: '1.0.010',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -415,29 +415,28 @@ var app = new Vue({
     async GetLast10GlobalCreatedGames() {
       note('GetLast10GlobalCreatedGames() called');
       this.appStateIsGettingLast10Games = true;
-      if (this.appStateShowGlobalCreated) {
-        var requestUrl = 'https://worker-falling-frost-2926.bigtentgames.workers.dev/';
-        await fetch(requestUrl, {
-          headers: {
-            Host: window.location.hostname,
-            Origin: window.location.origin,
-          },
-        })
-          .then((response) => {
-            if (!response.ok) {
-              this.appStateIsGettingLast10Games = false;
-              throw new Error('Server error: ' + response.status);
-            }
-            return response.text();
-          })
-          .then((payload) => {
-            this.appDataGlobalCreatedGames = JSON.parse(payload);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
+      var requestUrl = 'https://worker-falling-frost-2926.bigtentgames.workers.dev/';
+      await fetch(requestUrl, {
+        headers: {
+          Host: window.location.hostname,
+          Origin: window.location.origin,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
             this.appStateIsGettingLast10Games = false;
-          });
-      }
+            throw new Error('Server error: ' + response.status);
+          }
+          return response.text();
+        })
+        .then((payload) => {
+          this.appDataGlobalCreatedGames = JSON.parse(payload);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+          this.appStateIsGettingLast10Games = false;
+        });
+
       this.appStateIsGettingLast10Games = false;
     },
 

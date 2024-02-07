@@ -1007,9 +1007,8 @@ modal gamelinks p small:before {
 
 modal gamelinks p button.inline {
     display: block;
-    z-index: 300;
+    z-index: 2;
     padding: 6px 10px 10px;
-
 }
 
 modal gamelinks p button.inline icon {
