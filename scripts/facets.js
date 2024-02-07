@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.012',
+    appDataVersion: '1.0.013',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -358,6 +358,9 @@ var app = new Vue({
     GetCurrentSolutionParamString() {
       note('GetCurrentSolutionParamString() called');
       let params = [];
+      this.appDataHints.forEach((hint) => {
+        hint.value = hint.value.trim();
+      });
       if (this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
         params.push(this.appDataHints[0].value);
         params.push(this.appDataCards[0].words[0].id);
@@ -943,6 +946,7 @@ var app = new Vue({
         });
 
         this.appDataHints.forEach((hint, index) => {
+          hint.value = hint.value.trim();
           boardString += hint.value + (index === this.appDataHints.length - 1 ? '' : '-');
         });
 
