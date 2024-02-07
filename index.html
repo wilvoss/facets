@@ -198,7 +198,7 @@
       <modal v-if="appStateShowGlobalCreated">
         <section>
           <h2>Latest Puzzles</h2>
-          <p>Check here to play the 10 most recent puzzles created by players around the world within the last 7 days.</p>
+          <p>Check here to play the 10 most recent puzzles created by players around the world.</p>
           <icon v-if="appStateIsGettingLast10Games" class="spinner show"></icon>
           <message style="padding: calc(2 * var(--defaultGap)) 0" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0">
             <p>😢</p>
