@@ -27,10 +27,13 @@ let Fall = new WordSetObject({ id: '6', name: 'Fall', data: ['./data/fall.json']
 let Science = new WordSetObject({ id: '7', name: 'Science', data: ['./data/science.json'], textureImage: '../images/wallpapers/wallpapers/science.jpg' });
 let Entertainment = new WordSetObject({ id: '8', name: 'Entertainment', startsWithVowel: true, data: ['./data/entertainment.json'], textureImage: '../images/wallpapers/entertainment.jpg' });
 let CommonEmoji = new WordSetObject({ id: '9', name: 'Emoji', startsWithVowel: true, data: ['./data/common-emoji.json'], scale: 1.9, wordAlignement: 'start', message: 'Some Emoji might not show on your device.', textureImage: '../images/wallpapers/emoji.jpg' });
+let Cities = new WordSetObject({ id: '10', name: 'Cities', startsWithVowel: true, data: ['./data/cities.json'], enabled: false });
+let Sport = new WordSetObject({ id: '11', name: 'Sport', startsWithVowel: true, data: ['./data/sports.json'], enabled: false });
 let NounsVerbs = new WordSetObject({ id: '100', name: 'Nouns & Verbs', isSelected: true, data: [Nouns.data, Verbs.data], textureImage: '../images/wallpapers/common.jpg' });
 let Seasons = new WordSetObject({ id: '101', name: 'Seasons', data: [Winter.data, Spring.data, Summer.data, Fall.data], textureImage: '../images/wallpapers/wallpapers/seasons.jpg' });
 let Civilization = new WordSetObject({ id: '102', name: 'Civilization', data: ['./data/civilization.json'], textureImage: '../images/wallpapers/civilization.jpg' });
 let Archeology = new WordSetObject({ id: '103', name: 'Archeology', startsWithVowel: true, data: ['./data/prehistory.json'], textureImage: '../images/wallpapers/prehistory.jpg' });
-let All = new WordSetObject({ id: '104', name: 'All', startsWithVowel: true, data: [Winter.data, Spring.data, Summer.data, Fall.data, Entertainment.data, Science.data, Civilization.data, Archeology.data, CommonEmoji.data, Nouns.data, Verbs.data] });
+let Sports = new WordSetObject({ id: '104', name: 'Sports', startsWithVowel: true, data: [Sport.data, Cities.data] });
+let All = new WordSetObject({ id: '1000', name: 'All', startsWithVowel: true, data: [Winter.data, Spring.data, Summer.data, Fall.data, Entertainment.data, Science.data, Civilization.data, Archeology.data, CommonEmoji.data, Nouns.data, Verbs.data, Cities.data, Sport.data] });
 
-let WordSets = [NounsVerbs, Nouns, Verbs, Winter, Spring, Summer, Fall, Seasons, Entertainment, Science, Civilization, Archeology, CommonEmoji, All];
+let WordSets = [NounsVerbs, Nouns, Verbs, Winter, Spring, Summer, Fall, Seasons, Entertainment, Science, Civilization, Archeology, CommonEmoji, Sports, All];
