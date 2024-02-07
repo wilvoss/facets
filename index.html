@@ -206,7 +206,7 @@
           </message>
 
           <button v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0" @click="ToggleShowGlobalCreated(); HandleNewGameClick()">Create One!</button>
-          <button v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length > 0" @click="GetLast10GlobalCreatedGames();">Refresh</button>
+          <button class="small" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length > 0" @click="GetLast10GlobalCreatedGames();">Refresh</button>
 
           <gamelinks>
             <p @click="HandleOldGameClick(game)" v-for="game in getCreatedGamesWithWordSetNames">
