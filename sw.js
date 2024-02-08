@@ -1,4 +1,4 @@
-const CACHE_VERSION = '1.0.029';
+const CACHE_VERSION = '1.0.030';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
@@ -66,7 +66,7 @@ const cacheFiles = [
 ];
 
 // on activation we clean up the previously registered service workers
-self.addEventListener('activate', (evt) =>
+self.addEventListener('activate', (evt) => {
   evt.waitUntil(
     caches.keys().then((cacheNames) => {
       return Promise.all(
@@ -74,11 +74,13 @@ self.addEventListener('activate', (evt) =>
           if (cacheName !== CURRENT_CACHE) {
             return caches.delete(cacheName);
           }
+          // Return a resolved promise to ensure all caches are checked
+          return Promise.resolve();
         }),
       );
     }),
-  ),
-);
+  );
+});
 
 // on install we download the routes we want to cache for offline
 self.addEventListener('install', (evt) =>
@@ -98,29 +100,18 @@ self.addEventListener('message', function (event) {
 
 // fetch cache first, but use network if cache fails
 self.addEventListener('fetch', (event) => {
-  if (event.request.url.endsWith('.txt')) {
-    // Bypass the service worker and always fetch from the network
-    event.respondWith(fetch(event.request));
-  } else {
-    event.respondWith(
-      caches.open(CURRENT_CACHE).then((cache) => {
-        // Go to the cache first
-        return cache.match(event.request.url).then((cachedResponse) => {
-          // Return a cached response if we have one
-          if (cachedResponse) {
-            return cachedResponse;
-          }
-
-          // Otherwise, hit the network
-          return fetch(event.request).then((fetchedResponse) => {
-            // Add the network response to the cache for later visits
-            cache.put(event.request.url, fetchedResponse.clone());
-
-            // Return the network response
-            return fetchedResponse;
-          });
+  event.respondWith(
+    caches.open(CURRENT_CACHE).then((cache) => {
+      return cache.match(event.request.url).then((cachedResponse) => {
+        if (cachedResponse) {
+          return cachedResponse;
+        }
+        // Fetch from the network and update the cache
+        return fetch(event.request, { cache: 'reload' }).then((fetchedResponse) => {
+          cache.put(event.request.url, fetchedResponse.clone());
+          return fetchedResponse;
         });
-      }),
-    );
-  }
+      });
+    }),
+  );
 });
