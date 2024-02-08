@@ -1352,14 +1352,14 @@ version {
     }
 
     wrapper.mobile, .portrait wrapper.mobile {
-        transform: translateY(calc(-4 * var(--defaultGap)));
+        transform: translateY(calc((-.7 * var(--cardSize)) - env(safe-area-inset-bottom)));
         position: fixed;
         bottom: var(--defaultGap);
     }
 
     wrapper.mobile.extra, .portrait wrapper.mobile.extra {
         scale: .6;
-        transform: translateY(calc(-3 * var(--defaultGap)));
+        transform: translateY(calc(-.7 * var(--cardSize) - env(safe-area-inset-bottom)));
     }
 
     message {
@@ -1518,9 +1518,13 @@ version {
     }
 
     wrapper.mobile, .portrait wrapper.mobile {
-        transform: translateY(calc(-4 * var(--defaultGap)));
+        transform: translateY(calc((-.7 * var(--cardSize)) - env(safe-area-inset-bottom)));
         position: fixed;
         bottom: var(--defaultGap);
+    }
+
+    wrapper.mobile.extra, .portrait wrapper.mobile.extra {
+        transform: translateY(calc(-.7 * var(--cardSize) - env(safe-area-inset-bottom)));
     }
 
     modal controls button {
