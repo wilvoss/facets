@@ -75,7 +75,11 @@ body {
     color: hsl(var(--appForegroundHSL));
     line-height: 1.3em;
     margin: 0px 0px;
-    background: hsl(var(--appBackgroundDarkestHSL));
+    background: hsl(var(--appBackgroundHSL));
+    background-image: var(--texture2);
+    background-size: var(--textureSize);
+    background-blend-mode: var(--textureBlendMode);
+    background-position: top center;
     width: 100%;
     height: 100%;
     display: block;
@@ -86,13 +90,9 @@ body {
 app {
     overflow: hidden;
     height: 100%;
+    background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0) 200px);
     display: flex;
     flex-direction: column;
-    background: hsl(var(--appBackgroundHSL));
-    background-image: var(--texture2);
-    background-size: var(--textureSize);
-    background-blend-mode: var(--textureBlendMode);
-    background-position: top center;
 }
 
 h1, h2, h3, h4, h5 {
@@ -447,7 +447,6 @@ cta {
     color: hsl(var(--hueReviewing), 100%, 60%)
 }
 
-
 modal message {
     margin-top: calc(1 * var(--defaultGap));
     padding-top: var(--defaultGap);
@@ -477,7 +476,6 @@ wrapper {
 
 wrapper:first-of-type {
     padding: calc(var(--defaultGap)) 0;
-    background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0));
     margin-bottom: calc(2 * var(--defaultGap));
     max-width: unset;
 
@@ -801,7 +799,7 @@ spot {
 }
 
 parking spot {
-    background: hsla(0, 0%, 0%, .5);
+    background: hsla(0, 0%, 0%, .8);
     outline: 1px solid hsla(var(--hueMain), 100%, 70%, .7);
     opacity: .5;
 }
@@ -844,11 +842,6 @@ parking spot.empty {
 .reviewing.guessing parking spot.empty {
     outline-style: dashed;
 }
-
-.creating parking spot.empty {
-    opacity: .4;
-}
-
 
 card {
     background: transparent;
