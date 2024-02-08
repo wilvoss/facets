@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.035',
+    appDataVersion: '1.0.036',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -787,12 +787,16 @@ var app = new Vue({
     },
 
     HandleUpdateAppButtonClick() {
-      console.log('HandleUpdateAppButtonClick() called'); // Use console.log instead of note for debugging
+      console.log('HandleUpdateAppButtonClick() called');
       this.appStateIsNewVersionAvailable = false;
       localStorage.setItem('newVersionAvailable', this.appStateIsNewVersionAvailable);
-      if (this.serviceWorker !== '') {
+      if (this.serviceWorker) {
+        // Send a message to the service worker to skip waiting
         this.serviceWorker.postMessage({ action: 'skipWaiting' });
+
+        // Listen for the service worker to become active
         this.serviceWorker.addEventListener('controllerchange', () => {
+          // Reload the page once the new service worker is active
           window.location.reload(true);
         });
       } else {
