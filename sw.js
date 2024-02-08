@@ -1,4 +1,4 @@
-const CACHE_VERSION = '1.0.025';
+const CACHE_VERSION = '1.0.026';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
@@ -18,7 +18,7 @@ const cacheFiles = [
   'data/summer.json',
   'data/verbs.json',
   'data/winter.json',
-  'games/index.html',
+  'game/index.html',
   'fonts/Abel-Regular.ttf',
   'fonts/Bungee-Regular.ttf',
   'fonts/Federant-Regular.ttf',
