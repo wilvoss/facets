@@ -219,7 +219,7 @@
         </section>
       </modal>
       <wrapper>
-        <button :class="{show: appStateIsNewVersionAvailable}" title="There is an update available. Click to apply the update." class="pulse update inline" @click="HandleUpdateAppButtonClick">New Update<icon class="download"></icon></button>
+        <button :class="{show: appStateIsNewVersionAvailable && (appStateIsGuessing || (!appStateIsGuessing && getNumberOfHintsThatHaveBeenFilled === 0))}" title="There is an update available. Click to apply the update." class="pulse update inline" @click="HandleUpdateAppButtonClick">New Update<icon class="download"></icon></button>
         <controls>
           <button class="inline" @click="HandleNewGameClick()">New</button>
         </controls>
