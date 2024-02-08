@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.028',
+    appDataVersion: '1.0.029',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -583,6 +583,7 @@ var app = new Vue({
         this.userSettingsUseMultiColoredGems = JSON.parse(userSettingsUseMultiColoredGems);
         this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
       }
+      this.CheckForServiceWorkerUpdate();
     },
 
     HandleBodyPointerUp(e, _card) {
@@ -793,6 +794,17 @@ var app = new Vue({
         this.serviceWorker.postMessage({ action: 'skipWaiting' });
       } else {
         window.location.reload(true);
+      }
+    },
+
+    CheckForServiceWorkerUpdate() {
+      note('CheckForServiceWorkerUpdate() called');
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function (registrations) {
+          for (let registration of registrations) {
+            registration.update();
+          }
+        });
       }
     },
 
