@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.032',
+    appDataVersion: '1.0.033',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -787,12 +787,16 @@ var app = new Vue({
     },
 
     HandleUpdateAppButtonClick() {
-      note('HandleUpdateAppButtonClick() called');
+      console.log('HandleUpdateAppButtonClick() called'); // Use console.log instead of note for debugging
       this.appStateIsNewVersionAvailable = false;
       localStorage.setItem('newVersionAvailable', this.appStateIsNewVersionAvailable);
       if (this.serviceWorker !== '') {
         this.serviceWorker.postMessage({ action: 'skipWaiting' });
+        this.serviceWorker.addEventListener('controllerchange', () => {
+          window.location.reload(true);
+        });
       } else {
+        // If no service worker, force a full page reload
         window.location.reload(true);
       }
     },
