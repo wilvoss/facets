@@ -191,3 +191,12 @@ button.update icon {
 button.update icon {
     background: white;
 }
+
+.greenText {
+    color: hsl(var(--hueGuessing), 80%, 34%)
+}
+
+.blueText {
+    color: hsl(var(--hueCreating), 100%, 48%);
+
+}

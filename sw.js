@@ -1,4 +1,4 @@
-const CACHE_VERSION = '1.0.057';
+const CACHE_VERSION = '1.0.058';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
@@ -45,13 +45,12 @@ const cacheFiles = [
   'images/icon-share.svg',
   'images/icon-spinner.svg',
   'images/rotator-icon.svg',
-  'images/tut-1.svg',
-  'images/tut-2.svg',
-  'images/tut-3.svg',
   'images/tut-4.svg',
-  'images/tut-5.svg',
+  'images/tut-4-light.svg',
   'images/tut-6.svg',
+  'images/tut-6-light.svg',
   'images/tut-7.svg',
+  'images/tut-7-light.svg',
   'models/CardObject-min.js',
   'models/PlayerObject-min.js',
   'models/WordObject-min.js',

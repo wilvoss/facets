@@ -49,13 +49,13 @@
           <p>{{appDataPlayerCurrent.name}}, when your friend created this word puzzle, they were given word-pairs (or Emoji-pairs) that they had to connect with single-word clues.</p>
           <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with.</p>
           <p>Anatomy of a solved puzzle:</p>
-          <img src="./images/tut-6.svg" />
+          <img :src="'./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
         </section>
         <section v-if="!appStateIsGuessing">
           <p>{{appDataPlayerCurrent.name}}, you are about to create a word puzzle that you will send to your friends via text, email or social media.</p>
           <p class="blueText">It's your job to come up with clues that connect the four word-pairs (or Emoji-pairs) that are displayed on the edges of a gem.</p>
           <p>Anatomy of a puzzle:</p>
-          <img src="./images/tut-7.svg" />
+          <img :src="'./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
           <p>When you are satisfied with your 4 clues, hit the <cta>Send</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
           <p>They're gonna have to recreate your puzzle based on your clues! 🧠</p>
         </section>
@@ -71,19 +71,19 @@
           <h3>Creating</h3>
           <p>When creating a new puzzle, it's your job to come up with clues that connect the four word-pairs that are displayed on the edges of a gem.</p>
           <p>Anatomy of a puzzle:</p>
-          <img src="./images/tut-7.svg" />
+          <img :src="'./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
           <p>When you are satisfied with your 4 clues, hit the <cta>Send</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
           <p>They're gonna have to recreate your puzzle based on your clues! 🧠</p>
           <h3>Guessing</h3>
           <p>When your friend created this word puzzle, they were given word-pairs that they had to connect with single word clues.</p>
           <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with.</p>
           <p>Anatomy of a solved puzzle:</p>
-          <img src="./images/tut-6.svg" />
+          <img :src="'./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
           <p v-if="!userSettingsAutoCheck">Click the <cta>SEND</cta> button to send your guess back to whoever sent it to you.</p>
           <p v-if="userSettingsAutoCheck">Click the <cta>Guess</cta> button to automatically check your guess.</p>
           <h3>Reviewing</h3>
           <p>If your friends have "Pass 'n play" enabled in settings, they'll send their guesses back to you. When reviewing, remove incorrectly placed cards from the gem.</p>
-          <img src="./images/tut-4.svg" />
+          <img :src="'./images/tut-4' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
           <p>Click the <cta>SEND</cta> button to send the puzzle back, even if you are just giving them the solution.</p>
           <h3>Controls</h3>
           <p>A card is a group of four words around the edges of a small outlined square.</p>
