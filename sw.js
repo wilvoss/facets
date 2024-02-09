@@ -1,4 +1,4 @@
-const CACHE_VERSION = '1.0.046';
+const CACHE_VERSION = '1.0.047';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
@@ -101,9 +101,7 @@ self.addEventListener('message', function (event) {
 });
 
 self.addEventListener('fetch', (event) => {
-  const isFileRequest = event.request.url.includes('.css') || event.request.url.includes('.js') || event.request.url.includes('.html');
-
-  if (isFileRequest) {
+  if (event.request.url.includes('.css') || event.request.url.includes('.js') || event.request.url.includes('.html')) {
     event.respondWith(
       fetch(event.request)
         .then((fetchedResponse) => {
@@ -111,57 +109,43 @@ self.addEventListener('fetch', (event) => {
           caches.open(CURRENT_CACHE).then((cache) => {
             cache.put(event.request, clonedResponse);
           });
-
           return fetchedResponse;
         })
-        .catch(() => {
-          return caches.match(event.request);
-        }),
+        .catch(() => caches.match(event.request)),
     );
   } else {
-    // Handle requests with different search strings
-    const normalizedUrl = new URL(event.request.url);
-    const searchParams = normalizedUrl.searchParams.toString();
-
-    if (searchParams) {
-      const cacheKey = `${event.request.url}?${searchParams}`;
+    const urlSearchParams = new URL(event.request.url).searchParams.toString();
+    if (urlSearchParams) {
+      const modifiedUrl = `${event.request.url}?${urlSearchParams}`;
       event.respondWith(
-        caches.match(cacheKey).then((cachedResponse) => {
-          if (cachedResponse) {
-            return cachedResponse;
-          }
-          return fetch(event.request).then((apiResponse) => {
-            const clonedApiResponse = apiResponse.clone();
-            caches.open(CURRENT_CACHE).then((cache) => {
-              cache.put(cacheKey, clonedApiResponse);
-            });
-            return apiResponse;
-          });
-        }),
+        caches.match(modifiedUrl).then(
+          (cachedResponse) =>
+            cachedResponse ||
+            fetch(event.request).then((response) => {
+              const clonedResponse = response.clone();
+              caches.open(CURRENT_CACHE).then((cache) => {
+                cache.put(modifiedUrl, clonedResponse);
+              });
+              return response;
+            }),
+        ),
       );
     } else if (event.request.url.includes('bigtentgames.workers.dev')) {
-      // Handle requests to bigtentgames.workers.dev
       event.respondWith(
         fetch(event.request)
           .then((apiResponse) => {
-            // Ensure the response is valid before caching
             if (!apiResponse || apiResponse.status !== 200 || apiResponse.type !== 'basic') {
               throw new Error('Network response was not ok.');
             }
-
             const clonedApiResponse = apiResponse.clone();
             caches.open(CURRENT_CACHE).then((cache) => {
               cache.put(event.request, clonedApiResponse);
             });
-
             return apiResponse;
           })
-          .catch(() => {
-            return caches.match(event.request);
-          }),
+          .catch(() => caches.match(event.request)),
       );
     } else {
-      // Serve other requests from the cache
       event.respondWith(caches.match(event.request));
     }
   }
