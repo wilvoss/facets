@@ -1,4 +1,4 @@
-const CACHE_VERSION = '1.0.050';
+const CACHE_VERSION = '1.0.051';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
@@ -109,14 +109,18 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
+  if (requestUrl.searchParams.toString().length > 0) {
+    return;
+  }
+
   event.respondWith(
     caches.open(CURRENT_CACHE).then((cache) => {
       return cache.match(event.request.url).then((cachedResponse) => {
         if (cachedResponse) {
           return cachedResponse;
         }
-        // Fetch from the network and update the cache
-        return fetch(event.request, { cache: 'reload' }).then((fetchedResponse) => {
+        // Fetch from the network without caching
+        return fetch(event.request, { cache: 'no-store' }).then((fetchedResponse) => {
           cache.put(event.request.url, fetchedResponse.clone());
           return fetchedResponse;
         });
