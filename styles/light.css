@@ -24,22 +24,6 @@
     --trayReviewingBackgroundHSL: var(--hueReviewing), 100%, 70%;
     --traySolvedBackgroundHSL: var(--hueSolved), 86%, 73%;
 
-    --longTransition: 400ms;
-    --mediumTransition: 250ms;
-    --shortTransition: 150ms;
-
-    --cardSize: 180px;
-    --wordHeight: 30px;
-    --wordScale: 1;
-    --wordAlignment: end;
-    --defaultGap: 20px;
-    --borderRadius: 5px;
-    --tinyIconSize: 13px;
-    --extraSmallIconSize: 16px;
-    --smallIconSize: 24px;
-    --mediumIconSize: 32px;
-    --cardDropShadow: 0px 0px 10px rgba(0, 0, 0, .3);
-    --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, .5);
 
     --textureSource: radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), 1) 0%, hsla(var(--appBackgroundDarkestHSL), 1) 50%, hsla(var(--appBackgroundDarkestHSL), 0) 80%);
     --texture2: radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), 1) 0%, hsla(var(--appBackgroundDarkestHSL), 1) 50%, hsla(var(--appBackgroundDarkestHSL), 0) 80%);
