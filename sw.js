@@ -1,4 +1,4 @@
-const CACHE_VERSION = '1.0.041';
+const CACHE_VERSION = '1.0.042';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
@@ -98,20 +98,54 @@ self.addEventListener('message', function (event) {
   }
 });
 
-// fetch cache first, but use network if cache fails
 self.addEventListener('fetch', (event) => {
-  event.respondWith(
-    caches.open(CURRENT_CACHE).then((cache) => {
-      return cache.match(event.request.url).then((cachedResponse) => {
-        if (cachedResponse) {
-          return cachedResponse;
-        }
-        // Fetch from the network and update the cache
-        return fetch(event.request, { cache: 'reload' }).then((fetchedResponse) => {
-          cache.put(event.request.url, fetchedResponse.clone());
+  // Check if the request is for a new file (e.g., CSS, JS, or HTML)
+  const isFileRequest = event.request.url.includes('.css') || event.request.url.includes('.js') || event.request.url.includes('.html');
+
+  if (isFileRequest) {
+    // Fetch from the network and update the cache
+    event.respondWith(
+      fetch(event.request)
+        .then((fetchedResponse) => {
+          // Clone the response to use it in both cache and client
+          const clonedResponse = fetchedResponse.clone();
+
+          // Update the cache with the new response
+          caches.open(CURRENT_CACHE).then((cache) => {
+            cache.put(event.request, clonedResponse);
+          });
+
           return fetchedResponse;
-        });
-      });
-    }),
-  );
+        })
+        .catch(() => {
+          // If network fetch fails, serve from cache
+          return caches.match(event.request);
+        }),
+    );
+  } else {
+    // For API calls, fetch directly from the network
+    if (event.request.url.includes('bigtentgames.workers.dev')) {
+      event.respondWith(
+        fetch(event.request)
+          .then((apiResponse) => {
+            // Clone the response to use it in both cache and client
+            const clonedApiResponse = apiResponse.clone();
+
+            // Update the cache with the new API response
+            caches.open(CURRENT_CACHE).then((cache) => {
+              cache.put(event.request, clonedApiResponse);
+            });
+
+            return apiResponse;
+          })
+          .catch(() => {
+            // If API fetch fails, serve from cache
+            return caches.match(event.request);
+          }),
+      );
+    } else {
+      // Serve other requests from the cache
+      event.respondWith(caches.match(event.request));
+    }
+  }
 });
