@@ -1,4 +1,4 @@
-const CACHE_VERSION = '1.0.049';
+const CACHE_VERSION = '1.0.050';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
@@ -102,6 +102,13 @@ self.addEventListener('message', function (event) {
 
 // fetch cache first, but use network if cache fails
 self.addEventListener('fetch', (event) => {
+  const requestUrl = new URL(event.request.url);
+
+  // Exclude requests to bigtentgames.workers.dev
+  if (requestUrl.hostname.includes('bigtentgames.workers.dev')) {
+    return;
+  }
+
   event.respondWith(
     caches.open(CURRENT_CACHE).then((cache) => {
       return cache.match(event.request.url).then((cachedResponse) => {
