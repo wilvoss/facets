@@ -7,7 +7,7 @@ class WordSetObject {
     this.isSelected = spec.isSelected === undefined ? false : spec.isSelected;
     this.data = spec.data === undefined ? [] : spec.data;
     this.textureImage = spec.textureImage === undefined ? '../images/wallpapers/common.jpg' : spec.textureImage;
-    this.textureHue = spec.textureHue === undefined ? 205 : spec.textureHue;
+    this.textureHue = spec.textureHue === undefined ? 'radial-gradient(circle, hsla(var(--appBackgroundDarkHSL), .7) 0%, hsla(var(--appBackgroundDarkHSL), 1) 100%)' : spec.textureHue;
     this.textureSize = spec.textureSize === undefined ? '512px' : spec.textureSize;
     this.textureBlendMode = spec.textureBlendMode === undefined ? 'normal' : spec.textureBlendMode;
     this.enabled = spec.enabled === undefined ? true : spec.enabled;
@@ -24,13 +24,13 @@ let Winter = new WordSetObject({ id: '3', name: 'Winter', data: ['./data/winter.
 let Spring = new WordSetObject({ id: '4', name: 'Spring', data: ['./data/spring.json'], enabled: false });
 let Summer = new WordSetObject({ id: '5', name: 'Summer', data: ['./data/summer.json'], enabled: false });
 let Fall = new WordSetObject({ id: '6', name: 'Fall', data: ['./data/fall.json'], enabled: false });
-let Science = new WordSetObject({ id: '7', name: 'Science', data: ['./data/science.json'], textureImage: '../images/wallpapers/wallpapers/science.jpg' });
+let Science = new WordSetObject({ id: '7', name: 'Science', data: ['./data/science.json'], textureImage: '../images/wallpapers/science.jpg' });
 let Entertainment = new WordSetObject({ id: '8', name: 'Entertainment', startsWithVowel: true, data: ['./data/entertainment.json'], textureImage: '../images/wallpapers/entertainment.jpg' });
 let CommonEmoji = new WordSetObject({ id: '9', name: 'Emoji', startsWithVowel: true, data: ['./data/common-emoji.json'], scale: 1.9, wordAlignement: 'start', message: 'Some Emoji might not show on your device.', textureImage: '../images/wallpapers/emoji.jpg' });
 let Cities = new WordSetObject({ id: '10', name: 'Cities', startsWithVowel: true, data: ['./data/cities.json'], enabled: false });
 let Sport = new WordSetObject({ id: '11', name: 'Sport', startsWithVowel: true, data: ['./data/sports.json'], enabled: false });
 let NounsVerbs = new WordSetObject({ id: '100', name: 'Nouns & Verbs', isSelected: true, data: [Nouns.data, Verbs.data], textureImage: '../images/wallpapers/common.jpg' });
-let Seasons = new WordSetObject({ id: '101', name: 'Seasons', data: [Winter.data, Spring.data, Summer.data, Fall.data], textureImage: '../images/wallpapers/wallpapers/seasons.jpg' });
+let Seasons = new WordSetObject({ id: '101', name: 'Seasons', data: [Winter.data, Spring.data, Summer.data, Fall.data], textureImage: '../images/wallpapers/seasons.jpg' });
 let Civilization = new WordSetObject({ id: '102', name: 'Civilization', data: ['./data/civilization.json'], textureImage: '../images/wallpapers/civilization.jpg' });
 let Archeology = new WordSetObject({ id: '103', name: 'Archeology', startsWithVowel: true, data: ['./data/prehistory.json'], textureImage: '../images/wallpapers/prehistory.jpg' });
 let Sports = new WordSetObject({ id: '104', name: 'Sports', data: [Sport.data, Cities.data], textureImage: '../images/wallpapers/sports.jpg' });

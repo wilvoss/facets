@@ -32,7 +32,7 @@
 }
 
 app {
-    background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .7) 200px);
+    background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1) 100px, hsla(var(--appBackgroundDarkestHSL), 0) 400px);
 }
 
 

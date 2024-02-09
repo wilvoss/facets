@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.054',
+    appDataVersion: '1.0.055',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -160,14 +160,14 @@ var app = new Vue({
         this.documentCssRoot.style.setProperty('--texture2', 'url(' + _wordset.textureImage + ')');
         this.documentCssRoot.style.setProperty('--textureSize', _wordset.textureSize);
         this.documentCssRoot.style.setProperty('--textureBlendMode', _wordset.textureBlendMode);
-        this.documentCssRoot.style.setProperty('--hueTheme', _wordset.textureHue);
+        this.documentCssRoot.style.setProperty('--textureHue', _wordset.textureHue);
       } else {
         let textureSource = this.documentCssRoot.style.getPropertyValue('--textureSource');
         this.documentCssRoot.style.setProperty('--texture2', textureSource);
         this.documentCssRoot.style.setProperty('--textureSize', 'cover');
         this.documentCssRoot.style.setProperty('--textureBlendMode', 'normal');
-        let hueMainSource = this.documentCssRoot.style.getPropertyValue('--hueMainSource');
-        this.documentCssRoot.style.setProperty('--hueTheme', hueMainSource);
+        let textureHueSource = this.documentCssRoot.style.getPropertyValue('--textureHueSource');
+        this.documentCssRoot.style.setProperty('--textureHue', textureHueSource);
       }
       this.documentCssRoot.style.setProperty('--wordScale', _wordset.scale);
     },

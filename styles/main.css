@@ -58,6 +58,8 @@
 
     --textureSource: radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), .3) 0%, hsla(var(--appBackgroundDarkestHSL), 0) 40%, hsla(var(--appBackgroundDarkestHSL), 1) 80%);
     --texture2: radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), .3) 0%, hsla(var(--appBackgroundDarkestHSL), 0) 40%, hsla(var(--appBackgroundDarkestHSL), 1) 80%);
+    --textureHueSource: linear-gradient(hsla(var(--appBackgroundHSL), 0), hsla(var(--appBackgroundHSL), 0));
+    --textureHue: radial-gradient(circle, hsla(var(--appBackgroundHSL), 0) 0%, hsla(var(--appBackgroundHSL), 0) 100%);
     --textureSize: cover;
     --textureBlendMode: normal;
 }
@@ -77,8 +79,9 @@ body {
     line-height: 1.3em;
     margin: 0px 0px;
     background: hsl(var(--appBackgroundHSL));
-    background-image: var(--texture2);
-    background-size: var(--textureSize);
+    background-image: var(--textureHue), var(--texture2);
+    background-size: cover, var(--textureSize);
+    background-repeat: no-repeat, repeat;
     background-position: top center;
     width: 100%;
     height: 100%;
@@ -1417,8 +1420,8 @@ version {
         width: 100%;
         height: 100%;
         overflow: hidden;
-        background-image: none;
-        background-size: 128px;
+        /* background-image: none; */
+        background-size: cover, 128px;
     }
 
     p {
