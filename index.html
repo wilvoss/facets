@@ -41,6 +41,8 @@
 
   <body>
     <app id="app" v-cloak :class="{multicolor: userSettingsUseMultiColoredGems, solved: currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, guessing: appStateIsGuessing, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}" @pointerdown="HandleBodyPointerDown(event)" @pointerup="HandleBodyPointerUp(event, appStateIsDragging ? appDataDraggedCard : getSelectedCard)">
+      <link rel="stylesheet" v-if="userSettingsUsesLightTheme" href="styles/light.css" media="screen" />
+
       <modal v-if="appStateShowOOBE" class="tutorial">
         <h2>Quick Guide</h2>
         <section v-if="appStateIsGuessing">
@@ -180,6 +182,10 @@
           <small :class="{disabled: appStateIsGuessing}">Enable this if you want to send your puzzle with a random 5th card.</small>
 
           <h3>Appearance</h3>
+          <checkbox :class="{on: tempUserSettingsUsesLightTheme}" @click="ToggleTempUseLightTheme()">
+            Light theme
+            <toggle></toggle>
+          </checkbox>
           <checkbox :class="{on: tempUseWordSetThemes}" @click="ToggleTempUseWordSetThemes()">
             Category backgrounds
             <toggle></toggle>
@@ -240,7 +246,6 @@
           </button>
         </controls>
       </wrapper>
-
       <wrapper>
         <message v-if="appDataMessage !== '' && appDataMessage === 'Tap to copy minified message.'">{{appDataMessage}}</message>
         <message @click="ShareWin()" v-if="appDataMessage !== '' && appDataMessage !== 'Message copied to the clipboard.'">

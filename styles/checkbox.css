@@ -23,7 +23,7 @@ checkbox toggle {
     margin: 0px;
     width: 46px;
     height: 26px;
-    background: rgba(0, 0, 0, 0.6);
+    background: hsla(var(--appBackgroundLighterHSL), 1);
     border-radius: 13px;
     overflow: hidden;
     transition: var(--mediumTransition) ease-in-out all;

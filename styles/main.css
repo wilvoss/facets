@@ -14,6 +14,7 @@
 }
 
 :root {
+    --hueMainSource: 140;
     --hueMain: 140;
     --hueTheme: 215;
     --hueCreating: 215;
@@ -22,6 +23,7 @@
     --hueSolved: 175;
     --hueHighlight: 140;
 
+    --appBackgroundLighterHSL: var(--hueTheme), 50%, 41%;
     --appBackgroundHSL: var(--hueTheme), 100%, 11%;
     --appBackgroundDarkHSL: var(--hueTheme), 100%, 8%;
     --appBackgroundDarkestHSL: var(--hueTheme), 100%, 3%;
@@ -54,8 +56,7 @@
     --cardDropShadow: 0px 0px 10px rgba(0, 0, 0, .3);
     --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, .5);
 
-
-    --texture1: url(../images/defaultTexture.jpg);
+    --textureSource: radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), .3) 0%, hsla(var(--appBackgroundDarkestHSL), 0) 40%, hsla(var(--appBackgroundDarkestHSL), 1) 80%);
     --texture2: radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), .3) 0%, hsla(var(--appBackgroundDarkestHSL), 0) 40%, hsla(var(--appBackgroundDarkestHSL), 1) 80%);
     --textureSize: cover;
     --textureBlendMode: normal;
@@ -78,7 +79,6 @@ body {
     background: hsl(var(--appBackgroundHSL));
     background-image: var(--texture2);
     background-size: var(--textureSize);
-    background-blend-mode: var(--textureBlendMode);
     background-position: top center;
     width: 100%;
     height: 100%;
@@ -141,8 +141,8 @@ button {
 }
 
 button.secondary {
-    color: hsl(var(--hueTheme), 40%, 40%);
-    border-color: hsl(var(--hueTheme), 50%, 25%);
+    color: hsl(var(--hueTheme), 40%, 50%);
+    border-color: hsl(var(--hueTheme), 50%, 50%);
 }
 
 button.inline {
@@ -589,7 +589,7 @@ modal controls {
 }
 
 modal controls button {
-    border: 1px solid hsla(var(--linkColorDarkHSL), .3);
+    border: 1px solid hsla(var(--linkColorDarkHSL), .75);
     font-size: 100%;
     width: var(--cardSize);
 }
@@ -638,7 +638,7 @@ spot rotators button icon {
     height: var(--extraSmallIconSize);
     mask-size: var(--extraSmallIconSize) var(--extraSmallIconSize);
     -webkit-mask-size: var(--extraSmallIconSize) var(--extraSmallIconSize);
-    background: rgb(0, 0, 0, 0.2);
+    background: hsla(var(--appForegroundDiminishedHSL), .1);
 }
 
 parking spot rotators button icon {
@@ -806,7 +806,8 @@ spot {
 }
 
 parking spot {
-    background: hsla(0, 0%, 0%, .8);
+    background: hsla(var(--appBackgroundDarkestHSL), .8);
+    /* background: hsla(0, 0%, 0%, .8); */
     outline: 1px solid hsla(var(--hueMain), 100%, 70%, .7);
     opacity: .5;
 }
@@ -897,7 +898,7 @@ cards spot:nth-child(4) card words word:nth-child(4) {
 }
 
 card.ghost, card.ghost.empty, .guessing card.ghost.empty, .reviewing card.ghost.empty {
-    background: rgba(0, 0, 0, .4);
+    background: hsla(var(--appBackgroundDarkestHSL), .4);
     transition: 0ms ease-in 0ms opacity;
     position: fixed;
     top: calc(-.5 * var(--cardSize));
@@ -1046,7 +1047,7 @@ modal section h3 small {
 hints hint input {
     transform: rotateX(24deg) rotateY(0deg);
     transform-style: preserve-3d;
-    text-shadow: 0px -1px 1px rgba(0, 0, 0, .6);
+    text-shadow: 0px -1px 1px hsla(var(--appBackgroundDarkestHSL), .6);
     font-size: 120%;
 }
 
@@ -1076,7 +1077,7 @@ hints hint input::placeholder {
 
 modal input, modal select {
     font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
-    color: white;
+    color: hsl(var(--appForegroundHSL));
     font-size: 110%;
     text-align: left;
 }
@@ -1330,7 +1331,7 @@ modal::-webkit-scrollbar {
 version {
     text-align: center;
     font-size: 12px;
-    color: hsla(var(--hueMain), 100%, 100%);
+    color: hsl(var(--appForegroundHSL));
     padding-top: var(--defaultGap);
     display: flex;
     gap: var(--defaultGap);

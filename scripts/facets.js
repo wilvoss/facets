@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.051',
+    appDataVersion: '1.0.052',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -66,12 +66,14 @@ var app = new Vue({
     // user settings
     userSettingsAutoCheck: true,
     userSettingsUseExtraCard: false,
+    userSettingsUsesLightTheme: false,
     userSettingsUseMultiColoredGems: true,
     userSettingsUseWordSetThemes: false,
     // temp user settings
     tempName: '',
     tempID: 0,
     tempUseMultiColoredGems: true,
+    tempUserSettingsUsesLightTheme: false,
     tempAutoCheck: true,
     tempUseWordSetThemes: false,
     tempWordSetName: '',
@@ -112,6 +114,11 @@ var app = new Vue({
     ToggleTempUseWordSetThemes() {
       note('ToggleTempUseWordSetThemes() called');
       this.tempUseWordSetThemes = !this.tempUseWordSetThemes;
+    },
+
+    ToggleTempUseLightTheme() {
+      note('ToggleTempUseLightTheme() called');
+      this.tempUserSettingsUsesLightTheme = !this.tempUserSettingsUsesLightTheme;
     },
 
     ToggleTempUsePortraitLayout() {
@@ -155,10 +162,12 @@ var app = new Vue({
         this.documentCssRoot.style.setProperty('--textureBlendMode', _wordset.textureBlendMode);
         this.documentCssRoot.style.setProperty('--hueTheme', _wordset.textureHue);
       } else {
-        this.documentCssRoot.style.setProperty('--texture2', 'radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), .3) 0%, hsla(var(--appBackgroundDarkestHSL), 0) 40%, hsla(var(--appBackgroundDarkestHSL), 1) 80%)');
+        let textureSource = this.documentCssRoot.style.getPropertyValue('--textureSource');
+        this.documentCssRoot.style.setProperty('--texture2', textureSource);
         this.documentCssRoot.style.setProperty('--textureSize', 'cover');
         this.documentCssRoot.style.setProperty('--textureBlendMode', 'normal');
-        this.documentCssRoot.style.setProperty('--hueTheme', '205');
+        let hueMainSource = this.documentCssRoot.style.getPropertyValue('--hueMainSource');
+        this.documentCssRoot.style.setProperty('--hueTheme', hueMainSource);
       }
       this.documentCssRoot.style.setProperty('--wordScale', _wordset.scale);
     },
@@ -573,6 +582,11 @@ var app = new Vue({
         this.tempUseExtraCard = this.userSettingsUseExtraCard;
       }
 
+      let userSettingsUsesLightTheme = localStorage.getItem('userSettingsUsesLightTheme');
+      if (userSettingsUsesLightTheme !== undefined && userSettingsUsesLightTheme !== null) {
+        this.userSettingsUsesLightTheme = JSON.parse(userSettingsUsesLightTheme);
+        this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
+      }
       let userSettingsAutoCheck = localStorage.getItem('autoCheck');
       if (userSettingsAutoCheck !== undefined && userSettingsAutoCheck !== null) {
         this.userSettingsAutoCheck = JSON.parse(userSettingsAutoCheck);
@@ -663,6 +677,7 @@ var app = new Vue({
       this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
       // this.tempUsePortraitLayout = this.appStateUsePortraitLayout;
       this.tempUseExtraCard = this.userSettingsUseExtraCard;
+      this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
       this.tempAutoCheck = this.userSettingsAutoCheck;
     },
 
@@ -700,6 +715,7 @@ var app = new Vue({
         this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
         // this.appStateUsePortraitLayout = this.tempUsePortraitLayout;
         this.userSettingsUseExtraCard = this.tempUseExtraCard;
+        this.userSettingsUsesLightTheme = this.tempUserSettingsUsesLightTheme;
         this.userSettingsAutoCheck = this.tempAutoCheck;
         this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
         this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
@@ -708,6 +724,7 @@ var app = new Vue({
         localStorage.setItem('userID', this.appDataPlayerCurrent.id);
         // localStorage.setItem('appStateUsePortraitLayout', this.appStateUsePortraitLayout);
         localStorage.setItem('useWordSetThemes', this.userSettingsUseWordSetThemes);
+        localStorage.setItem('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
         localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
         localStorage.setItem('autoCheck', this.userSettingsAutoCheck);
         localStorage.setItem('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
