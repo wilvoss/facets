@@ -281,6 +281,13 @@ message small {
     line-height: 100%;
 }
 
+message small.messageShare {
+    padding: var(--defaultGap) 0;
+    display: inline-block;
+    margin-top: -18px;
+    /* transform: translate(6px, -17px); */
+}
+
 message icon.share {
     display: inline-block;
     width: var(--extraSmallIconSize);
