@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.039',
+    appDataVersion: '1.0.040',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -888,7 +888,9 @@ var app = new Vue({
     },
 
     async ShareText(_text) {
-      note('ShareText() called');
+      note('ShareText() called with this text:');
+      note(_text);
+
       let _shareObject = {
         text: _text,
       };
@@ -925,6 +927,7 @@ var app = new Vue({
         var corsflareUrl = 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
         var requestUrl = corsflareUrl + location.search.substring(1);
 
+        note('Fetching short url');
         await fetch(requestUrl, {
           method: 'POST',
           headers: {
@@ -942,6 +945,7 @@ var app = new Vue({
           .catch((error) => console.error('Error:', error));
 
         this.appStateIsGettingTinyURL = false;
+
         this.ShareText(text + ' <' + this.appDataShareURL + '>');
       }
     },
