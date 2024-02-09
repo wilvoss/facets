@@ -532,18 +532,19 @@ tray diamond {
     position: absolute;
     background: url(../images/diamond.svg) no-repeat;
     background-size: 100% 100%;
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
     pointer-events: none;
     transform: translateY(-60px);
     transition: var(--mediumTransition) ease-in-out background-color;
+    mask-repeat: no-repeat;
+    -webkit-mask-repeat: no-repeat;
     z-index: -1;
 }
 
 diamond.back {
-    background: hsl(var(--trayBackgroundHSL));
     mask-image: url(../images/diamond-back.svg);
     -webkit-mask-image: url(../images/diamond-back.svg);
-    mask-size: 100% 100%;
-    -webkit-mask-size: 100% 100%;
     opacity: .8;
 }
 
