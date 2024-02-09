@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.040',
+    appDataVersion: '1.0.041',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -418,6 +418,7 @@ var app = new Vue({
     async GetLast10GlobalCreatedGames() {
       note('GetLast10GlobalCreatedGames() called');
       this.appStateIsGettingLast10Games = true;
+      this.appDataGlobalCreatedGames = [];
       var requestUrl = 'https://worker-falling-frost-2926.bigtentgames.workers.dev/';
       await fetch(requestUrl, {
         headers: {
