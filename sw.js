@@ -1,4 +1,4 @@
-const CACHE_VERSION = '1.0.045';
+const CACHE_VERSION = '1.0.046';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
@@ -101,18 +101,13 @@ self.addEventListener('message', function (event) {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Check if the request is for a new file (e.g., CSS, JS, or HTML)
   const isFileRequest = event.request.url.includes('.css') || event.request.url.includes('.js') || event.request.url.includes('.html');
 
   if (isFileRequest) {
-    // Fetch from the network and update the cache
     event.respondWith(
       fetch(event.request)
         .then((fetchedResponse) => {
-          // Clone the response to use it in both cache and client
           const clonedResponse = fetchedResponse.clone();
-
-          // Update the cache with the new response
           caches.open(CURRENT_CACHE).then((cache) => {
             cache.put(event.request, clonedResponse);
           });
@@ -120,20 +115,41 @@ self.addEventListener('fetch', (event) => {
           return fetchedResponse;
         })
         .catch(() => {
-          // If network fetch fails, serve from cache
           return caches.match(event.request);
         }),
     );
   } else {
-    // For API calls, fetch directly from the network
-    if (event.request.url.includes('bigtentgames.workers.dev')) {
+    // Handle requests with different search strings
+    const normalizedUrl = new URL(event.request.url);
+    const searchParams = normalizedUrl.searchParams.toString();
+
+    if (searchParams) {
+      const cacheKey = `${event.request.url}?${searchParams}`;
+      event.respondWith(
+        caches.match(cacheKey).then((cachedResponse) => {
+          if (cachedResponse) {
+            return cachedResponse;
+          }
+          return fetch(event.request).then((apiResponse) => {
+            const clonedApiResponse = apiResponse.clone();
+            caches.open(CURRENT_CACHE).then((cache) => {
+              cache.put(cacheKey, clonedApiResponse);
+            });
+            return apiResponse;
+          });
+        }),
+      );
+    } else if (event.request.url.includes('bigtentgames.workers.dev')) {
+      // Handle requests to bigtentgames.workers.dev
       event.respondWith(
         fetch(event.request)
           .then((apiResponse) => {
-            // Clone the response to use it in both cache and client
-            const clonedApiResponse = apiResponse.clone();
+            // Ensure the response is valid before caching
+            if (!apiResponse || apiResponse.status !== 200 || apiResponse.type !== 'basic') {
+              throw new Error('Network response was not ok.');
+            }
 
-            // Update the cache with the new API response
+            const clonedApiResponse = apiResponse.clone();
             caches.open(CURRENT_CACHE).then((cache) => {
               cache.put(event.request, clonedApiResponse);
             });
@@ -141,7 +157,6 @@ self.addEventListener('fetch', (event) => {
             return apiResponse;
           })
           .catch(() => {
-            // If API fetch fails, serve from cache
             return caches.match(event.request);
           }),
       );
