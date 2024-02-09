@@ -161,3 +161,33 @@ parking spot rotators button icon {
 checkbox toggle:before {
     background: hsl(var(--appBackgroundDarkestHSL));
 }
+
+
+button.update {
+    background: hsla(var(--hueCreating), 80%, 40%, 1);
+    border: 1px solid hsla(var(--hueCreating), 80%, 40%, 1);
+    color: white;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, .2);
+}
+
+.creating button.update, .reviewing.guessing button.update {
+    background: hsla(var(--hueGuessing), 80%, 40%, 1);
+    border-color: hsla(var(--hueGuessing), 80%, 40%, 1);
+}
+
+.creating.guessing button.update {
+    background: hsla(var(--hueCreating), 80%, 40%, 1);
+    border-color: hsla(var(--hueCreating), 80%, 40%, 1);
+}
+
+button.update.show {
+    transform: translateY(calc(-1 * var(--defaultGap)));
+}
+
+button.update icon {
+    background: white;
+}
+
+button.update icon {
+    background: white;
+}
