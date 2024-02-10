@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.067',
+    appDataVersion: '1.0.068',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -876,7 +876,7 @@ var app = new Vue({
       if (this.currentGameGuessCount === 1) {
         text = this.appDataPlayerCreator.name + ', I got it in 1 try! 🔥';
       }
-      this.ShareText(text, this.appDataShareURL);
+      this.ShareText(text, '');
     },
 
     async CopyTextToClipboard(_text) {
@@ -920,10 +920,13 @@ var app = new Vue({
       note(_text);
 
       let _shareObject = {
-        text: _text + ' <' + _url + '>',
+        text: _text + _url === '' ? '' : ' <' + _url + '>',
       };
 
       if (!navigator.canShare(_shareObject)) {
+        if (_url === '') {
+          _url = window.location.origin;
+        }
         _shareObject = {
           text: _text,
           url: _url,
