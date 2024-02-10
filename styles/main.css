@@ -1422,7 +1422,7 @@ version {
         height: 100%;
         overflow: hidden;
         /* background-image: none; */
-        background-size: cover, 1256px;
+        background-size: cover, 256px;
     }
 
     p {
