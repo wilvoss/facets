@@ -1,4 +1,4 @@
-const CACHE_VERSION = '1.0.071';
+const CACHE_VERSION = '1.0.072';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
@@ -81,6 +81,7 @@ self.addEventListener('activate', (evt) => {
       );
     }),
   );
+  evt.waitUntil(clients.claim());
 });
 
 // on install we download the routes we want to cache for offline
