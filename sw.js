@@ -1,9 +1,9 @@
-const CACHE_VERSION = '1.0.070';
+const CACHE_VERSION = '1.0.071';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
 const cacheFiles = [
-  './',
+  '/',
   '',
   'favicon-16x16.png',
   'favicon.png',
