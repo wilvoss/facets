@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.063',
+    appDataVersion: '1.0.064',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -872,10 +872,11 @@ var app = new Vue({
     ShareWin() {
       note('ShareWin() called');
       let text = this.appDataPlayerCreator.name + ', I got it in ' + this.currentGameGuessCount + ' tries! 😀';
+      this.ConstructAndSetShareURLForCurrentGame();
       if (this.currentGameGuessCount === 1) {
         text = this.appDataPlayerCreator.name + ', I got it in 1 try! 🔥';
       }
-      this.ShareText(text);
+      this.ShareText(text, this.appDataShareURL);
     },
 
     async CopyTextToClipboard(_text) {
@@ -914,13 +915,21 @@ var app = new Vue({
       this.appDataMessage = 'Message copied to the clipboard.';
     },
 
-    async ShareText(_text) {
+    async ShareText(_text, _url) {
       note('ShareText() called with this text:');
       note(_text);
 
       let _shareObject = {
-        text: _text,
+        text: _text + '<' + _url + '>',
       };
+
+      if (!navigator.canShare(_shareObject)) {
+        _shareObject = {
+          text: _text,
+          url: _url,
+        };
+      }
+
       if (navigator.share && navigator.canShare(_shareObject)) {
         await navigator
           .share(_shareObject)
@@ -948,7 +957,7 @@ var app = new Vue({
         // aren't awaiting a promise for the tiny url, this passes
         // the security requirement for direct user interaction
         // that would otherwise trigger in Chrome on iOS and iPadOS
-        this.ShareText(text + ' <' + this.appDataShareURL + '>');
+        this.ShareText(text, this.appDataShareURL);
       } else {
         this.appStateIsGettingTinyURL = true;
         var corsflareUrl = 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
@@ -973,7 +982,7 @@ var app = new Vue({
 
         this.appStateIsGettingTinyURL = false;
 
-        this.ShareText(text + ' <' + this.appDataShareURL + '>');
+        this.ShareText(text, this.appDataShareURL);
       }
     },
 
