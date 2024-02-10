@@ -226,6 +226,7 @@ button.update icon {
 
 header h1 {
     margin: 0px;
+    color: hsla(var(--appForegroundHSL), 0.8);
 }
 
 icon {
@@ -378,7 +379,7 @@ header h1 {
     cursor: default;
     text-align: center;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
     font-family: 'Theme';
     font-weight: normal;
     font-size: 280%;
