@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.058',
+    appDataVersion: '1.0.059',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -93,6 +93,15 @@ var app = new Vue({
         e.preventDefault();
       }
       this.appStateShowTutorial = !this.appStateShowTutorial;
+    },
+
+    ToggleUseLightTheme(_value) {
+      this.userSettingsUsesLightTheme = _value;
+      if (this.userSettingsUsesLightTheme) {
+        document.getElementById('themeColor').content = 'rgb(240, 255, 245)';
+      } else {
+        document.getElementById('themeColor').content = 'rgb(0, 9, 15)';
+      }
     },
 
     async ToggleShowGlobalCreated() {
@@ -584,7 +593,7 @@ var app = new Vue({
 
       let userSettingsUsesLightTheme = localStorage.getItem('userSettingsUsesLightTheme');
       if (userSettingsUsesLightTheme !== undefined && userSettingsUsesLightTheme !== null) {
-        this.userSettingsUsesLightTheme = JSON.parse(userSettingsUsesLightTheme);
+        this.ToggleUseLightTheme(JSON.parse(userSettingsUsesLightTheme));
         this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
       }
       let userSettingsAutoCheck = localStorage.getItem('autoCheck');
@@ -677,7 +686,7 @@ var app = new Vue({
       this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
       // this.tempUsePortraitLayout = this.appStateUsePortraitLayout;
       this.tempUseExtraCard = this.userSettingsUseExtraCard;
-      this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
+      this.ToggleUseLightTheme(this.userSettingsUsesLightTheme);
       this.tempAutoCheck = this.userSettingsAutoCheck;
     },
 
@@ -715,7 +724,7 @@ var app = new Vue({
         this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
         // this.appStateUsePortraitLayout = this.tempUsePortraitLayout;
         this.userSettingsUseExtraCard = this.tempUseExtraCard;
-        this.userSettingsUsesLightTheme = this.tempUserSettingsUsesLightTheme;
+        this.ToggleUseLightTheme(this.tempUserSettingsUsesLightTheme);
         this.userSettingsAutoCheck = this.tempAutoCheck;
         this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
         this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;

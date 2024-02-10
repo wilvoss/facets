@@ -951,7 +951,7 @@ hints hint {
     display: block;
     position: absolute;
     height: var(--wordHeight);
-    background-size: 128px 128px;
+    background-size: 256px 256px;
     padding: calc(var(--defaultGap) / 4) calc(var(--defaultGap) / 4) calc(var(--defaultGap));
     width: calc(1.75 * var(--cardSize));
     perspective: var(--cardSize);
