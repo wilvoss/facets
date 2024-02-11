@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.078',
+    appDataVersion: '1.0.079',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -957,38 +957,38 @@ var app = new Vue({
       let text = this.GetShareTextBasedOnContext(_gotIt);
       this.ConstructAndSetShareURLForCurrentGame(currentGameReviewIsFinal);
 
-      if (this.isChromeAndiOSoriPadOS) {
-        // share the appDataMessage with the full-length url, because we
-        // aren't awaiting a promise for the tiny url, this passes
-        // the security requirement for direct user interaction
-        // that would otherwise trigger in Chrome on iOS and iPadOS
-        this.ShareText(text, this.appDataShareURL);
-      } else {
-        this.appStateIsGettingTinyURL = true;
-        var corsflareUrl = 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
-        var requestUrl = corsflareUrl + location.search.substring(1);
+      // if (this.isChromeAndiOSoriPadOS) {
+      // share the appDataMessage with the full-length url, because we
+      // aren't awaiting a promise for the tiny url, this passes
+      // the security requirement for direct user interaction
+      // that would otherwise trigger in Chrome on iOS and iPadOS
+      // this.ShareText(text, this.appDataShareURL);
+      // } else {
+      this.appStateIsGettingTinyURL = true;
+      var corsflareUrl = 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
+      var requestUrl = corsflareUrl + location.search.substring(1);
 
-        note('Fetching short url');
-        await fetch(requestUrl, {
-          method: 'POST',
-          headers: {
-            Host: window.location.hostname,
-            Origin: window.location.origin,
-          },
+      note('Fetching short url');
+      await fetch(requestUrl, {
+        method: 'POST',
+        headers: {
+          Host: window.location.hostname,
+          Origin: window.location.origin,
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Server error: ' + response.status);
+          }
+          return response.text();
         })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error('Server error: ' + response.status);
-            }
-            return response.text();
-          })
-          .then((shortUrlParam) => (this.appDataShareURL = location.origin + '/game/?' + shortUrlParam))
-          .catch((error) => console.error('Error:', error));
+        .then((shortUrlParam) => (this.appDataShareURL = location.origin + '/game/?' + shortUrlParam))
+        .catch((error) => console.error('Error:', error));
 
-        this.appStateIsGettingTinyURL = false;
+      this.appStateIsGettingTinyURL = false;
 
-        this.ShareText(text, this.appDataShareURL);
-      }
+      this.ShareText(text, this.appDataShareURL);
+      // }
     },
 
     ReportPuzzle(_game) {
