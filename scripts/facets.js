@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.073',
+    appDataVersion: '1.0.074',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -919,6 +919,7 @@ var app = new Vue({
     async ShareText(_text, _url) {
       note('ShareText() called with this text:');
       note(_text);
+      note(_url);
 
       let _shareObject = {
         text: _text + (_url === '' ? '' : ' <' + _url + '>'),
@@ -1011,7 +1012,8 @@ var app = new Vue({
 
         this.appDataHints.forEach((hint, index) => {
           hint.value = hint.value.trim();
-          boardString += hint.value + (index === this.appDataHints.length - 1 ? '' : '-');
+          let encodedHint = encodeURIComponent(hint.value);
+          boardString += encodedHint + (index === this.appDataHints.length - 1 ? '' : '-');
         });
 
         urlString = encodeURIComponent(urlString);
