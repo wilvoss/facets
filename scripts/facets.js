@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.095',
+    appDataVersion: '1.0.096',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -972,7 +972,7 @@ var app = new Vue({
     async ShareBoard(_gotIt = false) {
       note('ShareBoard() called');
       if (this.isChromeAndiOSoriPadOS && this.appDataShareURL.indexOf('facets.bigtentgames.com/game/?') !== -1) {
-        this.CopyTextToClipboard(this.GetShareTextBasedOnContext(_gotIt), this.appDataShareURL);
+        this.CopyTextToClipboard(this.GetShareTextBasedOnContext(_gotIt) + ' <' + this.appDataShareURL + '>');
         note('Shortened URL exists, copying to clipboard');
       } else {
         let currentGameReviewIsFinal = this.appDataPlayerCurrent.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4;
