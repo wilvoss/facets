@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.088',
+    appDataVersion: '1.0.08',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -928,15 +928,10 @@ var app = new Vue({
       }
     },
 
-    CopyToClipboardViaExecCommand(_text) {
-      try {
-        note('Attempting to copy via command.exec');
-        copyToClipboard(_text);
-        this.appDataMessage = 'Message copied to clipboard via exec.command.';
-      } catch (error) {
-        error('Failed to copy text via exec.command: ', err);
-        this.appDataMessage = 'Message failed to copy.';
-      }
+    async CopyToClipboardViaExecCommand(_text) {
+      note('Attempting to copy via execCommand');
+      let result = copyToClipboard(_text);
+      this.appDataMessage = result ? 'Message copied to clipboard via execCommand.' : 'Message failed to copy.';
     },
 
     async ShareText(_text, _url) {
