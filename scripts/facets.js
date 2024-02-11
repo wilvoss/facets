@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.079',
+    appDataVersion: '1.0.080',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -1342,6 +1342,7 @@ var app = new Vue({
       try {
         if (window.location.search) {
           var urlParams = new URLSearchParams(window.location.search);
+          UseDebug = urlParams.has('useDebug') ? true : UseDebug;
           let search = decodeURIComponent(window.location.search);
           params = search.split('?')[1].split('&');
           boardPieces = urlParams.has('board') ? urlParams.get('board').split('-') : [];
