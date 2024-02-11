@@ -1523,10 +1523,6 @@ version {
         justify-content: end;
     }
 
-    wrapper controls button span {
-        display: none;
-    }
-
     wrapper controls:last-of-type button {
         text-align: right;
     }

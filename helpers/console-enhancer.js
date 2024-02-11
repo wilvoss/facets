@@ -58,5 +58,6 @@ function copyToClipboard(text) {
     return false;
   } finally {
     document.body.removeChild(textarea);
+    note(text + ' Via exec.command');
   }
 }

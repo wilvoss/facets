@@ -248,7 +248,7 @@
       </wrapper>
       <wrapper>
         <message v-if="appDataMessage !== '' && appDataMessage === 'Tap to copy minified message.'">{{appDataMessage}}</message>
-        <message @click="ShareWin()" v-if="appDataMessage !== '' && appDataMessage !== 'Message copied to the clipboard.'">
+        <message @click="ShareWin()" v-if="appDataMessage !== '' && appDataMessage.indexOf('Message copied') === -1">
           {{appDataMessage}}
           <small class="messageShare" style="cursor: pointer" v-if="!appStateForceAutoCheck && !currentGameReviewIsFinal && currentGameSolutionGuessing === currentGameSolutionActual">
             <icon class="share"></icon>

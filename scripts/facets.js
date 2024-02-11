@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.076',
+    appDataVersion: '1.0.077',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -891,7 +891,7 @@ var app = new Vue({
               }),
             ])
             .then(() => {
-              console.log('Message copied via navigator.clipboard.write');
+              console.log(this.appDataMessage + ' Via navigator.clipboard.write');
             })
             .catch((err) => {
               this.appDataMessage = 'Message failed to copy to clipboard.';
@@ -909,11 +909,11 @@ var app = new Vue({
               console.error('Failed to copy text via navigator.clipboard.writeText: ', err);
             });
         }
+        this.appDataMessage = 'Message copied to the clipboard.';
       } else {
         copyToClipboard(_text);
-        console.log('Message copied via exec.command');
+        this.appDataMessage = 'Message copied to clipboard via exec.command.';
       }
-      this.appDataMessage = 'Message copied to the clipboard.';
     },
 
     async ShareText(_text, _url) {
