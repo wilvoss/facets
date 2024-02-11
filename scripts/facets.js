@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.084',
+    appDataVersion: '1.0.085',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -884,7 +884,7 @@ var app = new Vue({
       if (navigator.clipboard) {
         if (window.ClipboardItem) {
           // ClipboardItem is available
-          navigator.clipboard
+          await navigator.clipboard
             .write([
               new ClipboardItem({
                 'text/plain': new Blob([_text], { type: 'text/plain' }),
