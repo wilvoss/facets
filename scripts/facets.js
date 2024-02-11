@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.074',
+    appDataVersion: '1.0.075',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -925,7 +925,7 @@ var app = new Vue({
         text: _text + (_url === '' ? '' : ' <' + _url + '>'),
       };
 
-      if (!navigator.canShare(_shareObject)) {
+      if (navigator.canShare && !navigator.canShare(_shareObject)) {
         if (_url === '') {
           _url = window.location.origin;
         }
