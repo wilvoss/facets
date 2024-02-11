@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.094',
+    appDataVersion: '1.0.095',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -947,70 +947,70 @@ var app = new Vue({
         text: _text + (_url === '' ? '' : ' <' + _url + '>'),
       };
 
-      if (this.isChromeAndiOSoriPadOS || !navigator.share) {
-        this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
+      if (navigator.canShare && !navigator.canShare(_shareObject)) {
+        _shareObject = {
+          text: _text,
+          url: _url === '' ? window.location.origin : _url,
+        };
+      }
+      if (navigator.share && navigator.canShare(_shareObject)) {
+        await navigator
+          .share(_shareObject)
+          .then((result) => {
+            console.log('Message shared via navigator.share()');
+          })
+          .catch((err) => {
+            this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
+            console.error('Failed to share via navigator.share(): ', err);
+          });
       } else {
-        if (navigator.canShare && !navigator.canShare(_shareObject)) {
-          _shareObject = {
-            text: _text,
-            url: _url === '' ? window.location.origin : _url,
-          };
-        }
-        if (navigator.share && navigator.canShare(_shareObject)) {
-          await navigator
-            .share(_shareObject)
-            .then((result) => {
-              console.log('Message shared via navigator.share()');
-            })
-            .catch((err) => {
-              this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
-              console.error('Failed to share via navigator.share(): ', err);
-            });
-        } else {
-          // fall back to clipboard
-          this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
-        }
+        // fall back to clipboard
+        this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
       }
     },
 
     async ShareBoard(_gotIt = false) {
       note('ShareBoard() called');
+      if (this.isChromeAndiOSoriPadOS && this.appDataShareURL.indexOf('facets.bigtentgames.com/game/?') !== -1) {
+        this.CopyTextToClipboard(this.GetShareTextBasedOnContext(_gotIt), this.appDataShareURL);
+        note('Shortened URL exists, copying to clipboard');
+      } else {
+        let currentGameReviewIsFinal = this.appDataPlayerCurrent.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4;
+        let text = this.GetShareTextBasedOnContext(_gotIt);
+        this.ConstructAndSetShareURLForCurrentGame(currentGameReviewIsFinal);
 
-      let currentGameReviewIsFinal = this.appDataPlayerCurrent.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4;
-      let text = this.GetShareTextBasedOnContext(_gotIt);
-      this.ConstructAndSetShareURLForCurrentGame(currentGameReviewIsFinal);
+        // if (this.isChromeAndiOSoriPadOS) {
+        // share the appDataMessage with the full-length url, because we
+        // aren't awaiting a promise for the tiny url, this passes
+        // the security requirement for direct user interaction
+        // that would otherwise trigger in Chrome on iOS and iPadOS
+        // this.ShareText(text, this.appDataShareURL);
+        // } else {
+        this.appStateIsGettingTinyURL = true;
+        var corsflareUrl = 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
+        var requestUrl = corsflareUrl + location.search.substring(1);
 
-      // if (this.isChromeAndiOSoriPadOS) {
-      // share the appDataMessage with the full-length url, because we
-      // aren't awaiting a promise for the tiny url, this passes
-      // the security requirement for direct user interaction
-      // that would otherwise trigger in Chrome on iOS and iPadOS
-      // this.ShareText(text, this.appDataShareURL);
-      // } else {
-      this.appStateIsGettingTinyURL = true;
-      var corsflareUrl = 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
-      var requestUrl = corsflareUrl + location.search.substring(1);
-
-      note('Fetching short url');
-      await fetch(requestUrl, {
-        method: 'POST',
-        headers: {
-          Host: window.location.hostname,
-          Origin: window.location.origin,
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Server error: ' + response.status);
-          }
-          return response.text();
+        note('Fetching short url');
+        await fetch(requestUrl, {
+          method: 'POST',
+          headers: {
+            Host: window.location.hostname,
+            Origin: window.location.origin,
+          },
         })
-        .then((shortUrlParam) => (this.appDataShareURL = location.origin + '/game/?' + shortUrlParam))
-        .catch((error) => console.error('Error:', error));
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Server error: ' + response.status);
+            }
+            return response.text();
+          })
+          .then((shortUrlParam) => (this.appDataShareURL = location.origin + '/game/?' + shortUrlParam))
+          .catch((error) => console.error('Error:', error));
 
-      this.appStateIsGettingTinyURL = false;
+        this.appStateIsGettingTinyURL = false;
 
-      this.ShareText(text, this.appDataShareURL);
+        this.ShareText(text, this.appDataShareURL);
+      }
       // }
     },
 
@@ -1486,6 +1486,9 @@ var app = new Vue({
       let text = 'Send';
       if (this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
         text = this.userSettingsAutoCheck || this.appStateForceAutoCheck ? 'Guess' : text;
+        if (this.isChromeAndiOSoriPadOS && this.appDataShareURL.indexOf('facets.bigtentgames.com/game/?') !== -1) {
+          text = 'Copy';
+        }
       }
       return text;
     },
