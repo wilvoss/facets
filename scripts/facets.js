@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.080',
+    appDataVersion: '1.0.081',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -942,6 +942,7 @@ var app = new Vue({
             console.log('Message shared via navigator.share()');
           })
           .catch((err) => {
+            this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
             console.error('Failed to share via navigator.share(): ', err);
           });
       } else {
