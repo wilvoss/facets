@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.081',
+    appDataVersion: '1.0.082',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -577,14 +577,14 @@ var app = new Vue({
         this.documentCssRoot.style.setProperty('--wordScale', this.currentGameWordSet.scale);
       }
 
-      let _appStateIsNewVersionAvailable = localStorage.getItem('newVersionAvailable');
-      try {
-        if (_appStateIsNewVersionAvailable !== undefined && _appStateIsNewVersionAvailable !== null) {
-          this.appStateIsNewVersionAvailable = JSON.parse(_appStateIsNewVersionAvailable);
-        }
-      } catch (_error) {
-        error('_newVersionAvailable error: ' + _error);
-      }
+      // let _appStateIsNewVersionAvailable = localStorage.getItem('newVersionAvailable');
+      // try {
+      //   if (_appStateIsNewVersionAvailable !== undefined && _appStateIsNewVersionAvailable !== null) {
+      //     this.appStateIsNewVersionAvailable = JSON.parse(_appStateIsNewVersionAvailable);
+      //   }
+      // } catch (_error) {
+      //   error('_newVersionAvailable error: ' + _error);
+      // }
 
       let userSettingsUseExtraCard = localStorage.getItem('useExtraCard');
       if (userSettingsUseExtraCard !== undefined && userSettingsUseExtraCard !== null) {
@@ -817,7 +817,7 @@ var app = new Vue({
     HandleUpdateAppButtonClick() {
       console.log('HandleUpdateAppButtonClick() called');
       this.appStateIsNewVersionAvailable = false;
-      localStorage.setItem('newVersionAvailable', this.appStateIsNewVersionAvailable);
+      // localStorage.setItem('newVersionAvailable', this.appStateIsNewVersionAvailable);
       if (this.serviceWorker) {
         // Send a message to the service worker to skip waiting
         this.serviceWorker.postMessage({ action: 'skipWaiting' });
@@ -859,7 +859,7 @@ var app = new Vue({
                   // There is a new service worker available, show the notification
                   if (navigator.serviceWorker.controller) {
                     this.appStateIsNewVersionAvailable = true;
-                    localStorage.setItem('newVersionAvailable', this.appStateIsNewVersionAvailable);
+                    // localStorage.setItem('newVersionAvailable', this.appStateIsNewVersionAvailable);
                   }
                   break;
               }
