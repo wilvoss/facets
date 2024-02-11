@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.093',
+    appDataVersion: '1.0.094',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -947,29 +947,29 @@ var app = new Vue({
         text: _text + (_url === '' ? '' : ' <' + _url + '>'),
       };
 
-      if (navigator.canShare && !navigator.canShare(_shareObject)) {
-        if (_url === '') {
-          _url = window.location.origin;
-        }
-        _shareObject = {
-          text: _text,
-          url: _url,
-        };
-      }
-
-      if (navigator.share && navigator.canShare(_shareObject)) {
-        await navigator
-          .share(_shareObject)
-          .then((result) => {
-            console.log('Message shared via navigator.share()');
-          })
-          .catch((err) => {
-            this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
-            console.error('Failed to share via navigator.share(): ', err);
-          });
-      } else {
-        // fall back to clipboard
+      if (this.isChromeAndiOSoriPadOS || !navigator.share) {
         this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
+      } else {
+        if (navigator.canShare && !navigator.canShare(_shareObject)) {
+          _shareObject = {
+            text: _text,
+            url: _url === '' ? window.location.origin : _url,
+          };
+        }
+        if (navigator.share && navigator.canShare(_shareObject)) {
+          await navigator
+            .share(_shareObject)
+            .then((result) => {
+              console.log('Message shared via navigator.share()');
+            })
+            .catch((err) => {
+              this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
+              console.error('Failed to share via navigator.share(): ', err);
+            });
+        } else {
+          // fall back to clipboard
+          this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
+        }
       }
     },
 
