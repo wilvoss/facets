@@ -7,15 +7,15 @@ function announce(text) {
 }
 
 function highlight(text) {
-  log(text, 'color:green;');
+  log('NOTICE: ' + text, 'color:green;');
 }
 
 function warn(text) {
-  log(text, 'color:orange;');
+  log('Warn: ' + text, 'color:orange;');
 }
 
 function error(text) {
-  log(text, 'color:red;');
+  log('Error: ' + text, 'color:red;');
 }
 
 function note(text) {
@@ -31,7 +31,7 @@ function log(text, color, override = false) {
   ms = ms < 10 ? ms * 100 : ms;
   ms = ms < 100 ? ms * 10 : ms;
   if (UseDebug || override) {
-    console.log('%c' + new Date(Date.now()).toLocaleTimeString('en-US').replace(/ AM/, '').replace(/ PM/, '') + '.' + ms + ' \t%c' + text, 'color:lightgray;', color);
+    console.log(new Date(Date.now()).toLocaleTimeString('en-US').replace(/ AM/, '').replace(/ PM/, '') + '.' + ms + ' \t' + text);
   }
 }
 
