@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.087',
+    appDataVersion: '1.0.088',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -903,34 +903,39 @@ var app = new Vue({
               }),
             ])
             .then(() => {
-              console.log(this.appDataMessage + ' Via navigator.clipboard.write');
+              note('Attempting to copy via navigator.clipboard.write');
+              this.appDataMessage = 'Message copied to the clipboard.';
             })
             .catch((err) => {
-              this.appDataMessage = 'Message failed to copy to clipboard.';
-              copyToClipboard(_text);
-              this.appDataMessage = 'Message copied to clipboard via exec.command.';
+              error('Failed to copy text via navigator.clipboard.write: ', err);
+              this.CopyToClipboardViaExecCommand(_text);
             });
         } else {
           // ClipboardItem is not available, use writeText
           await navigator.clipboard
             .writeText(_text)
             .then(() => {
-              console.log(this.appDataMessage + ' Via navigator.clipboard.writeText');
+              note('Attempting to copy via navigator.clipboard.writeText');
+              this.appDataMessage = 'Message copied to the clipboard.';
             })
             .catch((err) => {
-              copyToClipboard(_text);
-              this.appDataMessage = 'Message copied to clipboard via exec.command.';
-              console.error('Failed to copy text via navigator.clipboard.writeText: ', err);
+              error('Failed to copy text via navigator.clipboard.writeText: ', err);
+              this.CopyToClipboardViaExecCommand(_text);
             });
         }
-        this.appDataMessage = 'Message copied to the clipboard.';
       } else {
-        try {
-          copyToClipboard(_text);
-          this.appDataMessage = 'Message copied to clipboard via exec.command.';
-        } catch (error) {
-          this.appDataMessage = 'Message failed to copy to clipboard.';
-        }
+        this.CopyToClipboardViaExecCommand(_text);
+      }
+    },
+
+    CopyToClipboardViaExecCommand(_text) {
+      try {
+        note('Attempting to copy via command.exec');
+        copyToClipboard(_text);
+        this.appDataMessage = 'Message copied to clipboard via exec.command.';
+      } catch (error) {
+        error('Failed to copy text via exec.command: ', err);
+        this.appDataMessage = 'Message failed to copy.';
       }
     },
 
