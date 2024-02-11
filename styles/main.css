@@ -56,8 +56,8 @@
     --cardDropShadow: 0px 0px 10px rgba(0, 0, 0, .3);
     --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, .5);
 
-    --textureSource: radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), .3) 0%, hsla(var(--appBackgroundDarkestHSL), 0) 40%, hsla(var(--appBackgroundDarkestHSL), 1) 80%);
-    --texture2: radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), .3) 0%, hsla(var(--appBackgroundDarkestHSL), 0) 40%, hsla(var(--appBackgroundDarkestHSL), 1) 80%);
+    --textureSource: radial-gradient(circle at center 400px, hsla(var(--appBackgroundHSL), .7) 1%, hsla(var(--appBackgroundHSL), .7) 40%, hsla(var(--appBackgroundDarkestHSL), 1) 80%);
+    --texture2: var(--textureSource);
     --textureHueSource: linear-gradient(hsla(var(--appBackgroundHSL), 0), hsla(var(--appBackgroundHSL), 0));
     --textureHue: radial-gradient(circle, hsla(var(--appBackgroundHSL), 0) 0%, hsla(var(--appBackgroundHSL), 0) 100%);
     --textureSize: cover;
@@ -78,7 +78,7 @@ body {
     color: hsl(var(--appForegroundHSL));
     line-height: 1.3em;
     margin: 0px 0px;
-    background: hsl(var(--appBackgroundHSL));
+    background: hsl(var(--appBackgroundDarkestHSL));
     background-image: var(--textureHue), var(--texture2);
     background-size: cover, var(--textureSize);
     background-repeat: no-repeat, repeat;
