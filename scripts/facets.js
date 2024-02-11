@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.082',
+    appDataVersion: '1.0.083',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -895,7 +895,8 @@ var app = new Vue({
             })
             .catch((err) => {
               this.appDataMessage = 'Message failed to copy to clipboard.';
-              console.error('Failed to copy text via navigator.clipboard.write: ', err);
+              copyToClipboard(_text);
+              this.appDataMessage = 'Message copied to clipboard via exec.command.';
             });
         } else {
           // ClipboardItem is not available, use writeText
@@ -905,14 +906,19 @@ var app = new Vue({
               console.log(this.appDataMessage + ' Via navigator.clipboard.writeText');
             })
             .catch((err) => {
-              this.appDataMessage = 'Message failed to copy to clipboard.';
+              copyToClipboard(_text);
+              this.appDataMessage = 'Message copied to clipboard via exec.command.';
               console.error('Failed to copy text via navigator.clipboard.writeText: ', err);
             });
         }
         this.appDataMessage = 'Message copied to the clipboard.';
       } else {
-        copyToClipboard(_text);
-        this.appDataMessage = 'Message copied to clipboard via exec.command.';
+        try {
+          copyToClipboard(_text);
+          this.appDataMessage = 'Message copied to clipboard via exec.command.';
+        } catch (error) {
+          this.appDataMessage = 'Message failed to copy to clipboard.';
+        }
       }
     },
 
