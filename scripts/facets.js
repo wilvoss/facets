@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.096',
+    appDataVersion: '1.0.097',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -1504,7 +1504,8 @@ var app = new Vue({
       announce(userAgent);
       var isChromeIOS = /CriOS/.test(userAgent) && /iPhone|iPad|iPod/.test(userAgent);
       warn(isChromeIOS);
-      return isChromeIOS;
+      userAgent = userAgent.toLowerCase();
+      return isChromeIOS || (userAgent.includes('firefox') && userAgent.includes('android'));
     },
   },
 });
