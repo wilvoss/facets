@@ -24,9 +24,8 @@
     --trayReviewingBackgroundHSL: var(--hueReviewing), 100%, 70%;
     --traySolvedBackgroundHSL: var(--hueSolved), 86%, 73%;
 
-
-    --textureSource: radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), 1) 0%, hsla(var(--appBackgroundDarkestHSL), 1) 50%, hsla(var(--appBackgroundDarkestHSL), 0) 80%);
-    --texture2: radial-gradient(circle, hsla(var(--appBackgroundDarkestHSL), 1) 0%, hsla(var(--appBackgroundDarkestHSL), 1) 50%, hsla(var(--appBackgroundDarkestHSL), 0) 80%);
+    --textureSource: radial-gradient(circle at center 400px, hsla(var(--appBackgroundDarkestHSL), .7) 1%, hsla(var(--appBackgroundDarkestHSL), .7) 40%, hsla(var(--appBackgroundHSL), 1) 80%);
+    --texture2: var(var(--textureSource));
     --textureSize: cover;
     --textureBlendMode: normal;
 }
