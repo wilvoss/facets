@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.099',
+    appDataVersion: '1.0.100',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -208,7 +208,6 @@ var app = new Vue({
           this.RotateTray(8);
         }
         if (mappedSol[1] !== actualSol[1]) {
-          // find and remove the card with mappedSol[1]
           let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[1])));
           this.SwapCards(card, this.getFirstAvailableParkingSpot);
         }
@@ -226,7 +225,6 @@ var app = new Vue({
         }
         this.appDataMessage = this.GetMessageBasedOnTrayCount(true, this.appDataPlayerCurrent.name, false);
         return false;
-        // }
       }
     },
 
@@ -371,7 +369,6 @@ var app = new Vue({
       });
       _wordSet.isSelected = true;
       this.documentCssRoot.style.setProperty('--wordScale', _wordSet.scale);
-      // this.documentCssRoot.style.setProperty('--wordAlignment', _wordSet.wordAlignment);
     },
 
     GetCurrentSolutionParamString() {
@@ -577,15 +574,6 @@ var app = new Vue({
         this.documentCssRoot.style.setProperty('--wordScale', this.currentGameWordSet.scale);
       }
 
-      // let _appStateIsNewVersionAvailable = localStorage.getItem('newVersionAvailable');
-      // try {
-      //   if (_appStateIsNewVersionAvailable !== undefined && _appStateIsNewVersionAvailable !== null) {
-      //     this.appStateIsNewVersionAvailable = JSON.parse(_appStateIsNewVersionAvailable);
-      //   }
-      // } catch (_error) {
-      //   error('_newVersionAvailable error: ' + _error);
-      // }
-
       let userSettingsUseExtraCard = localStorage.getItem('useExtraCard');
       if (userSettingsUseExtraCard !== undefined && userSettingsUseExtraCard !== null) {
         this.userSettingsUseExtraCard = JSON.parse(userSettingsUseExtraCard);
@@ -685,7 +673,6 @@ var app = new Vue({
       this.tempID = this.appDataPlayerCurrent.id;
       this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
       this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
-      // this.tempUsePortraitLayout = this.appStateUsePortraitLayout;
       this.tempUseExtraCard = this.userSettingsUseExtraCard;
       this.ToggleUseLightTheme(this.userSettingsUsesLightTheme);
       this.tempAutoCheck = this.userSettingsAutoCheck;
@@ -723,7 +710,6 @@ var app = new Vue({
 
         this.appDataPlayerCurrent.id = this.tempID;
         this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
-        // this.appStateUsePortraitLayout = this.tempUsePortraitLayout;
         this.userSettingsUseExtraCard = this.tempUseExtraCard;
         this.ToggleUseLightTheme(this.tempUserSettingsUsesLightTheme);
         this.userSettingsAutoCheck = this.tempAutoCheck;
@@ -732,7 +718,6 @@ var app = new Vue({
         this.SetWordSetTheme(this.currentGameGuessingWordSet);
 
         localStorage.setItem('userID', this.appDataPlayerCurrent.id);
-        // localStorage.setItem('appStateUsePortraitLayout', this.appStateUsePortraitLayout);
         localStorage.setItem('useWordSetThemes', this.userSettingsUseWordSetThemes);
         localStorage.setItem('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
         localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
@@ -979,13 +964,6 @@ var app = new Vue({
         let text = this.GetShareTextBasedOnContext(_gotIt);
         this.ConstructAndSetShareURLForCurrentGame(currentGameReviewIsFinal);
 
-        // if (this.isChromeAndiOSoriPadOS) {
-        // share the appDataMessage with the full-length url, because we
-        // aren't awaiting a promise for the tiny url, this passes
-        // the security requirement for direct user interaction
-        // that would otherwise trigger in Chrome on iOS and iPadOS
-        // this.ShareText(text, this.appDataShareURL);
-        // } else {
         this.appStateIsGettingTinyURL = true;
         var corsflareUrl = 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
         var requestUrl = corsflareUrl + location.search.substring(1);
@@ -1011,7 +989,6 @@ var app = new Vue({
 
         this.ShareText(text, this.appDataShareURL);
       }
-      // }
     },
 
     ReportPuzzle(_game) {
