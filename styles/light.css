@@ -135,6 +135,9 @@ hints hint input:disabled {
     outline-color: hsla(var(--hueGuessing), 100%, 40%, .7)
 }
 
+spot rotators button icon {
+    background: hsla(var(--appForegroundDiminishedHSL), .2);
+}
 
 parking spot rotators button icon {
     background: hsla(var(--hueMain), 100%, 40%, 0.46);
@@ -160,7 +163,6 @@ parking spot rotators button icon {
 checkbox toggle:before {
     background: hsl(var(--appBackgroundDarkestHSL));
 }
-
 
 button.update {
     background: hsla(var(--hueCreating), 80%, 40%, 1);

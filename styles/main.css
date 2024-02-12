@@ -643,7 +643,7 @@ spot rotators button icon {
     height: var(--extraSmallIconSize);
     mask-size: var(--extraSmallIconSize) var(--extraSmallIconSize);
     -webkit-mask-size: var(--extraSmallIconSize) var(--extraSmallIconSize);
-    background: hsla(var(--appForegroundDiminishedHSL), .1);
+    background: hsla(var(--appBackgroundDarkestHSL), .2);
 }
 
 parking spot rotators button icon {
