@@ -96,6 +96,7 @@ app {
     background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0) 200px);
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
 }
 
 h1, h2, h3, h4, h5 {
@@ -289,7 +290,6 @@ message small.messageShare {
     padding: 0 0 var(--defaultGap);
     display: inline-block;
     margin-top: -18px;
-    /* transform: translate(6px, -17px); */
 }
 
 message icon.share {
@@ -370,11 +370,6 @@ hintcard card {
     border: none;
 }
 
-header {
-    padding: 0 calc(var(--defaultGap));
-    width: auto;
-}
-
 header h1 {
     cursor: default;
     text-align: center;
@@ -389,10 +384,7 @@ header h1 {
 subtitle {
     justify-content: center;
     align-items: center;
-    gap: var(--defaultGap);
-    position: absolute;
-    z-index: 200;
-    left: 0;
+    gap: calc(.5 * var(--defaultGap));
     width: 100%
 }
 
@@ -401,10 +393,13 @@ subtitle {
     color: hsla(var(--linkColorDarkHSL), 1);
     display: flex;
     font-size: 70%;
+    gap: var(--defaultGap);
+    padding-bottom: var(--defaultGap);
 }
 
 subtitle button.small {
-    padding: 12px 6px;
+    padding: 12px 6px 12px 6px;
+    align-items: start;
 }
 
 message {
@@ -478,7 +473,7 @@ wrapper {
     max-width: 1124px;
     margin: 0 auto;
     display: flex;
-    padding: calc(var(--defaultGap) / 2) 0 0;
+    padding: 0;
     justify-content: center;
     align-items: start;
     flex-direction: row;
@@ -486,10 +481,26 @@ wrapper {
 }
 
 wrapper:first-of-type {
-    padding: calc(var(--defaultGap)) 0;
-    margin-bottom: calc(2 * var(--defaultGap));
+    padding: calc(.5 * var(--defaultGap)) 0 0;
+    justify-content: center;
     max-width: unset;
+    min-height: unset;
+    align-items: center;
+}
 
+wrapper.main {
+    height: calc(100% - var(--cardSize));
+    padding-bottom: var(--cardSize);
+    align-items: center;
+    justify-content: center;
+}
+
+.portrait wrapper.main {
+    padding-bottom: 0px;
+}
+
+wrapper.mobile {
+    height: calc(var(--cardSize) + 2 * var(--defaultGap));
 }
 
 wrapper.columns {
@@ -498,8 +509,17 @@ wrapper.columns {
     align-items: center;
 }
 
+wrapper.mobile {
+    padding-bottom: calc(2 * var(--defaultGap));
+}
+
+wrapper message {
+    height: calc(2 * var(--defaultGap));
+    padding: 8px var(--defaultGap) 0px;
+
+}
+
 .portrait wrapper.mobile.extra {
-    transform: translateY(calc(.1 * var(--cardSize)));
     scale: .85;
 }
 
@@ -524,19 +544,19 @@ rotators, tray, hints {
 
 tray {
     border-radius: calc(2 * var(--borderRadius));
-    padding: calc(4 * var(--defaultGap));
+    min-width: calc(3 * var(--cardSize));
+    min-height: calc(3 * var(--cardSize));
 }
 
 tray diamond {
-    width: calc(100% - 2 * var(--defaultGap));
-    height: calc(100% - 2 * var(--defaultGap));
+    width: 100%;
+    height: 100%;
     position: absolute;
     background: url(../images/diamond.svg) no-repeat;
-    background-size: 100% 100%;
-    mask-size: 100% 100%;
-    -webkit-mask-size: 100% 100%;
+    background-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize));
+    mask-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize) + 2px);
+    -webkit-mask-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize) + 2px);
     pointer-events: none;
-    transform: translateY(-60px);
     transition: var(--mediumTransition) ease-in-out background-color;
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
@@ -576,7 +596,7 @@ controls {
     justify-content: center;
     align-items: center;
     height: 100%;
-    padding: 0 var(--defaultGap);
+    padding: 0;
 }
 
 modal controls {
@@ -599,23 +619,38 @@ modal controls button {
     width: var(--cardSize);
 }
 
+wrapper controls {
+    width: 100px;
+    justify-content: start;
+}
+
+wrapper controls:last-of-type {
+    justify-content: end;
+}
+
 wrapper controls button {
     background: none;
     font-size: 150%;
-    width: var(--cardSize);
     height: 100%;
-    padding: 10px var(--defaultGap);
+    padding: 10px var(--defaultGap) 10px 0px;
+}
+
+wrapper controls:last-of-type button {
+    padding: 10px 0px 10px var(--defaultGap);
 }
 
 rotators {
     position: absolute;
     pointer-events: none;
     z-index: 100;
-    padding: var(--defaultGap) 0px 0px;
+    padding: 0;
     width: calc(var(--cardSize) * 2 + (calc(var(--defaultGap) * 10)));
     justify-content: space-between;
 }
 
+wrapper>rotators {
+    transform: translateY(calc(-1.35 * var(--cardSize)));
+}
 
 rotators button {
     transition: var(--shortTransition) ease-in-out;
@@ -732,28 +767,13 @@ parking {
     padding: var(--defaultGap);
 }
 
-wrapper.mobile {
-    overflow: visible;
-    height: 0px;
-    padding: 0px;
-    transform: translateY(calc(.7 * var(--cardSize)));
-    scale: .6;
-    width: 100%;
-    justify-content: center;
-    align-items: center;
-    display: none;
-}
-
-
 .portrait parking {
     display: none;
 }
 
 .portrait wrapper.mobile {
     display: flex;
-    height: auto;
     transform: unset;
-    scale: 1;
 }
 
 wrapper.mobile parking {
@@ -773,13 +793,12 @@ wrapper.mobile parking {
 
 cards {
     display: flex;
-    transition: var(--longTransition) ease-in-out;
-    transition-property: transform, rotate, opacity;
     padding: var(--defaultGap);
     width: calc(var(--cardSize) * 2 + var(--defaultGap));
     height: calc(var(--cardSize) * 2 + var(--defaultGap));
     flex-wrap: wrap;
     gap: var(--defaultGap);
+    transform: translateY(60px);
 }
 
 cards.disabled {
@@ -812,7 +831,6 @@ spot {
 
 parking spot {
     background: hsla(var(--appBackgroundDarkestHSL), .8);
-    /* background: hsla(0, 0%, 0%, .8); */
     outline: 1px solid hsla(var(--hueMain), 100%, 70%, .7);
     opacity: .5;
 }
@@ -902,35 +920,44 @@ cards spot:nth-child(4) card words word:nth-child(4) {
     opacity: .7;
 }
 
-card.ghost, card.ghost.empty, .guessing card.ghost.empty, .reviewing card.ghost.empty {
-    background: hsla(var(--appBackgroundDarkestHSL), .4);
-    transition: 0ms ease-in 0ms opacity;
+ghost {
+    display: block;
+    width: var(--cardSize);
+    height: var(--cardSize);
+    transform-origin: 50% 50%;
+    -webkit-transform-origin: 50% 50%;
     position: fixed;
     top: calc(-.5 * var(--cardSize));
     left: calc(-.5 * var(--cardSize));
-    opacity: 0;
     pointer-events: none;
     z-index: 200;
+}
+
+ghost card, ghost card.empty, .guessing ghost card.empty, .reviewing ghost card.empty {
+    background: hsla(var(--appBackgroundDarkestHSL), .8);
+    transition: 0ms ease-in 0ms opacity;
+    opacity: 0;
+    pointer-events: none;
     border: 1px solid hsla(var(--hueMain), 100%, 70%, .7);
 }
 
-.multicolor.creating card.ghost {
+.multicolor.creating ghost card {
     border: 1px solid hsla(var(--hueCreating), 100%, 70%, .7);
 }
 
-.multicolor.guessing card.ghost {
+.multicolor.guessing ghost card {
     border: 1px solid hsla(var(--hueGuessing), 100%, 70%, .7);
 }
 
-.multicolor.guessing.solved card.ghost {
+.multicolor.guessing.solved ghost card {
     border: 1px solid hsla(var(--hueSolved), 100%, 70%, .7);
 }
 
-.multicolor.reviewing card.ghost {
+.multicolor.reviewing ghost card {
     border: 1px solid hsla(var(--hueReviewing), 100%, 70%, .7);
 }
 
-card.ghost.show {
+ghost card.show {
     transition: 0ms ease-in 150ms opacity;
     opacity: .9;
 }
@@ -945,7 +972,7 @@ hints {
     height: 100%;
     z-index: -1;
     font-size: 130%;
-
+    transform: translateY(60px);
 }
 
 hints hint {
@@ -1333,6 +1360,14 @@ modal::-webkit-scrollbar {
     opacity: .3;
 }
 
+.mobile {
+    display: none;
+}
+
+.portrait wrapper.mobile {
+    display: flex;
+}
+
 version {
     text-align: center;
     font-size: 12px;
@@ -1344,16 +1379,6 @@ version {
 
 
 @media screen and (max-height:844px) {
-
-    wrapper {
-        padding: 0
-    }
-
-    wrapper:first-of-type {
-        margin-bottom: var(--defaultGap);
-        padding: calc(var(--defaultGap)) 0;
-    }
-
     controls {
         padding-top: 0;
         padding-bottom: 0;
@@ -1361,55 +1386,24 @@ version {
 
     wrapper controls button {
         height: 100%;
-        padding: 10px 0;
-    }
-
-    wrapper.mobile, .portrait wrapper.mobile {
-        transform: translateY(calc((-.7 * var(--cardSize)) - env(safe-area-inset-bottom)));
-        position: fixed;
-        bottom: var(--defaultGap);
     }
 
     wrapper.mobile.extra, .portrait wrapper.mobile.extra {
         scale: .6;
-        transform: translateY(calc(-.7 * var(--cardSize) - env(safe-area-inset-bottom)));
+    }
+
+    wrapper message {
+        height: calc(2 * var(--defaultGap));
     }
 
     message {
         display: block;
     }
 
-    modal message {
-        height: auto;
-        position: relative;
-    }
 
-    header {
-        width: auto;
-        padding: 0;
-    }
-
-    header h1 {
-        letter-spacing: 1px;
-        font-size: 180%;
-    }
-
-    subtitle {
-        font-size: 70%;
-        justify-content: center;
-    }
-
-    rotators {
-        padding: calc(.5 * var(--defaultGap)) 0px;
-    }
 }
 
 @media screen and (max-width:660px) {
-
-    :root {
-        --wordHeight: 26px;
-        --cardSize: 130px;
-    }
 
     html {
         width: 100%;
@@ -1422,8 +1416,72 @@ version {
         width: 100%;
         height: 100%;
         overflow: hidden;
-        /* background-image: none; */
         background-size: cover, 256px;
+    }
+
+    app {
+        background-size: calc(.75 * var(--textureSize));
+        justify-content: start;
+        align-items: start;
+    }
+
+    wrapper:first-of-type {
+        gap: 0px;
+        justify-content: space-between;
+    }
+
+    wrapper controls {
+        width: 50px;
+        padding: calc(.5 * var(--defaultGap));
+    }
+
+    wrapper.main {
+        font-size: 1.3em;
+        max-height: 430px;
+        overflow: visible;
+        padding-bottom: 0;
+    }
+
+    wrapper.main>rotators {
+        scale: .7;
+        max-width: 145%;
+        min-width: 540px;
+        padding: 0px;
+    }
+
+    .portrait wrapper.mobile parking spot {
+        outline-width: 2px;
+    }
+
+    .portrait wrapper.mobile {
+        position: fixed;
+        padding: 0px;
+        bottom: 0px;
+    }
+
+    subtitle {
+        gap: 8px;
+        padding-bottom: 0px;
+    }
+
+    subtitle button.small {
+        padding: 6px 6px 12px 6px;
+    }
+
+    tray {
+        scale: .7;
+    }
+
+    ghost card, ghost card.empty, .guessing ghost card.empty, .reviewing ghost card.empty {
+        scale: .7;
+    }
+
+    words word {
+        font-size: 1.1em;
+    }
+
+    parking words word {
+        font-size: 1.4em;
     }
 
     p {
@@ -1432,12 +1490,6 @@ version {
         width: calc(100% - (2 * var(--defaultGap)));
     }
 
-    app {
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-        background-size: calc(.75 * var(--textureSize));
-    }
 
     button.update {
         font-size: 100%;
@@ -1456,8 +1508,8 @@ version {
     }
 
     modal section {
-        max-width: calc(var(--cardSize) * 3);
-
+        padding: 0 var(--defaultGap);
+        width: calc(100% - var(--defaultGap));
     }
 
     modal img {
@@ -1468,34 +1520,8 @@ version {
         font-size: 12px;
         padding: 0px;
         width: 100%;
-        max-width: calc((2 * var(--cardSize)) + (3 * var(--defaultGap)));
+        max-width: calc((2 * var(--cardSize) - 2 * var(--defaultGap)));
     }
-
-    wrapper {
-        padding: calc(var(--defaultGap) / 4) 0 0;
-        overflow: hidden;
-        max-width: 100%;
-    }
-
-    wrapper:first-of-type {
-        padding: calc(var(--defaultGap) / 1) 0;
-        gap: 0px;
-        align-items: center;
-    }
-
-    wrapper controls button {
-        padding: 10px 0;
-    }
-
-    .notMobile {
-        display: none;
-    }
-
-    message {
-        position: absolute;
-        z-index: 200;
-    }
-
 
     message icon.share {
         scale: .9;
@@ -1507,51 +1533,10 @@ version {
         width: 100%;
     }
 
-    wrapper controls {
-        padding: 0;
-        width: 100%;
-    }
-
-    wrapper controls button.inline {
-        height: 100%;
-        text-align: left;
-        justify-content: start;
-        width: calc(0.45 * var(--cardSize));
-    }
-
-    wrapper controls:last-of-type button.inline {
-        justify-content: end;
-    }
-
-    wrapper controls:last-of-type button {
-        text-align: right;
-    }
-
-    wrapper.mobile, .portrait wrapper.mobile {
-        transform: translateY(calc((-.7 * var(--cardSize)) - env(safe-area-inset-bottom)));
-        position: fixed;
-        bottom: var(--defaultGap);
-    }
-
-    wrapper.mobile.extra, .portrait wrapper.mobile.extra {
-        transform: translateY(calc(-.7 * var(--cardSize) - env(safe-area-inset-bottom)));
-    }
-
     modal controls button {
+        width: calc(.7 * var(--cardSize));
         padding: calc(.5 * var(--defaultGap));
         font-size: 140%;
-    }
-
-
-    controls button icon.emoji {
-        background: none;
-        transform: translateY(-3px);
-        font-size: 140%;
-    }
-
-    header {
-        width: auto;
-        padding: 0 var(--defaultGap);
     }
 
     header h1 {
@@ -1563,120 +1548,11 @@ version {
         font-size: 100%;
     }
 
-    subtitle button.inline {
-        padding: 12px 2px;
-        text-wrap: nowrap;
-    }
 
     message {
         font-size: 110%;
         text-align: center;
         line-height: 130%;
-    }
-
-    modal message {
-        position: relative;
-    }
-
-    rotators {
-        width: calc(100%);
-        overflow: hidden;
-        padding: calc(1.5 * var(--defaultGap)) 0;
-        margin: 0px;
-    }
-
-    spot rotators button {
-        padding: 6px;
-    }
-
-    rotators button icon {
-        padding-top: 0px;
-        width: var(--smallIconSize);
-        height: var(--smallIconSize);
-        mask-size: var(--smallIconSize) var(--smallIconSize);
-        -webkit-mask-size: var(--smallIconSize) var(--smallIconSize);
-        background: hsl(var(--linkColorLightHSL));
-    }
-
-    cards spot:hover rotators button icon {
-        background: rgb(0, 0, 0, 0.2);
-    }
-
-    tray {
-        scale: .95;
-    }
-
-    tray diamond {
-        width: calc(100% - 4 * var(--defaultGap));
-        height: calc(100% - 4 * var(--defaultGap));
-        transform: translateY(-40px);
-    }
-
-    cards {
-        background-size: 128px;
-    }
-
-
-    spot rotators {
-        min-width: unset;
-        font-size: 146%;
-    }
-
-    .guessing spot rotators button {
-        padding: 0px 0px 12px 12px;
-    }
-
-    word {
-        height: calc(var(--wordHeight) - 5px);
-        padding-top: 5px;
-        font-size: calc(var(--wordScale) * 100%);
-    }
-
-    cards word {
-        align-items: start;
-        font-size: calc(var(--wordScale) * 100%);
-    }
-
-    word:nth-child(2) {
-        transform: translate(calc((var(--cardSize) / 2) - (var(--wordHeight) / 2)), calc(-1 * (var(--cardSize) / 2) + calc(var(--defaultGap) * 1) - 7px));
-    }
-
-    word:nth-child(3) {
-        transform: translate(0, calc(-1 * (var(--cardSize) / 1) + calc(var(--defaultGap) * 1.3)));
-    }
-
-    word:nth-child(4) {
-        transform: translate(calc(-1 * (var(--cardSize) / 2) + calc(var(--defaultGap) * 1) - 7px), calc(-1 * (var(--cardSize) / 2) + calc(var(--defaultGap) * 1) - 7px));
-    }
-
-    hints hint {
-        padding: calc(var(--defaultGap) / 1) calc(var(--defaultGap) / 4) calc(var(--defaultGap) / 2.6);
-        width: calc(1.6 * var(--cardSize));
-        background-size: 128px;
-    }
-
-    hints hint input {
-        line-height: 120%;
-    }
-
-    hints hint:first-of-type input {
-        pointer-events: all;
-    }
-
-    hints hint:nth-child(1) {
-        transform: translate(0px, calc(-1.99 * var(--wordHeight)));
-    }
-
-    hints hint:nth-child(2) {
-        transform: translate(calc(var(--cardSize) + (var(--defaultGap) / 6)), calc(-1 * var(--cardSize) + calc(var(--wordHeight) * -2.1)));
-    }
-
-    hints hint:nth-child(3) {
-        transform: translate(calc(-1 * var(--cardSize) - var(--defaultGap) / 6), calc(-1 * var(--cardSize) + calc(var(--wordHeight) * -2.08)));
-    }
-
-    hints hint:nth-child(4) {
-        transform: translate(0px, calc(var(--cardSize) * -2.44));
     }
 
     callout {
@@ -1694,15 +1570,17 @@ version {
         padding: 0px;
     }
 
-    wrapper.mobile, .portrait wrapper.mobile {
+    wrapper.mobile parking, .portrait wrapper.mobile parking {
         display: flex;
-        height: 0px;
-        scale: .6;
+        scale: .45;
+        transform-origin-y: 100%;
+        -webkit-transform-origin-y: 100%;
     }
 
     wrapper.mobile.extra, .portrait wrapper.mobile.extra {
-        scale: .5;
-
+        scale: .825;
+        transform-origin-y: 100%;
+        -webkit-transform-origin-y: 100%;
     }
 
     wrapper.mobile parking, .portrait wrapper.mobile.parking {
@@ -1717,29 +1595,16 @@ version {
 }
 
 @media screen and (max-height:670px) {
-    wrapper {
-        padding: 0px;
-        margin-top: 0px;
-        margin-bottom: 0px;
+    wrapper.main {
+        max-height: 400px;
     }
 
-    wrapper:first-of-type {
+    wrapper controls {
         padding-bottom: 0px;
     }
 
-    wrapper message {
-        margin-top: 8px;
-        font-size: 100%;
-    }
-
-    words word {
-        letter-spacing: 1px;
-    }
-
-    modal message {
-        margin-top: calc(.5 * var(--defaultGap));
-        padding-top: calc(.5 * var(--defaultGap));
-        padding-bottom: calc(.5 * var(--defaultGap));
+    subtitle button.small {
+        padding: 6px 6px 6px 6px;
     }
 
 }

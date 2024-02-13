@@ -230,21 +230,21 @@
           <button class="inline" @click="HandleNewGameClick()">New</button>
         </controls>
         <header>
-          <hgroup>
-            <h1>{{appDataGameName}}</h1>
-            <subtitle>
-              <button class="inline small" @click="ToggleShowTutorial(event)">Guide</button>
-              <button class="inline small" @click="ToggleShowGlobalCreated()">Latest</button>
-              <button class="inline small" @click="appStateShowInfo = true">Info</button>
-              <button class="inline small" @click="ShowSettings()">Prefs</button>
-            </subtitle>
-          </hgroup>
+          <h1>{{appDataGameName}}</h1>
         </header>
         <controls>
           <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: currentGameSolutionGuessing === currentGameSolutionActual && currentGameSolutionGuessing !== '' || ( getNumberOfHintsThatHaveBeenFilled !== 4 && appDataPlayerCurrent.role === 'creator') || (getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && appDataPlayerCurrent.role !== 'reviewer' && appDataPlayerCurrent.id !== appDataPlayerCreator.id)}">
             <icon :class="{show: appStateIsGettingTinyURL}" class="spinner"></icon><span v-if="!appStateIsGettingTinyURL">{{getSubmitButtonText}}</span>
           </button>
         </controls>
+      </wrapper>
+      <wrapper>
+        <subtitle>
+          <button class="inline small" @click="ToggleShowTutorial(event)">Guide</button>
+          <button class="inline small" @click="ToggleShowGlobalCreated()">Latest</button>
+          <button class="inline small" @click="appStateShowInfo = true">Info</button>
+          <button class="inline small" @click="ShowSettings()">Prefs</button>
+        </subtitle>
       </wrapper>
       <wrapper>
         <message v-if="appDataMessage !== '' && appDataMessage === 'Tap to copy minified message.'">{{appDataMessage}}</message>
@@ -258,21 +258,19 @@
         <message v-if="appDataMessage !== '' && appDataMessage.indexOf('Message') !== -1"> {{appDataMessage}} </message>
         <message v-if="appDataMessage === ''">{{getPlayerMessage}}</message>
       </wrapper>
-      <wrapper>
-        <rotators>
+      <wrapper class="main">
+        <rotators style="width: calc(3.25 * var(--cardSize))">
           <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateTray(1)"><icon class="rotate"></icon></button>
           <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise" @click="RotateTray(-1)"><icon class="rotate"></icon></button>
         </rotators>
-      </wrapper>
-      <wrapper>
-        <card class="ghost selected" :style="{transform: 'translate(' + appDataGhostX + 'px, ' + appDataGhostY + 'px)'}" :class="{show: appStateIsDragging, empty: appDataDraggedCard.words.length === 0}">
-          <words>
-            <word v-for="word in appDataDraggedCard.words">{{word.value}}</word>
-          </words>
-        </card>
-      </wrapper>
-      <wrapper>
         <input aria-label="This is an input that holds focus while the tray is rotating. It's not used for anything else." aria-hidden="true" maxlength="0" :disabled="appStateIsGuessing" tabindex="-1" id="parkingInput" style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1" v-model="appDataParkingInputValue" tabindex="-1" />
+        <ghost :style="{transform: 'translate(' + appDataGhostX + 'px, ' + appDataGhostY + 'px)'}">
+          <card class="selected" :class="{show: appStateIsDragging, empty: appDataDraggedCard.words.length === 0}">
+            <words>
+              <word v-for="word in appDataDraggedCard.words">{{word.value}}</word>
+            </words>
+          </card>
+        </ghost>
         <parking>
           <spot v-for="(card, index) in appDataCardsParked" v-if="index < (currentGameGuessingCardCount / 2)" :class="{empty: card.words.length === 0, selected: card.isSelected}">
             <rotators>
