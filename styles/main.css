@@ -1468,6 +1468,17 @@ version {
         padding: 6px 6px 12px 6px;
     }
 
+    words word {
+        height: calc(var(--wordHeight) - 5px);
+        padding-top: 5px;
+        font-size: calc(var(--wordScale) * 100%);
+    }
+
+    cards words word {
+        align-items: start;
+        font-size: calc(var(--wordScale) * 100%);
+    }
+
     tray {
         scale: .7;
     }
