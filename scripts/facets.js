@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.103',
+    appDataVersion: '1.0.104',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -189,8 +189,8 @@ var app = new Vue({
         this.appDataHints.forEach((hint) => {
           hintValues.push(hint.value);
         });
-        let actualSol = this.currentGameSolutionActual.split('-');
-        let currentSol = this.GetCurrentSolutionParamString().split('-');
+        let actualSol = this.currentGameSolutionActual.split(':');
+        let currentSol = this.GetCurrentSolutionParamString().split(':');
 
         let mappedSol = [];
 
@@ -202,7 +202,7 @@ var app = new Vue({
             }
           }
         }
-        this.currentGameSolutionGuessing = mappedSol.join('-');
+        this.currentGameSolutionGuessing = mappedSol.join(':');
 
         if (this.currentGameSolutionActual === this.currentGameSolutionGuessing) {
           this.RotateTray(8);
@@ -394,7 +394,7 @@ var app = new Vue({
         params.push(this.appDataCards[3].words[2].id);
         params.push(this.appDataCards[2].words[2].id);
       }
-      let param = params.join('-');
+      let param = params.join(':');
       return param;
     },
 
@@ -761,7 +761,7 @@ var app = new Vue({
               this.RotateTray(e.shiftKey ? 1 : -1);
             }
             break;
-          case '-':
+          case ':':
           case '?':
           case '&':
           case '=':
@@ -1003,17 +1003,17 @@ var app = new Vue({
         let boardString = '';
         this.appDataCards.concat(this.appDataCardsParked).forEach((card) => {
           if (card.words.length === 0) {
-            boardString += '----';
+            boardString += '::::';
           }
           card.words.forEach((word) => {
-            boardString += word.id + '-';
+            boardString += word.id + ':';
           });
         });
 
         this.appDataHints.forEach((hint, index) => {
           hint.value = hint.value.trim();
           let encodedHint = encodeURIComponent(hint.value);
-          boardString += encodedHint + (index === this.appDataHints.length - 1 ? '' : '-');
+          boardString += encodedHint + (index === this.appDataHints.length - 1 ? '' : ':');
         });
 
         urlString = encodeURIComponent(urlString);
@@ -1345,7 +1345,7 @@ var app = new Vue({
           UseDebug = urlParams.has('useDebug') ? true : UseDebug;
           let search = decodeURIComponent(window.location.search);
           params = search.split('?')[1].split('&');
-          boardPieces = urlParams.has('board') ? urlParams.get('board').split('-') : [];
+          boardPieces = urlParams.has('board') ? urlParams.get('board').split(':') : [];
         }
 
         if (boardPieces.length >= 40) {
