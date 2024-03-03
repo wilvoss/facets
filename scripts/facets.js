@@ -1,3 +1,4 @@
+/// <reference path="../models/ProgressMessageObject.js" />
 /// <reference path="../models/WordObject.js" />
 /// <reference path="../models/CardObject.js" />
 
@@ -13,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.105',
+    appDataVersion: '1.0.106',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -223,7 +224,7 @@ var app = new Vue({
           let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[11])));
           this.SwapCards(card, this.getFirstAvailableParkingSpot);
         }
-        this.appDataMessage = this.GetMessageBasedOnTrayCount(true, this.appDataPlayerCurrent.name, false);
+        this.appDataMessage = this.GetMessageBasedOnTrayCount(true, '');
         return false;
       }
     },
@@ -1033,31 +1034,20 @@ var app = new Vue({
       }
     },
 
-    GetMessageBasedOnTrayCount(_gotIt, _name, _useName = true) {
+    GetMessageBasedOnTrayCount(_gotIt, _name) {
       note('GetMessageBasedOnTrayCount() called');
-      let name = _useName ? _name + ', ' : '';
-      switch (this.getNumberOfCardsThatHaveBeenPlacedOnTray) {
-        case 0:
-          return '🤢 Oh boy. ' + name + (!_useName ? 'This' : 'this') + ' is just sad.';
-        case 1:
-          return '🫣 ' + name + 'I guess one right is better than nothing?';
-        case 2:
-          return '😱 ' + name + (!_useName ? "You're" : "you're") + ' missing a couple!';
-        case 3:
-          return '🤪 ' + name + (!_useName ? 'Not' : 'not') + ' quite!';
-        case 4:
-          if (this.appDataPlayerCurrent.role !== 'reviewer') {
-            if (this.currentGameGuessCount === 1) {
-              return '🔥 ' + name + (!_useName ? 'You' : 'you') + ' nailed it in 1 try!';
-            } else {
-              return '😀 Nice, ' + name + 'you got it in ' + this.currentGameGuessCount + ' tries!';
-            }
-          } else if (_gotIt) {
-            return '🔥 ' + name + (!_useName ? 'You' : 'you') + ' nailed it!';
-          } else {
-            return '☔️ Whelp ' + name + "better luck next time. Here's the solution.";
-          }
+      let index = this.getNumberOfCardsThatHaveBeenPlacedOnTray;
+      if (index === 4 && this.appDataPlayerCurrent.role === 'reviewer' && !_gotIt) {
+        index = 5;
       }
+      let levelMessage = LevelMessage[index][getRandomInt(0, LevelMessage[index].length)];
+      let usingName = _name !== '';
+      let name = !usingName ? '' : _name + ', ';
+      let useLowerCase = usingName && levelMessage.indexOf('I ') !== 0;
+      levelMessage = useLowerCase ? levelMessage.toLowerCase() : levelMessage;
+      let message = LevelEmoji[index][getRandomInt(0, LevelEmoji[index].length)] + ' ' + name + levelMessage;
+      announce(message);
+      return message;
     },
 
     GetShareTextBasedOnContext(_gotIt) {
