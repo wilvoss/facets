@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.106',
+    appDataVersion: '1.0.107',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -70,6 +70,7 @@ var app = new Vue({
     userSettingsUsesLightTheme: false,
     userSettingsUseMultiColoredGems: true,
     userSettingsUseWordSetThemes: false,
+    userSettingsStreaks: [],
     // temp user settings
     tempName: '',
     tempID: 0,
@@ -282,6 +283,16 @@ var app = new Vue({
       this.currentGameGuessingWordSet = urlParams.has('wordSetID') ? this.appDataWordSets.find((s) => s.id === urlParams.get('wordSetID')) : this.currentGameWordSet;
       this.currentGameGuessingCardCount = urlParams.has('useExtraCard') && JSON.parse(urlParams.get('useExtraCard')) ? 5 : 4;
       this.appStateForceAutoCheck = this.appDataPlayerCreator.id === 0;
+
+      note('sender = ' + this.appDataPlayerSender.id);
+      note('creator = ' + this.appDataPlayerCreator.id);
+      note('current = ' + this.appDataPlayerCurrent.id);
+      if (this.appDataPlayerSender.id !== this.appDataPlayerCreator.id && this.appDataPlayerCreator.id !== this.appDataPlayerCurrent.id) {
+        this.appStateIsModalShowing = true;
+        this.appDataConfirmationObject = { message: 'Are you the original creator of this puzzle?', target: 'creator' };
+        this.appStateShowConfirmation = true;
+      }
+
       let corruptData = false;
       if (_boardArray.length >= 40) {
         this.appDataShareURL = window.location.href;
@@ -514,6 +525,14 @@ var app = new Vue({
         case 'newgame':
           if (_value) {
             this.NewGame(null);
+          }
+          break;
+        case 'creator':
+          if (_value) {
+            this.tempID = this.appDataPlayerCreator.id;
+            this.appDataPlayerCurrent.id = this.appDataPlayerCreator.id;
+            this.appDataPlayerCurrent.role = 'reviewer';
+            localStorage.setItem('userID', this.appDataPlayerCurrent.id);
           }
           break;
         default:

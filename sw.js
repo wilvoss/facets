@@ -1,4 +1,4 @@
-const CACHE_VERSION = '1.0.106';
+const CACHE_VERSION = '1.0.107';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
@@ -56,6 +56,7 @@ const cacheFiles = [
   'models/PlayerObject-min.js',
   'models/WordObject-min.js',
   'models/WordSetObject-min.js',
+  'models/StreakObject-min.js',
   'scripts/facets.js',
   'scripts/facets-min.js',
   'scripts/fetch-game.js',

@@ -1,0 +1,1 @@
+class StreakObject{constructor(a){this.streakPlayerId=void 0===a.streakPlayerId?-1:a.streakPlayerId,this.streakPlayerName=void 0===a.streakPlayerName?-1:a.streakPlayerName,this.streak=void 0===a.streak?0:a.streak}}
