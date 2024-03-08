@@ -66,7 +66,7 @@ const LevelMessage = [
         'Wow. You\'re neat.',
         'Such synchronicity.',
         'Shazam!',
-        'Boyaa!',
+        'Booyah!',
         'Words fail to express your genius.',
         'Correct!',
         'Time to celebrate!',
