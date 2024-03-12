@@ -118,8 +118,8 @@ a, a:hover, a:focus, a:visited, a:active {
 }
 
 a.padded {
-    padding-top: var(--defaultGap);
-    padding-bottom: var(--defaultGap);
+    padding-top: calc(.5 * var(--defaultGap));
+    padding-bottom: calc(.5 * var(--defaultGap));
 }
 
 a.inline {
