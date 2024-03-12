@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.112',
+    appDataVersion: '1.0.113',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -525,9 +525,6 @@ var app = new Vue({
     HandleGoButtonClick(event) {
       note('HandleGoButtonClick() called');
       this.SubmitSettings(event);
-      if (this.appStateIsGuessing) {
-        this.NewGame(event);
-      }
       this.appStateShowCatChooser = false;
     },
 
@@ -759,7 +756,7 @@ var app = new Vue({
         wordSetChanged = this.appDataWordSets.find((set) => set.isSelected === true).id !== this.tempWordSets.find((set) => set.isSelected === true).id;
         this.appDataWordSets = this.tempWordSets;
         this.currentGameWordSet = this.appDataWordSets.find((set) => set.isSelected === true);
-        if (wordSetChanged && !this.appStateIsGuessing) {
+        if ((wordSetChanged && !this.appStateIsGuessing) || this.appStateShowCatChooser) {
           this.NewGame();
           this.SetWordSetTheme(this.currentGameGuessingWordSet);
         }
