@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.108',
+    appDataVersion: '1.0.109',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -45,6 +45,7 @@ var app = new Vue({
     appStateIsGuessing: false,
     appStateIsModalShowing: false,
     appStateIsNewVersionAvailable: false,
+    appStateShowCatChooser: false,
     appStateShowConfirmation: false,
     appStateShowGlobalCreated: false,
     appStateShowInfo: false,
@@ -71,6 +72,7 @@ var app = new Vue({
     userSettingsUseMultiColoredGems: true,
     userSettingsUseWordSetThemes: false,
     userSettingsStreaks: [],
+    userSettingsShowCatChooser: true,
     // temp user settings
     tempName: '',
     tempID: 0,
@@ -81,6 +83,7 @@ var app = new Vue({
     tempWordSetName: '',
     tempUsePortraitLayout: false,
     tempUseExtraCard: false,
+    tempShowCatChooser: true,
     tempWordSets: [],
     // DOM reference
     documentCssRoot: document.querySelector(':root'),
@@ -147,15 +150,28 @@ var app = new Vue({
       this.tempUseExtraCard = !this.tempUseExtraCard;
     },
 
+    ToggleTempShowCategoryChooser(_value) {
+      note('ToggleTempShowCategoryChooser() called');
+      this.tempShowCatChooser = !this.tempShowCatChooser;
+    },
+
     ToggleAutoCheck() {
       note('ToggleAutoCheck() called');
       this.tempAutoCheck = !this.tempAutoCheck;
+    },
+
+    ShowCategoryPicker() {
+      this.tempWordSetName = this.getCurrentSelectedTempWordSetName;
     },
 
     ShowSettings() {
       note('ShowSettings() called');
       this.appStateIsModalShowing = true;
       this.appStateShowSettings = true;
+      this.GetCategoryNames();
+    },
+
+    GetCategoryNames() {
       this.tempWordSets = [];
       this.tempWordSetName = this.getCurrentSelectedTempWordSetName;
       this.appDataWordSets.forEach((set) => {
@@ -506,9 +522,22 @@ var app = new Vue({
       history.pushState(null, null, url);
     },
 
+    HandleGoButtonClick(event) {
+      note('HandleGoButtonClick() called');
+      this.SubmitSettings(event);
+      if (this.appStateIsGuessing) {
+        this.NewGame(event);
+      }
+      this.appStateShowCatChooser = false;
+    },
+
     HandleNewGameClick() {
       note('HandleNewGameClick() called');
-      if (this.appStateIsGuessing && this.appDataPlayerCurrent.role !== 'reviewer' && this.appDataPlayerCreator.id !== this.appDataPlayerCurrent.id) {
+      if (this.userSettingsShowCatChooser) {
+        this.GetCategoryNames();
+        this.tempShowCatChooser = this.userSettingsShowCatChooser;
+        this.appStateShowCatChooser = true;
+      } else if (this.appStateIsGuessing && this.appDataPlayerCurrent.role !== 'reviewer' && this.appDataPlayerCreator.id !== this.appDataPlayerCurrent.id) {
         this.appStateIsModalShowing = true;
         this.appDataConfirmationObject = { message: 'Are you sure you want <br/>to create a new game?', target: 'newgame' };
         this.appStateShowConfirmation = true;
@@ -587,6 +616,10 @@ var app = new Vue({
         this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
         this.SetWordSetTheme(this.currentGameWordSet);
       }
+
+      let userSettingsShowCatChooser = localStorage.getItem('userSettingsShowCatChooser');
+      this.userSettingsShowCatChooser = JSON.parse(userSettingsShowCatChooser);
+      this.tempShowCatChooser = this.userSettingsShowCatChooser;
 
       if (this.appStateIsGuessing) {
         this.documentCssRoot.style.setProperty('--wordScale', this.currentGameGuessingWordSet.scale);
@@ -694,6 +727,7 @@ var app = new Vue({
       this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
       this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
       this.tempUseExtraCard = this.userSettingsUseExtraCard;
+      this.tempShowCatChooser = this.userSettingsShowCatChooser;
       this.ToggleUseLightTheme(this.userSettingsUsesLightTheme);
       this.tempAutoCheck = this.userSettingsAutoCheck;
     },
@@ -715,7 +749,7 @@ var app = new Vue({
         this.appDataPlayerCreator.name = this.appDataPlayerCurrent.name;
       }
       localStorage.setItem('name', this.appDataPlayerCurrent.name);
-      if (this.appStateShowSettings) {
+      if (this.appStateShowSettings || this.appStateShowCatChooser) {
         let newSelectedWordSet = this.tempWordSets.find((set) => set.name === this.tempWordSetName);
         this.SelectWordSet(e, newSelectedWordSet);
 
@@ -730,6 +764,7 @@ var app = new Vue({
 
         this.appDataPlayerCurrent.id = this.tempID;
         this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
+        this.userSettingsShowCatChooser = this.tempShowCatChooser;
         this.userSettingsUseExtraCard = this.tempUseExtraCard;
         this.ToggleUseLightTheme(this.tempUserSettingsUsesLightTheme);
         this.userSettingsAutoCheck = this.tempAutoCheck;
@@ -737,6 +772,7 @@ var app = new Vue({
         this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
         this.SetWordSetTheme(this.currentGameGuessingWordSet);
 
+        localStorage.setItem('userSettingsShowCatChooser', this.userSettingsShowCatChooser);
         localStorage.setItem('userID', this.appDataPlayerCurrent.id);
         localStorage.setItem('useWordSetThemes', this.userSettingsUseWordSetThemes);
         localStorage.setItem('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
@@ -793,6 +829,8 @@ var app = new Vue({
               this.CancelSettings(null);
             } else if (this.appStateShowTutorial) {
               this.ToggleShowTutorial(null);
+            } else if (this.appStateShowCatChooser) {
+              this.appStateShowCatChooser = false;
             } else if (this.appStateShowConfirmation) {
               this.HandleYesNo(this.appDataConfirmationObject.target, false);
             } else if (this.appStateShowInfo) {

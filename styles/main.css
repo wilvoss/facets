@@ -1016,6 +1016,31 @@ modal input.large {
     font-size: 120%;
 }
 
+modal categories {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 100%;
+    margin-bottom: calc(2 * var(--defaultGap));
+}
+
+modal categories category {
+    display: block;
+    padding: calc(.5 * var(--defaultGap));
+    user-select: none;
+    cursor: pointer;
+
+}
+
+modal categories category.on {
+    color: hsl(var(--linkColorLightHSL));
+}
+
+modal categories category.on::before {
+    content: '✔ ';
+}
+
 modal gamelinks {
     display: block;
     counter-reset: my-badass-counter;
@@ -1068,7 +1093,7 @@ modal small {
     color: hsl(var(--appForegroundDiminishedHSL));
     line-height: 120%;
     width: 100%;
-    max-width: calc((2 * var(--cardSize)) + (2 * var(--defaultGap)));
+    max-width: calc(100% - 2 * var(--defaultGap));
 }
 
 modal section h3 small {
@@ -1529,7 +1554,7 @@ version {
         font-size: 12px;
         padding: 0px;
         width: 100%;
-        max-width: calc((2 * var(--cardSize) - 2 * var(--defaultGap)));
+        /* max-width: calc((2 * var(--cardSize) - 2 * var(--defaultGap))); */
     }
 
     message icon.share {

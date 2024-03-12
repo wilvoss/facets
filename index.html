@@ -175,6 +175,11 @@
             </callout>
           </leftright>
 
+          <checkbox @click="ToggleTempShowCategoryChooser()" title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{on: tempShowCatChooser}">
+            Show categories picker
+            <toggle></toggle>
+          </checkbox>
+
           <checkbox title="Enable this if you want to send your puzzle with a random 5th card." :class="{on: tempUseExtraCard, disabled: appStateIsGuessing}" @click="ToggleTempUseExtraCard()">
             Extra card
             <toggle></toggle>
@@ -199,6 +204,26 @@
         <controls>
           <button class="secondary" @click="CancelSettings(event)">Cancel</button>
           <button :disabled="tempID.toString().length !== 8" title="Please only use numbers." :class="{disabled: tempID.toString().length < 6}" @click="SubmitSettings(event)">Save</button>
+        </controls>
+      </modal>
+      <modal v-if="appStateShowCatChooser">
+        <section>
+          <h2>Category picker</h2>
+          <categories>
+            <category @click="tempWordSetName = name" :class="{on: tempWordSetName === name}" v-for="name in getEnabledTempWordSetNames">{{name}}</category>
+          </categories>
+
+          <leftright>
+            <checkbox @click="ToggleTempShowCategoryChooser()" title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{on: !tempShowCatChooser}">
+              Don't show category picker
+              <toggle></toggle>
+            </checkbox>
+          </leftright>
+          <small v-if="!tempShowCatChooser">You can turn this back on in preferences</small>
+        </section>
+        <controls>
+          <button class="secondary" @click="appStateShowCatChooser = false">Cancel</button>
+          <button @click="HandleGoButtonClick(event)">Go</button>
         </controls>
       </modal>
       <modal v-if="appStateShowGlobalCreated">
