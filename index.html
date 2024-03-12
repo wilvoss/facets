@@ -105,7 +105,7 @@
         <section>
           <h2>
             Facets!
-            <small style="font-size: 50%; padding-top: var(--defaultGap)">
+            <small style="max-width: unset; font-size: 50%; padding-top: var(--defaultGap)">
               A game of connecting words that maybe <br />
               don't connect so easily. 💎
             </small>
@@ -215,7 +215,7 @@
 
           <leftright>
             <checkbox @click="ToggleTempShowCategoryChooser()" title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{on: !tempShowCatChooser}">
-              Don't show category picker
+              Don't show this screen
               <toggle></toggle>
             </checkbox>
           </leftright>

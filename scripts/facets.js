@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.109',
+    appDataVersion: '1.0.110',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -618,8 +618,10 @@ var app = new Vue({
       }
 
       let userSettingsShowCatChooser = localStorage.getItem('userSettingsShowCatChooser');
-      this.userSettingsShowCatChooser = JSON.parse(userSettingsShowCatChooser);
-      this.tempShowCatChooser = this.userSettingsShowCatChooser;
+      if (userSettingsShowCatChooser !== undefined && userSettingsShowCatChooser !== null) {
+        this.userSettingsShowCatChooser = JSON.parse(userSettingsShowCatChooser);
+        this.tempShowCatChooser = this.userSettingsShowCatChooser;
+      }
 
       if (this.appStateIsGuessing) {
         this.documentCssRoot.style.setProperty('--wordScale', this.currentGameGuessingWordSet.scale);
