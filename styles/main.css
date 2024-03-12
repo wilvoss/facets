@@ -1038,11 +1038,7 @@ modal categories category.on {
 }
 
 modal categories category.on::before {
-    content: '— ';
-}
-
-modal categories category.on::after {
-    content: ' —';
+    content: '⇨ ';
 }
 
 modal gamelinks {
