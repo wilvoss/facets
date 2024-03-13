@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.115',
+    appDataVersion: '1.0.116',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -283,7 +283,7 @@ var app = new Vue({
       this.appDataCardsParked.push(new CardObject({}));
 
       this.appDataCards = temp;
-      await this.ShareBoard();
+      await this.ShareBoard(false, true);
       this.GetLast10GlobalCreatedGames();
     },
 
@@ -1011,7 +1011,7 @@ var app = new Vue({
       }
     },
 
-    async ShareBoard(_gotIt = false) {
+    async ShareBoard(_gotIt = false, _isNew = false) {
       note('ShareBoard() called');
       if (this.isChromeAndiOSoriPadOS && this.appDataShareURL.indexOf('facets.bigtentgames.com/game/?') !== -1) {
         this.CopyTextToClipboard(this.GetShareTextBasedOnContext(_gotIt) + ' <' + this.appDataShareURL + '>');
@@ -1019,7 +1019,7 @@ var app = new Vue({
       } else {
         let currentGameReviewIsFinal = this.appDataPlayerCurrent.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4;
         let text = this.GetShareTextBasedOnContext(_gotIt);
-        this.ConstructAndSetShareURLForCurrentGame(currentGameReviewIsFinal);
+        this.ConstructAndSetShareURLForCurrentGame(currentGameReviewIsFinal, _isNew);
 
         this.appStateIsGettingTinyURL = true;
         var corsflareUrl = 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
@@ -1052,7 +1052,7 @@ var app = new Vue({
       location.href = 'mailto:bigtentgames@icloud.com?subject=Facets Puzzle Reported&body=Puzzle ID# ' + _game.key + '%0D%0A This puzzle contains offensive language.%0D%0A' + _game.hints;
     },
 
-    ConstructAndSetShareURLForCurrentGame(_currentGameReviewIsFinal) {
+    ConstructAndSetShareURLForCurrentGame(_currentGameReviewIsFinal, _isNew = false) {
       note('ConstructAndSetShareURLForCurrentGame() called');
       if (this.appStateIsGuessing) {
         this.currentGameSolutionGuessing = '';
@@ -1075,10 +1075,13 @@ var app = new Vue({
 
         urlString = encodeURIComponent(urlString);
         urlString += '?sendingName=' + encodeURIComponent(this.appDataPlayerCurrent.name);
-        urlString += '&sendingID=' + encodeURIComponent(this.appDataPlayerCurrent.id);
         urlString += '&puzzleName=' + encodeURIComponent(this.appDataPlayerCreator.name);
         urlString += '&puzzleID=' + encodeURIComponent(this.appDataPlayerCreator.id);
         urlString += '&wordSetID=' + encodeURIComponent(this.currentGameGuessingWordSet.id);
+        if (_isNew) {
+          urlString += '&isNew=true' + encodeURIComponent(this.appDataPlayerCurrent.name);
+        }
+        urlString += '&sendingID=' + encodeURIComponent(this.appDataPlayerCurrent.id);
         urlString += '&useExtraCard=' + encodeURIComponent(this.currentGameGuessingCardCount === 5);
         urlString += '&sol=' + encodeURIComponent(this.currentGameSolutionActual);
         if (_currentGameReviewIsFinal) {
