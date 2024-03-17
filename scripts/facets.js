@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.116',
+    appDataVersion: '1.0.117',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -76,6 +76,7 @@ var app = new Vue({
     // temp user settings
     tempName: '',
     tempID: 0,
+    tempShareURLCode: '',
     tempUseMultiColoredGems: true,
     tempUserSettingsUsesLightTheme: false,
     tempAutoCheck: true,
