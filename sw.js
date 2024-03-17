@@ -1,4 +1,4 @@
-const CACHE_VERSION = '1.0.117';
+const CACHE_VERSION = '1.0.118';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
@@ -23,7 +23,7 @@ const cacheFiles = [
   'game/index.html',
   'fonts/Abel-Regular.ttf',
   'fonts/Bungee-Regular.ttf',
-  'fonts/Federant-Regular.ttf',
+  'fonts/BigShouldersInlineText-VariableFont_wght.ttf',
   'helpers/vue.min.js',
   'helpers/console-enhancer-min.js',
   'images/wallpapers/civilization.jpg',
