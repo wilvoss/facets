@@ -5,7 +5,8 @@
 
 @font-face {
     font-family: 'ClueFont';
-    src: url('../fonts/BigShouldersInlineText-VariableFont_wght.ttf');
+    src: url('../fonts/NovaFlat-Regular.ttf');
+    /* src: url('../fonts/BigShouldersInlineText-VariableFont_wght.ttf'); */
 }
 
 @font-face {
