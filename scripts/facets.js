@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.122',
+    appDataVersion: '1.0.123',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -1097,6 +1097,7 @@ var app = new Vue({
     GetMessageBasedOnTrayCount(_gotIt, _name) {
       note('GetMessageBasedOnTrayCount() called');
       let index = this.getNumberOfCardsThatHaveBeenPlacedOnTray;
+      let pretext = index;
       if (index === 4 && this.appDataPlayerCurrent.role === 'reviewer' && !_gotIt) {
         index = 5;
       }
@@ -1105,7 +1106,7 @@ var app = new Vue({
       let name = !usingName ? '' : _name + ', ';
       let useLowerCase = usingName && levelMessage.indexOf('I ') !== 0;
       levelMessage = useLowerCase ? levelMessage.toLowerCase() : levelMessage;
-      let message = LevelEmoji[index][getRandomInt(0, LevelEmoji[index].length)] + ' ' + name + levelMessage;
+      let message = pretext + '/4 ' + LevelEmoji[index][getRandomInt(0, LevelEmoji[index].length)] + ' ' + name + levelMessage;
       announce(message);
       return message;
     },
