@@ -487,6 +487,7 @@ wrapper:first-of-type {
     max-width: unset;
     min-height: unset;
     align-items: center;
+    gap: calc(2.5 * var(--defaultGap));
 }
 
 wrapper.main {
@@ -1458,7 +1459,7 @@ version {
 
     wrapper controls {
         width: 50px;
-        padding: calc(.5 * var(--defaultGap));
+        padding: 0 calc(1 * var(--defaultGap));
     }
 
     wrapper.main {
@@ -1576,7 +1577,7 @@ version {
 
     header h1 {
         letter-spacing: 1px;
-        font-size: 280%;
+        font-size: 250%;
     }
 
     subtitle {

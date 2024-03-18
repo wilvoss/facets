@@ -144,47 +144,26 @@
       <modal v-if="appStateShowSettings">
         <section>
           <h2>Preferences</h2>
-          <h3>Profile</h3>
+          <!-- <h3>Profile</h3> -->
           <leftright>
             <p>Your name</p>
             <callout>
               <input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
             </callout>
           </leftright>
-          <leftright>
+          <!-- <leftright>
             <p>Player ID # <small>Match this on all browsers</small></p>
             <callout>
               <input spellcheck="false" onpointerup="this.select()" inputmode="numeric" type="number" pattern="\d*" v-model="tempID" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="8" />
             </callout>
-          </leftright>
+          </leftright> -->
 
-          <h3>Guessing<small>{{appStateForceAutoCheck ? '(disabled while solving anonymous puzzle)' : ''}}</small></h3>
+          <h3>Guessing</h3>
           <checkbox title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{disabled: appStateForceAutoCheck, on: !tempAutoCheck}" @click="ToggleAutoCheck()">
             Pass 'n play
             <toggle></toggle>
           </checkbox>
-          <small>Enable this if you want to send your guesses back to your friend instead of automatically getting feedback.</small>
-
-          <h3>Creating<small>{{appStateIsGuessing ? '(disabled while guessing)' : ''}}</small></h3>
-          <leftright :class="{disabled: appStateIsGuessing}">
-            <p style="width: auto">Category</p>
-            <callout style="width: 100%">
-              <select v-model="tempWordSetName">
-                <option v-for="name in getEnabledTempWordSetNames" :value="name">{{name}}</option>
-              </select>
-            </callout>
-          </leftright>
-
-          <checkbox @click="ToggleTempShowCategoryChooser()" title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{on: tempShowCatChooser}">
-            Show categories picker
-            <toggle></toggle>
-          </checkbox>
-
-          <checkbox title="Enable this if you want to send your puzzle with a random 5th card." :class="{on: tempUseExtraCard, disabled: appStateIsGuessing}" @click="ToggleTempUseExtraCard()">
-            Extra card
-            <toggle></toggle>
-          </checkbox>
-          <small :class="{disabled: appStateIsGuessing}">Enable this if you want to send your puzzle with a random 5th card.</small>
+          <small>Enable this to send your guesses to your friend instead of automatically getting feedback (disabled while solving anonymous puzzle).</small>
 
           <h3>Appearance</h3>
           <checkbox :class="{on: tempUserSettingsUsesLightTheme}" @click="ToggleTempUseLightTheme()">
@@ -200,6 +179,13 @@
             <toggle></toggle>
           </checkbox>
           <small>Enable this if you want the gem to remain green when you are creating, guessing, or reviewing.</small>
+
+          <h3>Creating</h3>
+          <checkbox @click="ToggleTempShowCategoryChooser()" title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{on: tempShowCatChooser}">
+            Show "Puzzle Options" screen
+            <toggle></toggle>
+          </checkbox>
+          <small>Enable this to have the option to change categories and difficulty when creating a new puzzle.</small>
         </section>
         <controls>
           <button class="secondary" @click="CancelSettings(event)">Cancel</button>
@@ -208,22 +194,26 @@
       </modal>
       <modal v-if="appStateShowCatChooser">
         <section>
-          <h2>Category picker</h2>
+          <h2>Puzzle Options</h2>
           <categories>
             <category @click="tempWordSetName = name" :class="{on: tempWordSetName === name}" v-for="name in getEnabledTempWordSetNames">{{name}}</category>
           </categories>
-
-          <leftright>
+          <checkbox title="Enable this to make your puzzle much harder to solve!" :class="{on: tempUseExtraCard}" @click="ToggleTempUseExtraCard()">
+            Extra card
+            <toggle></toggle>
+          </checkbox>
+          <small>Enable this to make your puzzle much harder to solve!</small>
+          <!-- <leftright>
             <checkbox @click="ToggleTempShowCategoryChooser()" title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{on: !tempShowCatChooser}">
-              Don't show this screen
+              Hide this screen
               <toggle></toggle>
             </checkbox>
           </leftright>
-          <small v-if="!tempShowCatChooser">You can turn this back on in preferences</small>
+          <small v-if="!tempShowCatChooser">You can turn this back on in preferences</small> -->
         </section>
         <controls>
           <button class="secondary" @click="appStateShowCatChooser = false">Cancel</button>
-          <button @click="HandleGoButtonClick(event)">Go</button>
+          <button @click="HandleGoButtonClick(event)">Create</button>
         </controls>
       </modal>
       <modal v-if="appStateShowGlobalCreated">
