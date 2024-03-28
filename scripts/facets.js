@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.126',
+    appDataVersion: '1.0.127',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -1117,7 +1117,7 @@ var app = new Vue({
       let pretext = this.currentGameGuessingWordSet.startsWithVowel ? 'an ' : 'a ';
       pretext = this.currentGameGuessingCardCount === 5 ? 'a ' : pretext;
       if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
-        text = '🧠 I created ' + pretext + (this.currentGameGuessingCardCount === 5 ? '5-card ' : '') + '"' + this.currentGameGuessingWordSet.name + '" word puzzle for you to solve!';
+        text = '🧠' + this.currentGameGuessingWordSet.emoji + ' I created ' + pretext + (this.currentGameGuessingCardCount === 5 ? '5-card ' : '') + '"' + this.currentGameGuessingWordSet.name + '" word puzzle for you to solve!';
       } else if (this.appDataPlayerCurrent.role === 'reviewer') {
         text = this.GetMessageBasedOnTrayCount(_gotIt, this.currentGameGuessersName);
       } else {
