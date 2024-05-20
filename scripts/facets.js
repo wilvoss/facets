@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.127',
+    appDataVersion: '1.0.128',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -556,10 +556,13 @@ var app = new Vue({
           break;
         case 'creator':
           if (_value) {
-            this.tempID = this.appDataPlayerCreator.id;
-            this.appDataPlayerCurrent.id = this.appDataPlayerCreator.id;
-            this.appDataPlayerCurrent.role = 'reviewer';
-            localStorage.setItem('userID', this.appDataPlayerCurrent.id);
+            confirm = window.confirm('Are you sure you are the original creator?');
+            if (confirm) {
+              this.tempID = this.appDataPlayerCreator.id;
+              this.appDataPlayerCurrent.id = this.appDataPlayerCreator.id;
+              this.appDataPlayerCurrent.role = 'reviewer';
+              localStorage.setItem('userID', this.appDataPlayerCurrent.id);
+            }
           }
           break;
         default:
@@ -1117,7 +1120,7 @@ var app = new Vue({
       let pretext = this.currentGameGuessingWordSet.startsWithVowel ? 'an ' : 'a ';
       pretext = this.currentGameGuessingCardCount === 5 ? 'a ' : pretext;
       if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
-        text = '🧠' + this.currentGameGuessingWordSet.emoji + ' I created ' + pretext + (this.currentGameGuessingCardCount === 5 ? '5-card ' : '') + '"' + this.currentGameGuessingWordSet.name + '" word puzzle for you to solve!';
+        text = '🧠' + this.currentGameGuessingWordSet.emoji + (this.currentGameGuessingCardCount === 5 ? '⭐️' : '') + ' I created ' + pretext + (this.currentGameGuessingCardCount === 5 ? '5-card ' : '') + '"' + this.currentGameGuessingWordSet.name + '" word puzzle for you to solve!';
       } else if (this.appDataPlayerCurrent.role === 'reviewer') {
         text = this.GetMessageBasedOnTrayCount(_gotIt, this.currentGameGuessersName);
       } else {
