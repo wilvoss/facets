@@ -47,7 +47,7 @@ const LevelMessage = [
         '2 down, 2 to go.',
         'Coulda, woulda, shoulda.',
         'There are many ways to fail, this is just one of them.',
-        'You\'re basic.'
+        'Ya basic.'
     ],
     [
         'Not quite!',

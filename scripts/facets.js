@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.128',
+    appDataVersion: '1.0.129',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -66,7 +66,7 @@ var app = new Vue({
     currentGameSolutionGuessing: [],
     currentGameWordSet: WordSets.find((m) => m.id === '100'),
     // user settings
-    userSettingsAutoCheck: true,
+    userSettingsAutoCheck: false,
     userSettingsUseExtraCard: false,
     userSettingsUsesLightTheme: false,
     userSettingsUseMultiColoredGems: true,
