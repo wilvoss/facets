@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.129',
+    appDataVersion: '1.0.130',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -79,7 +79,7 @@ var app = new Vue({
     tempShareURLCode: '',
     tempUseMultiColoredGems: true,
     tempUserSettingsUsesLightTheme: false,
-    tempAutoCheck: true,
+    tempAutoCheck: false,
     tempUseWordSetThemes: false,
     tempWordSetName: '',
     tempUsePortraitLayout: false,
@@ -803,10 +803,10 @@ var app = new Vue({
             } else if (this.appStateShowTutorial) {
               this.appStateShowOOBE = false;
               this.ToggleShowTutorial(null);
-            } else if (this.appStateShowConfirmation) {
-              this.HandleYesNo(this.appDataConfirmationObject.target, true);
             } else if (this.appStateShowIntro) {
               this.HandleIntroButtonClick(null);
+            } else if (this.appStateShowConfirmation) {
+              this.HandleYesNo(this.appDataConfirmationObject.target, true);
             } else if (this.appStateShowInfo) {
               this.appStateShowInfo = false;
             } else if (this.appStateShowGlobalCreated) {
