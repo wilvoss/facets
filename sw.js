@@ -1,4 +1,4 @@
-const CACHE_VERSION = '1.0.131';
+const CACHE_VERSION = '1.0.132';
 const CURRENT_CACHE = `main-${CACHE_VERSION}`;
 
 // these are the routes we are going to cache for offline support
@@ -63,6 +63,7 @@ const cacheFiles = [
   'scripts/fetch-game-min.js',
   'styles/checkbox-min.css',
   'styles/main.css',
+  'styles/focus.css',
   'styles/main-min.css',
   'styles/normalize.css',
   'index.html',
