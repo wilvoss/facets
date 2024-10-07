@@ -42,7 +42,8 @@
   <body>
     <app id="app" v-cloak :class="{multicolor: userSettingsUseMultiColoredGems, solved: currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, guessing: appStateIsGuessing, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}" @pointerdown="HandleBodyPointerDown(event)" @pointerup="HandleBodyPointerUp(event, appStateIsDragging ? appDataDraggedCard : getSelectedCard)">
       <link rel="stylesheet" v-if="userSettingsUsesLightTheme" href="styles/light.css" media="screen" />
-
+      <!-- <link rel="stylesheet" href="styles/simple.css" media="screen" /> -->
+      <link rel="stylesheet" v-if="userSettingsFocus" href="styles/focus.css" media="screen" />
       <modal v-if="appStateShowOOBE" class="tutorial">
         <h2>Quick Guide</h2>
         <section v-if="appStateIsGuessing">
@@ -245,7 +246,7 @@
           <button class="inline" @click="HandleNewGameClick()">New</button>
         </controls>
         <header>
-          <h1>{{appDataGameName}}</h1>
+          <h1 @click="ToggleFocus()">{{appDataGameName}}</h1>
         </header>
         <controls>
           <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: currentGameSolutionGuessing === currentGameSolutionActual && currentGameSolutionGuessing !== '' || ( getNumberOfHintsThatHaveBeenFilled !== 4 && appDataPlayerCurrent.role === 'creator') || (getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && appDataPlayerCurrent.role !== 'reviewer' && appDataPlayerCurrent.id !== appDataPlayerCreator.id)}">

@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.130',
+    appDataVersion: '1.0.131',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -73,6 +73,7 @@ var app = new Vue({
     userSettingsUseWordSetThemes: false,
     userSettingsStreaks: [],
     userSettingsShowCatChooser: true,
+    userSettingsFocus: false,
     // temp user settings
     tempName: '',
     tempID: 0,
@@ -107,6 +108,12 @@ var app = new Vue({
         document.getElementById('themeColor').content = 'rgb(240, 255, 245)';
       } else {
         document.getElementById('themeColor').content = 'rgb(0, 9, 15)';
+      }
+    },
+
+    ToggleFocus() {
+      if (this.appDataPlayerCurrent.role !== 'creator' && window.innerWidth <= 660) {
+        this.userSettingsFocus = !this.userSettingsFocus;
       }
     },
 
