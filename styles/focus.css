@@ -12,13 +12,13 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
     }
 
     wrapper.mobile parking, .portrait wrapper.mobile parking {
-        scale: .8;
+        scale: 1;
         overflow-y: auto;
-        padding: 10px 20px;
+        padding: 10px 40px 100px;
         justify-content: start;
         transform-origin-y: 0%;
         -webkit-transform-origin-y: 0%;
-        mask-image: linear-gradient(90deg, transparent, red 10px, red calc(100% - 20px), transparent);
+        mask-image: linear-gradient(90deg, transparent, red 10px, red calc(100% - 40px), transparent);
     }
 
     .portrait wrapper.mobile parking spot {

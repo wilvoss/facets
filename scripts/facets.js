@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.133',
+    appDataVersion: '1.0.134',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -112,7 +112,7 @@ var app = new Vue({
     },
 
     ToggleFocus() {
-      if (this.appDataPlayerCurrent.role !== 'creator' && window.innerWidth <= 660) {
+      if (window.innerWidth <= 660) {
         this.userSettingsFocus = !this.userSettingsFocus;
       }
     },
