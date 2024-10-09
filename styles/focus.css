@@ -58,8 +58,8 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
         -ms-overflow-style: none;
         scrollbar-width: none;
 
-        touch-action: auto;
-        scroll-behavior: smooth;
+        /* touch-action: auto; */
+        /* scroll-behavior: smooth; */
     }
 
 
