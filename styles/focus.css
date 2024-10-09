@@ -53,7 +53,7 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
         mask-image: linear-gradient(90deg, transparent, red 40px, red calc(100% - 40px), transparent);
     }
 
-    wrapper.mobile parking::-webkit-scrollbar, .portrait wrapper.mobile parking::-webkit-scrollbar {
+    /* wrapper.mobile parking::-webkit-scrollbar, .portrait wrapper.mobile parking::-webkit-scrollbar {
         display: none;
 
         -ms-overflow-style: none;
@@ -61,7 +61,7 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
 
         touch-action: auto;
         scroll-behavior: smooth;
-    }
+    } */
 
 
     .portrait wrapper.mobile parking spot {
