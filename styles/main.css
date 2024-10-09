@@ -348,6 +348,16 @@ icon.rotate {
     -webkit-mask-image: url(../images/icon-rotatearrow.svg);
 }
 
+icon.expand {
+    mask-image: url(../images/icon-expand.svg);
+    -webkit-mask-image: url(../images/icon-expand.svg);
+}
+
+icon.contract {
+    mask-image: url(../images/icon-contract.svg);
+    -webkit-mask-image: url(../images/icon-contract.svg);
+}
+
 icon.settings {
     mask-image: url(../images/icon-settings.svg);
     -webkit-mask-image: url(../images/icon-settings.svg);
@@ -1405,6 +1415,9 @@ version {
     gap: var(--defaultGap);
 }
 
+.focuser {
+    display: none;
+}
 
 @media screen and (max-height:844px) {
     controls {
@@ -1628,6 +1641,10 @@ version {
     wrapper.mobile parking spot, .portrait wrapper.mobile.parking spot {
         display: block;
 
+    }
+
+    .focuser {
+        display: flex;
     }
 }
 

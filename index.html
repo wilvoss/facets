@@ -246,7 +246,7 @@
           <button class="inline" @click="HandleNewGameClick()">New</button>
         </controls>
         <header>
-          <h1 @click="ToggleFocus()">{{appDataGameName}}</h1>
+          <h1>{{appDataGameName}}</h1>
         </header>
         <controls>
           <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: currentGameSolutionGuessing === currentGameSolutionActual && currentGameSolutionGuessing !== '' || ( getNumberOfHintsThatHaveBeenFilled !== 4 && appDataPlayerCurrent.role === 'creator') || (getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && appDataPlayerCurrent.role !== 'reviewer' && appDataPlayerCurrent.id !== appDataPlayerCreator.id)}">
@@ -330,6 +330,10 @@
             </spot>
           </cards>
         </tray>
+        <rotators class="focuser" style="transform: translateY(calc(1.35 * var(--cardSize))); width: calc(3.25 * var(--cardSize))">
+          <button></button>
+          <button aria-label="Focus Expand" class="expand" @click="ToggleFocus()"><icon :class="{expand: !userSettingsFocus, contract: userSettingsFocus}"></icon></button>
+        </rotators>
         <parking>
           <spot v-for="(card, index) in appDataCardsParked" v-if="index >= (currentGameGuessingCardCount / 2) && (index < currentGameGuessingCardCount)" :class="{empty: card.words.length === 0, selected: card.isSelected}">
             <rotators>

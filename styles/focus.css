@@ -100,4 +100,6 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
         transform: translate(calc(var(--scale) * (-1 * (var(--cardSize) / 2) + calc(var(--defaultGap) * 1) - 5px)), calc(var(--scale) *(-1 * (var(--cardSize) / 2) + calc(var(--defaultGap) * 1) - 5px)));
         rotate: -90deg;
     }
+
+
 }
