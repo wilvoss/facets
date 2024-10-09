@@ -14,11 +14,12 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.151',
+    appDataVersion: '1.0.152',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
     appDataDraggedCard: new CardObject({}),
+    appDataDraggedCardStartedInParkingLot: false,
     appDataEmptyCard: new CardObject({ id: 'ghost' }),
     appDataGameCatchphrase: 'A game of words!',
     appDataGameName: 'Facets',
@@ -56,6 +57,7 @@ var app = new Vue({
     appStateTrayIsRotating: false,
     appStateTrayRotation: 0,
     appStateUsePortraitLayout: false,
+    appStateIsHorizontalPan: false,
     // current game
     currentGameGuessCount: 0,
     currentGameGuessersName: '',
@@ -579,9 +581,39 @@ var app = new Vue({
       this.appStateIsModalShowing = false;
     },
 
+    // this is a window event handler
     HandlePointerMoveEvent(e) {
+      const diffX = e.clientX - this.appDataGhostX;
+      const diffY = e.clientY - this.appDataGhostY;
+
       this.appDataGhostX = e.clientX;
       this.appDataGhostY = e.clientY;
+
+      var container = document.getElementById('parking');
+      if (!this.appStateIsHorizontalPan) {
+        if (Math.abs(diffX) > Math.abs(diffY) && !this.appDataDraggedCard.isInTray && app.userSettingsFocus) {
+          // Horizontal movement detected, allow scrolling
+          this.appStateIsHorizontalPan = true;
+          this.appStateIsDragging = false;
+          this.appDataDraggedCard.isSelected = false;
+          this.appDataDraggedCard = this.appDataEmptyCard;
+        }
+      }
+
+      if (this.appStateIsHorizontalPan && this.appDataDraggedCardStartedInParkingLot && e.target.parentElement.parentElement.id === 'parking') {
+        // Allow the default scroll behavior
+        container.scrollLeft -= diffX;
+      } else if (this.appStateIsDragging) {
+        // Handle vertical dragging logic here
+        // Example: Move the dragged element
+        this.appDataDraggedCard.style.transform = `translate(${diffX}px, ${diffY}px)`;
+      }
+    },
+
+    IsElementInsideContainer(element, container) {
+      const elementRect = element.getBoundingClientRect();
+      const containerRect = container.getBoundingClientRect();
+      return elementRect.top >= containerRect.top && elementRect.left >= containerRect.left && elementRect.bottom <= containerRect.bottom && elementRect.right <= containerRect.right;
     },
 
     HandlePageVisibilityChange() {
@@ -670,11 +702,14 @@ var app = new Vue({
       } else {
         this.appDataDraggedCard.isSelected = false;
       }
+      this.appStateIsHorizontalPan = false;
+      this.appDataDraggedCardStartedInParkingLot = false;
     },
 
     HandleBodyPointerDown(e) {
       this.appDataGhostX = e.clientX;
       this.appDataGhostY = e.clientY;
+      this.appStateIsHorizontalPan = false;
     },
 
     HandleCardPointerDown(e, _card) {
@@ -687,6 +722,7 @@ var app = new Vue({
         if (e.target.hasPointerCapture(e.pointerId)) {
           e.target.releasePointerCapture(e.pointerId);
         }
+        this.appDataDraggedCardStartedInParkingLot = e.target.parentElement.parentElement.id === 'parking';
       }
 
       this.appDataDraggedCard = _card;

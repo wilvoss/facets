@@ -353,7 +353,7 @@
         </parking>
       </wrapper>
       <wrapper class="mobile" :class="{extra: currentGameGuessingCardCount === 5}">
-        <parking>
+        <parking id="parking">
           <spot v-for="(card, index) in appDataCardsParked" v-if="index < currentGameGuessingCardCount" :class="{empty: card.words.length === 0, selected: card.isSelected}">
             <card @click="RotateCard(event, card, -1)" @pointerup="HandleCardPointerUp(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
               <words>
