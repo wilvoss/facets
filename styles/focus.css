@@ -11,13 +11,13 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
         --scale: .7;
     }
 
-    .portrait wrapper.mobile {
+    .portrait wrapper.mobile, wrapper.mobile.extra, .portrait wrapper.mobile.extra {
         position: relative;
         flex-direction: column;
         justify-content: center;
         align-items: start;
         height: auto;
-
+        scale: 1;
     }
 
 
