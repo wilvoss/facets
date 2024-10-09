@@ -36,6 +36,7 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
         background-color: hsla(var(--highlightColorHSL), .5);
         mask-size: 70px 19.52px;
         -webkit-mask-size: 70px 19.52px;
+        pointer-events: none;
     }
 
     wrapper.mobile parking, .portrait wrapper.mobile parking {
@@ -58,8 +59,8 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
         -ms-overflow-style: none;
         scrollbar-width: none;
 
-        /* touch-action: auto; */
-        /* scroll-behavior: smooth; */
+        touch-action: auto;
+        scroll-behavior: smooth;
     }
 
 
