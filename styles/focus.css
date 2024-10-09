@@ -34,7 +34,7 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
         -webkit-mask-repeat: no-repeat;
         mask-position: center;
         -webkit-mask-position: center;
-        background-color: hsla(var(--linkColorLightHSL), .6);
+        background-color: hsla(var(--highlightColorHSL), 1);
         mask-size: 70px 32px;
         -webkit-mask-size: 70px 32px;
         pointer-events: none;
