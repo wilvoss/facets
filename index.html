@@ -35,7 +35,7 @@
     <link rel="icon" type="image/png" sizes="128x128" href="favicon.png" />
 
     <link rel="stylesheet" href="styles/normalize.css" media="screen" />
-    <link rel="stylesheet" href="styles/main-min.css" media="screen" />
+    <link rel="stylesheet" href="styles/main.min.css" media="screen" />
     <link rel="stylesheet" href="styles/checkbox-min.css" media="screen" />
   </head>
 
@@ -43,7 +43,7 @@
     <app id="app" v-cloak :class="{multicolor: userSettingsUseMultiColoredGems, solved: currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, guessing: appStateIsGuessing, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}" @pointerdown="HandleBodyPointerDown(event)" @pointerup="HandleBodyPointerUp(event, appStateIsDragging ? appDataDraggedCard : getSelectedCard)">
       <link rel="stylesheet" v-if="userSettingsUsesLightTheme" href="styles/light.css" media="screen" />
       <!-- <link rel="stylesheet" href="styles/simple.css" media="screen" /> -->
-      <link rel="stylesheet" v-if="userSettingsFocus && appDataPlayerCurrent.role !== 'creator'" href="styles/focus.css" media="screen" />
+      <link rel="stylesheet" v-if="userSettingsFocus && (appStateIsGuessing || appDataPlayerCurrent.role === 'reviewer')" href="styles/focus.min.css" media="screen" />
       <modal v-if="appStateShowOOBE" class="tutorial">
         <h2>Quick Guide</h2>
         <section v-if="appStateIsGuessing">

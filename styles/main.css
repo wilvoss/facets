@@ -1393,6 +1393,7 @@ modal::-webkit-scrollbar {
 
 .portrait wrapper.mobile {
     display: flex;
+    gap: 0px;
 }
 
 version {

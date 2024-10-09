@@ -26,17 +26,17 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
         display: block;
         position: fixed;
         width: 100%;
-        height: 19.52px;
+        height: 32px;
         border: 1px solid red;
-        mask-image: url(/images/pan-6.svg);
-        -webkit-mask-image: url(/images/pan-6.svg);
+        mask-image: url(/images/pan-8.svg);
+        -webkit-mask-image: url(/images/pan-8.svg);
         mask-repeat: no-repeat;
         -webkit-mask-repeat: no-repeat;
         mask-position: center;
         -webkit-mask-position: center;
         background-color: hsla(var(--linkColorLightHSL), .6);
-        mask-size: 70px 19.52px;
-        -webkit-mask-size: 70px 19.52px;
+        mask-size: 70px 32px;
+        -webkit-mask-size: 70px 32px;
         pointer-events: none;
         margin-top: 100px;
     }
