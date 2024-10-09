@@ -16,6 +16,7 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
         flex-direction: column;
         justify-content: center;
         align-items: start;
+        height: auto;
 
     }
 
@@ -23,37 +24,33 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
 
     .portrait wrapper.mobile panbar {
         display: block;
+        position: fixed;
         width: 100%;
         height: 19.52px;
         border: 1px solid red;
-        position: relative;
-        mask-image: url(/images/pan-2.svg);
-        -webkit-mask-image: url(/images/pan-2.svg);
+        mask-image: url(/images/pan-3.svg);
+        -webkit-mask-image: url(/images/pan-3.svg);
         mask-repeat: no-repeat;
         -webkit-mask-repeat: no-repeat;
         mask-position: center;
         -webkit-mask-position: center;
-        background-color: hsla(var(--highlightColorHSL), .5);
+        background-color: hsla(var(--linkColorLightHSL), .6);
         mask-size: 70px 19.52px;
         -webkit-mask-size: 70px 19.52px;
         pointer-events: none;
+        margin-top: 100px;
     }
 
     wrapper.mobile parking, .portrait wrapper.mobile parking {
         width: calc(100% - 80px);
-        /* position: fixed; */
         scale: 1;
         overflow-y: auto;
-        padding: 1px 40px;
+        padding: 1px 40px 100px;
         justify-content: start;
-        transform-origin-y: 0%;
-        -webkit-transform-origin-y: 0%;
-        /* transform-origin-x: 35%; */
-        /* -webkit-transform-origin-x: 35%; */
         mask-image: linear-gradient(90deg, transparent, red 40px, red calc(100% - 40px), transparent);
     }
 
-    /* wrapper.mobile parking::-webkit-scrollbar, .portrait wrapper.mobile parking::-webkit-scrollbar {
+    wrapper.mobile parking::-webkit-scrollbar, .portrait wrapper.mobile parking::-webkit-scrollbar {
         display: none;
 
         -ms-overflow-style: none;
@@ -61,7 +58,7 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
 
         touch-action: auto;
         scroll-behavior: smooth;
-    } */
+    }
 
 
     .portrait wrapper.mobile parking spot {
