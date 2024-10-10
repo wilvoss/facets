@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.154',
+    appDataVersion: '1.0.155',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -756,7 +756,7 @@ var app = new Vue({
         return;
       }
 
-      if (this.appDataDraggedCard.words.length > 0) {
+      if (this.appDataDraggedCard.words.length > 0 && !this.appStateIsHorizontalPan) {
         this.SwapCards(_card, this.appDataDraggedCard);
       }
       if (this.appStateIsHorizontalPan) {
