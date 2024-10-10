@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.152',
+    appDataVersion: '1.0.153',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -603,10 +603,6 @@ var app = new Vue({
       if (this.appStateIsHorizontalPan && this.appDataDraggedCardStartedInParkingLot && e.target.parentElement.parentElement.id === 'parking') {
         // Allow the default scroll behavior
         container.scrollLeft -= diffX;
-      } else if (this.appStateIsDragging) {
-        // Handle vertical dragging logic here
-        // Example: Move the dragged element
-        this.appDataDraggedCard.style.transform = `translate(${diffX}px, ${diffY}px)`;
       }
     },
 
@@ -744,6 +740,8 @@ var app = new Vue({
       if (this.appDataDraggedCard.words.length > 0) {
         this.SwapCards(_card, this.appDataDraggedCard);
       }
+      this.appStateIsHorizontalPan = false;
+      this.appDataDraggedCardStartedInParkingLot = false;
     },
 
     HandlePickerCardClicked(e, _card) {
@@ -1246,7 +1244,7 @@ var app = new Vue({
       note('RotateCard() called');
       e.preventDefault();
       e.stopPropagation();
-      if (this.appStateIsGuessing) {
+      if (this.appStateIsGuessing && (!this.userSettingsFocus || (this.userSettingsFocus && e.target.parentElement.parentElement.id !== 'parking'))) {
         this.appDataMessage = '';
         if (this.appDataTimeoutCardRotation) {
           clearTimeout(this.appDataTimeoutCardRotation);
