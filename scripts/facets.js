@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.158',
+    appDataVersion: '1.0.159',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -27,7 +27,7 @@ var app = new Vue({
     appDataGhostY: 0,
     appDataVelocity: 0,
     appDataLastDiffX: 0,
-    appDataInitializePan: false,
+    appDataCheckForPan: false,
     appDataInertialInterval: null,
     appDataGlobalCreatedGames: [],
     appDataHints: [],
@@ -592,13 +592,17 @@ var app = new Vue({
       this.appDataGhostX = e.clientX;
       this.appDataGhostY = e.clientY;
       var container = document.getElementById('parking');
-      if (!this.appStateIsHorizontalPan && !this.appDataInitializePan) {
+      if (!this.appStateIsHorizontalPan && !this.appDataCheckForPan) {
+        log('checking for horizontal pan in parking lot');
         if (Math.abs(diffX) > Math.abs(diffY) && this.appDataDraggedCardStartedInParkingLot && this.userSettingsFocus) {
           this.appStateIsHorizontalPan = true;
+          this.appDataDraggedCard.isSelected = false;
+          this.appDataDraggedCard = this.appDataEmptyCard;
+          this.appStateIsDragging = false;
         }
       } else {
       }
-      this.appDataInitializePan = true;
+      this.appDataCheckForPan = true;
 
       if (this.appStateIsHorizontalPan && this.appDataDraggedCardStartedInParkingLot && e.target.parentElement.parentElement.id === 'parking') {
         container.scrollLeft -= diffX;
@@ -715,7 +719,7 @@ var app = new Vue({
       } else {
         this.appDataDraggedCard.isSelected = false;
       }
-      this.appDataInitializePan = false;
+      this.appDataCheckForPan = false;
       this.appStateIsHorizontalPan = false;
       this.appDataDraggedCardStartedInParkingLot = false;
       // this.ApplyInertia();
@@ -725,6 +729,7 @@ var app = new Vue({
       this.appDataGhostX = e.clientX;
       this.appDataGhostY = e.clientY;
       this.appStateIsHorizontalPan = false;
+      this.appDataCheckForPan = false;
       clearInterval(this.appDataInertialInterval); // Stop any ongoing inertia
     },
 
@@ -741,6 +746,8 @@ var app = new Vue({
         this.appDataDraggedCardStartedInParkingLot = e.target.parentElement.parentElement.id === 'parking';
       }
 
+      this.appStateIsHorizontalPan = false;
+      this.appDataCheckForPan = false;
       this.appDataDraggedCard = _card;
       this.appStateIsDragging = true;
     },
@@ -765,11 +772,11 @@ var app = new Vue({
       }
 
       if (this.appStateIsHorizontalPan) {
-        // this.appDataDraggedCard.isSelected = false;
-        // this.appDataDraggedCard = this.appDataEmptyCard;
+        this.appDataDraggedCard.isSelected = false;
+        this.appDataDraggedCard = this.appDataEmptyCard;
         this.appStateIsDragging = false;
       }
-      this.appDataInitializePan = false;
+      this.appDataCheckForPan = false;
       this.appStateIsHorizontalPan = false;
       this.appDataDraggedCardStartedInParkingLot = false;
     },
