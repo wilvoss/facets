@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.155',
+    appDataVersion: '1.0.156',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -596,6 +596,12 @@ var app = new Vue({
         if (Math.abs(diffX) > Math.abs(diffY) && this.appDataDraggedCardStartedInParkingLot && app.userSettingsFocus) {
           log('HandlePointerMoveEvent() called and !this.appStateIsHorizontalPan');
           this.appStateIsHorizontalPan = true;
+        }
+      } else {
+        if (this.appStateIsDragging) {
+          this.appStateIsDragging = false;
+          // this.appDataDraggedCard.isSelected = false;
+          this.appDataDraggedCard = this.appDataEmptyCard;
         }
       }
 
