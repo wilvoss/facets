@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.156',
+    appDataVersion: '1.0.157',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -593,16 +593,11 @@ var app = new Vue({
 
       var container = document.getElementById('parking');
       if (!this.appStateIsHorizontalPan) {
-        if (Math.abs(diffX) > Math.abs(diffY) && this.appDataDraggedCardStartedInParkingLot && app.userSettingsFocus) {
+        if (Math.abs(diffX) > Math.abs(diffY) && this.appDataDraggedCardStartedInParkingLot && this.userSettingsFocus) {
           log('HandlePointerMoveEvent() called and !this.appStateIsHorizontalPan');
           this.appStateIsHorizontalPan = true;
         }
       } else {
-        if (this.appStateIsDragging) {
-          this.appStateIsDragging = false;
-          // this.appDataDraggedCard.isSelected = false;
-          this.appDataDraggedCard = this.appDataEmptyCard;
-        }
       }
 
       if (this.appStateIsHorizontalPan && this.appDataDraggedCardStartedInParkingLot && e.target.parentElement.parentElement.id === 'parking') {
@@ -767,6 +762,12 @@ var app = new Vue({
       }
       if (this.appStateIsHorizontalPan) {
         this.ApplyInertia();
+      }
+
+      if (this.appStateIsHorizontalPan) {
+        // this.appDataDraggedCard.isSelected = false;
+        // this.appDataDraggedCard = this.appDataEmptyCard;
+        this.appStateIsDragging = false;
       }
       this.appStateIsHorizontalPan = false;
       this.appDataDraggedCardStartedInParkingLot = false;
