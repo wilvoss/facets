@@ -152,12 +152,12 @@
               <input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
             </callout>
           </leftright>
-          <!-- <leftright>
-            <p>Player ID # <small>Match this on all browsers</small></p>
+          <leftright>
+            <p>Player ID # <small style="max-width: unset">Match this on all browsers</small></p>
             <callout>
-              <input spellcheck="false" onpointerup="this.select()" inputmode="numeric" type="number" pattern="\d*" v-model="tempID" oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="8" />
+              <input title="Numbers only please." spellcheck="false" onpointerup="this.select()" inputmode="numeric" type="number" v-model="tempID" oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength); this.value = this.value.replace(/[^0-9]/g, '');" maxlength="8" />
             </callout>
-          </leftright> -->
+          </leftright>
 
           <h3>Guessing</h3>
           <checkbox title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{disabled: appStateForceAutoCheck, on: !tempAutoCheck}" @click="ToggleAutoCheck()">
