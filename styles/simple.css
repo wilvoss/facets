@@ -65,10 +65,10 @@ cards spot:nth-child(1) card words word:nth-child(2), cards spot:nth-child(1) ca
 spot {
     outline: 1.7px solid hsla(var(--hueGuessing), 100%, 40%, 1);
     border-radius: var(--borderRadius);
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
-ghost card {
+card {
     border-radius: var(--borderRadius);
 }
 
