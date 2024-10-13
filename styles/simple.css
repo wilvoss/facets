@@ -36,11 +36,11 @@ app {
 }
 
 
-button.secondary {
+/* button.secondary {
     color: black;
     border-color: hsla(var(--messageColorHSL), .7);
     background-color: white;
-}
+} */
 
 message {
     text-shadow: none;
