@@ -548,6 +548,10 @@ wrapper message {
     display: block;
 }
 
+parking .anticlockwise, cards .anticlockwise {
+    display: flex;
+}
+
 rotators, tray, hints {
     display: flex;
     justify-content: center;
@@ -674,6 +678,16 @@ rotators button {
     line-height: 100%;
     background: none;
     padding: calc(1.25 * var(--defaultGap));
+    /* background-color: red; */
+}
+
+spot rotators button {
+    display: flex;
+    justify-content: end;
+    align-items: start;
+    width: calc(.3 * var(--cardSize));
+    height: calc(.3 * var(--cardSize));
+
 }
 
 rotators button icon {
@@ -750,7 +764,7 @@ spot.empty rotators, spot.empty:hover rotators, .guessing spot.empty:hover rotat
 
 spot rotators:last-of-type {
     scale: -1;
-    transform: translateY(28px);
+    transform: translateY(calc(.3 * var(--cardSize)));
 }
 
 spot rotators button, spot.empty rotators button:hover {
@@ -1417,6 +1431,10 @@ version {
 
 .focuser {
     display: none;
+}
+
+app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators button, .dragging input, .dragging words, .dragging word, .dragging rotators, .dragging spot.empty card {
+    cursor: grabbing;
 }
 
 @media screen and (max-height:844px) {
