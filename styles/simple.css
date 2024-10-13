@@ -1,5 +1,5 @@
 :root {
-    --hueMainSource: 140;
+    /* --hueMainSource: 140;
     --hueMain: 140;
     --hueTheme: 140;
     --hueCreating: 195;
@@ -27,12 +27,9 @@
     --textureSource: radial-gradient(circle at center 400px, hsla(var(--appBackgroundDarkestHSL), .7) 1%, hsla(var(--appBackgroundDarkestHSL), .7) 40%, hsla(var(--appBackgroundHSL), 1) 80%);
     --texture2: var(var(--textureSource));
     --textureSize: cover;
-    --textureBlendMode: normal;
+    --textureBlendMode: normal; */
 }
 
-html, body {
-    background: hsl(0, 0%, 97%);
-}
 
 app {
     background-image: none;
@@ -43,11 +40,6 @@ button.secondary {
     color: black;
     border-color: hsla(var(--messageColorHSL), .7);
     background-color: white;
-}
-
-modal controls {
-    background-color: hsla(var(--messageColorHSL), .7);
-    border-color: hsla(var(--messageColorHSL), .7);
 }
 
 message {
@@ -65,14 +57,21 @@ cards {
     transform: translateY(54px);
 }
 
+
 cards spot:nth-child(1) card words word:nth-child(2), cards spot:nth-child(1) card words word:nth-child(3), cards spot:nth-child(2) card words word:nth-child(3), cards spot:nth-child(2) card words word:nth-child(4), cards spot:nth-child(3) card words word:nth-child(1), cards spot:nth-child(3) card words word:nth-child(2), cards spot:nth-child(4) card words word:nth-child(1), cards spot:nth-child(4) card words word:nth-child(4) {
     opacity: 1;
 }
 
 spot {
-    /* outline-color: hsla(var(--hueGuessing), 100%, 40%, .7); */
-    background-color: white;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, .05);
+    outline: 1.7px solid hsla(var(--hueGuessing), 100%, 40%, 1);
+
+}
+
+spot.empty, parking spot.empty, .reviewing.guessing parking spot.empty, .creating parking spot.empty {
+    outline-color: hsla(var(--hueGuessing), 100%, 40%, 1);
+    outline-style: dashed;
+    background: none;
+    /* background-color: white; */
 }
 
 .multicolor.creating diamond.back, diamond.back, .multicolor.reviewing diamond.back, .multicolor.guessing diamond.back {
@@ -84,20 +83,6 @@ spot {
 tray diamond {
     background: none;
     background-image: none;
-    /* mask-image: none; */
-}
-
-hints hint input {
-    transform: rotateX(0deg) rotateY(0deg);
-    transform-style: preserve-3d;
-    text-shadow: 0px -1px 1px hsla(var(--appBackgroundDarkestHSL), .6);
-    font-size: 120%;
-    /* border-bottom: 1px dashed hsl(var(--hueMain), 0%, 80%); */
-}
-
-cards card, .multicolor.guessing cards card, .reviewing cards card {
-    color: hsl(var(--hueMain), 100%, 14%);
-    /* color: hsl(var(--hueMain), 100%, 86%); */
 }
 
 card word {
@@ -115,94 +100,73 @@ card word {
     line-height: 100%;
 }
 
-.multicolor.creating card {
-    color: hsl(var(--hueCreating), 100%, 14%);
-    /* color: hsl(var(--hueCreating), 100%, 86%); */
+card, tray card, parking card, .multicolor.creating card, .multicolor.guessing card, .multicolor.guessing.reviewing card, .multicolor.solved.guessing card, card.ghost, card.ghost.empty, .guessing card.ghost.empty, .reviewing card.ghost.empty, .multicolor.creating card.ghost, .multicolor.guessing card.ghost, .multicolor.guessing.solved card.ghost, .multicolor.reviewing card.ghost, cards card, .multicolor.guessing cards card, .reviewing cards card {
+    color: black;
+    background: white;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, .1);
+    border: none;
 }
 
-.multicolor.guessing card {
-    color: hsl(var(--hueGuessing), 100%, 14%);
-    /* color: hsl(var(--hueGuessing), 94%, 90%); */
-}
-
-.multicolor.guessing.reviewing card {
-    color: hsl(var(--hueReviewing), 100%, 14%);
-    /* color: hsl(var(--hueReviewing), 94%, 90%); */
-}
-
-.multicolor.solved.guessing card {
-    color: hsl(var(--hueSolved), 100%, 14%);
-    /* color: hsl(var(--hueSolved), 94%, 90%); */
+wrapper parking spot.empty card, .portrait wrapper.mobile parking spot.empty card, cards spot.empty card, .multicolor.guessing cards spot.empty card, .reviewing cards spot.empty card, parking spot.empty card, .multicolor.guessing spot.empty card, .multicolor.creating spot.empty card, .multicolor.reviewing spot.empty card {
+    background: none;
+    box-shadow: none;
 }
 
 card.ghost, card.ghost.empty, .guessing card.ghost.empty, .reviewing card.ghost.empty {
-    border-color: hsla(var(--hueMain), 100%, 40%, .7);
-}
-
-
-.multicolor.creating card.ghost {
-    border: 1px solid hsla(var(--hueMain), 100%, 40%, .7);
-}
-
-.multicolor.guessing card.ghost {
-    border: 1px solid hsla(var(--hueMain), 100%, 40%, .7);
-}
-
-.multicolor.guessing.solved card.ghost {
-    border: 1px solid hsla(var(--hueMain), 100%, 70%, .7);
-}
-
-.multicolor.reviewing card.ghost {
-    border: 1px solid hsla(var(--hueMain), 100%, 70%, .7);
+    opacity: .7;
 }
 
 hints hint input {
     text-shadow: 0px 1px 1px hsla(var(--appBackgroundDarkestHSL), .6);
+    transform: unset;
 }
 
-
 .multicolor.creating hints hint input, .multicolor.creating hints hint input:disabled {
-    color: hsla(var(--hueCreating), 100%, 36%, 1);
+    color: hsla(var(--appForegroundHSL), 1);
 }
 
 hints hint input:disabled {
-    color: hsl(var(--hueGuessing), 100%, 32%);
+    color: hsla(var(--appForegroundHSL), 1);
 }
 
 .multicolor.creating hints hint input::placeholder {
-    color: hsla(var(--hueCreating), 70%, 60%, 1);
+    color: hsla(var(--appForegroundHSL), 1);
 }
 
 .multicolor.guessing hints hint input:disabled {
     opacity: 1;
-    color: hsl(var(--hueGuessing), 90%, 42%);
+    color: hsla(var(--appForegroundHSL), 1);
 }
 
 .multicolor.guessing.reviewing hints hint input:disabled {
-    color: hsl(var(--hueReviewing), 60%, 50%);
+    color: hsla(var(--appForegroundHSL), 1);
 }
 
 .multicolor.guessing.solved hints hint input:disabled {
-    color: hsl(var(--hueSolved), 60%, 60%);
+    color: hsla(var(--appForegroundHSL), 1);
 }
 
 .multicolor.guessing parking spot, .multicolor.guessing.reviewing parking spot {
-    outline-color: hsla(var(--hueMain), 100%, 40%, .7)
+    outline-color: hsla(var(--hueMain), 100%, 40%, 1)
 }
 
-spot rotators button icon {
-    background: hsla(var(--appForegroundDiminishedHSL), .2);
+spot rotators button icon, .guessing spot:hover rotators button icon {
+    background: hsla(var(--appForegroundDiminishedHSL), 0);
+}
+
+parking {
+    opacity: .9;
 }
 
 parking spot rotators button icon {
-    background: hsla(var(--hueMain), 100%, 40%, 0.46);
+    background: hsla(var(--hueMain), 100%, 40%, 0);
 }
 
 .multicolor.creating parking spot rotators button icon,
 .multicolor.guessing parking spot rotators button icon,
 .multicolor.reviewing parking spot rotators button icon,
 .multicolor.solved.guessing parking spot rotators button icon {
-    background: hsla(var(--hueMain), 100%, 0%, 0.46);
+    background: hsla(var(--hueMain), 100%, 0%, 0);
 }
 
 
@@ -240,10 +204,9 @@ button.update icon {
 }
 
 .greenText {
-    color: hsl(var(--hueGuessing), 80%, 34%)
+    color: hsla(var(--appForegroundHSL), 1);
 }
 
 .blueText {
-    color: hsl(var(--hueCreating), 100%, 48%);
-
+    color: hsla(var(--appForegroundHSL), 1);
 }

@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.0.161',
+    appDataVersion: '1.0.162',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -75,6 +75,7 @@ var app = new Vue({
     userSettingsAutoCheck: false,
     userSettingsUseExtraCard: false,
     userSettingsUsesLightTheme: false,
+    userSettingsUsesSimplifiedTheme: false,
     userSettingsUseMultiColoredGems: true,
     userSettingsUseWordSetThemes: false,
     userSettingsStreaks: [],
@@ -86,6 +87,7 @@ var app = new Vue({
     tempShareURLCode: '',
     tempUseMultiColoredGems: true,
     tempUserSettingsUsesLightTheme: false,
+    tempUserSettingsUsesSimplifiedTheme: false,
     tempAutoCheck: false,
     tempUseWordSetThemes: false,
     tempWordSetName: '',
@@ -115,6 +117,10 @@ var app = new Vue({
       } else {
         document.getElementById('themeColor').content = 'rgb(0, 9, 15)';
       }
+    },
+
+    ToggleUseSimplifedTheme(_value) {
+      this.userSettingsUsesSimplifiedTheme = _value;
     },
 
     ToggleFocus() {
@@ -147,6 +153,11 @@ var app = new Vue({
     ToggleTempUseLightTheme() {
       note('ToggleTempUseLightTheme() called');
       this.tempUserSettingsUsesLightTheme = !this.tempUserSettingsUsesLightTheme;
+    },
+
+    ToggleTempUseSimplifiedTheme() {
+      note('ToggleTempUseSimplifiedTheme() called');
+      this.tempUserSettingsUsesSimplifiedTheme = !this.tempUserSettingsUsesSimplifiedTheme;
     },
 
     ToggleTempUsePortraitLayout() {
@@ -697,6 +708,13 @@ var app = new Vue({
         this.ToggleUseLightTheme(JSON.parse(userSettingsUsesLightTheme));
         this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
       }
+
+      let userSettingsUsesSimplifiedTheme = localStorage.getItem('userSettingsUsesSimplifiedTheme');
+      if (userSettingsUsesSimplifiedTheme !== undefined && userSettingsUsesSimplifiedTheme !== null) {
+        this.ToggleUseSimplifedTheme(JSON.parse(userSettingsUsesSimplifiedTheme));
+        this.tempUserSettingsUsesSimplifiedTheme = this.userSettingsUsesSimplifiedTheme;
+      }
+
       let userSettingsAutoCheck = localStorage.getItem('autoCheck');
       if (userSettingsAutoCheck !== undefined && userSettingsAutoCheck !== null) {
         this.userSettingsAutoCheck = JSON.parse(userSettingsAutoCheck);
@@ -810,6 +828,7 @@ var app = new Vue({
       this.tempUseExtraCard = this.userSettingsUseExtraCard;
       this.tempShowCatChooser = this.userSettingsShowCatChooser;
       this.ToggleUseLightTheme(this.userSettingsUsesLightTheme);
+      this.ToggleUseSimplifedTheme(this.userSettingsUsesSimplifiedTheme);
       this.tempAutoCheck = this.userSettingsAutoCheck;
     },
 
@@ -848,6 +867,7 @@ var app = new Vue({
         this.userSettingsShowCatChooser = this.tempShowCatChooser;
         this.userSettingsUseExtraCard = this.tempUseExtraCard;
         this.ToggleUseLightTheme(this.tempUserSettingsUsesLightTheme);
+        this.ToggleUseSimplifedTheme(this.tempUserSettingsUsesSimplifiedTheme);
         this.userSettingsAutoCheck = this.tempAutoCheck;
         this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
         this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
@@ -857,6 +877,7 @@ var app = new Vue({
         localStorage.setItem('userID', this.appDataPlayerCurrent.id);
         localStorage.setItem('useWordSetThemes', this.userSettingsUseWordSetThemes);
         localStorage.setItem('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
+        localStorage.setItem('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
         localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
         localStorage.setItem('autoCheck', this.userSettingsAutoCheck);
         localStorage.setItem('useMultiColoredGems', this.userSettingsUseMultiColoredGems);

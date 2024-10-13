@@ -42,7 +42,7 @@
   <body>
     <app id="app" v-cloak :class="{multicolor: userSettingsUseMultiColoredGems, solved: currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, guessing: appStateIsGuessing, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}" @pointerdown="HandleBodyPointerDown(event)" @pointerup="HandleBodyPointerUp(event, appStateIsDragging ? appDataDraggedCard : getSelectedCard)">
       <link rel="stylesheet" v-if="userSettingsUsesLightTheme" href="styles/light.css" media="screen" />
-      <!-- <link rel="stylesheet" href="styles/simple.css" media="screen" /> -->
+      <link rel="stylesheet" v-if="userSettingsUsesSimplifiedTheme" href="styles/simple.css" media="screen" />
       <link rel="stylesheet" v-if="userSettingsFocus && (appStateIsGuessing || appDataPlayerCurrent.role === 'reviewer')" href="styles/focus.min.css" media="screen" />
       <modal v-if="appStateShowOOBE" class="tutorial">
         <h2>Quick Guide</h2>
@@ -167,10 +167,16 @@
           <small>Enable this to send your guesses to your friend instead of automatically getting feedback (disabled while solving anonymous puzzle).</small>
 
           <h3>Appearance</h3>
-          <checkbox :class="{on: tempUserSettingsUsesLightTheme}" @click="ToggleTempUseLightTheme()">
-            Light theme
-            <toggle></toggle>
-          </checkbox>
+          <leftright>
+            <checkbox :class="{on: tempUserSettingsUsesLightTheme}" @click="ToggleTempUseLightTheme()">
+              Light theme
+              <toggle></toggle>
+            </checkbox>
+            <checkbox :class="{on: tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseSimplifiedTheme()">
+              Simple visuals
+              <toggle></toggle>
+            </checkbox>
+          </leftright>
           <checkbox :class="{on: tempUseWordSetThemes}" @click="ToggleTempUseWordSetThemes()">
             Category backgrounds
             <toggle></toggle>
