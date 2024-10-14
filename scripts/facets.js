@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.1.001',
+    appDataVersion: '1.1.002',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -113,7 +113,7 @@ var app = new Vue({
     ToggleUseLightTheme(_value) {
       this.userSettingsUsesLightTheme = _value;
       if (this.userSettingsUsesLightTheme) {
-        document.getElementById('themeColor').content = 'rgb(240, 255, 245)';
+        document.getElementById('themeColor').content = 'hsl(140, 100%, 92%)';
       } else {
         document.getElementById('themeColor').content = 'rgb(0, 9, 15)';
       }
