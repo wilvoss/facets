@@ -23,7 +23,6 @@ cards spot:nth-child(1) card words word:nth-child(2), cards spot:nth-child(1) ca
 }
 
 spot {
-    /* border-radius: var(--borderRadius); */
     outline: none;
     border: none;
     border-radius: var(--borderRadius);
@@ -41,7 +40,7 @@ spot.empty, parking spot.empty card, .reviewing.guessing parking spot.empty card
     background: none;
 }
 
-.multicolor.creating diamond.back, diamond.back, .multicolor.reviewing diamond.back, .multicolor.guessing diamond.back {
+.multicolor.creating diamond.back, diamond.back, .multicolor.reviewing diamond.back, .multicolor.guessing diamond.back, .multicolor.solved.guessing diamond.back {
     background: none;
     background-image: none;
 }
