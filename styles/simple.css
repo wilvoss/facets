@@ -29,6 +29,7 @@ spot {
 
 .portrait.simple wrapper.mobile parking spot {
     outline-width: 0px;
+    background: none;
 }
 
 .portrait wrapper.mobile parking spot.empty {
