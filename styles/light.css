@@ -23,6 +23,8 @@
     --trayGuessingBackgroundHSL: var(--hueGuessing), 80%, 50%;
     --trayReviewingBackgroundHSL: var(--hueReviewing), 100%, 70%;
     --traySolvedBackgroundHSL: var(--hueSolved), 86%, 73%;
+    --simpleCardForegroundHSL: 0, 0%, 0%;
+    --simpleCardBackgroundHSL: 0, 100%, 100%;
 
     --textureSource: radial-gradient(circle at center 400px, hsla(var(--appBackgroundDarkestHSL), .7) 1%, hsla(var(--appBackgroundDarkestHSL), .7) 40%, hsla(var(--appBackgroundHSL), 1) 80%);
     --texture2: var(var(--textureSource));

@@ -45,7 +45,7 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
         width: calc(100% - 80px);
         scale: 1;
         overflow-y: auto;
-        padding: 1px 40px 100px;
+        padding: 2px 40px 100px;
         justify-content: start;
         mask-image: linear-gradient(90deg, transparent, red 40px, red calc(100% - 40px), transparent);
     }

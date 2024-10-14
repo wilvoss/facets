@@ -39,6 +39,8 @@
     --trayGuessingBackgroundHSL: var(--hueGuessing), 100%, 40%;
     --trayReviewingBackgroundHSL: var(--hueReviewing), 100%, 54%;
     --traySolvedBackgroundHSL: var(--hueSolved), 100%, 48%;
+    --simpleCardBackgroundHSL: 0, 0%, 0%;
+    --simpleCardForegroundHSL: 0, 100%, 100%;
 
     --longTransition: 400ms;
     --mediumTransition: 250ms;
