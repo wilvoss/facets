@@ -67,10 +67,14 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
 
     }
 
-    .portrait wrapper.mobile parking spot card {
+    .portrait wrapper.mobile parking spot card, .portrait wrapper.mobile parking spot rotators {
         width: calc(var(--scale) * var(--cardSize));
         height: calc(var(--scale) * var(--cardSize));
 
+    }
+
+    .portrait wrapper.mobile parking spot rotators:last-of-type {
+        transform: translateY(calc(var(--scale) * var(--cardSize)));
     }
 
     parking words word {

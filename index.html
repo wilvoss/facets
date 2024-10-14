@@ -365,7 +365,24 @@
         </parking>
       </wrapper>
       <wrapper class="mobile" :class="{extra: currentGameGuessingCardCount === 5}">
-        <parking id="parking">
+        <parking id="parking" v-if="userSettingsFocus">
+          <spot v-for="(card, index) in appDataCardsParked" v-if="index < currentGameGuessingCardCount" :class="{empty: card.words.length === 0, selected: card.isSelected}">
+            <rotators>
+              <button aria-label="Rotate Tray Clockwise" class="clockwise" @pointerdown="RotateCard(event, card, 1)"><icon class="rotate"></icon></button>
+              <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise" @pointerdown="RotateCard(event, card, -1)"><icon class="rotate"></icon></button>
+            </rotators>
+            <card @pointerup="HandleCardPointerUp(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
+              <words>
+                <word v-for="word in card.words">{{word.value}}</word>
+              </words>
+            </card>
+            <rotators>
+              <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateCard(event, card, 1)"><icon class="rotate"></icon></button>
+              <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise" @click="RotateCard(event, card, -1)"><icon class="rotate"></icon></button>
+            </rotators>
+          </spot>
+        </parking>
+        <parking id="parking" v-if="!userSettingsFocus">
           <spot v-for="(card, index) in appDataCardsParked" v-if="index < currentGameGuessingCardCount" :class="{empty: card.words.length === 0, selected: card.isSelected}">
             <card @click="RotateCard(event, card, -1)" @pointerup="HandleCardPointerUp(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
               <words>
