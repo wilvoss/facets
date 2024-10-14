@@ -17,7 +17,6 @@ cards {
     transform: translateY(54px);
 }
 
-
 cards spot:nth-child(1) card words word:nth-child(2), cards spot:nth-child(1) card words word:nth-child(3), cards spot:nth-child(2) card words word:nth-child(3), cards spot:nth-child(2) card words word:nth-child(4), cards spot:nth-child(3) card words word:nth-child(1), cards spot:nth-child(3) card words word:nth-child(2), cards spot:nth-child(4) card words word:nth-child(1), cards spot:nth-child(4) card words word:nth-child(4) {
     opacity: 1;
 }
@@ -26,6 +25,14 @@ spot {
     outline: none;
     border: none;
     border-radius: var(--borderRadius);
+}
+
+.portrait.simple wrapper.mobile parking spot {
+    outline-width: 0px;
+}
+
+.portrait wrapper.mobile parking spot.empty {
+    outline-width: 2px;
 }
 
 card {

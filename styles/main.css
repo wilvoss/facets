@@ -991,7 +991,7 @@ ghost card.show {
 }
 
 card.rotating {
-    transition: var(--shortTransition) ease-in-out all;
+    transition: var(--mediumTransition) ease-in-out all;
 }
 
 hints {

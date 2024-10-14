@@ -43,7 +43,7 @@
     <app
       id="app"
       v-cloak
-      :class="{multicolor: userSettingsUseMultiColoredGems, solved: currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, dragging: appStateIsDragging, guessing: appStateIsGuessing, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}"
+      :class="{multicolor: userSettingsUseMultiColoredGems, solved: currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, dragging: appStateIsDragging, guessing: appStateIsGuessing, simple: userSettingsUsesSimplifiedTheme, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}"
       @pointerdown="HandleBodyPointerDown(event)"
       @pointerup="HandleBodyPointerUp(event, appStateIsDragging ? appDataDraggedCard : getSelectedCard)"
     >
