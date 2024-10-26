@@ -255,14 +255,15 @@
       <wrapper>
         <button :class="{show: appStateIsNewVersionAvailable && (appStateIsGuessing || (!appStateIsGuessing && getNumberOfHintsThatHaveBeenFilled === 0))}" title="There is an update available. Click to apply the update." class="pulse update inline" @click="HandleUpdateAppButtonClick">New Update<icon class="download"></icon></button>
         <controls>
-          <button class="inline" @click="HandleNewGameClick()">New</button>
+          <button class="inline" @click="HandleNewGameClick()">Create Game</button>
         </controls>
         <header>
           <h1 @click="ToggleFocus()">{{appDataGameName}}</h1>
         </header>
         <controls>
           <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: currentGameSolutionGuessing === currentGameSolutionActual && currentGameSolutionGuessing !== '' || ( getNumberOfHintsThatHaveBeenFilled !== 4 && appDataPlayerCurrent.role === 'creator') || (getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && appDataPlayerCurrent.role !== 'reviewer' && appDataPlayerCurrent.id !== appDataPlayerCreator.id)}">
-            <icon :class="{show: appStateIsGettingTinyURL}" class="spinner"></icon><span v-if="!appStateIsGettingTinyURL">{{getSubmitButtonText}}</span>
+            <icon :class="{show: appStateIsGettingTinyURL}" class="spinner"></icon>
+            <span v-if="!appStateIsGettingTinyURL">{{getSubmitButtonText}}</span>
           </button>
         </controls>
       </wrapper>

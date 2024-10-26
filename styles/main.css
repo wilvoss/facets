@@ -638,7 +638,7 @@ modal controls button {
 }
 
 wrapper controls {
-    width: 100px;
+    width: auto;
     justify-content: start;
 }
 
@@ -648,13 +648,13 @@ wrapper controls:last-of-type {
 
 wrapper controls button {
     background: none;
-    font-size: 150%;
+    font-size: 145%;
     height: 100%;
     padding: 10px var(--defaultGap) 10px 0px;
 }
 
 wrapper controls:last-of-type button {
-    padding: 10px 0px 10px var(--defaultGap);
+    padding: 10px 0px;
 }
 
 rotators {
@@ -1492,8 +1492,12 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     }
 
     wrapper controls {
-        width: 50px;
+        /* width: 50px; */
         padding: 0 calc(1 * var(--defaultGap));
+    }
+
+    wrapper controls button {
+        font-size: 125%;
     }
 
     wrapper.main {
