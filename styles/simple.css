@@ -6,6 +6,25 @@ message {
     text-shadow: none;
 }
 
+.guessing.solved message {
+    animation: bounce 1s steps(10, start) infinite;
+    -webkit-animation: bounce 1s steps(10, start) infinite;
+    color: hsla(var(--hueSolved), 100%, 70%, 1);
+}
+
+
+@keyframes bounce {
+
+
+    50% {
+        /* transform: translateY(-2px); */
+        scale: 1.02;
+    }
+
+
+
+}
+
 tray {
     background-image: none;
     mask-image: none;
@@ -78,6 +97,10 @@ card, tray card, parking card, .multicolor.creating card, .multicolor.guessing c
     background: hsl(var(--simpleCardBackgroundHSL));
     box-shadow: 0px 3px 10px hsla(0, 0%, 0%, .2);
     border: none;
+}
+
+.multicolor.guessing cards card {
+    outline: 1px solid hsla(var(--hueSolved), 100%, 70%, 1);
 }
 
 wrapper parking spot.empty card, .portrait wrapper.mobile parking spot.empty card, cards spot.empty card, .multicolor.guessing cards spot.empty card, .reviewing cards spot.empty card, parking spot.empty card, .multicolor.guessing spot.empty card, .multicolor.creating spot.empty card, .multicolor.reviewing spot.empty card {
