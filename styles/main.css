@@ -319,7 +319,7 @@ icon.spinner {
     animation: spin 1s steps(10, start) infinite;
     -webkit-animation: spin 1s steps(10, start) infinite;
     transition: var(--mediumTransition) linear opacity;
-    transition-delay: 50ms;
+    transition-delay: 0ms;
     opacity: 0;
 }
 
