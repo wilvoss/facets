@@ -313,9 +313,11 @@ icon.info {
 
 icon.spinner {
     mask-image: url(../images/icon-spinner.svg);
+    mask-size: calc(.75* var(--mediumIconSize)) calc(.75* var(--mediumIconSize));
+    -webkit-mask-size: calc(.75* var(--mediumIconSize)) calc(.75* var(--mediumIconSize));
     -webkit-mask-image: url(../images/icon-spinner.svg);
-    animation: spin 1s steps(11, start) infinite;
-    -webkit-animation: spin 1s steps(11, start) infinite;
+    animation: spin 1s steps(10, start) infinite;
+    -webkit-animation: spin 1s steps(10, start) infinite;
     transition: var(--mediumTransition) linear opacity;
     transition-delay: 50ms;
     opacity: 0;
@@ -1492,7 +1494,7 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     }
 
     wrapper controls {
-        /* width: 50px; */
+        width: 50px;
         padding: 0 calc(1 * var(--defaultGap));
     }
 
