@@ -263,7 +263,7 @@
         <controls>
           <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: currentGameSolutionGuessing === currentGameSolutionActual && currentGameSolutionGuessing !== '' || ( getNumberOfHintsThatHaveBeenFilled !== 4 && appDataPlayerCurrent.role === 'creator') || (getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && appDataPlayerCurrent.role !== 'reviewer' && appDataPlayerCurrent.id !== appDataPlayerCreator.id)}">
             <icon :class="{show: appStateIsGettingTinyURL}" class="spinner"></icon>
-            <span v-if="!appStateIsGettingTinyURL">{{getSubmitButtonText}}</span>
+            <span v-if="!appStateIsGettingTinyURL" v-html="getSubmitButtonText"></span>
           </button>
         </controls>
       </wrapper>

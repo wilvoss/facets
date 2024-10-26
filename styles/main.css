@@ -228,9 +228,13 @@ button.update icon {
     background: hsl(var(--appForegroundHSL));
 }
 
+header {
+    flex: 1;
+}
+
 header h1 {
     margin: 0px;
-    color: hsla(var(--appForegroundHSL), 0.8);
+    color: hsla(var(--appForegroundHSL), 1);
 }
 
 icon {
@@ -498,7 +502,6 @@ wrapper {
 wrapper:first-of-type {
     padding: calc(.5 * var(--defaultGap)) 0 0;
     justify-content: center;
-    max-width: unset;
     min-height: unset;
     align-items: center;
     gap: calc(2.5 * var(--defaultGap));
@@ -640,23 +643,14 @@ modal controls button {
 }
 
 wrapper controls {
-    width: auto;
-    justify-content: start;
-}
-
-wrapper controls:last-of-type {
-    justify-content: end;
+    flex: 1;
+    justify-content: center;
 }
 
 wrapper controls button {
     background: none;
     font-size: 145%;
     height: 100%;
-    padding: 10px var(--defaultGap) 10px 0px;
-}
-
-wrapper controls:last-of-type button {
-    padding: 10px 0px;
 }
 
 rotators {
@@ -1493,12 +1487,20 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         justify-content: space-between;
     }
 
+    header {
+        display: flex;
+        justify-content: center;
+        flex: 1;
+        flex-basis: 170px;
+    }
+
     wrapper controls {
-        width: 50px;
+        flex: 1;
         padding: 0 calc(1 * var(--defaultGap));
     }
 
     wrapper controls button {
+        width: 88px;
         font-size: 125%;
     }
 
