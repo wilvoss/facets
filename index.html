@@ -92,14 +92,12 @@
           <h3>Reviewing</h3>
           <p>If your friends have "Call and response" enabled in settings, they'll send their guesses back to you. When reviewing, remove incorrectly placed cards from the gem.</p>
           <img :src="'./images/tut-4' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
-          <p>Click the <cta>SEND REPLY</cta> button to send the puzzle back, even if you are just giving them the solution.</p>
+          <p>Click the <cta>SEND BACK</cta> button to send the puzzle back, even if you are just giving them the solution.</p>
           <h3>Controls</h3>
           <p>A card is a group of four words around the edges of a small outlined square.</p>
           <p>You can drag cards from one spot to another spot. While guessing or reviewing, you can rotate the cards by tapping on the curved arrows in the corner of each card.</p>
           <img src="./images/rotator-icon.svg" />
           <p>The gem has 4 large clues around its edges. At any time, you can tap on a clue or either of the two large curved arrows above the gem to rotate it.</p>
-          <h3>Advanced</h3>
-          <p>If you play on multiple browsers, be sure to change your appDataPlayerCurrent ID # in settings to be the same on each so that you can review any game you sent to anyone on any device 🤓.</p>
         </section>
         <controls><button @click="ToggleShowTutorial(event)">Got it</button></controls>
       </modal>
