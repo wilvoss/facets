@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.1.013',
+    appDataVersion: '1.1.014',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -1617,6 +1617,7 @@ var app = new Vue({
     },
     getSubmitButtonText: function () {
       let text = 'Send Guess';
+      text = this.appDataPlayerCurrent.role === 'reviewer' ? 'Send Reply' : text;
       if (this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
         text = this.userSettingsAutoCheck || this.appStateForceAutoCheck ? 'Auto Guess' : text;
         if (this.isChromeAndiOSoriPadOS && this.appDataShareURL.indexOf('facets.bigtentgames.com/game/?') !== -1) {
