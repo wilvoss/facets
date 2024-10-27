@@ -1511,7 +1511,7 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     }
 
     wrapper controls button {
-        width: 88px;
+        width: 80px;
         font-size: 125%;
     }
 
