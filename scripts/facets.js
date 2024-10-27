@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.1.014',
+    appDataVersion: '1.1.015',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -1617,13 +1617,22 @@ var app = new Vue({
     },
     getSubmitButtonText: function () {
       let text = 'Send Guess';
-      text = this.appDataPlayerCurrent.role === 'reviewer' ? 'Send Reply' : text;
+
+      if (this.appDataPlayerCurrent.role === 'reviewer') {
+        text = 'Send Reply';
+      } else if (this.appDataPlayerCurrent.role === 'creator') {
+        text = 'Send Game';
+      }
+
       if (this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
-        text = this.userSettingsAutoCheck || this.appStateForceAutoCheck ? 'Auto Guess' : text;
-        if (this.isChromeAndiOSoriPadOS && this.appDataShareURL.indexOf('facets.bigtentgames.com/game/?') !== -1) {
+        if (this.userSettingsAutoCheck || this.appStateForceAutoCheck) {
+          text = 'Auto Guess';
+        }
+        if (this.isChromeAndiOSoriPadOS && this.appDataShareURL.includes('facets.bigtentgames.com/game/?')) {
           text = 'Copy';
         }
       }
+
       return text;
     },
     getCreatedGamesWithWordSetNames: function () {
