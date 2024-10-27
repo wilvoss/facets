@@ -177,11 +177,12 @@ button.small {
     cursor: pointer;
     text-align: center;
     background: none;
-    color: hsla(var(--linkColorDarkHSL), 1);
+    color: hsla(var(--linkColorDarkHSL), .8);
     display: flex;
     text-transform: uppercase;
     letter-spacing: 1px;
     opacity: 1;
+    text-wrap: nowrap;
 }
 
 button.update {
@@ -326,6 +327,7 @@ icon.spinner {
     transition: var(--mediumTransition) linear opacity;
     transition-delay: 0ms;
     opacity: 0;
+    position: absolute;
 }
 
 icon.spinner.show {
@@ -1496,6 +1498,7 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     wrapper:first-of-type {
         gap: 0px;
         justify-content: space-between;
+        padding: var(--defaultGap) 0 calc(.5 * var(--defaultGap));
     }
 
     header {
@@ -1512,6 +1515,7 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
 
     wrapper controls button {
         width: 80px;
+        padding: 0px var(--defaultGap);
         font-size: 125%;
     }
 
@@ -1541,7 +1545,7 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
 
     subtitle {
         gap: 8px;
-        padding-bottom: 0px;
+        padding-bottom: var(--defaultGap);
     }
 
     subtitle button.small {

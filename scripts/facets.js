@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.1.018',
+    appDataVersion: '1.1.019',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -72,28 +72,23 @@ var app = new Vue({
     currentGameSolutionGuessing: [],
     currentGameWordSet: WordSets.find((m) => m.id === '100'),
     // user settings
-    userSettingsAutoCheck: false,
     userSettingsUseExtraCard: false,
     userSettingsUsesLightTheme: false,
     userSettingsUsesSimplifiedTheme: false,
     userSettingsUseMultiColoredGems: true,
     userSettingsUseWordSetThemes: false,
     userSettingsStreaks: [],
-    userSettingsShowCatChooser: true,
     userSettingsFocus: false,
     // temp user settings
     tempName: '',
     tempID: 0,
     tempShareURLCode: '',
-    tempUseMultiColoredGems: true,
     tempUserSettingsUsesLightTheme: false,
     tempUserSettingsUsesSimplifiedTheme: false,
-    tempAutoCheck: false,
     tempUseWordSetThemes: false,
     tempWordSetName: '',
     tempUsePortraitLayout: false,
     tempUseExtraCard: false,
-    tempShowCatChooser: true,
     tempWordSets: [],
     // DOM reference
     documentCssRoot: document.querySelector(':root'),
@@ -165,24 +160,9 @@ var app = new Vue({
       this.tempUsePortraitLayout = !this.tempUsePortraitLayout;
     },
 
-    ToggleTempUseMultiColoredGems() {
-      note('ToggleTempUsePortraitLayout() called');
-      this.tempUseMultiColoredGems = !this.tempUseMultiColoredGems;
-    },
-
     ToggleTempUseExtraCard() {
       note('ToggleTempUseExtraCard() called');
       this.tempUseExtraCard = !this.tempUseExtraCard;
-    },
-
-    ToggleTempShowCategoryChooser(_value) {
-      note('ToggleTempShowCategoryChooser() called');
-      this.tempShowCatChooser = !this.tempShowCatChooser;
-    },
-
-    ToggleAutoCheck() {
-      note('ToggleAutoCheck() called');
-      this.tempAutoCheck = !this.tempAutoCheck;
     },
 
     ShowCategoryPicker() {
@@ -521,7 +501,7 @@ var app = new Vue({
         this.appDataConfirmationObject = { message: 'Did they have the right answer?', target: 'correct' };
         this.appStateShowConfirmation = true;
       } else if (this.appStateIsGuessing) {
-        if ((this.appStateForceAutoCheck || this.userSettingsAutoCheck) && this.appDataPlayerCurrent.role !== 'reviewer' && this.appStateIsGuessing && this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
+        if (this.appStateForceAutoCheck && this.appDataPlayerCurrent.role !== 'reviewer' && this.appStateIsGuessing && this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
           this.IsCurrentGuessCorrect();
         } else {
           this.ShareBoard();
@@ -555,17 +535,8 @@ var app = new Vue({
 
     HandleNewGameClick() {
       note('HandleNewGameClick() called');
-      if (this.userSettingsShowCatChooser) {
-        this.GetCategoryNames();
-        this.tempShowCatChooser = this.userSettingsShowCatChooser;
-        this.appStateShowCatChooser = true;
-      } else if (this.appStateIsGuessing && this.appDataPlayerCurrent.role !== 'reviewer' && this.appDataPlayerCreator.id !== this.appDataPlayerCurrent.id) {
-        this.appStateIsModalShowing = true;
-        this.appDataConfirmationObject = { message: 'Are you sure you want <br/>to create a new game?', target: 'newgame' };
-        this.appStateShowConfirmation = true;
-      } else {
-        this.NewGame();
-      }
+      this.GetCategoryNames();
+      this.appStateShowCatChooser = true;
     },
 
     HandleYesNo(_target, _value) {
@@ -685,12 +656,6 @@ var app = new Vue({
         this.SetWordSetTheme(this.currentGameWordSet);
       }
 
-      let userSettingsShowCatChooser = localStorage.getItem('userSettingsShowCatChooser');
-      if (userSettingsShowCatChooser !== undefined && userSettingsShowCatChooser !== null) {
-        this.userSettingsShowCatChooser = JSON.parse(userSettingsShowCatChooser);
-        this.tempShowCatChooser = this.userSettingsShowCatChooser;
-      }
-
       if (this.appStateIsGuessing) {
         this.documentCssRoot.style.setProperty('--wordScale', this.currentGameGuessingWordSet.scale);
       } else {
@@ -714,19 +679,6 @@ var app = new Vue({
         this.ToggleUseSimplifedTheme(JSON.parse(userSettingsUsesSimplifiedTheme));
         this.tempUserSettingsUsesSimplifiedTheme = this.userSettingsUsesSimplifiedTheme;
       }
-
-      let userSettingsAutoCheck = localStorage.getItem('autoCheck');
-      if (userSettingsAutoCheck !== undefined && userSettingsAutoCheck !== null) {
-        this.userSettingsAutoCheck = JSON.parse(userSettingsAutoCheck);
-        this.tempAutoCheck = this.userSettingsAutoCheck;
-      }
-
-      let userSettingsUseMultiColoredGems = localStorage.getItem('useMultiColoredGems');
-      if (userSettingsUseMultiColoredGems !== undefined && userSettingsUseMultiColoredGems !== null) {
-        this.userSettingsUseMultiColoredGems = JSON.parse(userSettingsUseMultiColoredGems);
-        this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
-      }
-      this.CheckForServiceWorkerUpdate();
     },
 
     HandleBodyPointerUp(e, _card) {
@@ -824,12 +776,9 @@ var app = new Vue({
       this.appStateShowIntro = false;
       this.tempID = this.appDataPlayerCurrent.id;
       this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
-      this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
+      this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
       this.tempUseExtraCard = this.userSettingsUseExtraCard;
-      this.tempShowCatChooser = this.userSettingsShowCatChooser;
-      this.ToggleUseLightTheme(this.userSettingsUsesLightTheme);
-      this.ToggleUseSimplifedTheme(this.userSettingsUsesSimplifiedTheme);
-      this.tempAutoCheck = this.userSettingsAutoCheck;
+      this.tempUserSettingsUsesSimplifiedTheme = this.userSettingsUsesSimplifiedTheme;
     },
 
     HandleIntroButtonClick(e) {
@@ -864,23 +813,17 @@ var app = new Vue({
 
         this.appDataPlayerCurrent.id = this.tempID;
         this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
-        this.userSettingsShowCatChooser = this.tempShowCatChooser;
         this.userSettingsUseExtraCard = this.tempUseExtraCard;
         this.ToggleUseLightTheme(this.tempUserSettingsUsesLightTheme);
         this.ToggleUseSimplifedTheme(this.tempUserSettingsUsesSimplifiedTheme);
-        this.userSettingsAutoCheck = this.tempAutoCheck;
-        this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
         this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
         this.SetWordSetTheme(this.currentGameGuessingWordSet);
 
-        localStorage.setItem('userSettingsShowCatChooser', this.userSettingsShowCatChooser);
         localStorage.setItem('userID', this.appDataPlayerCurrent.id);
         localStorage.setItem('useWordSetThemes', this.userSettingsUseWordSetThemes);
         localStorage.setItem('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
         localStorage.setItem('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
         localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
-        localStorage.setItem('autoCheck', this.userSettingsAutoCheck);
-        localStorage.setItem('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
         localStorage.setItem('wordSet', this.currentGameWordSet.id);
       }
       this.appStateIsModalShowing = false;
@@ -1626,7 +1569,7 @@ var app = new Vue({
       }
 
       if (this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
-        if (this.userSettingsAutoCheck || this.appStateForceAutoCheck) {
+        if (this.appStateForceAutoCheck) {
           text = 'Check Now';
         }
         if (this.isChromeAndiOSoriPadOS && this.appDataShareURL.includes('facets.bigtentgames.com/game/?')) {

@@ -43,11 +43,12 @@
     <app
       id="app"
       v-cloak
-      :class="{multicolor: userSettingsUseMultiColoredGems, solved: currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, dragging: appStateIsDragging, guessing: appStateIsGuessing, simple: userSettingsUsesSimplifiedTheme, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}"
+      class="multicolor"
+      :class="{solved: currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, dragging: appStateIsDragging, guessing: appStateIsGuessing, simple: userSettingsUsesSimplifiedTheme, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}"
       @pointerdown="HandleBodyPointerDown(event)"
       @pointerup="HandleBodyPointerUp(event, appStateIsDragging ? appDataDraggedCard : getSelectedCard)"
     >
-      <link rel="stylesheet" v-if="userSettingsUsesLightTheme" href="styles/light.css" media="screen" />
+      <link rel="stylesheet" v-if="(userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme)" href="styles/light.css" media="screen" />
       <link rel="stylesheet" v-if="userSettingsUsesSimplifiedTheme" href="styles/simple.css" media="screen" />
       <link rel="stylesheet" v-if="userSettingsFocus && (appStateIsGuessing || appDataPlayerCurrent.role === 'reviewer')" href="styles/focus.min.css" media="screen" />
       <modal v-if="appStateShowOOBE" class="tutorial">
@@ -86,8 +87,8 @@
           <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with.</p>
           <p>Anatomy of a solved puzzle:</p>
           <img :src="'./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
-          <p v-if="!userSettingsAutoCheck">Click the <cta>SEND GUESS</cta> button to send your guess back to whoever sent it to you.</p>
-          <p v-if="userSettingsAutoCheck">Click the <cta>CHECK NOW</cta> button to automatically check your guess.</p>
+          <p v-if="!appStateForceAutoCheck">Click the <cta>SEND GUESS</cta> button to send your guess back to whoever sent it to you.</p>
+          <p v-if="appStateForceAutoCheck">Click the <cta>CHECK NOW</cta> button to automatically check your guess.</p>
           <h3>Reviewing</h3>
           <p>If your friends have "Call and response" enabled in settings, they'll send their guesses back to you. When reviewing, remove incorrectly placed cards from the gem.</p>
           <img :src="'./images/tut-4' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
@@ -152,54 +153,33 @@
       <modal v-if="appStateShowSettings">
         <section>
           <h2>Settings</h2>
-          <!-- <h3>Profile</h3> -->
+          <h3>Profile</h3>
           <leftright>
             <p>Your name</p>
             <callout>
               <input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
             </callout>
           </leftright>
-          <leftright>
-            <p>Player ID # <small style="max-width: unset">Match on all your browsers</small></p>
+          <!-- <leftright>
+            <p>Player ID # <small style="max-width: unset">Match on all browsers</small></p>
             <callout>
               <input title="Numbers only please." spellcheck="false" onpointerup="this.select()" inputmode="numeric" type="number" v-model="tempID" oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength); this.value = this.value.replace(/[^0-9]/g, '');" maxlength="8" />
             </callout>
-          </leftright>
-
-          <h3>Guessing</h3>
-          <checkbox title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{disabled: appStateForceAutoCheck, on: !tempAutoCheck}" @click="ToggleAutoCheck()">
-            Call and response
-            <toggle></toggle>
-          </checkbox>
-          <small>Enable this to send your guesses to your friend instead of automatically getting feedback (disabled while solving anonymous puzzle).</small>
+          </leftright> -->
 
           <h3>Appearance</h3>
-          <leftright>
-            <checkbox :class="{on: tempUserSettingsUsesLightTheme}" @click="ToggleTempUseLightTheme()">
-              Light theme
-              <toggle></toggle>
-            </checkbox>
-            <checkbox :class="{on: tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseSimplifiedTheme()">
-              Simple visuals
-              <toggle></toggle>
-            </checkbox>
-          </leftright>
+          <checkbox :class="{on: tempUserSettingsUsesLightTheme}" @click="ToggleTempUseLightTheme()">
+            Light theme
+            <toggle></toggle>
+          </checkbox>
+          <checkbox :class="{on: tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseSimplifiedTheme()">
+            Simple visuals
+            <toggle></toggle>
+          </checkbox>
           <checkbox :class="{on: tempUseWordSetThemes}" @click="ToggleTempUseWordSetThemes()">
             Category backgrounds
             <toggle></toggle>
           </checkbox>
-          <checkbox :class="{on: !tempUseMultiColoredGems}" @click="ToggleTempUseMultiColoredGems()">
-            Monocolored gem
-            <toggle></toggle>
-          </checkbox>
-          <small>Enable this if you want the gem to remain green when you are creating, guessing, or reviewing.</small>
-
-          <h3>Creating</h3>
-          <checkbox @click="ToggleTempShowCategoryChooser()" title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{on: tempShowCatChooser}">
-            Show "Game Options" screen
-            <toggle></toggle>
-          </checkbox>
-          <small>Enable this to have the option to change categories and difficulty when creating a new puzzle.</small>
         </section>
         <controls>
           <button class="secondary" @click="CancelSettings(event)">Cancel</button>
@@ -218,13 +198,6 @@
             Extra card
             <toggle></toggle>
           </checkbox>
-          <!-- <leftright>
-            <checkbox @click="ToggleTempShowCategoryChooser()" title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{on: !tempShowCatChooser}">
-              Hide this screen
-              <toggle></toggle>
-            </checkbox>
-          </leftright>
-          <small v-if="!tempShowCatChooser">You can turn this back on in preferences</small> -->
         </section>
         <controls>
           <button class="secondary" @click="appStateShowCatChooser = false">Cancel</button>
@@ -235,7 +208,7 @@
         <section>
           <h2>Recent Puzzles</h2>
           <p>Check here to play random puzzles recently created by players around the world.</p>
-          <icon v-if="appStateIsGettingLast10Games" class="spinner show"></icon>
+          <icon v-show="appStateIsGettingLast10Games" style="position: relative" class="spinner show"></icon>
           <message style="padding: calc(2 * var(--defaultGap)) 0" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0">
             <p>😢</p>
             <p>There are no recent puzzles to display.</p>
@@ -255,7 +228,6 @@
         </section>
       </modal>
       <wrapper>
-        <button :class="{show: appStateIsNewVersionAvailable && (appStateIsGuessing || (!appStateIsGuessing && getNumberOfHintsThatHaveBeenFilled === 0))}" title="There is an update available. Click to apply the update." class="pulse update inline" @click="HandleUpdateAppButtonClick">New Update<icon class="download"></icon></button>
         <controls>
           <button class="inline" @click="HandleNewGameClick()">Create Game</button>
         </controls>
