@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.1.017',
+    appDataVersion: '1.1.018',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -1620,7 +1620,7 @@ var app = new Vue({
       let text = 'Send Guess';
 
       if (this.appDataPlayerCurrent.role === 'reviewer') {
-        text = this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4 ? 'Send Final' : 'Send Back';
+        text = 'Send Back';
       } else if (this.appDataPlayerCurrent.role === 'creator') {
         text = 'Send Game';
       }
