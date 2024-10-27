@@ -99,7 +99,7 @@ card, tray card, parking card, .multicolor.creating card, .multicolor.guessing c
     border: none;
 }
 
-.multicolor.guessing cards card {
+.multicolor.solved.guessing cards card {
     outline: 1px solid hsla(var(--hueSolved), 100%, 70%, 1);
 }
 
