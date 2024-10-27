@@ -123,6 +123,7 @@ a, a:hover, a:focus, a:visited, a:active {
 a.padded {
     padding-top: calc(.5 * var(--defaultGap));
     padding-bottom: calc(.5 * var(--defaultGap));
+    width: 100%;
 }
 
 a.inline {
@@ -1052,9 +1053,11 @@ modal categories {
 modal categories category {
     display: block;
     padding: calc(.5 * var(--defaultGap));
+    width: calc(100% - var(--defaultGap));
+    text-align: center;
     user-select: none;
     cursor: pointer;
-
+    -webkit-tap-highlight-color: transparent;
 }
 
 modal categories category.on {
@@ -1062,7 +1065,15 @@ modal categories category.on {
 }
 
 modal categories category.on::before {
-    content: '⇨ ';
+    content: '❭❭';
+    display: inline-block;
+    padding-right: 10px;
+}
+
+modal categories category.on::after {
+    content: '❬❬';
+    display: inline-block;
+    padding-left: 10px;
 }
 
 modal gamelinks {
@@ -1352,7 +1363,7 @@ leftright {
     align-items: center;
     margin: 0px;
     border-radius: var(--borderRadius);
-    gap: var(--defaultGap);
+    gap: calc(.5 * var(--defaultGap));
 }
 
 leftright message, leftright callout, leftright p {

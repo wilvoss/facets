@@ -36,7 +36,7 @@
 
     <link rel="stylesheet" href="styles/normalize.css" media="screen" />
     <link rel="stylesheet" href="styles/main.min.css" media="screen" />
-    <link rel="stylesheet" href="styles/checkbox-min.css" media="screen" />
+    <link rel="stylesheet" href="styles/checkbox.min.css" media="screen" />
   </head>
 
   <body>
@@ -51,7 +51,7 @@
       <link rel="stylesheet" v-if="userSettingsUsesSimplifiedTheme" href="styles/simple.css" media="screen" />
       <link rel="stylesheet" v-if="userSettingsFocus && (appStateIsGuessing || appDataPlayerCurrent.role === 'reviewer')" href="styles/focus.min.css" media="screen" />
       <modal v-if="appStateShowOOBE" class="tutorial">
-        <h2>Quick Guide</h2>
+        <h2>Instructions</h2>
         <section v-if="appStateIsGuessing">
           <p>{{appDataPlayerCurrent.name}}, when your friend created this word puzzle, they were given word-pairs (or Emoji-pairs) that they had to connect with single-word clues.</p>
           <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with.</p>
@@ -72,7 +72,7 @@
       </modal>
       <modal v-if="appStateShowTutorial" class="tutorial">
         <section>
-          <h2>Guide</h2>
+          <h2>Instructions</h2>
           <p>In this game you are either <span class="blueText">creating</span> a word puzzle to send to your friends or <span class="greenText">guessing</span> the solution to a word puzzle that a friend sent to you.</p>
           <p>There is no single player mode. The game requires sharing between friends via text, chat, email, or some other social media.</p>
           <h3>Creating</h3>
@@ -124,7 +124,7 @@
       </modal>
       <modal v-if="appStateShowInfo">
         <section>
-          <h2>Info</h2>
+          <h2>About</h2>
           <h3>Created by</h3>
           <credit>Wil Voss</credit>
           <h3>Feedback and ideas</h3>
@@ -195,7 +195,7 @@
 
           <h3>Creating</h3>
           <checkbox @click="ToggleTempShowCategoryChooser()" title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{on: tempShowCatChooser}">
-            Show "Puzzle Options" screen
+            Show "Game Options" screen
             <toggle></toggle>
           </checkbox>
           <small>Enable this to have the option to change categories and difficulty when creating a new puzzle.</small>
@@ -207,15 +207,16 @@
       </modal>
       <modal v-if="appStateShowCatChooser">
         <section>
-          <h2>Puzzle Options</h2>
+          <h2>Game Options</h2>
+          <message>Choose a category for your game.</message>
           <categories>
             <category @click="tempWordSetName = name" :class="{on: tempWordSetName === name}" v-for="name in getEnabledTempWordSetNames">{{name}}</category>
           </categories>
-          <checkbox title="Enable this to make your puzzle much harder to solve!" :class="{on: tempUseExtraCard}" @click="ToggleTempUseExtraCard()">
+          <message>Add a 5th card to up the challenge!</message>
+          <checkbox style="max-width: 250px" title="Enable this to make your puzzle much harder to solve!" :class="{on: tempUseExtraCard}" @click="ToggleTempUseExtraCard()">
             Extra card
             <toggle></toggle>
           </checkbox>
-          <small>Enable this to make your puzzle much harder to solve!</small>
           <!-- <leftright>
             <checkbox @click="ToggleTempShowCategoryChooser()" title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{on: !tempShowCatChooser}">
               Hide this screen
@@ -231,8 +232,8 @@
       </modal>
       <modal v-if="appStateShowGlobalCreated">
         <section>
-          <h2>Latest Puzzles</h2>
-          <p>Check here to play random puzzles created by players around the world.</p>
+          <h2>Recent Puzzles</h2>
+          <p>Check here to play random puzzles recently created by players around the world.</p>
           <icon v-if="appStateIsGettingLast10Games" class="spinner show"></icon>
           <message style="padding: calc(2 * var(--defaultGap)) 0" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0">
             <p>😢</p>
@@ -269,9 +270,9 @@
       </wrapper>
       <wrapper>
         <subtitle>
-          <button class="inline small" @click="ToggleShowTutorial(event)">Guide</button>
-          <button class="inline small" @click="ToggleShowGlobalCreated()">Latest</button>
-          <button class="inline small" @click="appStateShowInfo = true">Info</button>
+          <button class="inline small" @click="ToggleShowTutorial(event)">Instructions</button>
+          <button class="inline small" @click="ToggleShowGlobalCreated()">Recent</button>
+          <button class="inline small" @click="appStateShowInfo = true">About</button>
           <button class="inline small" @click="ShowSettings()">Settings</button>
         </subtitle>
       </wrapper>
