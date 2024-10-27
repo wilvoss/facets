@@ -63,7 +63,7 @@
           <p class="blueText">It's your job to come up with clues that connect the four word-pairs (or Emoji-pairs) that are displayed on the edges of a gem.</p>
           <p>Anatomy of a puzzle:</p>
           <img :src="'./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
-          <p>When you are satisfied with your 4 clues, hit the <cta>Send</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
+          <p>When you are satisfied with your 4 clues, hit the <cta>Send Game</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
           <p>They're gonna have to recreate your puzzle based on your clues! 🧠</p>
         </section>
         <section>
@@ -79,19 +79,19 @@
           <p>When creating a new puzzle, it's your job to come up with clues that connect the four word-pairs that are displayed on the edges of a gem.</p>
           <p>Anatomy of a puzzle:</p>
           <img :src="'./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
-          <p>When you are satisfied with your 4 clues, hit the <cta>Send</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
+          <p>When you are satisfied with your 4 clues, hit the <cta>Send Guess</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
           <p>They're gonna have to recreate your puzzle based on your clues! 🧠</p>
           <h3>Guessing</h3>
           <p>When your friend created this word puzzle, they were given word-pairs that they had to connect with single word clues.</p>
           <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with.</p>
           <p>Anatomy of a solved puzzle:</p>
           <img :src="'./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
-          <p v-if="!userSettingsAutoCheck">Click the <cta>SEND</cta> button to send your guess back to whoever sent it to you.</p>
-          <p v-if="userSettingsAutoCheck">Click the <cta>Guess</cta> button to automatically check your guess.</p>
+          <p v-if="!userSettingsAutoCheck">Click the <cta>SEND GUESS</cta> button to send your guess back to whoever sent it to you.</p>
+          <p v-if="userSettingsAutoCheck">Click the <cta>CHECK NOW</cta> button to automatically check your guess.</p>
           <h3>Reviewing</h3>
-          <p>If your friends have "Pass 'n play" enabled in settings, they'll send their guesses back to you. When reviewing, remove incorrectly placed cards from the gem.</p>
+          <p>If your friends have "Call and response" enabled in settings, they'll send their guesses back to you. When reviewing, remove incorrectly placed cards from the gem.</p>
           <img :src="'./images/tut-4' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
-          <p>Click the <cta>SEND</cta> button to send the puzzle back, even if you are just giving them the solution.</p>
+          <p>Click the <cta>SEND REPLY</cta> button to send the puzzle back, even if you are just giving them the solution.</p>
           <h3>Controls</h3>
           <p>A card is a group of four words around the edges of a small outlined square.</p>
           <p>You can drag cards from one spot to another spot. While guessing or reviewing, you can rotate the cards by tapping on the curved arrows in the corner of each card.</p>
@@ -137,6 +137,7 @@
           <credit>Sonna Voss</credit>
           <message>Thank you for making this game better!</message>
           <h3>How can you help?</h3>
+          <a class="padded" href="https://bigtentgames.com/facets">Share with friends!</a>
           <a class="padded" :href="'mailto:bigtentgames@icloud.com?subject=Feedback - Facets! v' + appDataVersion">Give feedback!</a>
           <a class="padded" href="https://github.com/wilvoss/facets/issues" target="_blank">Submit a bug!</a>
           <a class="padded" href="https://www.buymeacoffee.com/wilvoss" target="_blank">Buy me a coffee! </a>
@@ -167,7 +168,7 @@
 
           <h3>Guessing</h3>
           <checkbox title="Check this if you want to send your guess back to your friend instead of automatically getting feedback on your guess." :class="{disabled: appStateForceAutoCheck, on: !tempAutoCheck}" @click="ToggleAutoCheck()">
-            Pass 'n play
+            Call and response
             <toggle></toggle>
           </checkbox>
           <small>Enable this to send your guesses to your friend instead of automatically getting feedback (disabled while solving anonymous puzzle).</small>

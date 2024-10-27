@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.1.016',
+    appDataVersion: '1.1.017',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -1562,7 +1562,8 @@ var app = new Vue({
       return this.appDataCardsParked.find((card) => card.words.length === 0);
     },
     getPlayerMessage: function () {
-      let text = this.appDataPlayerCurrent.name + ', you are guessing ' + this.appDataPlayerCreator.name + '\'s "' + this.currentGameGuessingWordSet.name + '" puzzle!';
+      let name = this.appStateForceAutoCheck ? 'an anonymous ' : this.appDataPlayerCreator.name + '\'s "';
+      let text = this.appDataPlayerCurrent.name + ', you are guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle!';
       if (!this.appStateIsGuessing) {
         text = this.appDataPlayerCurrent.name + ', you are creating a new "' + this.currentGameGuessingWordSet.name + '" puzzle!';
       } else {
@@ -1619,14 +1620,14 @@ var app = new Vue({
       let text = 'Send Guess';
 
       if (this.appDataPlayerCurrent.role === 'reviewer') {
-        text = 'Send Reply';
+        text = this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4 ? 'Send Final' : 'Send Back';
       } else if (this.appDataPlayerCurrent.role === 'creator') {
         text = 'Send Game';
       }
 
       if (this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
         if (this.userSettingsAutoCheck || this.appStateForceAutoCheck) {
-          text = 'Auto Guess';
+          text = 'Check Now';
         }
         if (this.isChromeAndiOSoriPadOS && this.appDataShareURL.includes('facets.bigtentgames.com/game/?')) {
           text = 'Copy';
