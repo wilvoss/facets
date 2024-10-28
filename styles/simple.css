@@ -6,7 +6,7 @@ message {
     text-shadow: none;
 }
 
-.guessing.solved message {
+.guessing.solved wrapper message {
     animation: bounce 1s steps(10, start) infinite;
     -webkit-animation: bounce 1s steps(10, start) infinite;
     color: hsla(var(--hueSolved), 100%, 70%, 1);
