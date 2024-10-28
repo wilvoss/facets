@@ -1021,7 +1021,6 @@ modal categories {
     align-items: center;
     flex-direction: column;
     width: 100%;
-    margin-bottom: calc(2 * var(--defaultGap));
 }
 
 modal categories category {

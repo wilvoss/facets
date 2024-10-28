@@ -135,7 +135,6 @@
           <credit>Elaine Soennichsen</credit>
           <credit>Kathleen Voss</credit>
           <credit>Sonna Voss</credit>
-          <message>Thank you for making this game better!</message>
           <h3>How can you help?</h3>
           <a class="padded" @click="ShareText('https://bigtentgames.com/facets', '')">Share with friends!</a>
           <a class="padded" :href="'mailto:bigtentgames@icloud.com?subject=Feedback - Facets! v' + appDataVersion">Give feedback!</a>
@@ -188,15 +187,16 @@
       <modal v-if="appStateShowCatChooser">
         <section>
           <h2>Game Options</h2>
-          <message>Choose a category for your game.</message>
+          <h3>Puzzle Category</h3>
           <categories>
             <category @click="tempWordSetName = name" :class="{on: tempWordSetName === name}" v-for="name in getEnabledTempWordSetNames">{{name}}</category>
           </categories>
-          <message>Add a 5th card to up the challenge!</message>
-          <checkbox style="max-width: 250px" title="Enable this to make your puzzle much harder to solve!" :class="{on: tempUseExtraCard}" @click="ToggleTempUseExtraCard()">
-            Extra card
+          <h3>Difficulty</h3>
+          <checkbox style="margin-top: 5px; max-width: 250px" title="Enable this to make your puzzle much harder to solve!" :class="{on: tempUseExtraCard}" @click="ToggleTempUseExtraCard()">
+            Challenging mode
             <toggle></toggle>
           </checkbox>
+          <small style="max-width: 250px">Enable to add an extra random guessing card that doesn't belong in the solution.</small>
         </section>
         <controls>
           <button class="secondary" @click="appStateShowCatChooser = false">Cancel</button>
