@@ -56,7 +56,7 @@
         <section v-if="appStateIsGuessing">
           <p>{{appDataPlayerCurrent.name}}, when your friend created this word puzzle, they were given word-pairs that they had to "connect" by coming up with a clue that works for both words in each word-pair.</p>
           <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with.</p>
-          <p>Place onto the tray and rotate them until you think you've solved the puzzle!</p>
+          <p>Place cards onto the tray and rotate them until you think you've solved the puzzle!</p>
           <p>Anatomy of a solved puzzle:</p>
           <img :src="'./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
           <p>Click the <cta>SEND GUESS</cta> button to send your guess back to your friend.</p>
@@ -86,7 +86,8 @@
           <p>They're gonna have to recreate your puzzle based on your clues! 🧠</p>
           <h3>Guessing</h3>
           <p>When your friend created this word puzzle, they were given word-pairs that they had to "connect" by coming up with a clue that works for both words in each word-pair.</p>
-          <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with. Place and rotate cards on the tray until you think you've solved the puzzle!</p>
+          <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with.</p>
+          <p>Place cards onto the tray and rotate them until you think you've solved the puzzle!</p>
           <p>Anatomy of a solved puzzle:</p>
           <img :src="'./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
           <p v-if="!appStateForceAutoCheck">Click the <cta>SEND GUESS</cta> button to send your guess back to whoever sent it to you.</p>
