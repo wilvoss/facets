@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.1.023',
+    appDataVersion: '1.1.024',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -1505,7 +1505,7 @@ var app = new Vue({
       return this.appDataCardsParked.find((card) => card.words.length === 0);
     },
     getPlayerMessage: function () {
-      let name = this.appStateForceAutoCheck ? 'an anonymous ' : this.appDataPlayerCreator.name + '\'s "';
+      let name = this.appStateForceAutoCheck ? 'an anonymous "' : this.appDataPlayerCreator.name + '\'s "';
       let text = this.appDataPlayerCurrent.name + ', you are guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle!';
       if (!this.appStateIsGuessing) {
         text = this.appDataPlayerCurrent.name + ', you are creating a new "' + this.currentGameGuessingWordSet.name + '" puzzle!';
