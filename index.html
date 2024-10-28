@@ -54,14 +54,15 @@
       <modal v-if="appStateShowOOBE" class="tutorial">
         <h2>How To Play</h2>
         <section v-if="appStateIsGuessing">
-          <p>{{appDataPlayerCurrent.name}}, when your friend created this word puzzle, they were given word-pairs (or Emoji-pairs) that they had to connect with single-word clues.</p>
-          <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with.</p>
+          <p>{{appDataPlayerCurrent.name}}, when your friend created this word puzzle, they were given word-pairs that they had to "connect" by coming up with a clue that works for both words in each word-pair.</p>
+          <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with. Place and rotate cards on the tray until you think you've solved the puzzle!</p>
           <p>Anatomy of a solved puzzle:</p>
           <img :src="'./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
+          <p>Click the <cta>SEND GUESS</cta> button to send your guess back to your friend.</p>
         </section>
         <section v-if="!appStateIsGuessing">
           <p>{{appDataPlayerCurrent.name}}, you are about to create a word puzzle that you will send to your friends via text, email or social media.</p>
-          <p class="blueText">It's your job to come up with clues that connect the four word-pairs (or Emoji-pairs) that are displayed on the edges of a gem.</p>
+          <p class="blueText">It's your job to come up with clues that "connect" the four word-pairs (or Emoji-pairs) that are displayed on the edges of a gem.</p>
           <p>Anatomy of a puzzle:</p>
           <img :src="'./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
           <p>When you are satisfied with your 4 clues, hit the <cta>Send Game</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
@@ -77,14 +78,14 @@
           <p>In this game you are either <span class="blueText">creating</span> a word puzzle to send to your friends or <span class="greenText">guessing</span> the solution to a word puzzle that a friend sent to you.</p>
           <p>There is no single player mode. The game requires sharing between friends via text, chat, email, or some other social media.</p>
           <h3>Creating</h3>
-          <p>When creating a new puzzle, it's your job to come up with clues that connect the four word-pairs that are displayed on the edges of a gem.</p>
+          <p>When creating a new puzzle, it's your job to come up with clues that "connect" the four word-pairs that are displayed on the edges of a gem.</p>
           <p>Anatomy of a puzzle:</p>
           <img :src="'./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
           <p>When you are satisfied with your 4 clues, hit the <cta>Send Guess</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
           <p>They're gonna have to recreate your puzzle based on your clues! 🧠</p>
           <h3>Guessing</h3>
-          <p>When your friend created this word puzzle, they were given word-pairs that they had to connect with single word clues.</p>
-          <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with.</p>
+          <p>When your friend created this word puzzle, they were given word-pairs that they had to "connect" by coming up with a clue that works for both words in each word-pair.</p>
+          <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with. Place and rotate cards on the tray until you think you've solved the puzzle!</p>
           <p>Anatomy of a solved puzzle:</p>
           <img :src="'./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
           <p v-if="!appStateForceAutoCheck">Click the <cta>SEND GUESS</cta> button to send your guess back to whoever sent it to you.</p>
