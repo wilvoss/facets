@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.1.030',
+    appDataVersion: '1.1.031',
     appDataCards: [],
     appDataCardsParked: [],
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
@@ -50,6 +50,7 @@ var app = new Vue({
     appStateIsGuessing: false,
     appStateIsModalShowing: false,
     appStateIsNewVersionAvailable: false,
+    appStatePageHasLoaded: false,
     appStateShowCatChooser: false,
     appStateShowConfirmation: false,
     appStateShowGlobalCreated: false,
@@ -1436,6 +1437,7 @@ var app = new Vue({
       this.GetLast10GlobalCreatedGames();
       this.appDataTransitionLong = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
       this.appDataTransitionShort = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
+      this.appStatePageHasLoaded = true;
 
       let boardPieces = [];
       try {

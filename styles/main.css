@@ -103,6 +103,17 @@ app {
     transition: var(--mediumTransition) ease-in-out background-color;
 }
 
+preload {
+    display: block;
+    opacity: 0;
+    width: 0px;
+    height: 0px;
+    overflow: hidden;
+    position: fixed;
+    pointer-events: none;
+    user-select: none;
+}
+
 h1, h2, h3, h4, h5 {
     font-weight: normal;
     margin: calc(3 * var(--defaultGap)) 0 calc(2 * var(--defaultGap));
