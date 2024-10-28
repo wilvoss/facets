@@ -1088,7 +1088,7 @@ modal gamelinks p small:before {
 
 modal gamelinks p button.inline {
     z-index: 2;
-    padding: 6px 10px 10px;
+    padding: 5px 10px;
     font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
     font-size: .5em;
     text-transform: uppercase;
