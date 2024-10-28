@@ -167,17 +167,6 @@ button.inline {
     gap: calc(var(--defaultGap) / 2);
 }
 
-button.inline.report {
-    font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
-    font-size: .6em;
-    text-transform: uppercase;
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    gap: 0px;
-    color: hsl(var(--appForegroundDiminishedHSL));
-}
-
 button icon {
     background: hsl(var(--linkColorLightHSL));
 }
@@ -1088,19 +1077,33 @@ modal gamelinks p small:before {
 }
 
 modal gamelinks p button.inline {
-    display: block;
     z-index: 2;
     padding: 6px 10px 10px;
+    font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
+    font-size: .5em;
+    text-transform: uppercase;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    color: hsl(var(--appForegroundDiminishedHSL));
+    transition: var(--shortTracnsition) ease-in-out all;
 }
 
 modal gamelinks p button.inline icon {
     opacity: .5;
     background-color: hsl(var(--messageColorHSL));
+    transition: var(--shortTransition) ease-in-out background-color;
+}
+
+modal gamelinks p button.inline:hover {
+    color: hsl(var(--appForegroundHSL));
 }
 
 modal gamelinks p button.inline:hover icon {
     opacity: 1;
 }
+
 
 modal gamelinks small {
     text-align: left;
