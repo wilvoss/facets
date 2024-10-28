@@ -100,6 +100,7 @@ app {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    transition: var(--mediumTransition) ease-in-out background-color;
 }
 
 h1, h2, h3, h4, h5 {
@@ -112,6 +113,11 @@ h1, h2, h3, h4, h5 {
 h3 {
     margin: var(--defaultGap) 0 0;
     color: hsl(var(--messageColorHSL));
+    transition: var(--mediumTransition) ease-in-out color;
+}
+
+input {
+    transition: var(--mediumTransition) ease-in-out color;
 }
 
 a, a:hover, a:focus, a:visited, a:active {
@@ -145,7 +151,7 @@ button {
     border: none;
     -webkit-tap-highlight-color: transparent;
     font-family: 'Theme';
-    transition: var(--shortTransition) ease-in-out all;
+    transition: var(--mediumTransition) ease-in-out all;
 }
 
 button.secondary {
@@ -159,6 +165,17 @@ button.inline {
     justify-content: center;
     align-items: center;
     gap: calc(var(--defaultGap) / 2);
+}
+
+button.inline.report {
+    font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
+    font-size: .6em;
+    text-transform: uppercase;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    color: hsl(var(--appForegroundDiminishedHSL));
 }
 
 button icon {
@@ -185,49 +202,13 @@ button.small {
     text-wrap: nowrap;
 }
 
-button.update {
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
-    position: fixed;
-    bottom: 0px;
-    z-index: 99;
-    font-size: 75%;
-    padding: 8px var(--defaultGap) 6px;
-    background: hsla(var(--hueCreating), 80%, 10%, 1);
-    border: 1px solid hsl(var(--trayCreatingBackgroundHSL));
-    transform: translateY(38px);
-    color: hsl(var(--appForegroundHSL));
-    border-radius: var(--borderRadius);
-    transition: var(--longTransition) ease-in-out all;
-    box-shadow: 0px -4px 4px rgba(0, 0, 0, .5);
-}
-
-.creating button.update, .reviewing.guessing button.update {
-    background: hsla(var(--hueGuessing), 80%, 10%, 1);
-    border-color: hsl(var(--trayGuessingBackgroundHSL));
-}
-
-.creating.guessing button.update {
-    background: hsla(var(--hueCreating), 80%, 10%, 1);
-    border-color: hsl(var(--trayCreatingBackgroundHSL));
-}
-
-button.update.show {
-    transform: translateY(calc(-1 * var(--defaultGap)));
-}
-
-button.small icon, button.update icon {
+button.small icon {
     width: var(--tinyIconSize);
     height: var(--tinyIconSize);
     mask-size: var(--tinyIconSize) var(--tinyIconSize);
     -webkit-mask-size: var(--tinyIconSize) var(--tinyIconSize);
     background: hsla(var(--linkColorDarkHSL), 1);
     margin-top: -1px;
-}
-
-button.update icon {
-    background: hsl(var(--appForegroundHSL));
 }
 
 header {
@@ -583,7 +564,7 @@ tray diamond {
     mask-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize) + 2px);
     -webkit-mask-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize) + 2px);
     pointer-events: none;
-    transition: var(--mediumTransition) ease-in-out background-color;
+    /* transition: var(--mediumTransition) ease-in-out background-color; */
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
     z-index: -1;
@@ -623,6 +604,8 @@ controls {
     align-items: center;
     height: 100%;
     padding: 0;
+    transition: var(--mediumTransition) ease-in-out;
+    transition-property: background-color, border-color;
 }
 
 modal controls {
@@ -670,7 +653,7 @@ wrapper>rotators {
 }
 
 rotators button {
-    transition: var(--shortTransition) ease-in-out;
+    transition: var(--mediumTransition) ease-in-out;
     transition-property: opacity, color;
     pointer-events: all;
     justify-content: center;
@@ -772,7 +755,7 @@ spot rotators button, spot.empty rotators button:hover {
     opacity: 0;
     font-size: 100%;
     padding: 0px 6px;
-    transition: var(--shortTransition) ease-in-out;
+    transition: var(--mediumTransition) ease-in-out;
     transition-property: opacity, color;
     color: hsl(var(--linkColorDarkHSL));
     pointer-events: none;
@@ -1303,6 +1286,7 @@ modal {
     opacity: 1;
     z-index: 300;
     gap: var(--defaultGap);
+    transition: var(--mediumTransition) ease-in-out all;
 }
 
 modal.centered {
@@ -1349,6 +1333,7 @@ callout {
     text-align: center;
     padding: calc(.5 * var(--defaultGap)) var(--defaultGap);
     background: hsla(var(--appBackgroundHSL), 1);
+    transition: var(--mediumTransition) ease-in-out all;
 }
 
 section input {
@@ -1373,6 +1358,14 @@ leftright message, leftright callout, leftright p {
     width: calc(1 * var(--cardSize));
     margin: 0;
     border-radius: var(--borderRadius);
+}
+
+leftright p {
+    flex: 1;
+}
+
+leftright callout {
+    flex: 2;
 }
 
 leftright callout input {
