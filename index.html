@@ -53,7 +53,7 @@
         <img width="0px" height="0px" alt="preload image that can't be seen" :style="{backgroundImage: 'url(./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg)'}" />
         <img width="0px" height="0px" alt="preload image that can't be seen" :style="{backgroundImage: 'url(./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg)'}" />
 
-        <img v-for="wordset in getEnabledWordSets" width="0px" height="0px" alt="preload image that can't be seen" :style="{backgroundImage: 'url('+ wordset.textureImage + '.svg)'}" />
+        <img v-for="wordset in getEnabledWordSets" width="0px" height="0px" alt="preload image that can't be seen" :style="{backgroundImage: 'url('+ wordset.textureImage + ')'}" />
       </preload>
       <link rel="stylesheet" v-if="(userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme)" href="styles/light.css" media="screen" />
       <link rel="stylesheet" v-if="userSettingsUsesSimplifiedTheme" href="styles/simple.css" media="screen" />
