@@ -194,7 +194,7 @@ button.small {
     cursor: pointer;
     text-align: center;
     background: none;
-    color: hsla(var(--linkColorDarkHSL), .8);
+    color: hsla(var(--appForegroundHSL), .8);
     display: flex;
     text-transform: uppercase;
     letter-spacing: 1px;
@@ -1375,6 +1375,8 @@ leftright {
     margin: 0px;
     border-radius: var(--borderRadius);
     gap: calc(.5 * var(--defaultGap));
+    transition: var(--mediumTransition) ease-in-out;
+    transition-property: background-color, border-color;
 }
 
 leftright message, leftright callout, leftright p {

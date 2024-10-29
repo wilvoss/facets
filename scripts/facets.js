@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.015',
+    appDataVersion: '1.2.016',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -1624,6 +1624,9 @@ var app = new Vue({
         }
       }
       return text;
+    },
+    getEnabledWordSets: function () {
+      return this.appDataWordSets.filter((set) => set.enabled);
     },
     getEnabledTempWordSets: function () {
       return this.tempWordSets.filter((set) => set.enabled);

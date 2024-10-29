@@ -13,7 +13,8 @@ checkbox {
     border-radius: calc(1 * var(--borderRadius));
     align-items: center;
     -webkit-tap-highlight-color: transparent;
-    transition: var(--mediumTransition) ease-in-out background-color;
+    transition: var(--mediumTransition) ease-in-out;
+    transition-property: background-color, border-color;
 }
 
 checkbox toggle {
