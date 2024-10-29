@@ -87,7 +87,7 @@
           <p>When creating a new puzzle, it's your job to come up with clues that "connect" the four word-pairs that are displayed on the edges of a gem.</p>
           <p>Anatomy of a puzzle:</p>
           <img :src="'./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
-          <p>When you are satisfied with your 4 clues, hit the <cta>Send Guess</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
+          <p>When you are satisfied with your 4 clues, hit the <cta>Send Game</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
           <p>They're gonna have to recreate your puzzle based on your clues! 🧠</p>
           <h3>Guessing</h3>
           <p>When your friend created this word puzzle, they were given word-pairs that they had to "connect" by coming up with a clue that works for both words in each word-pair.</p>
@@ -195,12 +195,10 @@
             </select>
           </leftright>
           <leftright>
-            <p>
-              Language
-              <small style="text-wrap: nowrap">(Alpha Testing)</small>
-            </p>
+            <p>Language</p>
             <select v-model="tempUserSettingsLanguage">
               <option v-for="option in getEnabledTempLanguages" :key="option.tag" :value="option.tag">{{ option.name }}</option>
+              <option disabled>More coming!</option>
             </select>
           </leftright>
           <h3>Difficulty</h3>

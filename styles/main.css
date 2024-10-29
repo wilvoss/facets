@@ -6,7 +6,6 @@
 @font-face {
     font-family: 'ClueFont';
     src: url('../fonts/NovaFlat-Regular.ttf');
-    /* src: url('../fonts/BigShouldersInlineText-VariableFont_wght.ttf'); */
 }
 
 @font-face {
@@ -564,7 +563,6 @@ tray diamond {
     mask-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize) + 2px);
     -webkit-mask-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize) + 2px);
     pointer-events: none;
-    /* transition: var(--mediumTransition) ease-in-out background-color; */
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
     z-index: -1;
@@ -662,7 +660,6 @@ rotators button {
     line-height: 100%;
     background: none;
     padding: calc(1.25 * var(--defaultGap));
-    /* background-color: red; */
 }
 
 spot rotators button {
@@ -1348,18 +1345,16 @@ callout, select {
 }
 
 select {
-    text-align: center;
     outline: none;
     border: none;
     background: hsla(var(--appBackgroundHSL), 1);
-    width: 100%;
-    /* padding: 0; */
     -webkit-tap-highlight-color: transparent;
     font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
     color: hsl(var(--appForegroundHSL));
     font-size: 110%;
-    -webkit-appearance: unset;
+    border-radius: var(--borderRadius);
 }
+
 
 section input {
     font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
@@ -1370,7 +1365,10 @@ section input {
 leftright {
     display: flex;
     width: calc(100%);
+    padding: 5px 0px;
     flex-direction: row;
+    background: hsla(var(--appBackgroundHSL), .4);
+    border: 1px solid hsla(var(--appBackgroundHSL), 1);
     justify-content: center;
     align-items: center;
     margin: 0px;
@@ -1378,10 +1376,9 @@ leftright {
     gap: calc(.5 * var(--defaultGap));
 }
 
-leftright message, leftright callout, leftright p, leftright select {
+leftright message, leftright callout, leftright p {
     text-align: left;
     width: calc(1 * var(--cardSize));
-    margin: 0;
     border-radius: var(--borderRadius);
 }
 
@@ -1390,6 +1387,10 @@ leftright p {
 }
 
 leftright callout, leftright select {
+    padding: calc(.3 * var(--defaultGap)) calc(.5 * var(--defaultGap));
+    border-radius: var(--borderRadius) calc(.5 * var(--borderRadius)) calc(.5 * var(--borderRadius)) var(--borderRadius);
+    width: unset;
+    margin: 0 5px 0 0;
     flex: 2;
 }
 
@@ -1637,7 +1638,6 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         font-size: 12px;
         padding: 0px;
         width: 100%;
-        /* max-width: calc((2 * var(--cardSize) - 2 * var(--defaultGap))); */
     }
 
     message icon.share {
@@ -1676,6 +1676,7 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         width: calc(100% - (2 * var(--defaultGap)));
         margin: 0 var(--defaultGap);
         max-width: unset;
+        font-size: 110%;
     }
 
     modal section {

@@ -8,7 +8,8 @@ checkbox {
     cursor: pointer;
     max-width: calc((100% - calc(2 * var(--defaultGap))));
     width: 100%;
-    background: hsla(var(--appBackgroundHSL), 1);
+    background: hsla(var(--appBackgroundHSL), .4);
+    border: 1px solid hsla(var(--appBackgroundHSL), 1);
     border-radius: calc(1 * var(--borderRadius));
     align-items: center;
     -webkit-tap-highlight-color: transparent;
