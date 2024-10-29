@@ -26,14 +26,22 @@
     <link rel="stylesheet" href="../styles/normalize.css" media="screen" />
     <link rel="stylesheet" href="../styles/main.min.css" media="screen" />
     <style>
-      button.loading {
+      p {
+        background: none;
+        justify-content: center;
+        flex-direction: column;
+        text-align: center;
+        align-items: center;
+        display: flex;
+      }
+      p.loading {
         cursor: default;
         background: none;
         font-family: 'Abel';
         pointer-events: none;
       }
       modal controls.hide,
-      button.hide,
+      p.hide,
       message.hide {
         display: none;
       }
@@ -51,7 +59,7 @@
           </small>
         </h2>
         <message id="message" class="hide">There was a problem. Quitting and restarting your browser might fix the issue.</message>
-        <button style="background: none; display: flex; justify-content: center; flex-direction: column; text-align: center; align-items: center" class="inline loading" id="loadingButton">Loading<icon class="spinner show" style="position: relative"></icon></button>
+        <p class="inline loading" id="loadingButton">Loading<icon class="spinner show"></icon></p>
         <controls id="controls" class="hide">
           <button onclick="location.href = location.origin" id="loadingButton">Okay</button>
         </controls>
