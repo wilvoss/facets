@@ -1575,7 +1575,9 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         padding: 6px 6px 12px 6px;
     }
 
-
+    select {
+        font-size: 110%;
+    }
 
     tray {
         scale: .7;
