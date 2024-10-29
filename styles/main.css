@@ -1351,8 +1351,8 @@ select {
     -webkit-tap-highlight-color: transparent;
     font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
     color: hsl(var(--appForegroundHSL));
-    font-size: 110%;
     border-radius: var(--borderRadius);
+    -webkit-appearance: unset;
 }
 
 
