@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.001',
+    appDataVersion: '1.2.002',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -1611,7 +1611,8 @@ var app = new Vue({
       return this.appDataCardsParked.find((card) => card.words.length === 0);
     },
     getPlayerMessage: function () {
-      let name = this.appStateForceAutoCheck ? 'an anonymous "' : this.appDataPlayerCreator.name + '\'s "';
+      let pronoun = this.currentGameGuessingWordSet.startsWithVowel ? 'an "' : 'a "';
+      let name = this.appStateForceAutoCheck ? pronoun : this.appDataPlayerCreator.name + '\'s "';
       let text = 'Guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle!';
       if (!this.appStateIsGuessing) {
         text = this.appDataPlayerCurrent.name + ', you are creating a new "' + this.currentGameGuessingWordSet.name + '" puzzle!';
