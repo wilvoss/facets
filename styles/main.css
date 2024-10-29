@@ -161,7 +161,8 @@ button {
     border: none;
     -webkit-tap-highlight-color: transparent;
     font-family: 'Theme';
-    transition: var(--mediumTransition) ease-in-out all;
+    transition: var(--mediumTransition) ease-in-out;
+    transition-property: color, background-color, opacity, border-color;
 }
 
 button.secondary {
