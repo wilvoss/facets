@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.000',
+    appDataVersion: '1.2.001',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -602,6 +602,7 @@ var app = new Vue({
       stringArray.push('&sendingID=' + encodeURIComponent(_game.sendingID));
       stringArray.push('&puzzleName=a Player');
       stringArray.push('&puzzleID=' + encodeURIComponent(_game.puzzleID));
+      stringArray.push('&lang=' + encodeURIComponent(_game.lang));
       stringArray.push('&wordSetID=' + encodeURIComponent(_game.wordSetID));
       stringArray.push('&useExtraCard=' + encodeURIComponent(_game.useExtraCard));
       stringArray.push('&sol=' + encodeURIComponent(_game.sol));
