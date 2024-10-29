@@ -29,7 +29,7 @@ getJustWords = function (_array) {
     wordArray.push(w.value);
   });
 
-  //wordArray = wordArray.join(', ');
+  wordArray = wordArray.join(',');
 
   return wordArray;
 };

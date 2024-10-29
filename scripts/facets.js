@@ -14,9 +14,10 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.1.033',
+    appDataVersion: '1.2.000',
     appDataCards: [],
     appDataCardsParked: [],
+    appDataLanguages: AllLanguages,
     appDataConfirmationObject: { message: 'Did they have the right answer?', target: 'correct' },
     appDataDraggedCard: new CardObject({}),
     appDataDraggedCardStartedInParkingLot: false,
@@ -66,6 +67,7 @@ var app = new Vue({
     // current game
     currentGameGuessCount: 0,
     currentGameGuessersName: '',
+    currentGameLanguage: '',
     currentGameGuessingCardCount: 4,
     currentGameGuessingWordSet: WordSets.find((m) => m.id === '100'),
     currentGameReviewIsFinal: false,
@@ -80,6 +82,7 @@ var app = new Vue({
     userSettingsUseWordSetThemes: false,
     userSettingsStreaks: [],
     userSettingsFocus: false,
+    userSettingsLanguage: 'en-us',
     // temp user settings
     tempName: '',
     tempID: 0,
@@ -91,6 +94,7 @@ var app = new Vue({
     tempUsePortraitLayout: false,
     tempUseExtraCard: false,
     tempWordSets: [],
+    tempUserSettingsLanguage: 'en-us',
     // DOM reference
     documentCssRoot: document.querySelector(':root'),
   },
@@ -139,6 +143,11 @@ var app = new Vue({
         e.preventDefault();
       }
       this.appStateShowInfo = !this.appStateShowInfo;
+    },
+
+    SetTempLanguage(_lang) {
+      note('SetTempLanguage() called');
+      this.tempUserSettingsLanguage = _lang;
     },
 
     ToggleTempUseWordSetThemes() {
@@ -203,6 +212,80 @@ var app = new Vue({
         this.documentCssRoot.style.setProperty('--textureHue', textureHueSource);
       }
       this.documentCssRoot.style.setProperty('--wordScale', _wordset.scale);
+    },
+
+    async LoadTranslatedWords() {
+      // Fetch the new words based on the selected language
+      let translatedWords = await this.GetCurrentGameWordSet();
+
+      // Create a dictionary of translated words by id
+      let wordDictionary = {};
+      translatedWords.forEach((word) => {
+        wordDictionary[word.id] = word;
+      });
+
+      // Update the words in the cards array
+      this.appDataCards.forEach((card) => {
+        card.words.forEach((word) => {
+          if (wordDictionary[word.id]) {
+            word.value = wordDictionary[word.id].value; // Assuming 'value' holds the word text
+          }
+        });
+      });
+
+      this.appDataCardsParked.forEach((card) => {
+        card.words.forEach((word) => {
+          if (wordDictionary[word.id]) {
+            word.value = wordDictionary[word.id].value; // Assuming 'value' holds the word text
+          }
+        });
+      });
+    },
+
+    async GetCurrentGameWordSet() {
+      log('GetCurrentGameWordSet() called');
+      let allWords = [];
+      let lang = this.userSettingsLanguage === '' ? '' : this.userSettingsLanguage + '/';
+      if (this.currentGameLanguage !== '') {
+        lang = this.currentGameLanguage;
+      }
+      let fetchPromises = this.currentGameWordSet.data.map(async (url) => {
+        const modifiedUrl = url.toString().replace('./data/', './data/' + lang);
+        const response = await fetch(modifiedUrl);
+        return await response.json();
+      });
+
+      try {
+        let dataArrays = await Promise.all(fetchPromises);
+        allWords = [].concat(...dataArrays);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+
+      return allWords;
+    },
+
+    async GetGuessingGameWordSet() {
+      log('GetGuessingGameWordSet() called');
+      let lang = this.userSettingsLanguage === '' ? '' : this.userSettingsLanguage + '/';
+      if (this.currentGameLanguage !== '') {
+        lang = this.currentGameLanguage + '/';
+      }
+      let allWords = [];
+      let fetchPromises = this.currentGameGuessingWordSet.data.map(async (url) => {
+        const modifiedUrl = url.toString().replace('./data/', './data/' + lang);
+        const response = await fetch(modifiedUrl);
+        return await response.json();
+      });
+
+      try {
+        let dataArrays = await Promise.all(fetchPromises);
+        allWords = [].concat(...dataArrays);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+
+      return allWords;
     },
 
     IsCurrentGuessCorrect() {
@@ -273,7 +356,7 @@ var app = new Vue({
           allUsedWords.push(word);
         });
       });
-      let wordset = await this.getCurrentGameWordSet;
+      let wordset = await this.GetCurrentGameWordSet();
 
       if (this.currentGameGuessingCardCount === 5) {
         this.appDataCardsParked.push(new CardObject({ words: getUniqueWords(wordset, 4, getJustWords(allUsedWords)) }));
@@ -299,6 +382,7 @@ var app = new Vue({
 
       this.appDataPlayerSender.name = urlParams.has('sendingName') ? urlParams.get('sendingName') : this.appDataPlayerSender.name;
       this.currentGameGuessersName = this.appDataPlayerSender.name;
+      this.currentGameLanguage = urlParams.has('lang') ? urlParams.get('lang') : 'en-us';
       this.appDataPlayerCreator.name = urlParams.has('puzzleName') ? urlParams.get('puzzleName') : this.appDataPlayerCreator.name;
       this.appDataPlayerSender.id = urlParams.has('sendingID') ? parseInt(urlParams.get('sendingID')) : this.appDataPlayerSender.id;
       this.appDataPlayerCreator.id = urlParams.has('puzzleID') ? parseInt(urlParams.get('puzzleID')) : this.appDataPlayerCreator.id;
@@ -318,7 +402,7 @@ var app = new Vue({
       let corruptData = false;
       if (_boardArray.length >= 40) {
         this.appDataShareURL = window.location.href;
-        let allWords = await this.getGuessingGameWordSet;
+        let allWords = await this.GetGuessingGameWordSet();
 
         this.appDataCards = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
         this.appDataCardsParked = [new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({}), new CardObject({})];
@@ -377,7 +461,7 @@ var app = new Vue({
 
     async CreateCardsForPlayer(_appDataPlayerCurrent) {
       note('CreateCardsForPlayer() called');
-      let wordset = await this.getCurrentGameWordSet;
+      let wordset = await this.GetCurrentGameWordSet();
       let words = getUniqueWords(wordset);
       for (let x = 0; x < 4; x++) {
         const card = new CardObject({ position: x });
@@ -650,6 +734,12 @@ var app = new Vue({
       }
       this.currentGameWordSet.isSelected = true;
 
+      let language = localStorage.getItem('userSettingsLanguage');
+      if (language !== undefined && language !== null) {
+        this.userSettingsLanguage = language;
+        this.tempUserSettingsLanguage = this.userSettingsLanguage;
+      }
+
       let useThemes = localStorage.getItem('useWordSetThemes');
       if (useThemes !== undefined && useThemes !== null) {
         this.userSettingsUseWordSetThemes = JSON.parse(useThemes);
@@ -777,6 +867,7 @@ var app = new Vue({
       this.appStateShowIntro = false;
       this.tempID = this.appDataPlayerCurrent.id;
       this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
+      this.tempUserSettingsLanguage = this.userSettingsLanguage;
       this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
       this.tempUseExtraCard = this.userSettingsUseExtraCard;
       this.tempUserSettingsUsesSimplifiedTheme = this.userSettingsUsesSimplifiedTheme;
@@ -800,6 +891,7 @@ var app = new Vue({
       }
       localStorage.setItem('name', this.appDataPlayerCurrent.name);
       if (this.appStateShowSettings || this.appStateShowCatChooser) {
+        this.userSettingsLanguage = this.tempUserSettingsLanguage;
         let newSelectedWordSet = this.tempWordSets.find((set) => set.name === this.tempWordSetName);
         this.SelectWordSet(e, newSelectedWordSet);
 
@@ -814,6 +906,7 @@ var app = new Vue({
 
         this.appDataPlayerCurrent.id = this.tempID;
         this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
+        // this.getCurrentGameWordSet();
         this.userSettingsUseExtraCard = this.tempUseExtraCard;
         this.ToggleUseLightTheme(this.tempUserSettingsUsesLightTheme);
         this.ToggleUseSimplifedTheme(this.tempUserSettingsUsesSimplifiedTheme);
@@ -822,6 +915,7 @@ var app = new Vue({
 
         localStorage.setItem('userID', this.appDataPlayerCurrent.id);
         localStorage.setItem('useWordSetThemes', this.userSettingsUseWordSetThemes);
+        localStorage.setItem('userSettingsLanguage', this.userSettingsLanguage);
         localStorage.setItem('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
         localStorage.setItem('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
         localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
@@ -1124,9 +1218,10 @@ var app = new Vue({
         urlString += '?sendingName=' + encodeURIComponent(this.appDataPlayerCurrent.name);
         urlString += '&puzzleName=' + encodeURIComponent(this.appDataPlayerCreator.name);
         urlString += '&puzzleID=' + encodeURIComponent(this.appDataPlayerCreator.id);
+        urlString += '&lang=' + (_isNew === false ? encodeURIComponent(this.currentGameLanguage) : encodeURIComponent(this.userSettingsLanguage));
         urlString += '&wordSetID=' + encodeURIComponent(this.currentGameGuessingWordSet.id);
         if (_isNew) {
-          urlString += '&isNew=true' + encodeURIComponent(this.appDataPlayerCurrent.name);
+          urlString += '&isNew=true';
         }
         urlString += '&sendingID=' + encodeURIComponent(this.appDataPlayerCurrent.id);
         urlString += '&useExtraCard=' + encodeURIComponent(this.currentGameGuessingCardCount === 5);
@@ -1404,6 +1499,7 @@ var app = new Vue({
       document.title = 'Facets!';
       this.appDataMessage = _appDataMessage;
       this.currentGameGuessCount = 0;
+      this.currentGameLanguage = '';
       this.currentGameReviewIsFinal = false;
       this.currentGameGuessersName = '';
       this.appDataPlayerCurrent.role = 'creator';
@@ -1475,6 +1571,13 @@ var app = new Vue({
     window.addEventListener('popstate', this.HandlePopState);
   },
 
+  watch: {
+    userSettingsLanguage: function (newLang, oldLang) {
+      highlight('userSettingsLanguage watch triggered');
+      this.LoadTranslatedWords();
+    },
+  },
+
   computed: {
     getSelectedCard: function () {
       return this.appDataCards.concat(this.appDataCardsParked).find((card) => card.isSelected === true);
@@ -1508,7 +1611,7 @@ var app = new Vue({
     },
     getPlayerMessage: function () {
       let name = this.appStateForceAutoCheck ? 'an anonymous "' : this.appDataPlayerCreator.name + '\'s "';
-      let text = this.appDataPlayerCurrent.name + ', you are guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle!';
+      let text = 'Guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle!';
       if (!this.appStateIsGuessing) {
         text = this.appDataPlayerCurrent.name + ', you are creating a new "' + this.currentGameGuessingWordSet.name + '" puzzle!';
       } else {
@@ -1532,34 +1635,18 @@ var app = new Vue({
       });
       return names.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
     },
+    getEnabledTempLanguages: function () {
+      let names = [];
+      this.appDataLanguages.forEach((lang) => {
+        if (lang.enabled) {
+          names.push({ name: lang.name, tag: lang.tag });
+        }
+      });
+      console.log(names);
+      return names.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
+    },
     getCurrentSelectedTempWordSetName: function () {
       return this.appDataWordSets.find((set) => set.isSelected).name;
-    },
-    getCurrentGameWordSet: async function () {
-      let allWords = [];
-      let fetchPromises = this.currentGameWordSet.data.map((url) => fetch(url).then((response) => response.json()));
-
-      try {
-        let dataArrays = await Promise.all(fetchPromises);
-        allWords = [].concat(...dataArrays);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-
-      return allWords;
-    },
-    getGuessingGameWordSet: async function () {
-      let allWords = [];
-      let fetchPromises = this.currentGameGuessingWordSet.data.map((url) => fetch(url).then((response) => response.json()));
-
-      try {
-        let dataArrays = await Promise.all(fetchPromises);
-        allWords = [].concat(...dataArrays);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-
-      return allWords;
     },
     getSubmitButtonText: function () {
       let text = 'Send Guess';

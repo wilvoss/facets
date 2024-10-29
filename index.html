@@ -165,13 +165,6 @@
               <input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
             </callout>
           </leftright>
-          <!-- <leftright>
-            <p>Player ID # <small style="max-width: unset">Match on all browsers</small></p>
-            <callout>
-              <input title="Numbers only please." spellcheck="false" onpointerup="this.select()" inputmode="numeric" type="number" v-model="tempID" oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength); this.value = this.value.replace(/[^0-9]/g, '');" maxlength="8" />
-            </callout>
-          </leftright> -->
-
           <h3>Appearance</h3>
           <checkbox :class="{on: tempUserSettingsUsesLightTheme}" @click="ToggleTempUseLightTheme()">
             Light theme
@@ -194,16 +187,28 @@
       <modal v-if="appStateShowCatChooser">
         <section>
           <h2>Game Options</h2>
-          <h3>Puzzle Category</h3>
-          <categories>
-            <category @click="tempWordSetName = name" :class="{on: tempWordSetName === name}" v-for="name in getEnabledTempWordSetNames">{{name}}</category>
-          </categories>
+          <h3>Puzzle Words</h3>
+          <leftright>
+            <p>Category</p>
+            <select v-model="tempWordSetName">
+              <option v-for="name in getEnabledTempWordSetNames" :key="name" :value="name">{{ name }}</option>
+            </select>
+          </leftright>
+          <leftright>
+            <p>
+              Language
+              <small style="text-wrap: nowrap">(Alpha Testing)</small>
+            </p>
+            <select v-model="tempUserSettingsLanguage">
+              <option v-for="option in getEnabledTempLanguages" :key="option.tag" :value="option.tag">{{ option.name }}</option>
+            </select>
+          </leftright>
           <h3>Difficulty</h3>
-          <checkbox style="margin-top: 5px; max-width: 250px" title="Enable this to make your puzzle much harder to solve!" :class="{on: tempUseExtraCard}" @click="ToggleTempUseExtraCard()">
-            Challenging mode
+          <checkbox title="Enable this to make your puzzle much harder to solve!" :class="{on: tempUseExtraCard}" @click="ToggleTempUseExtraCard()">
+            Make it crazy hard
             <toggle></toggle>
           </checkbox>
-          <small style="max-width: 250px">Enable to add an extra random guessing card that doesn't belong in the solution.</small>
+          <small>Enable this to add an extra random guessing card that doesn't belong in the solution. This is really hard 😈. /ser</small>
         </section>
         <controls>
           <button class="secondary" @click="appStateShowCatChooser = false">Cancel</button>
@@ -256,16 +261,16 @@
         </subtitle>
       </wrapper>
       <wrapper>
-        <message v-if="appDataMessage !== '' && appDataMessage === 'Tap to copy minified message.'">{{appDataMessage}}</message>
-        <message @click="ShareWin()" v-if="appDataMessage !== '' && appDataMessage.indexOf('Message ') === -1">
+        <message :title="appDataMessage" v-if="appDataMessage !== '' && appDataMessage === 'Tap to copy minified message.'">{{c}}</message>
+        <message :title="appDataMessage" @click="ShareWin()" v-if="appDataMessage !== '' && appDataMessage.indexOf('Message ') === -1">
           {{appDataMessage}}
           <small class="messageShare" style="cursor: pointer" v-if="!appStateForceAutoCheck && !currentGameReviewIsFinal && currentGameSolutionGuessing === currentGameSolutionActual">
             <icon class="share"></icon>
             (share)
           </small>
         </message>
-        <message v-if="appDataMessage !== '' && appDataMessage.indexOf('Message') !== -1"> {{appDataMessage}} </message>
-        <message v-if="appDataMessage === ''">{{getPlayerMessage}}</message>
+        <message :title="appDataMessage" v-if="appDataMessage !== '' && appDataMessage.indexOf('Message') !== -1"> {{appDataMessage}} </message>
+        <message :title="appDataMessage" v-if="appDataMessage === ''">{{getPlayerMessage}}</message>
       </wrapper>
       <wrapper class="main">
         <rotators style="width: calc(3.25 * var(--cardSize))">
@@ -376,9 +381,10 @@
       </wrapper>
     </app>
     <script src="helpers/console-enhancer.js" type="text/javascript"></script>
+    <script src="models/LanguageObject.min.js" type="text/javascript"></script>
     <script src="models/ProgressMessageObject-min.js" type="text/javascript"></script>
     <script src="models/WordSetObject-min.js" type="text/javascript"></script>
-    <script src="models/WordObject-min.js" type="text/javascript"></script>
+    <script src="models/WordObject.min.js" type="text/javascript"></script>
     <script src="models/CardObject-min.js" type="text/javascript"></script>
     <script src="models/PlayerObject-min.js" type="text/javascript"></script>
     <script src="helpers/vue.min.js" type="text/javascript"></script>

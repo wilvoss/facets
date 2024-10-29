@@ -1005,7 +1005,7 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 
-modal input, hints hint input, modal select {
+modal input, hints hint input {
     text-align: center;
     outline: none;
     border: none;
@@ -1165,18 +1165,11 @@ hints hint input::placeholder {
     color: hsla(var(--hueSolved), 70%, 48%, 1);
 }
 
-modal input, modal select {
+modal input {
     font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
     color: hsl(var(--appForegroundHSL));
     font-size: 110%;
     text-align: left;
-}
-
-modal select {
-    width: 100%;
-    background: none;
-    outline: none;
-    -webkit-appearance: unset;
 }
 
 hints hint input:disabled {
@@ -1257,7 +1250,6 @@ word {
     height: calc(var(--wordHeight) - 10px);
     padding-top: 10px;
     font-size: calc(var(--wordScale) * 90%);
-    text-transform: capitalize;
     line-height: 100%;
 }
 
@@ -1336,7 +1328,7 @@ modal img {
     margin: var(--defaultGap) 0;
 }
 
-callout {
+callout, select {
     max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
     width: 100%;
     display: flex;
@@ -1347,6 +1339,20 @@ callout {
     padding: calc(.5 * var(--defaultGap)) var(--defaultGap);
     background: hsla(var(--appBackgroundHSL), 1);
     transition: var(--mediumTransition) ease-in-out all;
+}
+
+select {
+    text-align: center;
+    outline: none;
+    border: none;
+    background: hsla(var(--appBackgroundHSL), 1);
+    width: 100%;
+    /* padding: 0; */
+    -webkit-tap-highlight-color: transparent;
+    font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
+    color: hsl(var(--appForegroundHSL));
+    font-size: 110%;
+    -webkit-appearance: unset;
 }
 
 section input {
@@ -1366,7 +1372,7 @@ leftright {
     gap: calc(.5 * var(--defaultGap));
 }
 
-leftright message, leftright callout, leftright p {
+leftright message, leftright callout, leftright p, leftright select {
     text-align: left;
     width: calc(1 * var(--cardSize));
     margin: 0;
@@ -1377,7 +1383,7 @@ leftright p {
     flex: 1;
 }
 
-leftright callout {
+leftright callout, leftright select {
     flex: 2;
 }
 
@@ -1469,13 +1475,16 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     }
 
     wrapper message {
-        height: calc(2 * var(--defaultGap));
+        height: calc(1 * var(--defaultGap));
+        padding: 0px var(--defaultGap);
+        overflow: hidden;
+        text-wrap: nowrap;
+        text-overflow: ellipsis;
     }
 
     message {
         display: block;
     }
-
 
 }
 
@@ -1589,6 +1598,9 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         width: calc(100% - (2 * var(--defaultGap)));
     }
 
+    checkbox {
+        font-size: 110%;
+    }
 
     button.update {
         font-size: 100%;
