@@ -226,11 +226,11 @@
           </message>
 
           <button style="border: 1px solid hsla(var(--linkColorDarkHSL), 0.75)" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0" @click="ToggleShowGlobalCreated(); HandleNewGameClick()">Create One!</button>
-          <button class="small" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length > 0" @click="GetLast10GlobalCreatedGames();">Refresh</button>
+          <button class="primary" style="margin: 10px 0" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length > 0" @click="GetLast10GlobalCreatedGames();">Refresh</button>
 
           <gamelinks>
             <p @click="HandleOldGameClick(game)" v-for="game in getCreatedGamesWithWordSetNames">
-              <a href=""><small>{{game.name}}{{game.useExtraCard === "true" ? ' (5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a>
+              <a href=""><small>{{game.name}} Puzzle {{game.useExtraCard === "true" ? '(5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a>
               <button title="Report this puzzle for offensive language." @click="ReportPuzzle(game)" class="inline report"><icon class="alert"></icon>Report</button>
             </p>
           </gamelinks>

@@ -7,4 +7,4 @@ class LanguageObject {
   }
 }
 
-let AllLanguages = [new LanguageObject({ name: 'English (US)', tag: 'en-us' }), new LanguageObject({ name: 'Español (US)', tag: 'es-us' })];
+let AllLanguages = [new LanguageObject({ name: 'English', tag: 'en-us' }), new LanguageObject({ name: 'Español', tag: 'es-us' })];

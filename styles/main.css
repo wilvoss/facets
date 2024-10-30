@@ -1060,7 +1060,7 @@ modal categories category.on::after {
 
 modal gamelinks {
     display: block;
-    counter-reset: my-badass-counter;
+    counter-reset: recent-game-counter;
     width: 100%;
 }
 
@@ -1084,8 +1084,8 @@ modal gamelinks p a, modal gamelinks p a:hover, modal gamelinks p a:active, moda
 }
 
 modal gamelinks p small:before {
-    content: counter(my-badass-counter);
-    counter-increment: my-badass-counter;
+    content: counter(recent-game-counter);
+    counter-increment: recent-game-counter;
     display: inline-block;
     padding-right: 6px;
 }
