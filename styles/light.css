@@ -26,7 +26,7 @@
     --simpleCardForegroundHSL: 0, 0%, 0%;
     --simpleCardBackgroundHSL: 0, 100%, 100%;
     --statBackground: hsla(var(--hueTheme), 100%, 98%, .7);
-    --statBorder: hsla(var(--hueTheme), 70%, 80%, 1);
+    --statBorder: hsla(var(--hueTheme), 100%, 100%, 1);
 
     --textureSource: radial-gradient(circle at center 400px, hsla(var(--appBackgroundDarkestHSL), .7) 1%, hsla(var(--appBackgroundDarkestHSL), .7) 40%, hsla(var(--appBackgroundHSL), 1) 80%);
     --texture2: var(var(--textureSource));
