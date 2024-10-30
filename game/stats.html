@@ -31,8 +31,6 @@
         align-items: center;
         overflow: auto;
         height: 100%;
-        touch-action: none;
-        -ms-touch-action: none;
       }
       header {
         flex-direction: column;
@@ -101,6 +99,16 @@
 
       icon.spinner {
         margin-top: 120px;
+      }
+
+      app::-webkit-scrollbar {
+        display: none;
+
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+
+        touch-action: auto;
+        scroll-behavior: smooth;
       }
 
       @media screen and (max-width: 660px) {
