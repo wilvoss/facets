@@ -29,6 +29,9 @@
       app {
         justify-content: flex-start;
         align-items: center;
+        overflow: auto;
+        touch-action: none;
+        -ms-touch-action: none;
       }
       header {
         flex-direction: column;
@@ -51,6 +54,11 @@
         flex-wrap: wrap;
         gap: calc(0.5 * var(--defaultGap));
       }
+
+      stats:last-of-type {
+        margin-bottom: calc(1.5 * var(--defaultGap));
+      }
+
       stat {
         display: flex;
         flex-direction: column;
