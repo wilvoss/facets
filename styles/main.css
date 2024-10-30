@@ -1003,6 +1003,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 input[type="number"] {
+    appearance: textfield;
     -moz-appearance: textfield;
 }
 
@@ -1356,6 +1357,7 @@ select {
     font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
     color: hsl(var(--appForegroundHSL));
     border-radius: var(--borderRadius);
+    appearance: unset;
     -webkit-appearance: unset;
 }
 

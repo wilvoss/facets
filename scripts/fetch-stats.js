@@ -25,7 +25,6 @@ var app = new Vue({
     async LoadPage() {
       this.CheckTheme();
       await this.GetStats();
-      console.log(JSON.stringify(this.rawStats));
       this.stats = this.ProcessRawStats();
     },
 
