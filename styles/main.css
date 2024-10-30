@@ -23,6 +23,7 @@
     --hueSolved: 175;
     --hueHighlight: 140;
 
+    --appBackgroundLightestHSL: var(--hueTheme), 80%, 70%;
     --appBackgroundLighterHSL: var(--hueTheme), 50%, 41%;
     --appBackgroundHSL: var(--hueTheme), 55%, 20%;
     --appBackgroundDarkHSL: var(--hueTheme), 100%, 8%;

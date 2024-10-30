@@ -65,9 +65,8 @@
         align-items: stretch;
         gap: 0;
         flex: 1;
-        min-width: 25%;
         max-width: 100%;
-        padding: 10px 10px 14px;
+        padding: 20px 10px 20px;
         background: var(--statBackground);
         border-radius: var(--borderRadius);
         box-shadow: var(--statShadow);
@@ -86,13 +85,13 @@
         min-width: 100px;
       }
       key {
-        font-size: 0.9em;
-        color: hsla(var(--appForegroundHSL), 0.7);
+        font-size: 0.8em;
+        color: hsla(var(--appBackgroundLightestHSL), 1);
       }
 
       value {
         font-size: 2.4em;
-        line-height: 1.4em;
+        line-height: 1.2em;
       }
 
       icon.spinner {
@@ -112,6 +111,9 @@
       @media screen and (max-width: 660px) {
         stats {
           padding-top: var(--defaultGap);
+        }
+        key {
+          font-size: 1em;
         }
       }
     </style>

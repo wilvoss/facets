@@ -60,19 +60,19 @@ var app = new Vue({
       result.push({
         key: 'Basic',
         value: [
-          { key: 'Total Games Created', value: this.rawStats.totalGames },
-          { key: 'Crazy Hard Games', value: this.rawStats.totalHardGames },
+          { key: 'Games Created', value: this.rawStats.totalGames },
+          { key: 'Hard Games', value: this.rawStats.totalHardGames },
         ],
       });
       let languages = [];
       this.rawStats.languagesCount.forEach((language) => {
-        languages.push({ key: AllLanguages.find((item) => item.tag === language.lang).name + ' Games', value: language.count });
+        languages.push({ key: AllLanguages.find((item) => item.tag === language.lang).name, value: language.count });
       });
       languages.sort((a, b) => b.value - a.value);
       result.push({ key: 'Languages', value: languages });
       let wordsets = [];
       this.rawStats.wordsetIDCount.forEach((set) => {
-        wordsets.push({ key: WordSets.find((item) => item.id === set.id).name + ' Games', value: set.count });
+        wordsets.push({ key: WordSets.find((item) => item.id === set.id).name, value: set.count });
       });
       wordsets.sort((a, b) => b.value - a.value);
       result.push({ key: 'Categories', value: wordsets });
