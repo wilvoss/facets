@@ -137,9 +137,9 @@ a, a:hover, a:focus, a:visited, a:active {
 }
 
 a.padded {
-    padding-top: calc(.5 * var(--defaultGap));
-    padding-bottom: calc(.5 * var(--defaultGap));
-    width: 100%;
+    border: 1px solid hsla(var(--linkColorDarkHSL), .4);
+    border-radius: var(--borderRadius);
+    padding: 6px 8px;
 }
 
 a.inline {
