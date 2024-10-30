@@ -25,11 +25,14 @@
     --traySolvedBackgroundHSL: var(--hueSolved), 86%, 73%;
     --simpleCardForegroundHSL: 0, 0%, 0%;
     --simpleCardBackgroundHSL: 0, 100%, 100%;
+    --statBackground: hsla(var(--hueTheme), 100%, 98%, .7);
+    --statBorder: hsla(var(--hueTheme), 70%, 80%, 1);
 
     --textureSource: radial-gradient(circle at center 400px, hsla(var(--appBackgroundDarkestHSL), .7) 1%, hsla(var(--appBackgroundDarkestHSL), .7) 40%, hsla(var(--appBackgroundHSL), 1) 80%);
     --texture2: var(var(--textureSource));
     --textureSize: cover;
     --textureBlendMode: normal;
+    --statShadow: 0px 4px 6px rgba(0, 0, 0, .1);
 }
 
 app {

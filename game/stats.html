@@ -68,10 +68,10 @@
         min-width: 25%;
         max-width: 100%;
         padding: 10px 10px 14px;
-        background: hsla(var(--appBackgroundHSL), 0.6);
+        background: var(--statBackground);
         border-radius: var(--borderRadius);
-        box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.2);
-        border: 1px solid hsla(var(--appForegroundHSL), 0.1);
+        box-shadow: var(--statShadow);
+        border: 1px solid var(--statBorder);
       }
 
       .languages stat:first-of-type {
@@ -86,9 +86,7 @@
         min-width: 100px;
       }
       key {
-        font-size: 0.7em;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        font-size: 0.9em;
         color: hsla(var(--appForegroundHSL), 0.7);
       }
 
@@ -121,6 +119,7 @@
 
   <body>
     <app id="app" v-cloak>
+      <link rel="stylesheet" v-if="userSettingsUsesLightTheme" href="../styles/light.css" media="screen" />
       <wrapper>
         <header>
           <h1 @click="window.open('/', '_blank')">Stats</h1>
