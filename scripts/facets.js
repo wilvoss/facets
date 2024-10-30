@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.034',
+    appDataVersion: '1.2.035',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -1239,7 +1239,10 @@ var app = new Vue({
     GetMessageBasedOnTrayCount(_gotIt, _name) {
       note('GetMessageBasedOnTrayCount() called');
       let index = this.getNumberOfCardsThatHaveBeenPlacedOnTray;
-      let pretext = this.appDataPlayerCurrent.role === 'reviewer' ? index + '/4 ' : '';
+      let pretext = '';
+      if (this.appDataPlayerCurrent.role === 'reviewer' && getNumberOfCardsThatHaveBeenPlacedOnTray < 4) {
+        pretext = index + '/4 ';
+      }
       if (index === 4 && this.appDataPlayerCurrent.role === 'reviewer' && !_gotIt) {
         index = 5;
       }
