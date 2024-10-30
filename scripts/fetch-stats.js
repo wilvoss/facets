@@ -68,15 +68,33 @@ var app = new Vue({
       this.rawStats.languagesCount.forEach((language) => {
         languages.push({ key: AllLanguages.find((item) => item.tag === language.lang).name, value: language.count });
       });
-      languages.sort((a, b) => b.value - a.value);
+
+      this.SortByValueThenName(languages, 'key');
+
       result.push({ key: 'Games per Languages', value: languages });
       let wordsets = [];
       this.rawStats.wordsetIDCount.forEach((set) => {
         wordsets.push({ key: WordSets.find((item) => item.id === set.id).name, value: set.count });
       });
-      wordsets.sort((a, b) => b.value - a.value);
+
+      this.SortByValueThenName(wordsets, 'key');
+
       result.push({ key: 'Games per Category', value: wordsets });
       return result;
+    },
+
+    SortByValueThenName(_array, _property) {
+      _array.sort((a, b) => {
+        if (b.value !== a.value) {
+          return b.value - a.value;
+        } else {
+          if (a[_property] && b[_property]) {
+            return a[_property].localeCompare(b[_property]);
+          } else {
+            return 0;
+          }
+        }
+      });
     },
 
     HandleOnVisibilityChange(event) {

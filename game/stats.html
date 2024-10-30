@@ -39,6 +39,7 @@
 
       subtitle {
         color: hsla(var(--appForegroundHSL), 0.7);
+        text-align: center;
       }
 
       stats {
@@ -96,7 +97,7 @@
       }
 
       icon.spinner {
-        margin-top: 120px;
+        margin-top: 190px;
       }
 
       app::-webkit-scrollbar {
@@ -128,7 +129,7 @@
           <h1 @click="window.open('/', '_blank')">Stats</h1>
         </header>
       </wrapper>
-      <subtitle>Oct 24, 2024 - Present (Refreshed Daily)</subtitle>
+      <subtitle>Oct 24, 2024 - Present <br />(refreshed daily)</subtitle>
       <icon class="spinner" :class="{show: isFetching}"></icon>
       <stats :class="stat.key.toLowerCase()" v-for="stat in stats">
         <message>{{stat.key}}</message>
