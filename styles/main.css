@@ -13,6 +13,7 @@
     src: url('../fonts/Bungee-Regular.ttf');
 }
 
+
 :root {
     --hueMainSource: 140;
     --hueMain: 140;
@@ -62,6 +63,8 @@
     --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, .5);
     --statShadow: 0px 4px 10px rgba(0, 0, 0, .25);
 
+    --wordFont: 'Abel', 'Segoe UI', 'Helvetica Neue';
+
     --textureSource: radial-gradient(circle at center 400px, hsla(var(--appBackgroundHSL), .7) 1%, hsla(var(--appBackgroundHSL), .7) 40%, hsla(var(--appBackgroundDarkestHSL), 1) 80%);
     --texture2: var(--textureSource);
     --textureHueSource: linear-gradient(hsla(var(--appBackgroundHSL), 0), hsla(var(--appBackgroundHSL), 0));
@@ -92,8 +95,6 @@ body {
     width: 100%;
     height: 100%;
     display: block;
-    user-select: none;
-    -webkit-user-select: none;
 }
 
 app {
@@ -117,11 +118,18 @@ preload {
     user-select: none;
 }
 
+p {
+    user-select: none;
+    -webkit-user-select: none;
+}
+
 h1, h2, h3, h4, h5 {
     font-weight: normal;
     margin: calc(3 * var(--defaultGap)) 0 calc(2 * var(--defaultGap));
     font-family: "Theme";
     text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 h3 {
@@ -138,6 +146,8 @@ a, a:hover, a:focus, a:visited, a:active {
     text-align: center;
     color: hsl(var(--linkColorLightHSL));
     text-decoration: none;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 a.padded {
@@ -167,6 +177,8 @@ button {
     font-family: 'Theme';
     transition: var(--mediumTransition) ease-in-out;
     transition-property: color, background-color, opacity, border-color;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 button.secondary {
@@ -274,6 +286,10 @@ icon.feedback {
     -webkit-mask-image: url(../images/icon-feedback.svg);
 }
 
+small {
+    user-select: none;
+    -webkit-user-select: none;
+}
 
 message small {
     color: hsl(var(--linkColorLightHSL));
@@ -416,6 +432,8 @@ message {
     text-align: center;
     width: 100%;
     pointer-events: none;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 message span {
@@ -1156,6 +1174,8 @@ hints hint input {
 
 hints hint input::placeholder {
     color: hsla(var(--hueMain), 70%, 48%, 1);
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 .multicolor.creating hints hint input::placeholder {
@@ -1249,6 +1269,7 @@ words {
 }
 
 word {
+    font-family: var(--wordFont);
     display: flex;
     justify-content: center;
     align-items: baseline;
@@ -1260,6 +1281,8 @@ word {
     padding-top: 10px;
     font-size: calc(var(--wordScale) * 90%);
     line-height: 100%;
+    user-select: all;
+    -webkit-user-select: all;
 }
 
 cards word {
