@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.038',
+    appDataVersion: '1.2.039',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -250,7 +250,10 @@ var app = new Vue({
         lang = this.currentGameLanguage;
       }
       let fetchPromises = this.currentGameWordSet.data.map(async (url) => {
-        const modifiedUrl = url.toString().replace('./data/', './data/' + lang);
+        let modifiedUrl = url.toString().replace('./data/', './data/' + lang);
+        if (this.currentGameWordSet.noLanguage) {
+          modifiedUrl = url.toString().replace('./data/', './data/common/');
+        }
         const response = await fetch(modifiedUrl);
         return await response.json();
       });

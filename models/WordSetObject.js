@@ -16,6 +16,7 @@ class WordSetObject {
     this.wordAlignement = spec.wordAlignement === undefined ? 'end' : spec.wordAlignement;
     this.scale = spec.scale === undefined ? 1 : spec.scale;
     this.message = spec.message === undefined ? '' : spec.message;
+    this.noLanguage = spec.noLanguage === undefined ? false : spec.noLanguage;
   }
 }
 
@@ -27,7 +28,7 @@ let Summer = new WordSetObject({ id: '5', name: 'Summer', data: ['./data/summer.
 let Fall = new WordSetObject({ id: '6', name: 'Fall', data: ['./data/fall.json'], enabled: false });
 let Science = new WordSetObject({ id: '7', emoji: '🧪', name: 'Science', data: ['./data/science.json'], textureImage: '../images/wallpapers/science.jpg' });
 let Entertainment = new WordSetObject({ id: '8', emoji: '🍿', name: 'Entertainment', startsWithVowel: true, data: ['./data/entertainment.json'], textureImage: '../images/wallpapers/entertainment.jpg' });
-let CommonEmoji = new WordSetObject({ id: '9', emoji: '✨', name: 'Emoji', startsWithVowel: true, data: ['./data/common-emoji.json'], scale: 1.9, wordAlignement: 'start', message: 'Some Emoji might not show on your device.', textureImage: '../images/wallpapers/emoji.jpg' });
+let CommonEmoji = new WordSetObject({ id: '9', emoji: '✨', noLanguage: true, name: 'Emoji 😺', startsWithVowel: true, data: ['./data/common-emoji.json'], scale: 1.9, wordAlignement: 'start', message: 'Some Emoji might not show on your device.', textureImage: '../images/wallpapers/emoji.jpg' });
 let Cities = new WordSetObject({ id: '10', name: 'Cities', startsWithVowel: true, data: ['./data/cities.json'], enabled: false });
 let Sport = new WordSetObject({ id: '11', name: 'Sport', startsWithVowel: true, data: ['./data/sports.json'], enabled: false });
 let NounsVerbs = new WordSetObject({ id: '100', emoji: '🍎', name: 'Common', isSelected: true, data: [Nouns.data, Verbs.data], textureImage: '../images/wallpapers/common.jpg' });
@@ -35,7 +36,7 @@ let Seasons = new WordSetObject({ id: '101', emoji: '🍁', name: 'Seasons', dat
 let Civilization = new WordSetObject({ id: '102', emoji: '🌍', name: 'Civilization', data: ['./data/civilization.json'], textureImage: '../images/wallpapers/civilization.jpg' });
 let Archeology = new WordSetObject({ id: '103', emoji: '🦴', name: 'Archeology', startsWithVowel: true, data: ['./data/prehistory.json'], textureImage: '../images/wallpapers/prehistory.jpg' });
 let Sports = new WordSetObject({ id: '104', emoji: '🏓', name: 'Sports', data: [Sport.data, Cities.data], textureImage: '../images/wallpapers/sports.jpg' });
-let Kaomoji = new WordSetObject({ id: '105', emoji: '︶ω︶', name: 'Kaomoji', data: ['./data/kaomoji.json'], textureImage: '../images/wallpapers/emoji.jpg' });
+let Kaomoji = new WordSetObject({ id: '105', scale: 0.8, emoji: '︶ω︶', noLanguage: true, name: 'Kaomoji (¬_¬)', data: ['./data/kaomoji.json'], textureImage: '../images/wallpapers/emoji.jpg' });
 let All = new WordSetObject({ id: '1000', emoji: '🎓', name: 'All Words', startsWithVowel: true, data: [Winter.data, Spring.data, Summer.data, Fall.data, Entertainment.data, Science.data, Civilization.data, Archeology.data, Nouns.data, Verbs.data, Cities.data, Sport.data] });
 
 let WordSets = [NounsVerbs, Kaomoji, Nouns, Verbs, Winter, Spring, Summer, Fall, Seasons, Entertainment, Science, Civilization, Archeology, CommonEmoji, Sports, All];
