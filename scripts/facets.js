@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.039',
+    appDataVersion: '1.2.040',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -276,7 +276,10 @@ var app = new Vue({
       }
       let allWords = [];
       let fetchPromises = this.currentGameGuessingWordSet.data.map(async (url) => {
-        const modifiedUrl = url.toString().replace('./data/', './data/' + lang);
+        let modifiedUrl = url.toString().replace('./data/', './data/' + lang);
+        if (this.currentGameWordSet.noLanguage) {
+          modifiedUrl = url.toString().replace('./data/', './data/common/');
+        }
         const response = await fetch(modifiedUrl);
         return await response.json();
       });
