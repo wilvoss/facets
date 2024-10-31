@@ -43,8 +43,7 @@
     <app
       id="app"
       v-cloak
-      class="multicolor"
-      :class="{solved: currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, dragging: appStateIsDragging, guessing: appStateIsGuessing, simple: userSettingsUsesSimplifiedTheme, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}"
+      :class="{multicolor: userSettingsUseMultiColoredGems, solved: currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, dragging: appStateIsDragging, guessing: appStateIsGuessing, simple: userSettingsUsesSimplifiedTheme, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}"
       @pointerdown="HandleBodyPointerDown(event)"
       @pointerup="HandleBodyPointerUp(event, appStateIsDragging ? appDataDraggedCard : getSelectedCard)"
     >
@@ -174,14 +173,19 @@
             Light theme
             <toggle></toggle>
           </checkbox>
-          <checkbox :class="{on: tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseSimplifiedTheme()">
-            Simple visuals
-            <toggle></toggle>
-          </checkbox>
           <checkbox :class="{on: tempUseWordSetThemes}" @click="ToggleTempUseWordSetThemes()">
             Category backgrounds
             <toggle></toggle>
           </checkbox>
+          <checkbox :class="{on: tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseSimplifiedTheme()">
+            Simple visuals
+            <toggle></toggle>
+          </checkbox>
+          <checkbox :class="{disabled: tempUserSettingsUsesSimplifiedTheme, on: !tempUseMultiColoredGems && !tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseMultiColoredGems()">
+            Monocolored gem
+            <toggle></toggle>
+          </checkbox>
+          <small :class="{disabled: tempUserSettingsUsesSimplifiedTheme}">Enable this if you want the gem to remain green when you are creating, guessing, or reviewing.</small>
         </section>
         <controls>
           <button class="secondary" @click="CancelSettings(event)">Cancel</button>

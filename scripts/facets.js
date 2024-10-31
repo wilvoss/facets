@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.041',
+    appDataVersion: '1.2.042',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -87,6 +87,7 @@ var app = new Vue({
     tempName: '',
     tempID: 0,
     tempShareURLCode: '',
+    tempUseMultiColoredGems: true,
     tempUserSettingsUsesLightTheme: false,
     tempUserSettingsUsesSimplifiedTheme: false,
     tempUseWordSetThemes: false,
@@ -121,6 +122,9 @@ var app = new Vue({
 
     ToggleUseSimplifedTheme(_value) {
       this.userSettingsUsesSimplifiedTheme = _value;
+      if (this.userSettingsUsesSimplifiedTheme) {
+        this.tempUseMultiColoredGems = true;
+      }
     },
 
     ToggleFocus() {
@@ -168,6 +172,11 @@ var app = new Vue({
     ToggleTempUsePortraitLayout() {
       note('ToggleTempUsePortraitLayout() called');
       this.tempUsePortraitLayout = !this.tempUsePortraitLayout;
+    },
+
+    ToggleTempUseMultiColoredGems() {
+      note('ToggleTempUsePortraitLayout() called');
+      this.tempUseMultiColoredGems = !this.tempUseMultiColoredGems;
     },
 
     ToggleTempUseExtraCard() {
@@ -777,6 +786,12 @@ var app = new Vue({
         this.ToggleUseSimplifedTheme(JSON.parse(userSettingsUsesSimplifiedTheme));
         this.tempUserSettingsUsesSimplifiedTheme = this.userSettingsUsesSimplifiedTheme;
       }
+
+      let userSettingsUseMultiColoredGems = localStorage.getItem('useMultiColoredGems');
+      if (userSettingsUseMultiColoredGems !== undefined && userSettingsUseMultiColoredGems !== null) {
+        this.userSettingsUseMultiColoredGems = JSON.parse(userSettingsUseMultiColoredGems);
+        this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
+      }
     },
 
     HandleBodyPointerUp(e, _card) {
@@ -873,6 +888,7 @@ var app = new Vue({
       this.appStateShowSettings = false;
       this.appStateShowIntro = false;
       this.tempID = this.appDataPlayerCurrent.id;
+      this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
       this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
       this.tempUserSettingsLanguage = this.userSettingsLanguage;
       this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
@@ -913,10 +929,10 @@ var app = new Vue({
 
         this.appDataPlayerCurrent.id = this.tempID;
         this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
-        // this.getCurrentGameWordSet();
         this.userSettingsUseExtraCard = this.tempUseExtraCard;
         this.ToggleUseLightTheme(this.tempUserSettingsUsesLightTheme);
         this.ToggleUseSimplifedTheme(this.tempUserSettingsUsesSimplifiedTheme);
+        this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
         this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
         this.SetWordSetTheme(this.currentGameGuessingWordSet);
 
@@ -925,6 +941,7 @@ var app = new Vue({
         localStorage.setItem('userSettingsLanguage', this.userSettingsLanguage);
         localStorage.setItem('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
         localStorage.setItem('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
+        localStorage.setItem('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
         localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
         localStorage.setItem('wordSet', this.currentGameWordSet.id);
       }

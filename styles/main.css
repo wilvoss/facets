@@ -597,6 +597,9 @@ diamond.back {
     opacity: .8;
 }
 
+diamond.back {
+    background: hsl(var(--trayGuessingBackgroundHSL));
+}
 
 .multicolor.creating diamond.back {
     background: hsl(var(--trayCreatingBackgroundHSL));
