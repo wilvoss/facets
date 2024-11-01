@@ -39,6 +39,8 @@
 
       subtitle {
         color: hsla(var(--appForegroundHSL), 1);
+        display: flex;
+        flex-direction: column;
         line-height: 1.3em;
         text-align: center;
       }
@@ -136,7 +138,7 @@
           <h1 @click="window.open('/', '_blank')">Stats</h1>
         </header>
       </wrapper>
-      <subtitle>Oct 24, 2024 - Present <span>(Stats update daily at midnight GMT)</span></subtitle>
+      <subtitle>Oct 24, 2024 - Present <span>(Stats update every hour)</span></subtitle>
       <icon class="spinner" :class="{show: isFetching}"></icon>
       <stats :class="stat.key.toLowerCase()" v-for="stat in stats">
         <message>{{stat.key}}</message>
