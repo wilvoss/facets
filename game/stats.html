@@ -38,8 +38,14 @@
       }
 
       subtitle {
-        color: hsla(var(--appForegroundHSL), 0.7);
+        color: hsla(var(--appForegroundHSL), 1);
+        line-height: 1.3em;
         text-align: center;
+      }
+
+      subtitle span {
+        display: block;
+        color: hsla(var(--appForegroundHSL), 0.7);
       }
 
       stats {
@@ -130,7 +136,7 @@
           <h1 @click="window.open('/', '_blank')">Stats</h1>
         </header>
       </wrapper>
-      <subtitle>Oct 24, 2024 - Present <br />(refreshed daily)</subtitle>
+      <subtitle>Oct 24, 2024 - Present <span>(Stats update daily at midnight GMT)</span></subtitle>
       <icon class="spinner" :class="{show: isFetching}"></icon>
       <stats :class="stat.key.toLowerCase()" v-for="stat in stats">
         <message>{{stat.key}}</message>
