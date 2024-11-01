@@ -236,7 +236,7 @@
 
           <gamelinks>
             <p @click="HandleOldGameClick(game)" v-for="game in getCreatedGamesWithWordSetNames">
-              <a href=""><small>{{game.name}} Puzzle {{game.useExtraCard === "true" ? '(5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a>
+              <a href=""><small>{{game.name}} {{game.useExtraCard === "true" ? '(5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a>
               <button title="Report this puzzle for offensive language." @click="ReportPuzzle(game)" class="inline report"><icon class="alert"></icon>Report</button>
             </p>
           </gamelinks>

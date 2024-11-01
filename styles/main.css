@@ -1109,13 +1109,6 @@ modal gamelinks p a, modal gamelinks p a:hover, modal gamelinks p a:active, moda
     text-wrap: nowrap;
 }
 
-modal gamelinks p small:before {
-    content: counter(recent-game-counter);
-    counter-increment: recent-game-counter;
-    display: inline-block;
-    padding-right: 6px;
-}
-
 modal gamelinks p button.inline {
     z-index: 2;
     padding: 5px 10px;
@@ -1157,6 +1150,8 @@ modal small {
     line-height: 120%;
     width: 100%;
     max-width: calc(100% - 2 * var(--defaultGap));
+    transition: var(--mediumTransition) ease-in-out;
+    transition-property: opacity, color, background-color;
 }
 
 modal section h3 small {

@@ -14,7 +14,7 @@ checkbox {
     align-items: center;
     -webkit-tap-highlight-color: transparent;
     transition: var(--mediumTransition) ease-in-out;
-    transition-property: background-color, border-color;
+    transition-property: background-color, border-color, opacity;
 }
 
 checkbox toggle {
