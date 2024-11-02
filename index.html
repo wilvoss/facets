@@ -195,21 +195,28 @@
       <modal v-if="appStateShowCatChooser">
         <section>
           <h2>Game Options</h2>
-          <h3>Words</h3>
-          <leftright>
+          <message style="padding-top: 0px">Category</message>
+          <categories>
+            <category :class="{on: set.name === tempWordSetName }" @click="tempWordSetName = set.name" :class="{on: tempWordSetName === set.name}" v-for="set in getEnabledTempWordSet">{{set.name}}</category>
+          </categories>
+          <!-- <leftright>
             <p>Category</p>
             <select v-model="tempWordSetName">
               <option v-for="name in getEnabledTempWordSetNames" :key="name" :value="name">{{ name }}</option>
             </select>
-          </leftright>
-          <leftright>
-            <p>Language</p>
+          </leftright> -->
+          <message>Language</message>
+          <categories>
+            <category :class="{on: option.tag === tempUserSettingsLanguage }" @click="tempUserSettingsLanguage = option.tag" :class="{on: tempUserSettingsLanguage === option.tag}" v-for="option in getEnabledTempLanguages">{{option.name}}</category>
+          </categories>
+          <!-- <leftright>
+            <p>Selected</p>
             <select v-model="tempUserSettingsLanguage">
               <option v-for="option in getEnabledTempLanguages" :key="option.tag" :value="option.tag">{{ option.name }}</option>
               <option disabled>More coming!</option>
             </select>
-          </leftright>
-          <h3>Difficulty</h3>
+          </leftright> -->
+          <message>Difficulty</message>
           <checkbox title="Enable this to make your puzzle much harder to solve!" :class="{on: tempUseExtraCard}" @click="ToggleTempUseExtraCard()">
             Make it crazy hard
             <toggle></toggle>

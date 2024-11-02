@@ -1051,28 +1051,42 @@ modal input.large {
 }
 
 modal categories {
+    --backgroundCoverOn: hsla(var(--appBackgroundHSL), 1);
+    --backgroundCover: hsla(var(--appBackgroundDarkHSL), 1);
     display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: calc(.5 * var(--defaultGap));
     justify-content: center;
     align-items: center;
-    flex-direction: column;
     width: 100%;
 }
 
 modal categories category {
     display: block;
-    padding: calc(.5 * var(--defaultGap));
-    width: calc(100% - var(--defaultGap));
+    flex: 1;
+    padding: calc(.5 * var(--defaultGap)) var(--defaultGap);
+    color: hsla(var(--appForegroundHSL), .7);
     text-align: center;
     user-select: none;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
+    background: var(--backgroundCover);
+    background-size: 140%;
+    text-wrap: nowrap;
+    border-radius: var(--borderRadius);
+    border: 1px solid hsla(var(--appForegroundHSL), .1);
+    text-shadow: 0px 0px 4px hsl(var(--appBackgroundDarkestHSL));
+    max-width: 26%;
 }
 
 modal categories category.on {
-    color: hsl(var(--linkColorLightHSL));
+    background: var(--backgroundCoverOn);
+    color: hsla(var(--appForegroundHSL), 1);
+    border: 1px solid hsla(var(--appForegroundHSL), 1);
 }
 
-modal categories category.on::before {
+/* modal categories category.on::before {
     content: '❭❭';
     display: inline-block;
     padding-right: 10px;
@@ -1082,7 +1096,7 @@ modal categories category.on::after {
     content: '❬❬';
     display: inline-block;
     padding-left: 10px;
-}
+} */
 
 modal gamelinks {
     display: block;
@@ -1284,6 +1298,7 @@ word {
 }
 
 cards word {
+    text-transform: capitalize;
     height: calc(var(--wordHeight) - 2px);
     padding-top: 2px;
 

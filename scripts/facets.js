@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.049',
+    appDataVersion: '1.2.050',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -1665,6 +1665,15 @@ var app = new Vue({
         }
       });
       return names.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
+    },
+    getEnabledTempWordSet: function () {
+      let names = [];
+      this.appDataWordSets.forEach((set) => {
+        if (set.enabled) {
+          names.push(set);
+        }
+      });
+      return names.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
     },
     getEnabledTempLanguages: function () {
       let names = [];
