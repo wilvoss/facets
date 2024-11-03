@@ -1527,11 +1527,16 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     }
 
     wrapper message {
-        height: calc(1 * var(--defaultGap));
-        padding: 0px var(--defaultGap);
+        height: calc(1 * var(--defaultGap) + 6px);
+        padding: 0px var(--defaultGap) var(--defaultGap);
         overflow: hidden;
         text-wrap: nowrap;
         text-overflow: ellipsis;
+    }
+
+    wrapper subtitle {
+        margin-bottom: 0px;
+        padding-bottom: calc(.5 * var(--defaultGap));
     }
 
     message {
@@ -1608,6 +1613,11 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         position: fixed;
         padding: 0px;
         bottom: 0px;
+    }
+
+    wrapper message {
+        padding-top: var(--defaultGap);
+        padding-bottom: 0px;
     }
 
     subtitle {
