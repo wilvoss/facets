@@ -71,7 +71,7 @@ var app = new Vue({
 
       this.SortByValueThenName(languages, 'key');
 
-      result.push({ key: 'Games per Languages', value: languages });
+      result.push({ key: 'Language', value: languages });
       let wordsets = [];
       this.rawStats.wordsetIDCount.forEach((set) => {
         wordsets.push({ key: WordSets.find((item) => item.id === set.id).name, value: set.count });
@@ -79,7 +79,7 @@ var app = new Vue({
 
       this.SortByValueThenName(wordsets, 'key');
 
-      result.push({ key: 'Games per Category', value: wordsets });
+      result.push({ key: 'Category', value: wordsets });
       return result;
     },
 

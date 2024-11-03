@@ -151,9 +151,10 @@ a, a:hover, a:focus, a:visited, a:active {
 }
 
 a.padded {
-    border: 1px solid hsla(var(--linkColorDarkHSL), .4);
+    border: 1px solid hsla(var(--linkColorDarkHSL), .2);
+    background-color: hsl(var(--appBackgroundDarkHSL));
     border-radius: var(--borderRadius);
-    padding: 6px 8px;
+    padding: 6px 16px;
 }
 
 a.inline {
