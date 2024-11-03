@@ -1609,9 +1609,9 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         padding-bottom: 0px;
     }
 
-    subtitle {
+    wrapper subtitle {
         gap: 8px;
-        padding-bottom: var(--defaultGap);
+        padding-bottom: 0px;
     }
 
     subtitle button.small {
