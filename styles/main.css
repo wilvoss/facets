@@ -942,17 +942,6 @@ cards card, .multicolor.guessing cards card, .reviewing cards card {
     color: hsl(var(--hueSolved), 94%, 90%);
 }
 
-cards spot:nth-child(1) card words word:nth-child(2),
-cards spot:nth-child(1) card words word:nth-child(3),
-cards spot:nth-child(2) card words word:nth-child(3),
-cards spot:nth-child(2) card words word:nth-child(4),
-cards spot:nth-child(3) card words word:nth-child(1),
-cards spot:nth-child(3) card words word:nth-child(2),
-cards spot:nth-child(4) card words word:nth-child(1),
-cards spot:nth-child(4) card words word:nth-child(4) {
-    opacity: .7;
-}
-
 ghost {
     display: block;
     width: var(--cardSize);
