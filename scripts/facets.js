@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.055',
+    appDataVersion: '1.2.056',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -1273,7 +1273,7 @@ var app = new Vue({
       let usingName = _name !== '';
       let name = !usingName ? '' : _name + ', ';
       let useLowerCase = usingName && levelMessage.indexOf('I ') !== 0;
-      levelMessage = useLowerCase ? levelMessage.charAt(0).toUpperCase() + levelMessage.slice(1) : levelMessage;
+      levelMessage = useLowerCase ? levelMessage.charAt(0).toLowerCase() + levelMessage.slice(1) : levelMessage;
       let message = pretext + LevelEmoji[index][getRandomInt(0, LevelEmoji[index].length)] + ' ' + name + levelMessage;
       announce(message);
       return message;
