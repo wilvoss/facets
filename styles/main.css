@@ -866,6 +866,10 @@ spot {
 parking spot {
     background: hsla(var(--appBackgroundDarkestHSL), .8);
     outline: 1px solid hsla(var(--hueMain), 100%, 70%, .7);
+    opacity: 1;
+}
+
+parking spot.empty {
     opacity: .5;
 }
 
@@ -887,6 +891,10 @@ parking spot {
 .multicolor.guessing.solved parking spot {
     outline: 1px solid hsla(var(--hueSolved), 100%, 70%, .7);
     opacity: 1;
+}
+
+.multicolor.creating parking spot.empty, .multicolor.guessing parking spot.empty, .multicolor.guessing.reviewing parking spot.empty, .multicolor.guessing.solved parking spot.empty {
+    opacity: .5;
 }
 
 
