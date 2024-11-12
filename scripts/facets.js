@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.062',
+    appDataVersion: '1.2.063',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -570,9 +570,12 @@ var app = new Vue({
       this.appDataGlobalCreatedGames = [];
       var requestUrl = 'https://worker-falling-frost-2926.bigtentgames.workers.dev/';
       await fetch(requestUrl, {
+        method: 'GET',
         headers: {
           Host: window.location.hostname,
           Origin: window.location.origin,
+          'Access-Control-Request-Method': 'GET',
+          'Access-Control-Request-Headers': 'Content-Type',
         },
       })
         .then((response) => {
@@ -1196,6 +1199,8 @@ var app = new Vue({
           headers: {
             Host: window.location.hostname,
             Origin: window.location.origin,
+            'Access-Control-Request-Method': 'GET',
+            'Access-Control-Request-Headers': 'Content-Type',
           },
         })
           .then((response) => {

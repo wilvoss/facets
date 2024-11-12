@@ -15,9 +15,12 @@ async function HandleOnLoadEvent(_e) {
   requestUrl = corsflareUrl + encodeURIComponent(rawUrl);
 
   await fetch(requestUrl, {
+    method: 'GET',
     headers: {
       Host: window.location.hostname,
       Origin: window.location.origin,
+      'Access-Control-Request-Method': 'GET',
+      'Access-Control-Request-Headers': 'Content-Type',
     },
   })
     .then((response) => {
