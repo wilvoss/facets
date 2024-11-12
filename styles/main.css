@@ -322,7 +322,7 @@ icon.info {
 }
 
 icon.info.small {
-    background-color: hsl(0, 255%, 255%);
+    background-color: hsl(0, 100%, 100%);
     width: var(--tiniestIconSize);
     padding-left: 4px;
     padding-bottom: 5px;
