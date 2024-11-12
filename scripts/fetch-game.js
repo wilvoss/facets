@@ -1,6 +1,22 @@
+let timer, count, counter, loading, controls, message, refresh, okay;
+
 async function HandleOnLoadEvent(_e) {
+  loading = document.getElementById('loading');
+  controls = document.getElementById('controls');
+  message = document.getElementById('message');
+  counter = document.getElementById('counter');
+  refresh = document.getElementById('refresh');
+  okay = document.getElementById('okay');
+
   var corsflareUrl = 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
   var rawUrl = window.location.search.split('?')[1];
+
+  // return;/
+
+  if (!location.search || location.search === '') {
+    HandleError();
+    return;
+  }
 
   // Validate and sanitize the URL
   var requestUrl;
@@ -25,7 +41,7 @@ async function HandleOnLoadEvent(_e) {
   })
     .then((response) => {
       if (!response.ok) {
-        HandleError();
+        // HandleError(true);
         throw new Error('Server error: ' + response.status);
       }
       return response.text();
@@ -34,19 +50,40 @@ async function HandleOnLoadEvent(_e) {
       location.href = location.origin + '/?' + searchParams;
     })
     .catch((error) => {
-      HandleError();
+      HandleError(true);
       console.error('Error:', error);
     });
 }
 
-function HandleError() {
-  let button = document.getElementById('loadingButton');
-  let controls = document.getElementById('controls');
-  let message = document.getElementById('message');
-
+function HandleError(_refreshable = false) {
+  console.log('handleError() called');
+  loading.className = 'hide';
   message.className = '';
-  controls.className = '';
-  button.className = 'hide';
+  okay.className = 'padded';
+
+  if (_refreshable) {
+    message.innerHTML = 'There was a problem. <br />Try refreshing in 60 seconds.';
+    refresh.className = 'padded secondary disabled';
+    count = 60;
+    window.setInterval(() => {
+      count--;
+      console.log(count);
+      if (count <= 0) {
+        window.clearInterval(timer);
+        message.innerHTML = 'There was a problem. <br />Try refreshing your browser.';
+        refresh.className = 'padded secondary';
+      } else {
+        message.innerHTML = 'There was a problem. <br />Try refreshing in ' + count + ' seconds.';
+      }
+    }, 1000);
+  } else {
+    message.innerHTML = "You've reached this page in error.";
+  }
+}
+
+function HandleOnUnloadEvent() {
+  window.clearInterval(timer);
 }
 
 window.addEventListener('load', HandleOnLoadEvent);
+window.addEventListener('unload', HandleOnUnloadEvent);

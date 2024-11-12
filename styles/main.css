@@ -56,6 +56,7 @@
     --defaultGap: 20px;
     --borderRadius: 5px;
     --tinyIconSize: 13px;
+    --tiniestIconSize: 12px;
     --extraSmallIconSize: 16px;
     --smallIconSize: 24px;
     --mediumIconSize: 32px;
@@ -316,8 +317,18 @@ message icon.share {
 }
 
 icon.info {
-    mask-image: url(../images/icon-gradcap.svg);
-    -webkit-mask-image: url(../images/icon-gradcap.svg);
+    mask-image: url(../images/icon-question.svg);
+    -webkit-mask-image: url(../images/icon-question.svg);
+}
+
+icon.info.small {
+    background-color: hsl(0, 255%, 255%);
+    width: var(--tiniestIconSize);
+    padding-left: 4px;
+    padding-bottom: 5px;
+    height: var(--tiniestIconSize);
+    mask-size: var(--tiniestIconSize) var(--tiniestIconSize);
+    -webkit-mask-size: var(--tiniestIconSize) var(--tiniestIconSize);
 }
 
 icon.spinner {
@@ -1545,6 +1556,9 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
 }
 
 @media screen and (max-width:660px) {
+    :root {
+        --tiniestIconSize: 11px;
+    }
 
     html {
         width: 100%;
@@ -1617,6 +1631,10 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     wrapper message {
         padding-top: var(--defaultGap);
         padding-bottom: 0px;
+    }
+
+    icon.info.small {
+        padding-bottom: 2px;
     }
 
     wrapper subtitle {

@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.063',
+    appDataVersion: '1.2.064',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -22,7 +22,7 @@ var app = new Vue({
     appDataDraggedCard: new CardObject({}),
     appDataDraggedCardStartedInParkingLot: false,
     appDataEmptyCard: new CardObject({ id: 'ghost' }),
-    appDataGameCatchphrase: 'A game of words!',
+    appDataGameCatchphrase: 'A Puzzle Game of Words and Wits!',
     appDataGameName: 'Facets',
     appDataGhostX: 0,
     appDataGhostY: 0,
@@ -1644,14 +1644,14 @@ var app = new Vue({
     getPlayerMessage: function () {
       let pronoun = this.currentGameGuessingWordSet.startsWithVowel ? 'an "' : 'a "';
       let name = this.appStateForceAutoCheck ? pronoun : this.appDataPlayerCreator.name + '\'s "';
-      let text = 'Guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle!';
+      let text = 'Guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle! <a class="inline"><icon class="info small"></icon></a>';
       if (!this.appStateIsGuessing) {
-        text = this.appDataPlayerCurrent.name + ', you are creating a new "' + this.currentGameGuessingWordSet.name + '" puzzle!';
+        text = this.appDataPlayerCurrent.name + ', you are creating a new "' + this.currentGameGuessingWordSet.name + '" puzzle! <a class="inline"><icon class="info small"></icon></a>';
       } else {
         if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
           text = this.appDataPlayerCurrent.name + ', this is your own puzzle!';
         } else if (this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
-          text = this.appDataPlayerCurrent.name + ', you are reviewing ' + this.appDataPlayerSender.name + "'s guess!";
+          text = this.appDataPlayerCurrent.name + ', you are reviewing ' + this.appDataPlayerSender.name + "'s guess! <a class='inline'><icon class='info small'></icon></a>";
         }
       }
       return text;
@@ -1699,7 +1699,7 @@ var app = new Vue({
       if (this.appDataPlayerCurrent.role === 'reviewer') {
         text = 'Send Back';
       } else if (this.appDataPlayerCurrent.role === 'creator') {
-        text = 'Send Game';
+        text = 'Send Puzzle';
       }
 
       if (this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {

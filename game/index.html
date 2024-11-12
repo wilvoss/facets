@@ -26,7 +26,16 @@
     <link rel="stylesheet" href="../styles/normalize.css" media="screen" />
     <link rel="stylesheet" href="../styles/main.min.css" media="screen" />
     <style>
-      message {
+      body {
+        line-height: 150%;
+      }
+      section {
+        margin-top: 40px;
+      }
+      h2 {
+        font-size: 2.2em;
+      }
+      modal message {
         background: none;
         justify-content: center;
         flex-direction: column;
@@ -34,36 +43,61 @@
         align-items: center;
         display: flex;
         cursor: default;
-        pointer-events: none;
-        width: 80%;
+        /* width: 80%; */
+        pointer-events: all;
+        padding-bottom: 140px;
       }
       modal controls.hide,
       message.hide,
-      message.hide {
+      message.hide,
+      a.hide,
+      button.hide {
         display: none;
       }
+
+      message span {
+        display: contents;
+      }
+      a.padded {
+        display: inline-block;
+        font-size: 0.9em;
+        width: 50%;
+      }
+
+      button {
+        border: 1px solid hsla(var(--linkColorDarkHSL), 0.75);
+        width: 90%;
+      }
+
       icon {
         position: relative;
         margin-top: 10px;
+      }
+
+      small span {
+        display: inline-block;
+        margin-left: 6px;
+      }
+
+      @media screen and (max-width: 660px) {
+        button {
+          width: 50%;
+        }
       }
     </style>
   </head>
 
   <body>
-    <modal class="centered">
+    <modal>
       <section>
         <h2>
           Facets!
-          <small style="max-width: 100%; font-size: 50%; padding-top: var(--defaultGap)">
-            A game of connecting words that maybe <br />
-            don't connect so easily. 💎
-          </small>
+          <small style="max-width: 100%; font-size: 50%; padding-top: var(--defaultGap)"> A Puzzle Game of Words and Wits!</small>
         </h2>
-        <message id="message" class="hide">There was a problem. Quitting and restarting your browser might fix the issue.</message>
-        <message class="inline loading" id="loadingButton">Loading<icon class="spinner show" style="position: relative"></icon></message>
-        <controls id="controls" class="hide">
-          <button onclick="location.href = location.origin" id="loadingButton">Okay</button>
-        </controls>
+        <message id="message" class="hide"></message>
+        <message id="loading" class="inline loading">Loading<icon class="spinner show" style="position: relative"></icon></message>
+        <button id="refresh" class="hide" onclick="location.reload()">Refresh</button>
+        <button id="okay" class="hide" onclick="location.href='/'">Create Puzzle</button>
       </section>
     </modal>
 

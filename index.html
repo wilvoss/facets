@@ -23,7 +23,7 @@
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
 
-    <meta name="keywords" content="Facets, Facets!, Big Tent Games, Games, Causual game, Puzzle game, Word game, Boardgame, Wil Voss" />
+    <meta name="keywords" content="Facets, Facets!, Big Tent Games, Games, Casual game, Puzzle game, Word game, Boardgame, Wil Voss" />
     <meta name="description" content="Facets: A Puzzle Game of Words and Wits!" />
 
     <link rel="apple-touch-icon" sizes="120x120" href="images/icon180.png" />
@@ -72,7 +72,7 @@
           <p class="blueText">It's your job to come up with clues that "connect" the four word-pairs (or Emoji-pairs) that are displayed on the edges of a gem.</p>
           <p>Anatomy of a puzzle:</p>
           <img :src="'./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
-          <p>When you are satisfied with your 4 clues, hit the <cta>Send Game</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
+          <p>When you are satisfied with your 4 clues, hit the <cta>Send Puzzle}</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
           <p>They're gonna have to recreate your puzzle based on your clues! 🧠</p>
         </section>
         <section>
@@ -81,14 +81,14 @@
       </modal>
       <modal v-if="appStateShowTutorial" class="tutorial">
         <section>
-          <h2>How To Play</h2>
+          <h2>How to play</h2>
           <p>In this game you are either <span class="blueText">creating</span> a word puzzle to send to your friends or <span class="greenText">guessing</span> the solution to a word puzzle that a friend sent to you.</p>
           <p>There is no single player mode. The game requires sharing between friends via text, chat, email, or some other social media.</p>
           <h3>Creating</h3>
           <p>When creating a new puzzle, it's your job to come up with clues that "connect" the four word-pairs that are displayed on the edges of a gem.</p>
           <p>Anatomy of a puzzle:</p>
           <img :src="'./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
-          <p>When you are satisfied with your 4 clues, hit the <cta>Send Game</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
+          <p>When you are satisfied with your 4 clues, hit the <cta>Send Puzzle</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
           <p>They're gonna have to recreate your puzzle based on your clues! 🧠</p>
           <h3>Guessing</h3>
           <p>When your friend created this word puzzle, they were given word-pairs that they had to "connect" by coming up with a clue that works for both words in each word-pair.</p>
@@ -120,10 +120,7 @@
         <section>
           <h2>
             Facets!
-            <small style="max-width: unset; font-size: 50%; padding-top: var(--defaultGap)">
-              A game of connecting words that maybe <br />
-              don't connect so easily. 💎
-            </small>
+            <small style="max-width: unset; font-size: 50%; padding-top: var(--defaultGap)"> A Puzzle Game of Words and Wits! </small>
           </h2>
           <message>What's your name?</message>
           <input style="text-align: center" spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" v-model="tempName" />
@@ -132,8 +129,7 @@
       </modal>
       <modal v-if="appStateShowInfo">
         <section>
-          <h2>About</h2>
-          <a class="padded" href="/game/stats.html" target="_blank">Global game stats</a>
+          <h2>Credits</h2>
           <h3>Created by</h3>
           <credit>Wil Voss</credit>
           <h3>Feedback and ideas</h3>
@@ -194,7 +190,7 @@
       </modal>
       <modal v-if="appStateShowCatChooser">
         <section>
-          <h2>Game Options</h2>
+          <h2>Puzzle Options</h2>
           <message style="padding-top: 0px">Category</message>
           <categories>
             <category :class="{on: set.name === tempWordSetName }" @click="tempWordSetName = set.name" :class="{on: tempWordSetName === set.name}" v-for="set in getEnabledTempWordSet">{{set.name}}</category>
@@ -230,15 +226,15 @@
       </modal>
       <modal v-if="appStateShowGlobalCreated">
         <section>
-          <h2>Recent Puzzles</h2>
-          <p>Check here to play random puzzles recently created by players around the world.</p>
+          <h2>Global Puzzles</h2>
+          <p>Play random puzzles recently created by anonymous players from around the world.</p>
           <icon v-show="appStateIsGettingLast10Games" style="position: relative" class="spinner show"></icon>
           <message style="padding: calc(2 * var(--defaultGap)) 0" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0">
             <p>😢</p>
             <p>There are no recent puzzles to display.</p>
           </message>
 
-          <button style="border: 1px solid hsla(var(--linkColorDarkHSL), 0.75)" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0" @click="ToggleShowGlobalCreated(); HandleNewGameClick()">Create One!</button>
+          <a class="padded" style="margin-top: 20px; border: 1px solid hsla(var(--linkColorDarkHSL), 0.75)" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0" @click="ToggleShowGlobalCreated(); HandleNewGameClick()">Create One!</a>
           <button class="primary" style="margin: 10px 0" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length > 0" @click="GetLast10GlobalCreatedGames();">Refresh</button>
 
           <gamelinks>
@@ -248,12 +244,12 @@
             </p>
           </gamelinks>
 
-          <controls><button @click="appStateShowGlobalCreated = false">Okay</button></controls>
+          <controls><button class="secondary" @click="window.open('/game/stats.html', '_blank')">Stats</button><button @click="appStateShowGlobalCreated = false">Done</button></controls>
         </section>
       </modal>
       <wrapper>
         <controls>
-          <button class="inline" @click="HandleNewGameClick()">Create Game</button>
+          <button class="inline" @click="HandleNewGameClick()">Create Puzzle</button>
         </controls>
         <header>
           <h1 @click="ToggleFocus()">{{appDataGameName}}</h1>
@@ -267,9 +263,9 @@
       </wrapper>
       <wrapper>
         <subtitle>
-          <button class="inline small" @click="ToggleShowTutorial(event)">How To</button>
-          <button class="inline small" @click="ToggleShowGlobalCreated()">Recents</button>
-          <button class="inline small" @click="appStateShowInfo = true">About</button>
+          <button class="inline small" @click="ToggleShowTutorial(event)">How-to</button>
+          <button class="inline small" @click="ToggleShowGlobalCreated()">Global</button>
+          <button class="inline small" @click="appStateShowInfo = true">Credits</button>
           <button class="inline small" @click="ShowSettings()">Settings</button>
         </subtitle>
       </wrapper>
@@ -283,7 +279,7 @@
           </small>
         </message>
         <message :title="appDataMessage" v-if="appDataMessage !== '' && appDataMessage.indexOf('Message') !== -1"> {{appDataMessage}} </message>
-        <message :title="appDataMessage" v-if="appDataMessage === ''">{{getPlayerMessage}}</message>
+        <message style="cursor: pointer" :title="appDataMessage" v-if="appDataMessage === ''" @click="ToggleShowTutorial(event)" v-html="getPlayerMessage"></message>
       </wrapper>
       <wrapper class="main">
         <rotators style="width: calc(3.25 * var(--cardSize))">
