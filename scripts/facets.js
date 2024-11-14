@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.069',
+    appDataVersion: '1.2.070',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,

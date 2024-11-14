@@ -152,11 +152,9 @@ a, a:hover, a:focus, a:visited, a:active {
 }
 
 a.padded {
-    border: 1px solid hsla(var(--linkColorDarkHSL), .2);
-    background-color: hsl(var(--appBackgroundDarkHSL));
     border-radius: var(--borderRadius);
     padding: 8px 16px;
-    width: calc(100% - 32px);
+    width: calc(90% - 32px);
 }
 
 a.inline {
