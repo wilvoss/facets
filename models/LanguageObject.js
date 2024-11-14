@@ -13,5 +13,6 @@ let AllLanguages = [
   new LanguageObject({ name: '日本語', tag: 'ja-jp' }),
   new LanguageObject({ name: 'Français', tag: 'fr-fr' }),
   new LanguageObject({ name: '廣東話', tag: 'zh-hk' }),
-  new LanguageObject({ name: 'العربية', tag: 'ar-sa' })
+  new LanguageObject({ name: 'العربية', tag: 'ar-sa' }),
+  new LanguageObject({ name: 'Deutsch', tag: 'de-de' })
 ];
