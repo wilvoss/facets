@@ -149,6 +149,7 @@ a, a:hover, a:focus, a:visited, a:active {
     text-decoration: none;
     user-select: none;
     -webkit-user-select: none;
+    cursor: pointer;
 }
 
 a.padded {
