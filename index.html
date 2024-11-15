@@ -234,9 +234,11 @@
             <p>There are no recent puzzles to display.</p>
           </message>
 
-          <a class="padded" style="margin-top: 20px; border: 1px solid hsla(var(--linkColorDarkHSL), 0.75)" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0" @click="ToggleShowGlobalCreated(); HandleNewGameClick()">Create One!</a>
-          <button class="primary" style="margin: 10px 0" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length > 0" @click="GetLast10GlobalCreatedGames();">Refresh</button>
-
+          <!-- <a class="padded" style="margin-top: 20px; border: 1px solid hsla(var(--linkColorDarkHSL), 0.75)" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0" @click="ToggleShowGlobalCreated(); HandleNewGameClick()">Create One!</a> -->
+          <leftright style="margin: 20px 0">
+            <a class="padded" @click="GetLast10GlobalCreatedGames();">Refresh</a>
+            <a class="padded" @click="window.open('/game/stats.html', '_blank')">Global Game Stats</a>
+          </leftright>
           <gamelinks>
             <p @click="HandleOldGameClick(game)" v-for="game in getCreatedGamesWithWordSetNames">
               <a href=""><small>{{game.name}} {{game.useExtraCard === "true" ? '(5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a>
@@ -245,7 +247,6 @@
           </gamelinks>
 
           <controls>
-            <button class="secondary" @click="window.open('/game/stats.html', '_blank')">Stats</button>
             <button @click="appStateShowGlobalCreated = false">Done</button>
           </controls>
         </section>
