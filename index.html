@@ -237,7 +237,7 @@
           <!-- <a class="padded" style="margin-top: 20px; border: 1px solid hsla(var(--linkColorDarkHSL), 0.75)" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0" @click="ToggleShowGlobalCreated(); HandleNewGameClick()">Create One!</a> -->
           <leftright style="margin: 20px 0">
             <a class="padded" @click="GetLast10GlobalCreatedGames();">Refresh</a>
-            <a class="padded" @click="window.open('/game/stats.html', '_blank')">Global Game Stats</a>
+            <a class="padded" @click="window.open('/game/stats.html', '_blank')">Global Stats</a>
           </leftright>
           <gamelinks>
             <p @click="HandleOldGameClick(game)" v-for="game in getCreatedGamesWithWordSetNames">
