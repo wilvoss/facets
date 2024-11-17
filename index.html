@@ -228,17 +228,20 @@
         <section>
           <h2>Global Puzzles</h2>
           <p>Play random puzzles recently created by anonymous players from around the world.</p>
-          <icon v-show="appStateIsGettingLast10Games" style="position: relative" class="spinner show"></icon>
-          <message style="padding: calc(2 * var(--defaultGap)) 0" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0">
-            <p>😢</p>
-            <p>There are no recent puzzles to display.</p>
-          </message>
-
-          <!-- <a class="padded" style="margin-top: 20px; border: 1px solid hsla(var(--linkColorDarkHSL), 0.75)" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0" @click="ToggleShowGlobalCreated(); HandleNewGameClick()">Create One!</a> -->
-          <leftright style="margin: 20px 0">
+          
+          <leftright style="margin: 20px 0" v-if="getCreatedGamesWithWordSetNames.length > 0">
             <a class="padded" @click="GetLast10GlobalCreatedGames();">Refresh</a>
             <a class="padded" @click="window.open('/game/stats.html', '_blank')">Global Stats</a>
           </leftright>
+          
+          <icon v-show="appStateIsGettingLast10Games" style="position: relative" class="spinner show"></icon>
+          
+          <message style="padding: calc(2 * var(--defaultGap)) 0" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0">
+            <p>😢</p>
+            <p>There are no recent puzzles to display.</p>
+          <button style="margin-top: 20px; border: 1px solid hsla(var(--linkColorDarkHSL), 0.75)" @click="ToggleShowGlobalCreated(); HandleNewGameClick()">Create One!</button>
+          </message>
+
           <gamelinks>
             <p @click="HandleOldGameClick(game)" v-for="game in getCreatedGamesWithWordSetNames">
               <a href=""><small>{{game.name}} {{game.useExtraCard === "true" ? '(5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a>
