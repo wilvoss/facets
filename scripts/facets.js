@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.076',
+    appDataVersion: '1.2.077',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -64,6 +64,7 @@ var app = new Vue({
     appStateTrayRotation: 0,
     appStateUsePortraitLayout: false,
     appStateIsHorizontalPan: false,
+    appStateShowNotificadtion: true,
     // current game
     currentGameGuessCount: 0,
     currentGameGuessersName: '',
@@ -812,6 +813,9 @@ var app = new Vue({
     },
 
     HandleBodyPointerDown(e) {
+      if (!this.appStateIsModalShowing && !this.appStateShowTutorial && !this.appStateShowInfo && !this.appStateShowIntro) {
+        // this.appStateShowNotific adtion = false;
+      }
       this.appDataGhostX = e.clientX;
       this.appDataGhostY = e.clientY;
       this.appStateIsHorizontalPan = false;
@@ -1644,14 +1648,14 @@ var app = new Vue({
     getPlayerMessage: function () {
       let pronoun = this.currentGameGuessingWordSet.startsWithVowel ? 'an "' : 'a "';
       let name = this.appStateForceAutoCheck ? pronoun : this.appDataPlayerCreator.name + '\'s "';
-      let text = 'Guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle! <a class="inline"><icon class="info small"></icon></a>';
+      let text = 'You are guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle!';
       if (!this.appStateIsGuessing) {
-        text = this.appDataPlayerCurrent.name + ', you are creating a new "' + this.currentGameGuessingWordSet.name + '" puzzle! <a class="inline"><icon class="info small"></icon></a>';
+        text = 'You are creating a new "' + this.currentGameGuessingWordSet.name + '" puzzle!';
       } else {
         if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
           text = this.appDataPlayerCurrent.name + ', this is your own puzzle!';
         } else if (this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
-          text = this.appDataPlayerCurrent.name + ', you are reviewing ' + this.appDataPlayerSender.name + "'s guess! <a class='inline'><icon class='info small'></icon></a>";
+          text = 'You are reviewing ' + this.appDataPlayerSender.name + "'s guess!";
         }
       }
       return text;

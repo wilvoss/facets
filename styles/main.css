@@ -105,7 +105,7 @@ app {
     background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0) 200px);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     transition: var(--mediumTransition) ease-in-out background-color;
 }
 
@@ -461,6 +461,36 @@ subtitle button.small {
     align-items: start;
 }
 
+notification {
+    display: flex;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    /* top: var(--defaultGap); */
+    top: 0;
+    justify-content: center;
+    align-items: center;
+    z-index: 101;
+    background: hsla(var(--appBackgroundDarkestHSL), .8);
+    transition: var(--shortTransition);
+}
+
+notification.hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+notification message {
+    background: black;
+    width: auto;
+    padding: var(--defaultGap);
+    margin: var(--defaultGap);
+    border: 1px solid;
+    /* border-width: 0 1px 1px 1px; */
+    border-radius: var(--borderRadius);
+    pointer-events: none;
+}
+
 message {
     display: block;
     color: hsl(var(--messageColorHSL));
@@ -549,14 +579,21 @@ wrapper:first-of-type {
 }
 
 wrapper.main {
-    height: calc(100% - var(--cardSize));
-    padding-bottom: var(--cardSize);
+    width: calc(100% - 2 * var(--defaultGap));
+    padding: var(--defaultGap);
     align-items: center;
     justify-content: center;
 }
 
 .portrait wrapper.main {
+    height: calc(100% - var(--cardSize));
     padding-bottom: 0px;
+}
+
+
+app.portrait {
+    height: unset;
+    justify-content: space-between;
 }
 
 wrapper.mobile {
@@ -1545,6 +1582,7 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
 }
 
 @media screen and (max-height:844px) {
+
     controls {
         padding-top: 0;
         padding-bottom: 0;
