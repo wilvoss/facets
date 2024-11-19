@@ -60,6 +60,7 @@
     --extraSmallIconSize: 16px;
     --smallIconSize: 24px;
     --mediumIconSize: 32px;
+    --largeIconSize: 48px;
     --cardDropShadow: 0px 0px 10px rgba(0, 0, 0, .3);
     --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, .5);
     --statShadow: 0px 4px 10px rgba(0, 0, 0, .25);
@@ -230,12 +231,19 @@ button.small icon {
 }
 
 header {
+    display: flex;
+    justify-content: center;
+    gap: 3px;
     flex: 1;
 }
 
 header h1 {
     margin: 0px;
     color: hsla(var(--appForegroundHSL), 1);
+}
+
+header icon {
+    display: none;
 }
 
 icon {
@@ -259,6 +267,16 @@ icon.emoji {
     width: auto;
     height: auto;
     line-height: inherit;
+}
+
+icon.logo {
+    width: var(--largeIconSize);
+    height: var(--largeIconSize);
+    mask-size: var(--largeIconSize) var(--largeIconSize);
+    -webkit-mask-size: var(--largeIconSize) var(--largeIconSize);
+    mask-image: url(../images/logo-facets.svg);
+    -webkit-mask-image: url(../images/logo-facets.svg);
+    background-color: hsl(var(--appForegroundHSL));
 }
 
 icon.share {
@@ -414,6 +432,12 @@ header h1 {
     font-weight: normal;
     font-size: 280%;
     line-height: 84%;
+}
+
+
+icon.logo {
+    mask-image: url(../images/logo-facets.svg);
+    -webkit-mask-image: url(../images/logo-facets.svg);
 }
 
 subtitle {
@@ -1587,8 +1611,14 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     header {
         display: flex;
         justify-content: center;
-        flex: 1;
-        flex-basis: 170px;
+    }
+
+    header icon {
+        display: block;
+    }
+
+    header h1 {
+        display: none;
     }
 
     wrapper controls {

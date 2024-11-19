@@ -228,18 +228,18 @@
         <section>
           <h2>Global Puzzles</h2>
           <p>Play random puzzles recently created by anonymous players from around the world.</p>
-          
+
           <leftright style="margin: 20px 0" v-if="getCreatedGamesWithWordSetNames.length > 0">
             <a class="padded" @click="GetLast10GlobalCreatedGames();">Refresh</a>
             <a class="padded" @click="window.open('/game/stats.html', '_blank')">Global Stats</a>
           </leftright>
-          
+
           <icon v-show="appStateIsGettingLast10Games" style="position: relative" class="spinner show"></icon>
-          
+
           <message style="padding: calc(2 * var(--defaultGap)) 0" v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0">
             <p>😢</p>
             <p>There are no recent puzzles to display.</p>
-          <button style="margin-top: 20px; border: 1px solid hsla(var(--linkColorDarkHSL), 0.75)" @click="ToggleShowGlobalCreated(); HandleNewGameClick()">Create One!</button>
+            <button style="margin-top: 20px; border: 1px solid hsla(var(--linkColorDarkHSL), 0.75)" @click="ToggleShowGlobalCreated(); HandleNewGameClick()">Create One!</button>
           </message>
 
           <gamelinks>
@@ -258,8 +258,9 @@
         <controls>
           <button class="inline" @click="HandleNewGameClick()">Create Puzzle</button>
         </controls>
-        <header>
-          <h1 @click="ToggleFocus()">{{appDataGameName}}</h1>
+        <header @click="ToggleFocus()">
+          <icon class="logo"></icon>
+          <h1>{{appDataGameName}}</h1>
         </header>
         <controls>
           <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()" :class="{disabled: currentGameSolutionGuessing === currentGameSolutionActual && currentGameSolutionGuessing !== '' || ( getNumberOfHintsThatHaveBeenFilled !== 4 && appDataPlayerCurrent.role === 'creator') || (getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && appDataPlayerCurrent.role !== 'reviewer' && appDataPlayerCurrent.id !== appDataPlayerCreator.id)}">
