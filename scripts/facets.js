@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.83',
+    appDataVersion: '1.2.84',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -40,6 +40,7 @@ var app = new Vue({
     appDataShareURL: '',
     appDataTimeoutCardRotation: null,
     appDataTimeoutTrayRotation: null,
+    appDataTimeoutNotification: null,
     appDataTransitionLong: 0,
     appDataTransitionShort: 0,
     appDataWordSets: [...WordSets],
@@ -1650,12 +1651,12 @@ var app = new Vue({
       return this.appDataCardsParked.find((card) => card.words.length === 0);
     },
     getPlayerMessage: function () {
+      clearTimeout(this.appDataTimeoutNotification);
       let pronoun = this.currentGameGuessingWordSet.startsWithVowel ? 'an "' : 'a "';
       let name = this.appStateForceAutoCheck ? pronoun : this.appDataPlayerCreator.name + '\'s "';
       let text = '';
       if (this.appDataMessage !== '') {
         text = this.appDataMessage;
-        this.appStateShowNotification = true;
       } else if (!this.appStateIsGuessing && this.appDataPlayerCurrent.id !== -1) {
         text = 'You are creating a new "' + this.currentGameGuessingWordSet.name + '" puzzle!';
       } else if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id !== -1 && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
@@ -1667,6 +1668,9 @@ var app = new Vue({
       } else {
         text = 'You are guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle!';
       }
+      this.appDataTimeoutNotification = setTimeout(() => {
+        this.appStateShowNotification = false;
+      }, 1700);
       return text;
     },
     getEnabledWordSets: function () {

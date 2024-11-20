@@ -471,10 +471,10 @@ notification {
     justify-content: center;
     align-items: center;
     z-index: 101;
-    background: hsla(var(--appBackgroundDarkestHSL), .8);
-    transition: var(--shortTransition) ease-in-out opacity;
+    background: hsla(var(--appBackgroundDarkestHSL), .5);
+    backdrop-filter: blur(3px);
+    transition: var(--mediumTransition) ease-in-out opacity;
     opacity: 0;
-    transition-delay: 110ms;
     pointer-events: none;
 }
 
