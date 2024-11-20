@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.90',
+    appDataVersion: '1.2.91',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -1652,6 +1652,7 @@ var app = new Vue({
     },
     getPlayerMessage: function () {
       clearTimeout(this.appDataTimeoutNotification);
+      let time = 3000;
       let pronoun = this.currentGameGuessingWordSet.startsWithVowel ? 'an "' : 'a "';
       let name = this.appStateForceAutoCheck ? pronoun : this.appDataPlayerCreator.name + '\'s "';
       let text = '';
@@ -1659,9 +1660,7 @@ var app = new Vue({
         text = this.appDataMessage;
       } else if (!this.appStateIsGuessing && this.appDataPlayerCurrent.id !== -1) {
         text = 'You are creating a new "' + this.currentGameGuessingWordSet.name + '" puzzle!';
-        this.appDataTimeoutNotification = setTimeout(() => {
-          this.appStateShowNotification = false;
-        }, 1700);
+        time = 1700;
       } else if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id !== -1 && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
         text = this.appDataPlayerCurrent.name + ', this is your own puzzle!';
       } else if (this.currentGameReviewIsFinal && this.appDataPlayerCurrent.id !== -1) {
@@ -1671,6 +1670,10 @@ var app = new Vue({
       } else {
         text = 'You are guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle!';
       }
+      this.appDataTimeoutNotification = setTimeout(() => {
+        this.appStateShowNotification = false;
+      }, time);
+
       return text;
     },
     getEnabledWordSets: function () {
