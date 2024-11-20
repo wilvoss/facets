@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.82',
+    appDataVersion: '1.2.83',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -979,6 +979,8 @@ var app = new Vue({
               this.appStateShowInfo = false;
             } else if (this.appStateShowGlobalCreated) {
               this.appStateShowGlobalCreated = false;
+            } else if (this.appStateShowCatChooser) {
+              this.HandleGoButtonClick(e);
             }
             break;
           case 'Tab':
@@ -1654,13 +1656,13 @@ var app = new Vue({
       if (this.appDataMessage !== '') {
         text = this.appDataMessage;
         this.appStateShowNotification = true;
-      } else if (!this.appStateIsGuessing) {
+      } else if (!this.appStateIsGuessing && this.appDataPlayerCurrent.id !== -1) {
         text = 'You are creating a new "' + this.currentGameGuessingWordSet.name + '" puzzle!';
-      } else if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
+      } else if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id !== -1 && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
         text = this.appDataPlayerCurrent.name + ', this is your own puzzle!';
-      } else if (this.currentGameReviewIsFinal) {
+      } else if (this.currentGameReviewIsFinal && this.appDataPlayerCurrent.id !== -1) {
         text = this.appDataPlayerCurrent.name + ", here's the solution.";
-      } else if (this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
+      } else if (this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id && this.appDataPlayerCurrent.id !== -1) {
         text = 'You are reviewing ' + this.appDataPlayerSender.name + "'s guess!";
       } else {
         text = 'You are guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle!';

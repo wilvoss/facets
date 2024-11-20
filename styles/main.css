@@ -485,7 +485,8 @@ notification.show {
 
 notification message {
     background: black;
-    width: auto;
+    width: calc(100% - 2 * var(--defaultGap));
+    max-width: calc(2.5 * var(--cardSize));
     padding: var(--defaultGap);
     margin: var(--defaultGap);
     border: 1px solid;
