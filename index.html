@@ -57,7 +57,7 @@
       <link rel="stylesheet" v-if="(userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme)" href="styles/light.css" media="screen" />
       <link rel="stylesheet" v-if="userSettingsUsesSimplifiedTheme" href="styles/simple.css" media="screen" />
       <link rel="stylesheet" v-if="userSettingsFocus && (appStateIsGuessing || appDataPlayerCurrent.role === 'reviewer')" href="styles/focus.min.css" media="screen" />
-      <notification @click="appStateShowNotification = false" :class="{hide: !appStateShowNotification || getPlayerMessage === ''}">
+      <notification @click="appStateShowNotification = false" :class="{show: appStateShowNotification}">
         <message :title="getPlayerMessage" v-html="getPlayerMessage"></message>
       </notification>
       <modal v-if="appStateShowOOBE" class="tutorial">

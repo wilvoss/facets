@@ -472,12 +472,15 @@ notification {
     align-items: center;
     z-index: 101;
     background: hsla(var(--appBackgroundDarkestHSL), .8);
-    transition: var(--shortTransition);
+    transition: var(--shortTransition) ease-in-out opacity;
+    opacity: 0;
+    transition-delay: 110ms;
+    pointer-events: none;
 }
 
-notification.hide {
-    opacity: 0;
-    pointer-events: none;
+notification.show {
+    opacity: 1;
+    pointer-events: all;
 }
 
 notification message {

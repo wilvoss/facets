@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.078',
+    appDataVersion: '1.2.079',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -1651,20 +1651,19 @@ var app = new Vue({
       let pronoun = this.currentGameGuessingWordSet.startsWithVowel ? 'an "' : 'a "';
       let name = this.appStateForceAutoCheck ? pronoun : this.appDataPlayerCreator.name + '\'s "';
       let text = '';
-      if (!this.appStateIsGuessing) {
+      if (this.appDataMessage !== '') {
+        text = this.appDataMessage;
+        this.appStateShowNotification = true;
+      } else if (!this.appStateIsGuessing) {
         text = 'You are creating a new "' + this.currentGameGuessingWordSet.name + '" puzzle!';
+      } else if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
+        text = this.appDataPlayerCurrent.name + ', this is your own puzzle!';
+      } else if (this.currentGameReviewIsFinal) {
+        text = this.appDataPlayerCurrent.name + ", here's the solution.";
+      } else if (this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
+        text = 'You are reviewing ' + this.appDataPlayerSender.name + "'s guess!";
       } else {
-        if (this.currentGameReviewIsFinal) {
-          text = this.appDataPlayerCurrent.name + ", here's the solution.";
-        } else if (this.appDataMessage !== '') {
-          text = this.appDataMessage;
-        } else if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
-          text = this.appDataPlayerCurrent.name + ', this is your own puzzle!';
-        } else if (this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
-          text = 'You are reviewing ' + this.appDataPlayerSender.name + "'s guess!";
-        } else {
-          text = 'You are guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle!';
-        }
+        text = 'You are guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle!';
       }
       return text;
     },
