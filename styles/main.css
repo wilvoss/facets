@@ -1445,6 +1445,13 @@ modal section {
     max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
 }
 
+modal hider {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
 modal img {
     width: 100%;
     margin: var(--defaultGap) 0;
