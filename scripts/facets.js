@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.077',
+    appDataVersion: '1.2.078',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -64,7 +64,7 @@ var app = new Vue({
     appStateTrayRotation: 0,
     appStateUsePortraitLayout: false,
     appStateIsHorizontalPan: false,
-    appStateShowNotificadtion: true,
+    appStateShowNotification: true,
     // current game
     currentGameGuessCount: 0,
     currentGameGuessersName: '',
@@ -1121,6 +1121,7 @@ var app = new Vue({
             .then(() => {
               note('Attempting to copy via navigator.clipboard.write');
               this.appDataMessage = 'Message copied to the clipboard.';
+              this.appStateShowNotification = true;
             })
             .catch((err) => {
               error('Failed to copy text via navigator.clipboard.write: ', err);
@@ -1133,6 +1134,7 @@ var app = new Vue({
             .then(() => {
               note('Attempting to copy via navigator.clipboard.writeText');
               this.appDataMessage = 'Message copied to the clipboard.';
+              this.appStateShowNotification = true;
             })
             .catch((err) => {
               error('Failed to copy text via navigator.clipboard.writeText: ', err);
@@ -1648,14 +1650,20 @@ var app = new Vue({
     getPlayerMessage: function () {
       let pronoun = this.currentGameGuessingWordSet.startsWithVowel ? 'an "' : 'a "';
       let name = this.appStateForceAutoCheck ? pronoun : this.appDataPlayerCreator.name + '\'s "';
-      let text = 'You are guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle!';
+      let text = '';
       if (!this.appStateIsGuessing) {
         text = 'You are creating a new "' + this.currentGameGuessingWordSet.name + '" puzzle!';
       } else {
-        if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
+        if (this.currentGameReviewIsFinal) {
+          text = this.appDataPlayerCurrent.name + ", here's the solution.";
+        } else if (this.appDataMessage !== '') {
+          text = this.appDataMessage;
+        } else if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
           text = this.appDataPlayerCurrent.name + ', this is your own puzzle!';
         } else if (this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
           text = 'You are reviewing ' + this.appDataPlayerSender.name + "'s guess!";
+        } else {
+          text = 'You are guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle!';
         }
       }
       return text;
