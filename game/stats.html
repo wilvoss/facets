@@ -35,6 +35,7 @@
       header {
         flex-direction: column;
         padding: 8px;
+        align-items: center;
       }
 
       header h1,
@@ -147,8 +148,8 @@
       <link rel="stylesheet" v-if="userSettingsUsesLightTheme" href="../styles/light.css" media="screen" />
       <wrapper>
         <header @click="window.open('/', '_blank')">
-          <h1>Facets!</h1>
-          <h2>Global Game Stats</h2>
+          <icon class="logo"></icon>
+          <h2>Facets - Global Stats</h2>
         </header>
       </wrapper>
       <subtitle>Oct 24, 2024 - Present <span>(Updated Hourly)</span></subtitle>

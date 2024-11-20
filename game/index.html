@@ -32,7 +32,14 @@
       section {
         margin-top: 40px;
       }
+
+      header {
+        align-items: center;
+        flex-direction: column;
+      }
+
       h2 {
+        margin-top: 0;
         font-size: 2.2em;
       }
       modal message {
@@ -90,10 +97,11 @@
   <body>
     <modal>
       <section>
-        <h2>
-          Facets!
-          <small style="max-width: 100%; font-size: 50%; padding-top: var(--defaultGap)"> A Puzzle Game of Words and Wits!</small>
-        </h2>
+        <header>
+          <icon class="logo"></icon>
+
+          <h2><small style="max-width: 100%; font-size: 50%; padding-top: var(--defaultGap)"> Facets - A Puzzle Game of Words and Wits!</small></h2>
+        </header>
         <message id="message" class="hide"></message>
         <message id="loading" class="inline loading">Loading<icon class="spinner show" style="position: relative"></icon></message>
         <button id="refresh" class="hide" onclick="location.reload()">Refresh</button>
