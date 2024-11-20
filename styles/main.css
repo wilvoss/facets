@@ -19,7 +19,7 @@
     --hueMain: 140;
     --hueTheme: 215;
     --hueCreating: 215;
-    --hueGuessing: 140;
+    --hueGuessing: 40;
     --hueReviewing: 355;
     --hueSolved: 175;
     --hueHighlight: 140;
@@ -243,7 +243,7 @@ header h1 {
 }
 
 header icon {
-    display: none;
+    /* display: none; */
 }
 
 icon {
