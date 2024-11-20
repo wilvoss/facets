@@ -87,12 +87,16 @@
           <h2>How to play</h2>
           <p>In this game you are either <span class="blueText">creating</span> a word puzzle to send to your friends or <span class="greenText">guessing</span> the solution to a word puzzle that a friend sent to you.</p>
           <p>There is no single player mode. The game requires sharing between friends via text, chat, email, or some other social media.</p>
-          <h3>Creating</h3>
-          <p>When creating a new puzzle, it's your job to come up with clues that "connect" the four word-pairs that are displayed on the edges of a gem.</p>
-          <p>Anatomy of a puzzle:</p>
-          <img :src="'./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
-          <p>When you are satisfied with your 4 clues, hit the <cta>Send Puzzle</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
-          <p>They're gonna have to recreate your puzzle based on your clues! 🧠</p>
+
+          <hider v-if="!appStateIsGuessing">
+            <h3>Creating</h3>
+            <p>When creating a new puzzle, it's your job to come up with clues that "connect" the four word-pairs that are displayed on the edges of a gem.</p>
+            <p>Anatomy of a puzzle:</p>
+            <img :src="'./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
+            <p>When you are satisfied with your 4 clues, hit the <cta>Send Puzzle</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
+            <p>They're gonna have to recreate your puzzle based on your clues! 🧠</p>
+          </hider>
+
           <h3>Guessing</h3>
           <p>When your friend created this word puzzle, they were given word-pairs that they had to "connect" by coming up with a clue that works for both words in each word-pair.</p>
           <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with.</p>
@@ -101,6 +105,16 @@
           <img :src="'./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
           <p v-if="!appStateForceAutoCheck">Click the <cta>SEND GUESS</cta> button to send your guess back to whoever sent it to you.</p>
           <p v-if="appStateForceAutoCheck">Click the <cta>CHECK NOW</cta> button to automatically check your guess.</p>
+
+          <hider v-if="appStateIsGuessing">
+            <h3>Creating</h3>
+            <p>When creating a new puzzle, it's your job to come up with clues that "connect" the four word-pairs that are displayed on the edges of a gem.</p>
+            <p>Anatomy of a puzzle:</p>
+            <img :src="'./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
+            <p>When you are satisfied with your 4 clues, hit the <cta>Send Puzzle</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
+            <p>They're gonna have to recreate your puzzle based on your clues! 🧠</p>
+          </hider>
+
           <h3>Reviewing</h3>
           <p>Your friends will send their guesses back to you for review. When reviewing, remove incorrectly placed cards from the gem.</p>
           <img :src="'./images/tut-4' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
