@@ -1115,10 +1115,6 @@ modal input, hints hint input {
     -webkit-tap-highlight-color: transparent;
 }
 
-hints hint input {
-    line-height: 160%;
-}
-
 modal select option {
     color: unset;
 }
@@ -1251,7 +1247,7 @@ modal section h3 small {
 }
 
 hints hint input {
-    transform: rotateX(24deg) rotateY(0deg) scale(var(--wordScale));
+    transform: rotateX(24deg) rotateY(0deg);
     transform-style: preserve-3d;
     text-shadow: 0px -1px 1px hsla(var(--appBackgroundDarkestHSL), .6);
     font-size: 120%;
