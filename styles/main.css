@@ -1869,7 +1869,11 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
 
 @media screen and (max-height:670px) {
     wrapper.main {
-        max-height: 400px;
+        /* max-height: 400px; */
+    }
+
+    wrapper.subtitle {
+        display: none;
     }
 
     wrapper controls {

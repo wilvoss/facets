@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.92',
+    appDataVersion: '1.2.93',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -1724,7 +1724,7 @@ var app = new Vue({
 
       if (this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
         if (this.appStateForceAutoCheck) {
-          text = 'Check Now';
+          text = 'Check Guess';
         }
         if (this.isChromeAndiOSoriPadOS && this.appDataShareURL.includes('facets.bigtentgames.com/game/?')) {
           text = 'Copy';
