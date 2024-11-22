@@ -590,8 +590,7 @@ wrapper.main {
 }
 
 .portrait wrapper.main {
-    height: calc(100% - var(--cardSize));
-    padding-bottom: 0px;
+    height: calc(2 * var(--cardSize) + var(--wordHeight));
 }
 
 

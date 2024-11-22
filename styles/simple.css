@@ -40,6 +40,10 @@ spot {
     border-radius: var(--borderRadius);
 }
 
+.portrait wrapper.main {
+    padding: 0;
+}
+
 .portrait.simple wrapper.mobile parking spot {
     outline-width: 0px;
     background: none;

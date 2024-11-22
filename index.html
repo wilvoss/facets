@@ -171,40 +171,6 @@
         </section>
         <controls><button @click="appStateShowInfo = false">Okay</button></controls>
       </modal>
-      <modal v-if="appStateShowSettings">
-        <section>
-          <h2>Settings</h2>
-          <h3>Profile</h3>
-          <leftright>
-            <p>Your name</p>
-            <callout>
-              <input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
-            </callout>
-          </leftright>
-          <h3>Appearance</h3>
-          <checkbox :class="{on: tempUserSettingsUsesLightTheme}" @click="ToggleTempUseLightTheme()">
-            Light theme
-            <toggle></toggle>
-          </checkbox>
-          <checkbox :class="{on: tempUseWordSetThemes}" @click="ToggleTempUseWordSetThemes()">
-            Category backgrounds
-            <toggle></toggle>
-          </checkbox>
-          <checkbox :class="{on: tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseSimplifiedTheme()">
-            Simple visuals
-            <toggle></toggle>
-          </checkbox>
-          <checkbox :class="{disabled: tempUserSettingsUsesSimplifiedTheme, on: !tempUseMultiColoredGems && !tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseMultiColoredGems()">
-            Monocolored gem
-            <toggle></toggle>
-          </checkbox>
-          <small :class="{disabled: tempUserSettingsUsesSimplifiedTheme}">Enable this if you want the gem to remain green when you are creating, guessing, or reviewing.</small>
-        </section>
-        <controls>
-          <button class="secondary" @click="CancelSettings(event)">Cancel</button>
-          <button :disabled="tempID.toString().length !== 8" title="Please only use numbers." :class="{disabled: tempID.toString().length < 6}" @click="SubmitSettings(event)">Save</button>
-        </controls>
-      </modal>
       <modal v-if="appStateShowCatChooser">
         <section>
           <h2>Puzzle Options</h2>
@@ -239,6 +205,40 @@
         <controls>
           <button class="secondary" @click="appStateShowCatChooser = false">Cancel</button>
           <button @click="HandleGoButtonClick(event)">Create</button>
+        </controls>
+      </modal>
+      <modal v-if="appStateShowSettings">
+        <section>
+          <h2>Settings</h2>
+          <h3>Profile</h3>
+          <leftright>
+            <p>Your name</p>
+            <callout>
+              <input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
+            </callout>
+          </leftright>
+          <h3>Appearance</h3>
+          <checkbox :class="{on: tempUserSettingsUsesLightTheme}" @click="ToggleTempUseLightTheme()">
+            Light theme
+            <toggle></toggle>
+          </checkbox>
+          <checkbox :class="{on: tempUseWordSetThemes}" @click="ToggleTempUseWordSetThemes()">
+            Category backgrounds
+            <toggle></toggle>
+          </checkbox>
+          <checkbox :class="{on: tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseSimplifiedTheme()">
+            Simple visuals
+            <toggle></toggle>
+          </checkbox>
+          <checkbox :class="{disabled: tempUserSettingsUsesSimplifiedTheme, on: !tempUseMultiColoredGems && !tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseMultiColoredGems()">
+            Monocolored gem
+            <toggle></toggle>
+          </checkbox>
+          <small :class="{disabled: tempUserSettingsUsesSimplifiedTheme}">Enable this if you want the gem to remain green when you are creating, guessing, or reviewing.</small>
+        </section>
+        <controls>
+          <button class="secondary" @click="CancelSettings(event)">Cancel</button>
+          <button :disabled="tempID.toString().length !== 8" title="Please only use numbers." :class="{disabled: tempID.toString().length < 6}" @click="SubmitSettings(event)">Save</button>
         </controls>
       </modal>
       <modal v-if="appStateShowGlobalCreated">
