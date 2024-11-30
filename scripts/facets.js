@@ -14,7 +14,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.2.94',
+    appDataVersion: '1.2.95',
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -1019,7 +1019,7 @@ var app = new Vue({
     },
 
     HandleResize() {
-      this.appStateUsePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
+      this.appStateUsePortraitLayout = document.body.offsetWidth / document.body.offsetHeight < 0.75;
     },
 
     HandlePopState() {

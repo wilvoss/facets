@@ -62,18 +62,18 @@ function HandleError(_refreshable = false) {
   okay.className = 'padded';
 
   if (_refreshable) {
-    message.innerHTML = 'There was a problem. <br />Try refreshing in 60 seconds.';
-    refresh.className = 'padded secondary disabled';
     count = 60;
+    message.innerHTML = 'Cutting and polishing a gem takes time! <br />Try refreshing in ' + count + ' seconds.';
+    refresh.className = 'padded secondary disabled';
     window.setInterval(() => {
       count--;
       console.log(count);
       if (count <= 0) {
         window.clearInterval(timer);
-        message.innerHTML = 'There was a problem. <br />Try refreshing your browser.';
+        message.innerHTML = 'Cutting and polishing a gem takes time! <br />Try refreshing your browser.';
         refresh.className = 'padded secondary';
       } else {
-        message.innerHTML = 'There was a problem. <br />Try refreshing in ' + count + ' seconds.';
+        message.innerHTML = 'Cutting and polishing a gem takes time! <br />Try refreshing in ' + count + ' seconds.';
       }
     }, 1000);
   } else {

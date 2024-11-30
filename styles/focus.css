@@ -11,6 +11,11 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
         --scale: .7;
     }
 
+    .portrait wrapper.main {
+        padding: var(--defaultGap) 0 0;
+        height: 400px;
+    }
+
     .portrait wrapper.mobile, wrapper.mobile.extra, .portrait wrapper.mobile.extra {
         position: relative;
         flex-direction: column;

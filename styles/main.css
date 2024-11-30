@@ -590,7 +590,7 @@ wrapper.main {
 }
 
 .portrait wrapper.main {
-    height: calc(2 * var(--cardSize) + var(--wordHeight));
+    height: calc(100% - var(--cardSize));
 }
 
 
@@ -1684,7 +1684,7 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         font-size: 1.3em;
         max-height: 430px;
         overflow: visible;
-        padding-bottom: 0;
+        padding: 0;
     }
 
     wrapper.main>rotators {
@@ -1867,10 +1867,6 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
 }
 
 @media screen and (max-height:670px) {
-    wrapper.main {
-        /* max-height: 400px; */
-    }
-
     wrapper.subtitle {
         display: none;
     }
