@@ -242,10 +242,6 @@ header h1 {
     color: hsla(var(--appForegroundHSL), 1);
 }
 
-header icon {
-    /* display: none; */
-}
-
 icon {
     display: block;
     width: var(--smallIconSize);

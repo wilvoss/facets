@@ -205,5 +205,8 @@ button.update icon {
 
 .blueText {
     color: hsl(var(--hueCreating), 100%, 48%);
+}
 
+leftright callout {
+    background: hsl(var(--hueMain), 100%, 100%)
 }
