@@ -246,8 +246,8 @@
           <h2>Global Puzzles</h2>
           <p>Play random puzzles recently created by anonymous players from around the world.</p>
 
-          <leftright style="margin: 20px 0" v-if="getCreatedGamesWithWordSetNames.length > 0">
-            <a class="padded" @click="GetLast10GlobalCreatedGames();">Refresh</a>
+          <leftright style="margin: 20px 0">
+            <a class="padded" :class="{disabled: appStateIsGettingLast10Games}" @click="GetLast10GlobalCreatedGames();">Refresh</a>
             <a class="padded" @click="window.open('/game/stats.html', '_blank')">Global Stats</a>
           </leftright>
 
