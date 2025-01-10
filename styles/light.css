@@ -38,7 +38,6 @@
 
 body {
     background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkHSL), 0) 200px), var(--textureHue), var(--texture2);
-
 }
 
 button.secondary {
@@ -61,8 +60,8 @@ message {
 }
 
 notification {
-    background: hsla(var(--appBackgroundHSL), .7);
-    backdrop-filter: blur(10px);
+    background: linear-gradient(180deg, hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundHSL), .5) calc(120px));
+    backdrop-filter: blur(6px);
 }
 
 
@@ -237,9 +236,7 @@ leftright callout {
     background: hsl(var(--hueMain), 100%, 100%)
 }
 
-@media screen and (max-width:660px) {
-
-
+@media screen and (max-width:678px) {
     wrapper:first-of-type controls button.small {
         background: none;
     }

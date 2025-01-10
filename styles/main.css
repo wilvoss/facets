@@ -96,7 +96,7 @@ body {
     line-height: 1.3em;
     margin: 0px 0px;
     background: hsl(var(--appBackgroundDarkestHSL));
-    background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0) 200px), var(--textureHue), var(--texture2);
+    background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0) 50%), var(--textureHue), var(--texture2);
     background-size: cover, cover, var(--textureSize);
     background-repeat: no-repeat, no-repeat, repeat;
     background-position: top center;
@@ -329,7 +329,13 @@ icon.medium {
     height: var(--mediumIconSize);
     mask-size: calc(.75 * var(--mediumIconSize)) calc(.75 * var(--mediumIconSize));
     -webkit-mask-size: calc(.75 * var(--mediumIconSize)) calc(.75 * var(--mediumIconSize));
+}
 
+icon.large {
+    width: var(--largeIconSize);
+    height: var(--largeIconSize);
+    mask-size: calc(.75 * var(--largeIconSize)) calc(.75 * var(--largeIconSize));
+    -webkit-mask-size: calc(.75 * var(--largeIconSize)) calc(.75 * var(--largeIconSize));
 }
 
 icon.emoji {
@@ -760,6 +766,7 @@ wrapper:first-of-type {
         button.small {
             font-size: 90%;
             padding: calc(.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
+            border: 1px solid hsla(var(--messageColorHSL), .3);
             height: unset;
         }
 
@@ -1076,6 +1083,9 @@ parking {
         width: 40px;
         display: none;
         align-items: center;
+        border-radius: 0px;
+        /* border: 0px solid hsla(var(--messageColorHSL), .4); */
+        /* border-width: 0px 1px 0px 0px; */
 
         icon {
             background: hsl(var(--messageColorHSL));
@@ -1086,6 +1096,11 @@ parking {
         left: unset;
         right: 0;
         justify-content: end;
+        /* border-width: 0px 0px 0px 1px; */
+    }
+
+    button.scroller.disabled {
+        /* border-color: hsla(var(--messageColorHSL), 0); */
     }
 }
 
@@ -1836,7 +1851,7 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
 
 }
 
-@media screen and (max-width:660px) {
+@media screen and (max-width:678px) {
     :root {
         --tiniestIconSize: 11px;
     }
@@ -1852,6 +1867,9 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         width: 100%;
         height: 100%;
         overflow: hidden;
+
+        background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0) 200px), var(--textureHue), var(--texture2);
+
     }
 
     app {

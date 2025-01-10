@@ -425,7 +425,7 @@
       </wrapper>
       <wrapper class="mobile" :class="{extra: currentGameGuessingCardCount === 5}">
         <button class="scroller" :class="{disabled: appDataParkingScrollLeft <= 0}" @click="ScrollParking(event, 'right')" v-if="userSettingsFocus">
-          <icon class="chevronleft medium"></icon>
+          <icon class="chevronleft large"></icon>
         </button>
         <parking id="parking">
           <spot v-for="(card, index) in appDataCardsParked" v-if="index < currentGameGuessingCardCount" :class="{empty: card.words.length === 0, selected: card.isSelected}">
@@ -445,7 +445,7 @@
           </spot>
         </parking>
         <button class="scroller" :class="{disabled: appParkingRightButtonDisabled}" @click="ScrollParking(event, 'left')" v-if="userSettingsFocus">
-          <icon class="chevronright medium"></icon>
+          <icon class="chevronright large"></icon>
         </button>
       </wrapper>
     </app>

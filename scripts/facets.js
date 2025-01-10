@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.3',
+    appDataVersion: '2.0.4',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -293,7 +293,7 @@ var app = new Vue({
     },
 
     async GetCurrentGameWordSet() {
-      log('GetCurrentGameWordSet() called');
+      note('GetCurrentGameWordSet() called');
       let allWords = [];
       let lang = this.userSettingsLanguage === '' ? '' : this.userSettingsLanguage + '/';
       if (this.currentGameLanguage !== '') {
@@ -319,7 +319,7 @@ var app = new Vue({
     },
 
     async GetGuessingGameWordSet() {
-      log('GetGuessingGameWordSet() called');
+      note('GetGuessingGameWordSet() called');
       let lang = this.userSettingsLanguage === '' ? '' : this.userSettingsLanguage + '/';
       if (this.currentGameLanguage !== '') {
         lang = this.currentGameLanguage + '/';
@@ -455,9 +455,6 @@ var app = new Vue({
       this.currentGameGuessingCardCount = urlParams.has('useExtraCard') && JSON.parse(urlParams.get('useExtraCard')) ? 5 : 4;
       this.appStateForceAutoCheck = this.appDataPlayerCreator.id === 0;
 
-      note('sender = ' + this.appDataPlayerSender.id);
-      note('creator = ' + this.appDataPlayerCreator.id);
-      note('current = ' + this.appDataPlayerCurrent.id);
       if (this.appDataPlayerSender.id !== this.appDataPlayerCreator.id && this.appDataPlayerCreator.id !== this.appDataPlayerCurrent.id && !this.appStateForceAutoCheck) {
         this.appStateIsModalShowing = true;
         this.appDataConfirmationObject = { message: 'Are you, (' + this.appDataPlayerCreator.name + '), the original creator of this puzzle?', target: 'creator' };
@@ -519,7 +516,6 @@ var app = new Vue({
       }
       this.appStateIsGuessing = true;
       if (corruptData) {
-        announce('the data was corrupt');
         this.NewGame(null, '😕 - Something went wrong.');
       }
     },
@@ -568,9 +564,8 @@ var app = new Vue({
 
         if (!response.ok) {
           this.appStateIsGettingLast10Games = false;
-          throw new Error('Server error: ' + response.status);
+          error('Server error: ' + response.status);
         }
-        // console.log(response);
         const payload = await response.text();
         this.SetAIHints(JSON.parse(payload).result);
         this.FillParkingLot();
@@ -677,7 +672,7 @@ var app = new Vue({
           .then((response) => {
             if (!response.ok) {
               this.appStateIsGettingLast10Games = false;
-              throw new Error('Server error: ' + response.status);
+              error('Server error: ' + response.status);
             }
             return response.text();
           })
@@ -711,7 +706,7 @@ var app = new Vue({
           .then((response) => {
             if (!response.ok) {
               this.appStateIsGettingDailyGames = false;
-              throw new Error('Server error: ' + response.status);
+              error('Server error: ' + response.status);
             }
             return response.text();
           })
@@ -778,7 +773,7 @@ var app = new Vue({
       }
       let searchString = stringArray.join('');
       let url = location.origin + searchString;
-      console.log(url);
+      log(url);
       history.pushState(null, null, url);
       if (this.appStateShowDailyGames) {
         this.ToggleShowDailyGames(e);
@@ -1142,8 +1137,12 @@ var app = new Vue({
               this.appStateShowInfo = false;
             } else if (this.appStateShowGlobalCreated) {
               this.appStateShowGlobalCreated = false;
+            } else if (this.appStateShowNotification) {
+              this.appStateShowNotification = false;
             } else if (this.appStateShowMeta) {
               this.appStateShowMeta = false;
+            } else if (!this.appStateShowMeta) {
+              this.appStateShowMeta = true;
             }
             break;
           default:
@@ -1265,9 +1264,8 @@ var app = new Vue({
     },
 
     async CopyToClipboardViaExecCommand(_text) {
-      note('Attempting to copy via execCommand');
+      note('CopyToClipboardViaExecCommand() called');
       let result = copyToClipboard(_text);
-      log(result);
       this.appDataMessage = '';
     },
 
@@ -1291,7 +1289,7 @@ var app = new Vue({
           await navigator
             .share(_shareObject)
             .then((result) => {
-              console.log('Message shared via navigator.share()');
+              note('Message shared via navigator.share()');
             })
             .catch((err) => {
               this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
@@ -1497,7 +1495,6 @@ var app = new Vue({
 
       if (_card.isSelected) {
         this.appDataDraggedCard = _card;
-        warn('appDataDraggedCard card has been assigned on card click');
       }
     },
 
@@ -1657,16 +1654,6 @@ var app = new Vue({
       this.appStateTrayRotation = 0;
     },
 
-    GetAllParkingScrollStats() {
-      announce('Parking Scroll Info');
-      log('ScrollWidth = ' + this.getParkingScrollWidth);
-      log('ClientWidth = ' + this.getParkingClientWidth);
-      log('R ScrollSize = ' + (this.getParkingScrollWidth - this.getParkingClientWidth));
-      log('A ScrollSize = ' + this.getActualParkingScrollSize);
-      log('C ScrollSize = ' + this.getComputedParkingScrollSize);
-      log('ScrollLeft = ' + this.getParkingScrollLeft);
-    },
-
     GetScrollSize() {
       const parking = document.getElementById('parking');
       return parking.scrollWidth - parking.clientWidth;
@@ -1731,7 +1718,7 @@ var app = new Vue({
     LoadPage() {
       note('LoadPage() called');
       this.HandlePageVisibilityChange();
-      announce('Player ' + this.appDataPlayerCurrent.id + ' has initiated the game - appDataVersion v' + this.appDataVersion);
+      announce('Player ' + this.appDataPlayerCurrent.id + ' has loaded v' + this.appDataVersion);
       this.GetLast10GlobalCreatedGames();
       this.GetDailyGames();
       this.appDataTransitionLong = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
@@ -1893,7 +1880,6 @@ var app = new Vue({
           names.push({ name: lang.name, tag: lang.tag });
         }
       });
-      console.log(names);
       return names.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
     },
     getCurrentSelectedTempWordSetName: function () {
@@ -1954,9 +1940,7 @@ var app = new Vue({
     isChromeAndiOSoriPadOS: function () {
       note('isChromeAndiOSoriPadOS() called');
       var userAgent = navigator.userAgent || window.opera;
-      announce(userAgent);
       var isChromeIOS = /CriOS/.test(userAgent) && /iPhone|iPad|iPod/.test(userAgent);
-      warn(isChromeIOS);
       userAgent = userAgent.toLowerCase();
       return isChromeIOS || (userAgent.includes('firefox') && userAgent.includes('android'));
     },
@@ -1972,27 +1956,6 @@ var app = new Vue({
           && this.appDataPlayerCurrent.role !== 'reviewer'
           && this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id);
       return inActive;
-    },
-    getComputedParkingScrollSize: function () {
-      return this.GetScrollSize();
-    },
-    getRightScrollButtonEnablement() {
-      return this.getParkingScrollLeft >= this.getActualParkingScrollSize;
-    },
-    getActualParkingScrollSize: function () {
-      return this.getParkingScrollWidth - this.getParkingClientWidth;
-    },
-    getParkingScrollWidth: function () {
-      const parking = document.getElementById('parking');
-      return parking.scrollWidth;
-    },
-    getParkingClientWidth: function () {
-      const parking = document.getElementById('parking');
-      return parking.clientWidth;
-    },
-    getParkingScrollLeft: function () {
-      const parking = document.getElementById('parking');
-      return parking.scrollLeft;
     },
   },
 });

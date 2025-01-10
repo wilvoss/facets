@@ -6,19 +6,6 @@ message {
     text-shadow: none;
 }
 
-.guessing.solved wrapper message {
-    animation: bounce 1s steps(10, start) infinite;
-    -webkit-animation: bounce 1s steps(10, start) infinite;
-    color: hsla(var(--hueSolved), 100%, 70%, 1);
-}
-
-@keyframes bounce {
-    50% {
-        /* transform: translateY(-2px); */
-        scale: 1.02;
-    }
-}
-
 tray {
     background-image: none;
     mask-image: none;

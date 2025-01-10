@@ -6,7 +6,7 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
     display: flex;
 }
 
-@media screen and (max-width: 660px) {
+@media screen and (max-width: 678px) {
     :root {
         --scale: .7;
     }
@@ -53,7 +53,7 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
         overflow-x: hidden;
         padding: 25px 50px 68px;
         justify-content: start;
-        mask-image: linear-gradient(90deg, transparent 20px, red 50px, red calc(100% - 50px), transparent calc(100% - 20px));
+        mask-image: linear-gradient(90deg, transparent 30px, red 50px, red calc(100% - 50px), transparent calc(100% - 30px));
     }
 
     wrapper.mobile parking::-webkit-scrollbar, .portrait wrapper.mobile parking::-webkit-scrollbar {
