@@ -10,7 +10,7 @@
 
     --appBackgroundLightestHSL: var(--hueTheme), 40%, 50%;
     --appBackgroundLighterHSL: var(--hueTheme), 20%, 71%;
-    --appBackgroundHSL: var(--hueTheme), 100%, 89%;
+    --appBackgroundHSL: var(--hueTheme), 100%, 83%;
     --appBackgroundDarkHSL: var(--hueTheme), 100%, 92%;
     --appBackgroundDarkestHSL: var(--hueTheme), 100%, 97%;
     --appForegroundHSL: var(--hueTheme), 100%, 06%;
@@ -34,6 +34,11 @@
     --textureSize: cover;
     --textureBlendMode: normal;
     --statShadow: 0px 4px 6px rgba(0, 0, 0, .1);
+}
+
+body {
+    background-image: linear-gradient(hsla(var(--appBackgroundHSL), 1), hsla(var(--appBackgroundHSL), 0) 200px), var(--textureHue), var(--texture2);
+
 }
 
 button.secondary {

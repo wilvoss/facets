@@ -256,7 +256,6 @@ var app = new Vue({
       } else {
         let textureSource = this.documentCssRoot.style.getPropertyValue('--textureSource');
         this.documentCssRoot.style.setProperty('--texture2', textureSource);
-        this.documentCssRoot.style.setProperty('--textureSize', 'cover');
         this.documentCssRoot.style.setProperty('--textureBlendMode', 'normal');
         let textureHueSource = this.documentCssRoot.style.getPropertyValue('--textureHueSource');
         this.documentCssRoot.style.setProperty('--textureHue', textureHueSource);
@@ -755,9 +754,9 @@ var app = new Vue({
       e.preventDefault();
       e.stopPropagation();
       let stringArray = ['?'];
-      stringArray.push('sendingName=a Player');
+      stringArray.push('sendingName=Player 1');
       stringArray.push('&sendingID=' + encodeURIComponent(_game.sendingID));
-      stringArray.push('&puzzleName=a Player');
+      stringArray.push('&puzzleName=Player 1');
       stringArray.push('&puzzleID=' + encodeURIComponent(_game.puzzleID));
       stringArray.push('&lang=' + encodeURIComponent(_game.lang));
       stringArray.push('&wordSetID=' + encodeURIComponent(_game.wordSetID));
@@ -1675,20 +1674,20 @@ var app = new Vue({
     ConvertToDateFromKey(_key) {
       let day = _key.substring(2, 4);
       let year = _key.substring(4, 8);
-      let month = _key.substring(0, 2);
+      let month = _key.substring(0, 2) - 1;
       return new Date(year, month, day);
     },
 
     GetDateFormatted(_date, _nice = false) {
       let day = String(_date.getDate()).padStart(2, '0');
-      let month = String(_date.getMonth() + 1).padStart(2, '0');
+      let month = String(_date.getMonth()).padStart(2, '0');
       let year = _date.getFullYear();
       let date = month + day + year;
 
       if (_nice) {
         let d = new Date(year, month, day); // Use Intl.DateTimeFormat to format the date
         let options = { year: 'numeric', month: 'short', day: 'numeric' };
-        date = new Intl.DateTimeFormat('en-US', options).format(d);
+        date = new Intl.DateTimeFormat(undefined, options).format(d);
       }
 
       return date;

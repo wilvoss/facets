@@ -47,13 +47,13 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
     }
 
     wrapper.mobile parking, .portrait wrapper.mobile parking {
-        width: calc(100% - 80px);
+        width: calc(100% - 100px);
         scale: 1;
         overflow-y: hidden;
         overflow-x: hidden;
-        padding: 25px 40px 100px;
+        padding: 25px 50px 68px;
         justify-content: start;
-        mask-image: linear-gradient(90deg, transparent, red 40px, red calc(100% - 40px), transparent);
+        mask-image: linear-gradient(90deg, transparent 20px, red 50px, red calc(100% - 50px), transparent calc(100% - 20px));
     }
 
     wrapper.mobile parking::-webkit-scrollbar, .portrait wrapper.mobile parking::-webkit-scrollbar {

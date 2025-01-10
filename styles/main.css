@@ -108,7 +108,6 @@ body {
 app {
     overflow: hidden;
     height: 100%;
-    /* background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0) 200px); */
     display: flex;
     flex-direction: column;
     gap: var(--defaultGap);
@@ -786,10 +785,10 @@ wrapper.main {
     height: calc(100% - var(--cardSize));
 }
 
-
 app.portrait {
-    justify-content: start;
+    justify-content: space-between;
     align-items: center;
+    padding: 30px;
 }
 
 wrapper.mobile {
@@ -851,19 +850,20 @@ tray diamond {
     position: absolute;
     background: url(../images/diamond.svg) no-repeat;
     background-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize));
-    mask-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize) + 0px);
-    -webkit-mask-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize) + 0px);
     pointer-events: none;
     mask-repeat: no-repeat;
     -webkit-mask-repeat: no-repeat;
     z-index: -1;
+    overflow: hidden;
 }
 
 diamond.back {
     mask-image: url(../images/diamond-back.svg);
     -webkit-mask-image: url(../images/diamond-back.svg);
-    opacity: .8;
+    mask-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize));
+    -webkit-mask-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize));
     background: hsl(var(--trayGuessingBackgroundHSL));
+    opacity: .8;
 }
 
 .multicolor.creating diamond.back {
@@ -1070,7 +1070,7 @@ parking {
         height: calc(var(--scale) * var(--cardSize));
         padding-top: 0;
         padding-bottom: 0;
-        transform: translateY(calc(-.21 * var(--cardSize)));
+        transform: translateY(calc(-0.13 * var(--cardSize)));
         background: none;
         padding: 0;
         width: 40px;
@@ -1375,13 +1375,13 @@ modal categories category.on::after {
     padding-left: 10px;
 } */
 
-modal gamelinks {
+gamelinks {
     display: block;
     counter-reset: recent-game-counter;
     width: 100%;
 }
 
-modal gamelinks p {
+gamelinks p {
     text-align: left;
     display: flex;
     flex-direction: row;
@@ -1393,7 +1393,7 @@ modal gamelinks p {
     gap: var(--defaultGap);
 }
 
-modal gamelinks p a, modal gamelinks p a:hover, modal gamelinks p a:active, modal gamelinks p a:focus, modal gamelinks p a:visited {
+gamelinks p a, gamelinks p a:hover, gamelinks p a:active, gamelinks p a:focus, gamelinks p a:visited {
     color: hsl(var(--messageColorHSL));
     flex: 1;
     text-align: left;
@@ -1402,9 +1402,10 @@ modal gamelinks p a, modal gamelinks p a:hover, modal gamelinks p a:active, moda
     text-wrap: nowrap;
 }
 
-modal gamelinks p button.inline {
+gamelinks p button.inline {
     z-index: 100;
     padding: 5px 10px;
+    min-height: calc(2 * var(--defaultGap) - 5px);
     font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
     font-size: .5em;
     text-transform: uppercase;
@@ -1416,28 +1417,28 @@ modal gamelinks p button.inline {
     transition: var(--shortTracnsition) ease-in-out all;
 }
 
-modal gamelinks p button.inline icon {
+gamelinks p button.inline icon {
     opacity: .5;
     background-color: hsla(var(--appForegroundHSL), .3);
     transition: var(--shortTransition) ease-in-out background-color;
 }
 
-modal gamelinks p.done button.inline icon {
+gamelinks p.done button.inline icon {
     opacity: .5;
     background-color: hsl(var(--linkColorLightHSL));
     transition: var(--shortTransition) ease-in-out background-color;
 }
 
-modal gamelinks p button.inline:hover {
+gamelinks p button.inline:hover {
     color: hsl(var(--appForegroundHSL));
 }
 
-modal gamelinks p button.inline:hover icon {
+gamelinks p button.inline:hover icon {
     opacity: 1;
 }
 
 
-modal gamelinks small {
+gamelinks small {
     text-align: left;
 }
 
@@ -1851,13 +1852,16 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         width: 100%;
         height: 100%;
         overflow: hidden;
-        background-size: cover, 256px;
     }
 
     app {
         justify-content: start;
         align-items: start;
         gap: 0px;
+    }
+
+    app.portrait {
+        padding: 0px;
     }
 
     wrapper:first-of-type {
@@ -1932,7 +1936,6 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     }
 
     .portrait wrapper.mobile {
-        position: fixed;
         padding: 0px;
         bottom: 0px;
     }
@@ -2031,6 +2034,7 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     }
 
     subtitle {
+        gap: calc(.25 * var(--defaultGap));
         font-size: 130%;
     }
 
