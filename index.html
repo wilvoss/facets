@@ -89,11 +89,11 @@
           <p>Place cards onto the tray and rotate them until you think you've solved the puzzle!</p>
           <p>Anatomy of a solved puzzle:</p>
           <img :src="'./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
-          <p>Click the <cta>{{appDataActionButtonTexts.check}}</cta> button to send your guess back to whoever sent it to you.</p>
+          <p>Click the <cta>{{ appDataActionButtonTexts.check}}</cta> button to send your guess back to whoever sent it to you.</p>
         </section>
         <section v-if="!appStateIsGuessing">
           <p>{{appDataPlayerCurrent.name}}, you are about to create a word puzzle that you will send to your friends via text, email or social media.</p>
-          <p class="blueText">It's your job to come up with clues that "connect" the four word-pairs (or Emoji-pairs) that are displayed on the edges of a gem.</p>
+          <p class="blueText">It's your job to come up with single-word clues that "connect" the four word-pairs (or Emoji-pairs) that are displayed on the edges of a gem.</p>
           <p>Anatomy of a puzzle:</p>
           <img :src="'./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
           <p>When you are satisfied with your 4 clues, hit the <cta>{{appDataActionButtonTexts.send}}</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
@@ -111,7 +111,7 @@
 
           <hider v-if="!appStateIsGuessing">
             <h3>Creating</h3>
-            <p>When creating a new puzzle, it's your job to come up with clues that "connect" the four word-pairs that are displayed on the edges of a gem.</p>
+            <p>When creating a new puzzle, it's your job to come up with single-word clues that "connect" the four word-pairs that are displayed on the edges of a gem.</p>
             <p>Anatomy of a puzzle:</p>
             <img :src="'./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
             <p>When you are satisfied with your 4 clues, hit the <cta>{{appDataActionButtonTexts.send}}</cta> button. The puzzle will scramble and you'll be able to share a message with your friend that contains a link to the scrambled puzzle.</p>
@@ -134,8 +134,8 @@
           <p>Drag cards onto the tray and rotate them until you think you've solved the puzzle!</p>
           <p>Anatomy of a solved puzzle:</p>
           <img :src="'./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
-          <p v-if="!appAIGenerated">Click the <cta>{{appDataActionButtonTexts.check}}</cta> button to send your guess back to whoever sent it to you.</p>
-          <p v-if="appAIGenerated">Click the <cta>{{appDataActionButtonTexts.guess}}</cta> button to automatically check your guess.</p>
+          <p v-if="!appAIGenerated && !appStateForceAutoCheck">Click the <cta>{{appDataActionButtonTexts.check}}</cta> button to send your guess back to whoever sent it to you.</p>
+          <p v-if="appAIGenerated || appStateForceAutoCheck">Click the <cta>{{appDataActionButtonTexts.guess}}</cta> button to automatically check your guess.</p>
 
           <hider v-if="appStateIsGuessing">
             <h3>Creating</h3>
