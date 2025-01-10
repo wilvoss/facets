@@ -37,7 +37,7 @@
 }
 
 body {
-    background-image: linear-gradient(hsla(var(--appBackgroundHSL), 1), hsla(var(--appBackgroundHSL), 0) 200px), var(--textureHue), var(--texture2);
+    background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkHSL), 0) 200px), var(--textureHue), var(--texture2);
 
 }
 

@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '1.3.12',
+    appDataVersion: '2.0.2',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -125,9 +125,9 @@ var app = new Vue({
     ToggleUseLightTheme(_value) {
       this.userSettingsUsesLightTheme = _value;
       if (this.userSettingsUsesLightTheme) {
-        document.getElementById('themeColor').content = 'hsl(140, 100%, 89%)';
+        document.getElementById('themeColor').content = 'hsl(140, 100%, 92%)';
       } else {
-        document.getElementById('themeColor').content = 'rgb(0, 9, 15)';
+        document.getElementById('themeColor').content = 'hsl(140, 100%, 3%)';
       }
     },
 
