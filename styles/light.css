@@ -63,6 +63,11 @@ message {
 notification {
     background: hsla(var(--appBackgroundHSL), .7);
     backdrop-filter: blur(10px);
+}
+
+
+notification.meta {
+    background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkHSL), .0) 200px), var(--textureHueSource), var(--textureSource);
 
 }
 

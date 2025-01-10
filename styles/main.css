@@ -642,7 +642,7 @@ notification {
 notification.meta {
     z-index: 200;
     background: hsl(var(--appBackgroundDarkestHSL));
-    background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0) 50%), var(--textureHueSource), var(--textureSource);
+    background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0) 200px), var(--textureHueSource), var(--textureSource);
     background-size: cover, cover, cover;
     background-repeat: no-repeat, no-repeat, repeat;
     justify-content: center;
