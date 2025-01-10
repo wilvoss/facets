@@ -29,6 +29,7 @@ var app = new Vue({
     appDataParkingScrollLeft: 0,
     appDataGlobalCreatedGames: [],
     appDataDailyGames: [],
+    appDataUserDailyGamesStarted: [],
     appDataHints: [],
     appDataMessage: '',
     appDataParkingInputValue: '',
@@ -344,6 +345,53 @@ var app = new Vue({
       return allWords;
     },
 
+    UpdateGameGuessesCount(_game, _solved = false) {
+      let startedGame = this.GetUserStartedGame(_game);
+      if (startedGame && !startedGame.solved) {
+        startedGame.solved = _solved;
+        startedGame.guesses++;
+        localStorage.setItem('dailyGames', JSON.stringify(this.appDataUserDailyGamesStarted));
+      }
+      this.UpdateDailyGameFromStartedGameData(startedGame);
+    },
+
+    UpdateDailyGameFromStartedGameData(_gamestarted) {
+      let foundGame = this.appDataDailyGames.find((game) => {
+        return game.key === _gamestarted.key;
+      });
+      foundGame.guesses = _gamestarted.guesses;
+      foundGame.solved = _gamestarted.solved;
+
+      if (foundGame.solved) {
+        this.SendGameStatsToServer(foundGame);
+      }
+    },
+
+    async SendGameStatsToServer(_stats) {
+      let params = `id=${this.appDataPlayerCurrent.id}&key=${_stats.key}&guesses=${_stats.guesses}`;
+
+      const requestUrl = `https://empty-night-9bea.bigtentgames.workers.dev/${params}`;
+      announce(requestUrl);
+
+      try {
+        const response = await fetch(requestUrl, {
+          method: 'GET',
+          headers: {
+            Origin: window.location.origin,
+            'Access-Control-Request-Method': 'GET',
+            'Access-Control-Request-Headers': 'Content-Type',
+          },
+        });
+
+        if (!response.ok) {
+          this.appStateIsGettingLast10Games = false;
+          error('Server error: ' + response.status);
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    },
+
     IsCurrentGuessCorrect() {
       note('IsCurrentGuessCorrect() called');
       if (this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
@@ -370,6 +418,11 @@ var app = new Vue({
         if (this.currentGameSolutionActual === this.currentGameSolutionGuessing) {
           this.RotateTray(8);
         }
+
+        if (this.getCurrentDaily) {
+          this.UpdateGameGuessesCount(this.getCurrentDaily, this.currentGameSolutionActual === this.currentGameSolutionGuessing);
+        }
+
         if (mappedSol[1] !== actualSol[1]) {
           let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[1])));
           this.SwapCards(card, this.getFirstAvailableParkingSpot);
@@ -655,7 +708,7 @@ var app = new Vue({
     },
 
     async GetLast10GlobalCreatedGames() {
-      if (window.location.href !== window.location.origin + '/generate.html?generated=true') {
+      if (!this.vsShowDaily && window.location.href !== window.location.origin + '/generate.html?generated=true') {
         note('GetLast10GlobalCreatedGames() called');
         this.appStateIsGettingLast10Games = true;
         this.appDataGlobalCreatedGames = [];
@@ -689,7 +742,7 @@ var app = new Vue({
     },
 
     async GetDailyGames() {
-      if (window.location.href !== window.location.origin + '/generate.html?generated=true') {
+      if (this.vsShowDaily && window.location.href !== window.location.origin + '/generate.html?generated=true') {
         note('GetDailyGames() called');
         this.appStateIsGettingLast10Games = true;
         this.appDataDailyGames = [];
@@ -712,6 +765,16 @@ var app = new Vue({
           })
           .then((payload) => {
             this.appDataDailyGames = JSON.parse(payload);
+            let today = new Date();
+
+            this.appDataDailyGames.forEach((daily) => {
+              let previous = this.GetUserStartedGame(daily);
+              daily.guesses = 0;
+              if (previous) {
+                daily.solved = previous.solved;
+                daily.guesses = previous.guesses;
+              }
+            });
           })
           .catch((error) => {
             console.error('Error:', error);
@@ -746,12 +809,27 @@ var app = new Vue({
       }
     },
 
+    GetUserStartedGame(_game) {
+      return this.appDataUserDailyGamesStarted.find((game) => {
+        return game.key === _game.key;
+      });
+    },
+
+    HasUserStartedGame(_game) {
+      let foundGame = false;
+      foundGame = this.GetUserStartedGame(_game) ? true : false;
+      return foundGame;
+    },
+
     HandleOldGameClick(e, _game) {
       e.preventDefault();
       e.stopPropagation();
       let stringArray = ['?'];
+      this.currentGameSolutionGuessing = '';
+      this.appDataMessage = '';
       stringArray.push('sendingName=Player 1');
-      stringArray.push('&sendingID=' + encodeURIComponent(_game.sendingID));
+      stringArray.push('&generated=' + encodeURIComponent(_game.generated));
+      stringArray.push('&key=' + encodeURIComponent(_game.key));
       stringArray.push('&puzzleName=Player 1');
       stringArray.push('&puzzleID=' + encodeURIComponent(_game.puzzleID));
       stringArray.push('&lang=' + encodeURIComponent(_game.lang));
@@ -759,15 +837,14 @@ var app = new Vue({
       stringArray.push('&useExtraCard=' + encodeURIComponent(_game.useExtraCard));
       stringArray.push('&sol=' + encodeURIComponent(_game.sol));
       stringArray.push('&board=' + encodeURIComponent(_game.board));
-      stringArray.push('&generated=' + encodeURIComponent(_game.generated));
-      if (!_game.generated) {
-        this.appCurrentDailyGameKey = -1;
-      }
+      this.appCurrentDailyGameKey = -1;
       if (_game.generated && _game.key) {
         stringArray.push('&key=' + encodeURIComponent(_game.key));
-        if (this.GetDateFormatted(new Date()) === _game.key) {
-          this.appDailyIsFreshToday = false;
-          localStorage.setItem(_game.key, 0);
+
+        if (!this.HasUserStartedGame(_game)) {
+          let currentGame = { key: _game.key, guesses: 0, solved: false };
+          this.appDataUserDailyGamesStarted.push(currentGame);
+          localStorage.setItem('dailyGames', JSON.stringify(this.appDataUserDailyGamesStarted));
         }
         this.appCurrentDailyGameKey = _game.key;
       }
@@ -785,7 +862,8 @@ var app = new Vue({
         this.ToggleShowGlobalCreated(e);
       }
       this.LoadPage();
-      this.RotateTray(-4);
+      this.appStateShowNotification = true;
+      // this.RotateTray(-4);
     },
 
     HandleGoButtonClick(event) {
@@ -812,7 +890,7 @@ var app = new Vue({
           break;
         case 'creator':
           if (_value) {
-            confirm = window.confirm('Are you sure you are, (' + this.appDataPlayerCreator.name + '), the original creator?');
+            confirm = window.confirm(`Are you sure you are, (${this.appDataPlayerCreator.name}), the original creator?`);
             if (confirm) {
               this.tempID = this.appDataPlayerCreator.id;
               this.appDataPlayerCurrent.id = this.appDataPlayerCreator.id;
@@ -934,6 +1012,11 @@ var app = new Vue({
         this.appStateShowOOBE = window.location.search !== '';
       }
       this.tempID = parseInt(this.appDataPlayerCurrent.id);
+
+      let dailyGames = localStorage.getItem('dailyGames');
+      if (dailyGames !== undefined && dailyGames !== null) {
+        this.appDataUserDailyGamesStarted = JSON.parse(dailyGames);
+      }
 
       let name = localStorage.getItem('name');
       if (name !== undefined && name !== null) {
@@ -1216,11 +1299,11 @@ var app = new Vue({
     /* === COMMUNICATION === */
     ShareWin() {
       note('ShareWin() called');
-      let date = 'The ' + this.getCurrentDaily.date;
-      let text = 'I solved ' + date + ' Daily in ' + this.currentGameGuessCount + ' tries! 😀';
+      let date = this.getCurrentDaily === this.getTodaysDaily ? `Today's` : `The ${this.getCurrentDaily.date}`;
+      let text = `I solved ${date} Daily in ${this.getCurrentDaily.guesses} tries! 😀 <https://facets.bigtentgames.com>`;
       this.ConstructAndSetShareURLForCurrentGame();
-      if (this.currentGameGuessCount === 1) {
-        text = 'I solved ' + date + ' Daily in 1 try! 🥳';
+      if (this.getCurrentDaily.guesses === 1) {
+        text = `I solved ${date} Daily in 1 try! 🥳 <https://facets.bigtentgames.com>`;
       }
       this.ShareText(text, '');
     },
@@ -1667,8 +1750,9 @@ var app = new Vue({
     },
 
     GetDateFormatted(_date, _nice = false) {
+      const madj = _nice ? 0 : 1;
       let day = String(_date.getDate()).padStart(2, '0');
-      let month = String(_date.getMonth()).padStart(2, '0');
+      let month = String(_date.getMonth() + madj).padStart(2, '0');
       let year = _date.getFullYear();
       let date = month + day + year;
 
@@ -1687,6 +1771,7 @@ var app = new Vue({
       document.title = 'Facets!';
       this.appDataMessage = _appDataMessage;
       this.currentGameGuessCount = 0;
+      this.appCurrentDailyGameKey = -1;
       this.appAIGenerated = false;
       this.currentGameLanguage = '';
       this.currentGameReviewIsFinal = false;
@@ -1813,34 +1898,29 @@ var app = new Vue({
     getPlayerMessage: function () {
       clearTimeout(this.appDataTimeoutNotification);
       let time = 3000;
-      let pronoun = this.currentGameGuessingWordSet.startsWithVowel ? 'an "' : 'a "';
-      let name = this.appStateForceAutoCheck ? pronoun : this.appDataPlayerCreator.name + '\'s "';
+      let pronoun = this.currentGameGuessingWordSet.startsWithVowel ? 'an' : 'a';
+      let name = this.appStateForceAutoCheck ? pronoun : this.appDataPlayerCreator.name + "'s ";
       let text = '';
       if (this.appDataMessage !== '') {
         text = this.appDataMessage;
       } else if (!this.appStateIsGuessing && this.appDataPlayerCurrent.id !== -1) {
-        text = 'You are creating a new "' + this.currentGameGuessingWordSet.name + '" puzzle!';
+        text = `You are creating a new "${this.currentGameGuessingWordSet.name}" puzzle!`;
         time = 1700;
       } else if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id !== -1 && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
-        text = this.appDataPlayerCurrent.name + ', this is your own puzzle!';
+        text = `${this.appDataPlayerCurrent.name}, this is your own puzzle!`;
       } else if (this.currentGameReviewIsFinal && this.appDataPlayerCurrent.id !== -1) {
-        text = this.appDataPlayerCurrent.name + ", here's the solution.";
+        text = `${this.appDataPlayerCurrent.name}, here's the solution.`;
       } else if (this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id && this.appDataPlayerCurrent.id !== -1) {
-        text = 'You are reviewing ' + this.appDataPlayerSender.name + "'s guess!";
+        text = `You are reviewing ${this.appDataPlayerSender.name}'s guess!`;
       } else {
-        let today = new Date();
-        let date = this.GetDateFormatted(today);
-        let nicedate = this.GetDateFormatted(today, true);
-
-        if (this.appCurrentDailyGameKey !== -1) {
-          if (date.toString() === this.appCurrentDailyGameKey.toString()) {
-            text = 'You are guessing The Daily for today!';
-            text = 'You are guessing The Daily for <date>' + nicedate + '</date>!';
-          } else {
-            text = 'You are guessing The Daily for <date>' + nicedate + '</date>!';
+        if (this.getCurrentDaily) {
+          let today = new Date();
+          text = `<name>The Daily – ${this.getCurrentDaily.date.split(',')[0]}</name><subtitle> ${pronoun} "${this.currentGameGuessingWordSet.name}" puzzle</subtitle>`;
+          if (this.getCurrentDaily.key === this.getTodaysDaily.key) {
+            text = `The Daily – Today<subtitle> ${pronoun} "${this.currentGameGuessingWordSet.name}" puzzle</subtitle>`;
           }
         } else {
-          text = 'You are guessing ' + name + this.currentGameGuessingWordSet.name + '" puzzle!';
+          text = `You are guessing ${name} "${this.currentGameGuessingWordSet.name}" puzzle!`;
         }
       }
       this.appDataTimeoutNotification = setTimeout(() => {
@@ -1918,9 +1998,15 @@ var app = new Vue({
         return newArray ? { ...game, name: newArray.name } : game;
       });
     },
+    getTodaysKey: function () {
+      let today = new Date();
+
+      return this.GetDateFormatted(today);
+    },
     getTodaysDaily: function () {
+      let today = new Date();
       let daily = this.getDailyGamesWithWordSetNames.find((daily) => {
-        return daily.key === this.GetDateFormatted(new Date());
+        return daily.key === this.GetDateFormatted(today);
       });
       return daily;
     },
@@ -1930,11 +2016,18 @@ var app = new Vue({
       });
       return daily ? daily : null;
     },
+    getDailyIsFreshToday: function () {
+      const foundGame = this.getTodaysDaily ? this.HasUserStartedGame(this.getTodaysDaily) : null;
+      return foundGame ? false : true;
+    },
     getDailyGamesWithWordSetNames: function () {
       return this.appDataDailyGames.map((game) => {
         game.date = this.GetDateFormatted(this.ConvertToDateFromKey(game.key), true);
         const newArray = this.appDataWordSets.find((set) => set.id === game.wordSetID);
-        return newArray ? { ...game, name: newArray.name } : game;
+        if (newArray) {
+          game.name = newArray.name;
+        }
+        return game;
       });
     },
     isChromeAndiOSoriPadOS: function () {

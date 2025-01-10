@@ -192,7 +192,8 @@ button {
 
     badge {
         border-radius: 50%;
-        display: flex;
+        display: none;
+        color: hsl(var(--appForegroundHSL));
         background: rgb(227, 0, 0);
         width: 24px;
         height: 24px;
@@ -201,7 +202,11 @@ button {
         align-items: center;
         font-size: 0.7em;
         font-weight: 800;
+        transition: 250ms ease-out all;
+    }
 
+    badge.show {
+        display: flex;
     }
 }
 
@@ -218,14 +223,6 @@ button.inline {
     gap: calc(var(--defaultGap) / 2);
 }
 
-button icon {
-    background: hsl(var(--linkColorLightHSL));
-}
-
-button icon.emoji {
-    background: none;
-}
-
 button.small {
     font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
     padding: var(--defaultGap);
@@ -233,21 +230,12 @@ button.small {
     cursor: pointer;
     text-align: center;
     background: none;
-    color: hsla(var(--appForegroundHSL), .8);
+    color: hsla(var(--appForegroundDiminishedHSL), 1);
     display: flex;
     text-transform: uppercase;
     letter-spacing: 1px;
     opacity: 1;
     text-wrap: nowrap;
-
-    icon {
-        width: var(--tinyIconSize);
-        height: var(--tinyIconSize);
-        mask-size: var(--tinyIconSize) var(--tinyIconSize);
-        -webkit-mask-size: var(--tinyIconSize) var(--tinyIconSize);
-        background: hsla(var(--linkColorDarkHSL), 1);
-        margin-top: -1px;
-    }
 }
 
 header {
@@ -264,13 +252,22 @@ header {
     }
 
     span {
-        display: block;
+        display: flex;
+        gap: 4px;
         padding-top: 1px;
         flex: 1;
+
+        icon.nope {
+            background: #bb0000;
+        }
+
+        icon.check {
+            background: hsl(var(--linkColorLightHSL));
+        }
     }
 
     span:first-of-type {
-        text-align: right;
+        justify-content: end;
     }
 
     button.small {
@@ -291,11 +288,7 @@ header {
         /* font-weight: 800; */
 
         icon {
-            width: var(--smallIconSize);
-            height: var(--smallIconSize);
-            mask-size: var(--smallIconSize) var(--smallIconSize);
-            -webkit-mask-size: var(--smallIconSize) var(--smallIconSize);
-            background-color: hsl(var(--appBackgroundDarkestHSL));
+            background: hsl(var(--appBackgroundHSL));
         }
     }
 
@@ -320,8 +313,22 @@ icon {
     -webkit-mask-repeat: no-repeat;
     mask-position: center;
     -webkit-mask-position: center;
-    background-color: hsl(var(--linkColorLightHSL));
+    background-color: hsl(var(--appForegroundDiminishedHSL));
     pointer-events: none;
+}
+
+icon.tiny {
+    width: var(--tinyIconSize);
+    height: var(--tinyIconSize);
+    mask-size: calc(.75 * var(--tinyIconSize)) calc(.75 * var(--tinyIconSize));
+    -webkit-mask-size: calc(.75 * var(--tinyIconSize)) calc(.75 * var(--tinyIconSize));
+}
+
+icon.extrasmall {
+    width: var(--extraSmallIconSize);
+    height: var(--extraSmallIconSize);
+    mask-size: calc(.75 * var(--extraSmallIconSize)) calc(.75 * var(--extraSmallIconSize));
+    -webkit-mask-size: calc(.75 * var(--extraSmallIconSize)) calc(.75 * var(--extraSmallIconSize));
 }
 
 icon.medium {
@@ -336,6 +343,10 @@ icon.large {
     height: var(--largeIconSize);
     mask-size: calc(.75 * var(--largeIconSize)) calc(.75 * var(--largeIconSize));
     -webkit-mask-size: calc(.75 * var(--largeIconSize)) calc(.75 * var(--largeIconSize));
+}
+
+icon.empty {
+    background: none;
 }
 
 icon.emoji {
@@ -391,7 +402,6 @@ icon.download {
     mask-image: url(../images/icon-download.svg);
     -webkit-mask-image: url(../images/icon-download.svg);
 }
-
 
 icon.bmc {
     mask-image: url(../images/icon-bmc.svg);
@@ -579,6 +589,7 @@ button.small {
 
 button.small.main {
     padding-top: calc(.75 * var(--defaultGap));
+    padding-bottom: calc(.7 * var(--defaultGap));
     color: hsl(var(--linkColorLightHSL));
     font-family: "Theme";
 }
@@ -660,20 +671,41 @@ notification.show {
 }
 
 notification message {
+    gap: calc(.25 * var(--defaultGap));
     background: black;
+    font-size: 1.1em;
     width: calc(100% - 2 * var(--defaultGap));
     max-width: calc(2.5 * var(--cardSize));
-    padding: var(--defaultGap);
+    padding: calc(1.5 * var(--defaultGap)) var(--defaultGap);
     margin: var(--defaultGap);
-    border: 1px solid;
+    border: 1px solid hsl(var(--messageColorHSL));
+    color: hsl(var(--appForegroundHSL));
     border-radius: var(--borderRadius);
     pointer-events: none;
     box-shadow: 0px 2px 8px rgba(0, 0, 0, .25);
+
+    name {
+        display: flex;
+        justify-content: center;
+
+        icon {
+            margin: 0 4px 0 16px;
+        }
+    }
+
+    subtitle {
+        color: hsl(var(--appForegroundDiminishedHSL));
+        display: block;
+        text-transform: capitalize;
+        padding-bottom: 0;
+        font-size: .8em;
+    }
 }
 
 message {
-    display: block;
-    color: hsl(var(--messageColorHSL));
+    display: flex;
+    flex-direction: column;
+    border-color: hsl(var(--messageColorHSL));
     text-shadow: 0px -1px 2px black;
     text-align: center;
     width: 100%;
@@ -685,7 +717,7 @@ message span {
     display: none;
 }
 
-.solved message {
+.solved .show message {
     pointer-events: all;
 }
 
@@ -1402,10 +1434,11 @@ gamelinks p {
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
-    padding: 0;
+    padding: 0 0 var(--defaultGap) 0;
     align-items: center;
     margin-bottom: var(--defaultGap);
     gap: var(--defaultGap);
+    border-bottom: 1px solid hsla(var(--appForegroundHSL), 0.1);
 }
 
 gamelinks p a, gamelinks p a:hover, gamelinks p a:active, gamelinks p a:focus, gamelinks p a:visited {
@@ -1433,19 +1466,19 @@ gamelinks p button.inline {
 }
 
 gamelinks p button.inline icon {
-    opacity: .5;
-    background-color: hsla(var(--appForegroundHSL), .3);
+    background-color: #bb0000;
     transition: var(--shortTransition) ease-in-out background-color;
 }
 
 gamelinks p.done button.inline icon {
-    opacity: .5;
+    opacity: 1;
     background-color: hsl(var(--linkColorLightHSL));
     transition: var(--shortTransition) ease-in-out background-color;
 }
 
 gamelinks p button.inline:hover {
     color: hsl(var(--appForegroundHSL));
+    opacity: .5;
 }
 
 gamelinks p button.inline:hover icon {
@@ -2031,11 +2064,6 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         width: 100%;
     }
 
-    message icon.share {
-        scale: .9;
-        transform: translateY(0px);
-    }
-
     controls {
         padding: 0;
     }
@@ -2056,10 +2084,12 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         font-size: 130%;
     }
 
-    message {
-        font-size: 110%;
-        text-align: center;
-        line-height: 130%;
+    notification {
+        message {
+            gap: calc(.5 * var(--defaultGap));
+            /* text-align: center; */
+            font-size: 1.3em;
+        }
     }
 
     callout {

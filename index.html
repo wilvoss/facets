@@ -68,11 +68,15 @@
           <p>Hi, {{appDataPlayerCurrent.name}}!</p>
         </header>
         <subtitle>
-          <button class="inline small main" @click="HandleNewGameClick()">Create A Puzzle!</button>
+          <button class="inline small main" @click="HandleNewGameClick()">
+            <icon class="empty"></icon>
+            Create A Puzzle!
+            <icon class="empty"></icon>
+          </button>
           <!-- <button :class="{disabled: !appDailyIsFreshToday}" class="inline small strong">Today's Daily!</button> -->
           <button v-if="vsShowDaily" class="inline small" @click="ToggleShowDailyGames(event)">
             Daily Puzzles
-            <badge v-if="vsShowDaily && appDailyIsFreshToday">{{appDataNumberOfNewDailies}}</badge>
+            <badge :class="{show: vsShowDaily && getDailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
           </button>
           <button class="inline small" @click="ToggleShowTutorial(event)">How To Play</button>
           <button class="inline small" @click="ShowSettings(event)">Settings</button>
@@ -312,9 +316,16 @@
           </message>
           <h3>Past 10 days</h3>
           <gamelinks>
-            <p @click="HandleOldGameClick(event, game)" v-for="game in getDailyGamesWithWordSetNames">
-              <a href=""><small>{{game.date}} {{game.useExtraCard === "true" ? '(5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a>
-              <button class="inline report" @click="HandleOldGameClick(event, game)"><icon class="nope"></icon>Solve</button>
+            <p :class="{done: game.solved}" @click="HandleOldGameClick(event, game)" v-for="game in getDailyGamesWithWordSetNames">
+              <a href=""><small>{{game.date}} – "{{game.name}}" {{game.useExtraCard === "true" ? '(5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a>
+              <button v-if="game.solved && game.guesses > 0" class="inline report" @click="HandleOldGameClick(event, game)">
+                <icon class="check"></icon>
+                In {{game.guesses}}
+              </button>
+              <button v-if="!game.solved && game.guesses > 0" class="inline report" @click="HandleOldGameClick(event, game)">
+                <icon class="nope"></icon>
+                {{game.guesses}} {{game.guesses === 1 ? "Try" : "Tries"}}
+              </button>
             </p>
           </gamelinks>
 
@@ -327,19 +338,22 @@
         <controls>
           <button class="inline small" @click="ToggleShowMeta(event)">
             {{appStateUsePortraitLayout ? 'Menu': 'Home'}}
-            <!-- <icon v-if="appDailyIsFreshToday" class="cal"></icon> -->
-            <badge v-if="vsShowDaily && appDailyIsFreshToday">{{appDataNumberOfNewDailies}}</badge>
+            <badge :class="{show: vsShowDaily && getDailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
           </button>
         </controls>
         <header :disabled="appStateShowNotification">
-          <span> {{appAIGenerated ? 'Daily' : ''}} </span>
+          <span>
+            <icon v-if="getCurrentDaily && getCurrentDaily.solved" class="check"></icon>
+            {{getCurrentDaily && vsShowDaily && appAIGenerated ? getCurrentDaily.key === getTodaysKey ? 'Today' : getCurrentDaily.date.split(',')[0] : ''}}
+          </span>
           <flogo @click="appStateShowNotification = true"></flogo>
           <icon class="logo" @click="appStateShowNotification = true"></icon>
-          <span> {{vsShowDaily && appAIGenerated ? getCurrentDaily.key === appCurrentDailyGameKey ? 'Today' : getCurrentDaily.date.split(',')[0] : ''}} </span>
-          <button @click="HandleOldGameClick(event, getTodaysDaily)" class="small inline" :class="{show: vsShowDaily && appDailyIsFreshToday && (!appStateIsGuessing || appStateShowMeta)}">
+          <span>
+            <count v-if="getCurrentDaily"> {{getCurrentDaily.guesses}} {{getCurrentDaily.guesses !== 1 ? 'tries' : 'try'}} </count>
+          </span>
+          <button @click="HandleOldGameClick(event, getTodaysDaily)" class="small inline" :class="{show: vsShowDaily && getDailyIsFreshToday && (!appStateIsGuessing || appStateShowMeta)}">
             <icon class="cal"></icon>
-            The Daily!
-            <!-- <badge v-if="appDailyIsFreshToday">{{appDataNumberOfNewDailies}}</badge> -->
+            New Daily!
           </button>
         </header>
         <controls :class="{disabled: getActionButtonState}">
@@ -429,19 +443,11 @@
         </button>
         <parking id="parking">
           <spot v-for="(card, index) in appDataCardsParked" v-if="index < currentGameGuessingCardCount" :class="{empty: card.words.length === 0, selected: card.isSelected}">
-            <rotators>
-              <button aria-label="Rotate Tray Clockwise" class="clockwise" @pointerdown="RotateCard(event, card, 1)"><icon class="rotate"></icon></button>
-              <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise" @pointerdown="RotateCard(event, card, -1)"><icon class="rotate"></icon></button>
-            </rotators>
             <card @pointerup="HandleCardPointerUp(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
               <words>
                 <word v-for="word in card.words">{{word.value}}</word>
               </words>
             </card>
-            <rotators>
-              <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateCard(event, card, 1)"><icon class="rotate"></icon></button>
-              <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise" @click="RotateCard(event, card, -1)"><icon class="rotate"></icon></button>
-            </rotators>
           </spot>
         </parking>
         <button class="scroller" :class="{disabled: appParkingRightButtonDisabled}" @click="ScrollParking(event, 'left')" v-if="userSettingsFocus">
