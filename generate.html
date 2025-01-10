@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html itemtype="https://schema.org/VideoGame" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="x-content-type-options=nosniff" />
+
+    <title>Facets!</title>
+    <meta name="apple-mobile-web-app-title" content="Facets!" />
+    <meta name="mobile-web-app-capable" content="no" />
+    <meta name="apple-touch-fullscreen" content="no" />
+    <meta name="apple-mobile-web-app-capable" content="no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, minimum-scale=1, maximum-scale=5, user-scalable=yes" />
+    <meta name="theme-color" id="themeColor" content="rgb(0, 9, 15)" />
+  </head>
+
+  <body>
+    <app id="app" v-cloak>
+      <tray :class="{rotating: appStateTrayIsRotating}" :style="{rotate: appStateTrayRotation * 90 + 'deg'}">
+        <hints>
+          <hint @pointerdown="RotateTrayBasedOnInputFocus(index)" :id="'h' + index" v-for="(hint, index) in appDataHints" :key="index">
+            <input autocapitalize="off" autocomplete="off" spellcheck="false" :id="'hint' + index" type="text" title="Please only use alphanumeric characters." pattern="[A-Za-z0-9]*" :disabled="appStateIsGuessing || index > 0" v-model="hint.value" maxlength="14" type="text" onfocus="this.placeholder=''" onblur="this.placeholder='tap'" placeholder="tap" />
+          </hint>
+        </hints>
+        <cards :class="{disabled: appStateIsModalShowing}">
+          <spot v-for="(card, index) in appDataCards" :id="'spot' + index" v-if="!card.isExtra" :class="{empty: card.words.length === 0, selected: card.isSelected}">
+            <card @click="HandleCardClick(event, card)" @pointerup="HandleCardPointerUp(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
+              <words>
+                <word v-for="(word, windex) in card.words" :id="'word' + windex">{{word.value}}</word>
+              </words>
+            </card>
+          </spot>
+        </cards>
+      </tray>
+    </app>
+    <script src="helpers/console-enhancer.js" type="text/javascript"></script>
+    <script src="models/LanguageObject.min.js" type="text/javascript"></script>
+    <script src="models/ProgressMessageObject.min.js" type="text/javascript"></script>
+    <script src="models/WordSetObject.min.js" type="text/javascript"></script>
+    <script src="models/WordObject.min.js" type="text/javascript"></script>
+    <script src="models/CardObject-min.js" type="text/javascript"></script>
+    <script src="models/PlayerObject-min.js" type="text/javascript"></script>
+    <script src="helpers/vue.min.js" type="text/javascript"></script>
+    <script src="scripts/facets.js" type="text/javascript"></script>
+  </body>
+</html>

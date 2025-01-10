@@ -1,0 +1,153 @@
+app {
+    background-image: none;
+}
+
+message {
+    text-shadow: none;
+}
+
+.guessing.solved wrapper message {
+    animation: bounce 1s steps(10, start) infinite;
+    -webkit-animation: bounce 1s steps(10, start) infinite;
+    color: hsla(var(--hueSolved), 100%, 70%, 1);
+}
+
+@keyframes bounce {
+    50% {
+        /* transform: translateY(-2px); */
+        scale: 1.02;
+    }
+}
+
+tray {
+    background-image: none;
+    mask-image: none;
+    background: none;
+}
+
+cards {
+    scale: 1.1;
+    transform: translateY(54px);
+}
+
+cards spot:nth-child(1) card words word:nth-child(2), cards spot:nth-child(1) card words word:nth-child(3), cards spot:nth-child(2) card words word:nth-child(3), cards spot:nth-child(2) card words word:nth-child(4), cards spot:nth-child(3) card words word:nth-child(1), cards spot:nth-child(3) card words word:nth-child(2), cards spot:nth-child(4) card words word:nth-child(1), cards spot:nth-child(4) card words word:nth-child(4) {
+    opacity: 1;
+}
+
+spot {
+    outline: none;
+    border: none;
+    border-radius: var(--borderRadius);
+}
+
+.portrait wrapper.main {
+    padding: 0;
+}
+
+.portrait.simple wrapper.mobile parking spot {
+    outline-width: 0px;
+    background: none;
+}
+
+.portrait wrapper.mobile parking spot.empty {
+    outline-width: 2px;
+}
+
+card {
+    outline: 1.7px solid hsla(var(--hueGuessing), 100%, 40%, 1);
+    border-radius: var(--borderRadius);
+}
+
+spot.empty, parking spot.empty card, .reviewing.guessing parking spot.empty card, .creating parking spot.empty card {
+    outline-color: hsl(var(--simpleCardForegroundHSL));
+    outline-width: 1px;
+    outline-style: dashed;
+    background: none;
+}
+
+.multicolor.creating diamond.back, diamond.back, .multicolor.reviewing diamond.back, .multicolor.guessing diamond.back, .multicolor.solved.guessing diamond.back {
+    background: none;
+    background-image: none;
+}
+
+tray diamond {
+    background: none;
+    background-image: none;
+}
+
+card word {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    position: absolute;
+    text-align: center;
+    width: var(--cardSize);
+    overflow: visible;
+    height: calc(var(--wordHeight) - 10px);
+    padding-top: 10px;
+    font-size: calc(var(--wordScale)* 90%);
+    text-transform: capitalize;
+    line-height: 100%;
+}
+
+card, tray card, parking card, .multicolor.creating card, .multicolor.guessing card, .multicolor.guessing.reviewing card, .multicolor.solved.guessing card, card.ghost, card.ghost.empty, .guessing card.ghost.empty, .reviewing card.ghost.empty, .multicolor.creating card.ghost, .multicolor.guessing card.ghost, .multicolor.guessing.solved card.ghost, .multicolor.reviewing card.ghost, cards card, .multicolor.guessing cards card, .reviewing cards card {
+    color: hsl(var(--simpleCardForegroundHSL));
+    background: hsl(var(--simpleCardBackgroundHSL));
+    box-shadow: 0px 3px 10px hsla(0, 0%, 0%, .2);
+    border: none;
+}
+
+.multicolor.solved.guessing cards card {
+    outline: 1px solid hsla(var(--hueSolved), 100%, 70%, 1);
+}
+
+wrapper parking spot.empty card, .portrait wrapper.mobile parking spot.empty card, cards spot.empty card, .multicolor.guessing cards spot.empty card, .reviewing cards spot.empty card, parking spot.empty card, .multicolor.guessing spot.empty card, .multicolor.creating spot.empty card, .multicolor.reviewing spot.empty card {
+    background: none;
+    box-shadow: none;
+    outline: none;
+}
+
+card.ghost, card.ghost.empty, .guessing card.ghost.empty, .reviewing card.ghost.empty {
+    opacity: .7;
+}
+
+hints hint input {
+    text-shadow: 0px 1px 1px hsla(var(--simpleCardBackgroundHSL), .6);
+    transform: unset;
+}
+
+.multicolor.creating hints hint input, .multicolor.creating hints hint input:disabled, hints hint input:disabled, .multicolor.creating hints hint input::placeholder, .multicolor.guessing.reviewing hints hint input:disabled, .multicolor.guessing.solved hints hint input:disabled {
+    color: hsla(var(--simpleCardForegroundHSL), 1);
+}
+
+.multicolor.guessing hints hint input:disabled {
+    opacity: 1;
+    color: hsla(var(--simpleCardForegroundHSL), 1);
+}
+
+.multicolor.guessing parking spot card, .multicolor.guessing.reviewing parking spot card {
+    outline-color: hsla(var(--simpleCardForegroundHSL), 1);
+}
+
+spot rotators button icon {
+    background: hsla(var(--simpleCardForegroundHSL), .2);
+}
+
+.guessing spot:hover rotators button icon {
+    background: hsla(var(--linkColorDarkHSL), 1);
+}
+
+parking {
+    opacity: 1;
+}
+
+parking spot rotators button icon {
+    background: hsla(var(--hueMain), 100%, 40%, 0);
+}
+
+.multicolor.creating parking spot rotators button icon,
+.multicolor.guessing parking spot rotators button icon,
+.multicolor.reviewing parking spot rotators button icon,
+.multicolor.solved.guessing parking spot rotators button icon {
+    background: hsla(var(--hueMain), 100%, 0%, 0);
+}

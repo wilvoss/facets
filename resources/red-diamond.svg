@@ -1,0 +1,33 @@
+<svg width="189" height="189" viewBox="0 0 189 189" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M153 0H36L0 36L5.11423e-06 153L20.7085 160.965L0 153L36 189L153 189L189 153L189 36L153 0Z" fill="#FF0044"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M153 0H36L47 25H142L153 0ZM36 189L153 189L142 164H47L36 189ZM5.11423e-06 153L0 36L25 47V142L5.11423e-06 153ZM189 153V36L164 47V142L189 153Z" fill="black" fill-opacity="0.4"/>
+<path d="M36 3.38515e-05L47 25L25 25L36 3.38515e-05Z" fill="black" fill-opacity="0.3"/>
+<path d="M9.45702e-07 153L25 142L25 164L9.45702e-07 153Z" fill="black" fill-opacity="0.3"/>
+<path d="M36 189L47 164L25 164L36 189Z" fill="black" fill-opacity="0.45"/>
+<path d="M189 153L164 142L164 164L189 153Z" fill="black" fill-opacity="0.45"/>
+<path d="M153 3.95735e-05L164 25L142 25L153 3.95735e-05Z" fill="black" fill-opacity="0.45"/>
+<path d="M8.5751e-06 36L25 25L25 47L8.5751e-06 36Z" fill="black" fill-opacity="0.45"/>
+<path d="M153 189L164 164L142 164L153 189Z" fill="black" fill-opacity="0.3"/>
+<path d="M189 36L164 25L164 47L189 36Z" fill="black" fill-opacity="0.3"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M0 36L36 0L25 25L0 36ZM153 0L189 36L164 25L153 0ZM189 153L153 189L164 164L189 153ZM0 153L36 189L25 164L0 153Z" fill="white" fill-opacity="0.1"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M25 25H164V164H25L25 25ZM25 25L13 41L13 148L25 164L41 176L148 176L164 164L176 148V41L164 25L148 13L41 13L25 25Z" fill="black" fill-opacity="0.11"/>
+<g opacity="0.5">
+<path d="M25 94.4999L25 24.9999L60 59.9999L25 94.4999Z" fill="black" fill-opacity="0.8"/>
+<path d="M94.5 94.4999L94.5 24.9999L129 59.9999L94.5 94.4999Z" fill="black" fill-opacity="0.5"/>
+<path d="M94.5 24.9999L94.5 94.4999L60 59.9999L94.5 24.9999Z" fill="black" fill-opacity="0.4"/>
+<path d="M164 24.9999V94.4999L129 59.9999L164 24.9999Z" fill="black" fill-opacity="0.66"/>
+<path d="M25 164L25 94.4999L60 129L25 164Z" fill="black" fill-opacity="0.66"/>
+<path d="M94.5 164L94.5 94.4999L129 129L94.5 164Z" fill="black" fill-opacity="0.4"/>
+<path d="M94.5 94.4999L94.5 164L60 129L94.5 94.4999Z" fill="black" fill-opacity="0.5"/>
+<path d="M164 94.4999L164 164L129 129L164 94.4999Z" fill="black" fill-opacity="0.8"/>
+<path d="M94.5 164L25 164L60 129L94.5 164Z" fill="black" fill-opacity="0.8"/>
+<path d="M94.5 94.4999L25 94.4999L60 59.9999L94.5 94.4999Z" fill="black" fill-opacity="0.5"/>
+<path d="M25 94.4999L94.5 94.4999L60 129L25 94.4999Z" fill="black" fill-opacity="0.4"/>
+<path d="M25 24.9999L94.5 24.9999L60 59.9999L25 24.9999Z" fill="black" fill-opacity="0.66"/>
+<path d="M164 164L94.5 164L129 129L164 164Z" fill="black" fill-opacity="0.66"/>
+<path d="M164 94.4999L94.5 94.4999L129 60L164 94.4999Z" fill="black" fill-opacity="0.4"/>
+<path d="M94.5 94.4999H164L129 129L94.5 94.4999Z" fill="black" fill-opacity="0.5"/>
+<path d="M94.5 24.9999L164 24.9999L129 59.9999L94.5 24.9999Z" fill="black" fill-opacity="0.8"/>
+</g>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M95 26H94V94H26V95H94V163H95V95H163V94H95V26Z" fill="black" fill-opacity="0.1"/>
+</svg>

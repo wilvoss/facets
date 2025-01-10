@@ -1,0 +1,1 @@
+class PlayerObject{constructor(i){this.id=void 0===i.id?-1:i.id,this.cards=void 0===i.cards?[]:i.cards,this.name=void 0===i.name?"Player":i.name,this.role=void 0===i.role?"creator":i.role,this.playerPosition=void 0===i.playerPosition?0:i.playerPosition}}
