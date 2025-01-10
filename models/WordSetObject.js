@@ -8,7 +8,7 @@ class WordSetObject {
     this.isSelected = spec.isSelected === undefined ? false : spec.isSelected;
     this.data = spec.data === undefined ? [] : spec.data;
     this.textureImage = spec.textureImage === undefined ? '../images/wallpapers/common.jpg' : spec.textureImage;
-    this.textureHue = spec.textureHue === undefined ? 'radial-gradient(circle, hsla(var(--appBackgroundDarkHSL), .7) 0%, hsla(var(--appBackgroundDarkHSL), 1) 100%)' : spec.textureHue;
+    this.textureHue = spec.textureHue === undefined ? 'radial-gradient(circle, hsla(var(--appBackgroundDarkHSL), .8) 0%, hsla(var(--appBackgroundDarkHSL), 1) 100%)' : spec.textureHue;
     this.textureSize = spec.textureSize === undefined ? '512px' : spec.textureSize;
     this.textureBlendMode = spec.textureBlendMode === undefined ? 'normal' : spec.textureBlendMode;
     this.enabled = spec.enabled === undefined ? true : spec.enabled;

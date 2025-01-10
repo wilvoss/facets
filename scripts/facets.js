@@ -256,6 +256,7 @@ var app = new Vue({
       } else {
         let textureSource = this.documentCssRoot.style.getPropertyValue('--textureSource');
         this.documentCssRoot.style.setProperty('--texture2', textureSource);
+        this.documentCssRoot.style.setProperty('--textureSize', 'cover');
         this.documentCssRoot.style.setProperty('--textureBlendMode', 'normal');
         let textureHueSource = this.documentCssRoot.style.getPropertyValue('--textureHueSource');
         this.documentCssRoot.style.setProperty('--textureHue', textureHueSource);
