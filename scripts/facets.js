@@ -708,7 +708,7 @@ var app = new Vue({
     },
 
     async GetLast10GlobalCreatedGames() {
-      if (!this.vsShowDaily && window.location.href !== window.location.origin + '/generate.html?generated=true') {
+      if (window.location.href !== window.location.origin + '/generate.html?generated=true') {
         note('GetLast10GlobalCreatedGames() called');
         this.appStateIsGettingLast10Games = true;
         this.appDataGlobalCreatedGames = [];
@@ -863,7 +863,7 @@ var app = new Vue({
       }
       this.LoadPage();
       this.appStateShowNotification = true;
-      // this.RotateTray(-4);
+      this.RotateTray(-4);
     },
 
     HandleGoButtonClick(event) {

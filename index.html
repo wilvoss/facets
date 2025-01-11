@@ -80,7 +80,7 @@
           </button>
           <button class="inline small" @click="ToggleShowTutorial(event)">How To Play</button>
           <button class="inline small" @click="ShowSettings(event)">Settings</button>
-          <button v-if="!vsShowDaily" class="inline small" @click="ToggleShowGlobalCreated(event)">Recent Puzzles</button>
+          <button class="inline small" @click="ToggleShowGlobalCreated(event)">Recent Puzzles</button>
           <button class="inline small" @click="ToggleShowInfo(event)">Credits</button>
           <button class="inline small" @click="ToggleShowMeta(event)">Resume</button>
         </subtitle>
@@ -322,7 +322,7 @@
                 <icon class="check"></icon>
                 In {{game.guesses}}
               </button>
-              <button v-if="!game.solved && game.guesses > 0" class="inline report" @click="HandleOldGameClick(event, game)">
+              <button v-if="!game.solved" class="inline report" @click="HandleOldGameClick(event, game)">
                 <icon class="nope"></icon>
                 {{game.guesses}} {{game.guesses === 1 ? "Try" : "Tries"}}
               </button>
@@ -342,12 +342,11 @@
           </button>
         </controls>
         <header :disabled="appStateShowNotification">
-          <span>
-            <icon v-if="getCurrentDaily && getCurrentDaily.solved" class="check"></icon>
-            {{getCurrentDaily && vsShowDaily && appAIGenerated ? getCurrentDaily.key === getTodaysKey ? 'Today' : getCurrentDaily.date.split(',')[0] : ''}}
-          </span>
+          <span> {{getCurrentDaily && vsShowDaily && appAIGenerated ? getCurrentDaily.key === getTodaysKey ? 'Today' : getCurrentDaily.date.split(',')[0] : ''}} </span>
           <flogo @click="appStateShowNotification = true"></flogo>
-          <icon class="logo" @click="appStateShowNotification = true"></icon>
+          <icon v-if="!getCurrentDaily" class="logo" @click="appStateShowNotification = true"></icon>
+          <icon v-if="getCurrentDaily && getCurrentDaily.solved" class="check large"></icon>
+          <icon v-if="getCurrentDaily && !getCurrentDaily.solved" class="cal large"></icon>
           <span>
             <count v-if="getCurrentDaily"> {{getCurrentDaily.guesses}} {{getCurrentDaily.guesses !== 1 ? 'tries' : 'try'}} </count>
           </span>

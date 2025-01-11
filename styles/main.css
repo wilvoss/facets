@@ -41,6 +41,7 @@
     --linkColorDarkHSL: var(--hueHighlight), 69%, 45%;
     --messageColorHSL: 44, 100%, 70%;
     --highlightColorHSL: 50, 100%, 70%;
+    --alertHSL: 0, 100%, 45%;
     --trayBackgroundHSL: var(--hueMain), 100%, 50%;
     --trayCreatingBackgroundHSL: var(--hueCreating), 100%, 50%;
     --trayGuessingBackgroundHSL: var(--hueGuessing), 100%, 40%;
@@ -194,7 +195,7 @@ button {
         border-radius: 50%;
         display: none;
         color: hsl(var(--appForegroundHSL));
-        background: rgb(227, 0, 0);
+        background: hsl(var(--alertHSL));
         width: 24px;
         height: 24px;
         overflow: hidden;
@@ -202,7 +203,6 @@ button {
         align-items: center;
         font-size: 0.7em;
         font-weight: 800;
-        transition: 250ms ease-out all;
     }
 
     badge.show {
@@ -251,18 +251,19 @@ header {
         pointer-events: all;
     }
 
+    icon.check {
+        background: hsl(var(--linkColorLightHSL));
+    }
+
     span {
         display: flex;
         gap: 4px;
+        align-items: center;
         padding-top: 1px;
         flex: 1;
 
         icon.nope {
             background: #bb0000;
-        }
-
-        icon.check {
-            background: hsl(var(--linkColorLightHSL));
         }
     }
 
@@ -280,12 +281,9 @@ header {
         border-radius: 0px 0px var(--borderRadius) var(--borderRadius);
         border-width: 0px 1px 1px 1px;
         color: hsl(var(--appBackgroundHSL));
-        /* border-color: rgb(227, 0, 0); */
         transform: translate(0px, -60px);
-        transition: var(--longTransition) ease-in-out all;
+        transition: var(--mediumTransition) ease-in-out all;
         font-family: "Theme";
-        /* font-size: .9em; */
-        /* font-weight: 800; */
 
         icon {
             background: hsl(var(--appBackgroundHSL));
@@ -1453,7 +1451,8 @@ gamelinks p a, gamelinks p a:hover, gamelinks p a:active, gamelinks p a:focus, g
 gamelinks p button.inline {
     z-index: 100;
     padding: 5px 10px;
-    min-height: calc(2 * var(--defaultGap) - 5px);
+    width: calc(3 * var(--defaultGap) - 5px);
+    height: calc(3 * var(--defaultGap) - 5px);
     font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
     font-size: .5em;
     text-transform: uppercase;
@@ -1466,7 +1465,8 @@ gamelinks p button.inline {
 }
 
 gamelinks p button.inline icon {
-    background-color: #bb0000;
+    opacity: .4;
+    background-color: hsla(var(--alertHSL), 1);
     transition: var(--shortTransition) ease-in-out background-color;
 }
 
@@ -1478,7 +1478,7 @@ gamelinks p.done button.inline icon {
 
 gamelinks p button.inline:hover {
     color: hsl(var(--appForegroundHSL));
-    opacity: .5;
+
 }
 
 gamelinks p button.inline:hover icon {
@@ -1623,19 +1623,22 @@ word {
     text-align: center;
     width: var(--cardSize);
     overflow: visible;
-    height: calc(var(--wordHeight) - 10px);
-    padding-top: 10px;
+    height: calc(var(--cardSize) - 2px);
+    padding-top: 2px;
     font-size: calc(var(--wordScale) * 90%);
     line-height: 100%;
     user-select: all;
     -webkit-user-select: all;
 }
 
+parking word {
+    padding-top: 8px;
+    height: calc(var(--cardSize) - 8px);
+
+}
+
 cards word {
     text-transform: capitalize;
-    height: calc(var(--wordHeight) - 2px);
-    padding-top: 2px;
-
 }
 
 word:nth-child(1) {
@@ -1643,17 +1646,14 @@ word:nth-child(1) {
 }
 
 word:nth-child(2) {
-    transform: translate(calc((var(--cardSize) / 2) - (var(--wordHeight) / 2)), calc(-1 * (var(--cardSize) / 2) + calc(var(--defaultGap) * 1) - 5px));
     rotate: 90deg;
 }
 
 word:nth-child(3) {
-    transform: translate(0, calc(-1 * (var(--cardSize) / 1) + calc(var(--defaultGap) * 1.5)));
     rotate: 180deg;
 }
 
 word:nth-child(4) {
-    transform: translate(calc(-1 * (var(--cardSize) / 2) + calc(var(--defaultGap) * 1) - 5px), calc(-1 * (var(--cardSize) / 2) + calc(var(--defaultGap) * 1) - 5px));
     rotate: -90deg;
 }
 
@@ -2013,13 +2013,14 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     }
 
     words word {
-        height: calc(var(--wordHeight) - 5px);
-        padding-top: 5px;
+
         font-size: calc(var(--wordScale) * 100%);
     }
 
     parking words word {
         font-size: calc(var(--wordScale) * 140%);
+        height: calc(var(--cardSize) - 10px);
+        padding-top: 10px;
     }
 
     cards words word {
@@ -2072,6 +2073,11 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         width: calc(.7 * var(--cardSize));
         padding: calc(.5 * var(--defaultGap));
         font-size: 140%;
+    }
+
+    gamelinks p button.inline {
+        width: calc(3 * var(--defaultGap) - 5px);
+        height: calc(3 * var(--defaultGap) - 5px);
     }
 
     header h1 {
