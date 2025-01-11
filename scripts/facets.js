@@ -44,7 +44,6 @@ var app = new Vue({
     appDataTransitionShort: 0,
     appDataWordSets: [...WordSets],
     appCurrentDailyGameKey: -1,
-    appAIGenerated: false,
     appDailyIsFreshToday: true,
     appDataNumberOfNewDailies: 1,
     // app state
@@ -794,12 +793,12 @@ var app = new Vue({
         this.appStateShowConfirmation = true;
       } else if (this.appStateIsGuessing) {
         if (this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
-          if (this.appAIGenerated) {
+          if (this.getIsAIGenerated) {
             this.ShareWin();
           } else {
             this.HandleNewGameClick();
           }
-        } else if (this.appAIGenerated || this.appStateForceAutoCheck) {
+        } else if (this.getIsAIGenerated || this.appStateForceAutoCheck) {
           this.IsCurrentGuessCorrect();
         } else {
           this.ShareBoard();
@@ -822,8 +821,10 @@ var app = new Vue({
     },
 
     HandleOldGameClick(e, _game) {
+      note('HandleOldGameClick() called');
       e.preventDefault();
       e.stopPropagation();
+      console.log(_game.generated);
       let stringArray = ['?'];
       this.currentGameSolutionGuessing = '';
       this.appDataMessage = '';
@@ -1457,6 +1458,10 @@ var app = new Vue({
 
         urlString = encodeURIComponent(urlString);
         urlString += '?sendingName=' + encodeURIComponent(this.appDataPlayerCurrent.name);
+        urlString += '&generated=' + encodeURIComponent(this.getCurrentDaily ? true : this.getIsAIGenerated);
+        if (this.getCurrentDaily) {
+          urlString += '&key=' + encodeURIComponent(this.getCurrentDaily.key);
+        }
         urlString += '&puzzleName=' + encodeURIComponent(this.appDataPlayerCreator.name);
         urlString += '&puzzleID=' + encodeURIComponent(this.appDataPlayerCreator.id);
         urlString += '&lang=' + (_isNew === false ? encodeURIComponent(this.currentGameLanguage) : encodeURIComponent(this.userSettingsLanguage));
@@ -1467,7 +1472,6 @@ var app = new Vue({
         urlString += '&sendingID=' + encodeURIComponent(this.appDataPlayerCurrent.id);
         urlString += '&useExtraCard=' + encodeURIComponent(this.currentGameGuessingCardCount === 5);
         urlString += '&sol=' + encodeURIComponent(this.currentGameSolutionActual);
-        urlString += '&generated=' + encodeURIComponent(this.getIsAIGenerating);
         if (_currentGameReviewIsFinal) {
           urlString += '&final=true';
         }
@@ -1772,7 +1776,6 @@ var app = new Vue({
       this.appDataMessage = _appDataMessage;
       this.currentGameGuessCount = 0;
       this.appCurrentDailyGameKey = -1;
-      this.appAIGenerated = false;
       this.currentGameLanguage = '';
       this.currentGameReviewIsFinal = false;
       this.currentGameGuessersName = '';
@@ -1819,7 +1822,6 @@ var app = new Vue({
           let search = decodeURIComponent(window.location.search);
           params = search.split('?')[1].split('&');
           boardPieces = urlParams.has('board') ? urlParams.get('board').split(':') : [];
-          this.appAIGenerated = urlParams.has('generated') && urlParams.get('generated').toString() === 'true';
         }
 
         if (boardPieces.length >= 40) {
@@ -1976,13 +1978,13 @@ var app = new Vue({
 
       if (this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
         if (this.appStateForceAutoCheck) {
-          text = this.appAIGenerated ? this.appDataActionButtonTexts.guess : this.appDataActionButtonTexts.guess;
+          text = this.getIsAIGenerated ? this.appDataActionButtonTexts.guess : this.appDataActionButtonTexts.guess;
         }
         if (this.isChromeAndiOSoriPadOS && this.appDataShareURL.includes('facets.bigtentgames.com/game/?')) {
           text = this.appDataActionButtonTexts.copy;
         }
         if (this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
-          if (this.appAIGenerated) {
+          if (this.getIsAIGenerated) {
             text = this.appDataActionButtonTexts.share;
           } else {
             text = this.appDataActionButtonTexts.create;
@@ -2039,6 +2041,15 @@ var app = new Vue({
     },
     getIsAIGenerating: function () {
       return window.location.href.indexOf(window.location.origin + '/generate.html') !== -1;
+    },
+    getIsAIGenerated: function () {
+      note('getIsAIGenerated() called');
+      if (window.location.search) {
+        let urlParams = new URLSearchParams(window.location.search);
+        return urlParams.has('generated') && urlParams.get('generated').toString() === 'true';
+      }
+
+      return false;
     },
     getActionButtonState: function () {
       // prettier-ignore

@@ -43,7 +43,7 @@
     <app
       id="app"
       v-cloak
-      :class="{ai: appAIGenerated, multicolor: userSettingsUseMultiColoredGems, solved: appStateIsGuessing &&  currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, dragging: appStateIsDragging, guessing: appStateIsGuessing, simple: userSettingsUsesSimplifiedTheme, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}"
+      :class="{ai: getIsAIGenerated, multicolor: userSettingsUseMultiColoredGems, solved: appStateIsGuessing &&  currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, dragging: appStateIsDragging, guessing: appStateIsGuessing, simple: userSettingsUsesSimplifiedTheme, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}"
       @pointerdown="HandleBodyPointerDown(event)"
       @pointerup="HandleBodyPointerUp(event, appStateIsDragging ? appDataDraggedCard : getSelectedCard)"
     >
@@ -61,7 +61,7 @@
       <notification @click="appStateShowNotification = false" :class="{show: appStateShowNotification}">
         <message :title="getPlayerMessage" v-html="getPlayerMessage"></message>
       </notification>
-      <notification :class="{show: appStateShowMeta}" class="meta">
+      <notification v-if="appStateShowMeta" class="meta show">
         <header>
           <icon class="logo"></icon>
           <h2>Facets</h2>
@@ -73,7 +73,6 @@
             Create A Puzzle!
             <icon class="empty"></icon>
           </button>
-          <!-- <button :class="{disabled: !appDailyIsFreshToday}" class="inline small strong">Today's Daily!</button> -->
           <button v-if="vsShowDaily" class="inline small" @click="ToggleShowDailyGames(event)">
             Daily Puzzles
             <badge :class="{show: vsShowDaily && getDailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
@@ -123,11 +122,11 @@
           </hider>
 
           <h3>Guessing</h3>
-          <hider v-if="!appAIGenerated && !appStateForceAutoCheck">
+          <hider v-if="!getIsAIGenerated && !appStateForceAutoCheck">
             <p>When your friend created this word puzzle, they were given word-pairs that they had to "connect" by coming up with a clue that works for both words in each word-pair.</p>
             <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with.</p>
           </hider>
-          <hider v-if="appAIGenerated">
+          <hider v-if="getIsAIGenerated">
             <p>Right now, you are attempting to solve a word puzzle that our AI created. It was given word-pairs that it had to "connect" by coming up with a clue that works for both words in each word-pair.</p>
             <p class="greenText">It's your job to figure out what word-pairs it was given based on the clues it came up with.</p>
           </hider>
@@ -138,8 +137,8 @@
           <p>Drag cards onto the tray and rotate them until you think you've solved the puzzle!</p>
           <p>Anatomy of a solved puzzle:</p>
           <img :src="'./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
-          <p v-if="!appAIGenerated && !appStateForceAutoCheck">Click the <cta>{{appDataActionButtonTexts.check}}</cta> button to send your guess back to whoever sent it to you.</p>
-          <p v-if="appAIGenerated || appStateForceAutoCheck">Click the <cta>{{appDataActionButtonTexts.guess}}</cta> button to automatically check your guess.</p>
+          <p v-if="!getIsAIGenerated && !appStateForceAutoCheck">Click the <cta>{{appDataActionButtonTexts.check}}</cta> button to send your guess back to whoever sent it to you.</p>
+          <p v-if="getIsAIGenerated || appStateForceAutoCheck">Click the <cta>{{appDataActionButtonTexts.guess}}</cta> button to automatically check your guess.</p>
 
           <hider v-if="appStateIsGuessing">
             <h3>Creating</h3>
@@ -341,14 +340,15 @@
             <badge :class="{show: vsShowDaily && getDailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
           </button>
         </controls>
-        <header :disabled="appStateShowNotification">
-          <span> {{getCurrentDaily && vsShowDaily && appAIGenerated ? getCurrentDaily.key === getTodaysKey ? 'Today' : getCurrentDaily.date.split(',')[0] : ''}} </span>
-          <flogo @click="appStateShowNotification = true"></flogo>
-          <icon v-if="!getCurrentDaily" class="logo" @click="appStateShowNotification = true"></icon>
-          <icon v-if="getCurrentDaily && getCurrentDaily.solved" class="check large"></icon>
+        <header :disabled="appStateShowNotification" @click="appStateShowNotification = true">
+          <span> {{getCurrentDaily && vsShowDaily ? getCurrentDaily.key === getTodaysKey ? 'Today\'s' : getCurrentDaily.date.split(',')[0] : ''}} </span>
+          <flogo></flogo>
           <icon v-if="getCurrentDaily && !getCurrentDaily.solved" class="cal large"></icon>
+          <icon v-if="getCurrentDaily && getCurrentDaily.solved" class="check large"></icon>
+          <icon v-if="!getCurrentDaily" class="logo"></icon>
           <span>
-            <count v-if="getCurrentDaily"> {{getCurrentDaily.guesses}} {{getCurrentDaily.guesses !== 1 ? 'tries' : 'try'}} </count>
+            <count v-if="getCurrentDaily && getCurrentDaily.solved"> {{getCurrentDaily.guesses}} {{getCurrentDaily.guesses !== 1 ? 'tries' : 'try'}} </count>
+            <count v-if="getCurrentDaily && !getCurrentDaily.solved"> Daily </count>
           </span>
           <button @click="HandleOldGameClick(event, getTodaysDaily)" class="small inline" :class="{show: vsShowDaily && getDailyIsFreshToday && (!appStateIsGuessing || appStateShowMeta)}">
             <icon class="cal"></icon>

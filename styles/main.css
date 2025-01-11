@@ -261,10 +261,6 @@ header {
         align-items: center;
         padding-top: 1px;
         flex: 1;
-
-        icon.nope {
-            background: #bb0000;
-        }
     }
 
     span:first-of-type {
@@ -661,6 +657,7 @@ notification.meta {
     background-size: cover, cover, cover;
     background-repeat: no-repeat, no-repeat, repeat;
     justify-content: center;
+    transition-duration: 0s;
 }
 
 notification.show {
@@ -1877,11 +1874,6 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         text-wrap: nowrap;
         text-overflow: ellipsis;
     }
-
-    message {
-        display: block;
-    }
-
 }
 
 @media screen and (max-width:678px) {
