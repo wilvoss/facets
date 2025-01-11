@@ -1,0 +1,15 @@
+name: Open URL at Midnight
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # This cron expression represents midnight GMT (0 0 * * *)
+    - cron: '0 5 * * *' # 5 AM GMT (0 5 * * *)
+
+jobs:
+  open-url:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Open URL
+        uses: wei/curl@master # Use an existing action to open URLs
+        with:
+          url: 'https://facets.bigtentgames.com/generate.html?generated=true'
