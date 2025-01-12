@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.11',
+    appDataVersion: '2.0.12',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
     appDataCards: [],
     appDataCardsParked: [],
