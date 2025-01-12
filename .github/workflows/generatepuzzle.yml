@@ -3,17 +3,31 @@ name: Open URL at Midnight
 on:
   schedule:
     - cron: '0 0 * * *'
-    - cron: '0 5 * * *'
+    - cron: '14 5 * * *'
 
 jobs:
   open-url:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Open URL and capture cookies
-        run: curl -c cookies.txt 'https://facets.bigtentgames.com/generate.html?generated=true'
-      - name: Wait for 2 minutes
-        run: sleep 120
-      - name: Reload URL with cookies
-        run: curl -b cookies.txt 'https://facets.bigtentgames.com/generate.html?generated=true'
-      - name: Wait for 30 seconds
-        run: sleep 30
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Cache Node.js modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Execute Puppeteer script
+        run: node puppeteer.js
