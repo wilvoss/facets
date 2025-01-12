@@ -75,7 +75,7 @@
           </button>
           <button v-if="vsShowDaily" class="inline small" @click="ToggleShowDailyGames(event)">
             Daily Puzzles
-            <badge :class="{show: vsShowDaily && getDailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
+            <badge v-if="vsShowDaily && getDailyIsFreshToday">{{appDataNumberOfNewDailies}}</badge>
           </button>
           <button class="inline small" @click="ToggleShowTutorial(event)">How To Play</button>
           <button class="inline small" @click="ShowSettings(event)">Settings</button>
@@ -337,7 +337,7 @@
         <controls>
           <button class="inline small" @click="ToggleShowMeta(event)">
             {{appStateUsePortraitLayout ? 'Menu': 'Home'}}
-            <badge :class="{show: vsShowDaily && getDailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
+            <badge v-if="vsShowDaily && getDailyIsFreshToday">{{appDataNumberOfNewDailies}}</badge>
           </button>
         </controls>
         <header :disabled="appStateShowNotification">

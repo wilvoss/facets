@@ -246,6 +246,9 @@ header {
     white-space: nowrap;
     flex: 1;
     color: hsl(var(--appForegroundDiminishedHSL));
+    user-select: none;
+    -webkit-user-select: none;
+    cursor: default;
 
     icon {
         pointer-events: all;
@@ -654,7 +657,7 @@ notification {
 notification.meta {
     z-index: 200;
     background: hsl(var(--appBackgroundDarkestHSL));
-    background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0) 200px), var(--textureHueSource), var(--textureSource);
+    background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0) 50%), var(--textureHueSource), var(--textureSource);
     background-size: cover, cover, cover;
     background-repeat: no-repeat, no-repeat, repeat;
     justify-content: center;
@@ -796,6 +799,7 @@ wrapper:first-of-type {
             padding: calc(.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
             border: 1px solid hsla(var(--messageColorHSL), .3);
             height: unset;
+            transition: none;
         }
 
         button {
@@ -1625,8 +1629,8 @@ word {
     padding-top: 2px;
     font-size: calc(var(--wordScale) * 90%);
     line-height: 100%;
-    user-select: all;
-    -webkit-user-select: all;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 parking word {
