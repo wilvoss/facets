@@ -2,20 +2,18 @@ name: Open URL at Midnight
 
 on:
   schedule:
-    - cron: '0 0 * * *' # This cron expression represents midnight GMT (0 0 * * *)
-    - cron: '55 4 * * *' # 4:55 AM GMT (58 4 * * *)
+    - cron: '0 0 * * *'
+    - cron: '0 5 * * *'
 
 jobs:
   open-url:
     runs-on: ubuntu-latest
     steps:
-      - name: Open URL
-        uses: wei/curl@master # Use an existing action to open URLs
-        with:
-          url: 'https://facets.bigtentgames.com/generate.html?generated=true'
+      - name: Open URL and capture cookies
+        run: curl -c cookies.txt 'https://facets.bigtentgames.com/generate.html?generated=true'
       - name: Wait for 2 minutes
         run: sleep 120
-      - name: Reload URL
-        run: curl 'https://facets.bigtentgames.com/generate.html?generated=true'
+      - name: Reload URL with cookies
+        run: curl -b cookies.txt 'https://facets.bigtentgames.com/generate.html?generated=true'
       - name: Wait for 30 seconds
         run: sleep 30
