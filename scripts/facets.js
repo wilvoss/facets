@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.17',
+    appDataVersion: '2.0.18',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -1831,13 +1831,20 @@ var app = new Vue({
           if (this.getIsAIGenerating) {
             this.currentGameGuessingCardCount = getRandomInt(4, 6);
             this.userSettingsUseExtraCard = this.currentGameGuessingCardCount === 5;
-            this.tempWordSets = this.appDataWordSets[getRandomInt(0, this.appDataWordSets.length)];
+
+            this.currentGameWordSet = this.getEnabledWordSets[getRandomInt(0, this.getEnabledWordSets.length)];
+            log(this.currentGameWordSet.name);
+            this.SelectWordSet(null, this.currentGameWordSet);
+            note(this.currentGameWordSet.name);
 
             setTimeout(() => {
               this.GetAISolution();
             }, 100);
           }
+          note(this.currentGameWordSet.name);
+
           this.NewGame(null, '', false);
+          highlight(this.currentGameWordSet.name);
         }
       } catch (e) {
         warn(e.message);

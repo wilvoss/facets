@@ -340,12 +340,12 @@
             <badge :class="{show: vsShowDaily && getDailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
           </button>
         </controls>
-        <header :disabled="appStateShowNotification" @click="appStateShowNotification = true">
+        <header :disabled="appStateShowNotification">
           <span> {{getCurrentDaily && vsShowDaily ? getCurrentDaily.key === getTodaysKey ? 'Today\'s' : getCurrentDaily.date.split(',')[0] : ''}} </span>
           <flogo></flogo>
-          <icon v-if="getCurrentDaily && !getCurrentDaily.solved" class="cal large"></icon>
-          <icon v-if="getCurrentDaily && getCurrentDaily.solved" class="check large"></icon>
-          <icon v-if="!getCurrentDaily" class="logo"></icon>
+          <icon v-if="getCurrentDaily && !getCurrentDaily.solved" class="cal large" @click="ToggleShowDailyGames(event)"></icon>
+          <icon v-if="getCurrentDaily && getCurrentDaily.solved" class="check large" @click="ToggleShowDailyGames(event)"></icon>
+          <icon v-if="!getCurrentDaily" class="logo" @click="appStateShowNotification = true"></icon>
           <span>
             <count v-if="getCurrentDaily && getCurrentDaily.solved"> {{getCurrentDaily.guesses}} {{getCurrentDaily.guesses !== 1 ? 'tries' : 'try'}} </count>
             <count v-if="getCurrentDaily && !getCurrentDaily.solved"> Daily </count>

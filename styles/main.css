@@ -249,6 +249,7 @@ header {
 
     icon {
         pointer-events: all;
+        cursor: pointer;
     }
 
     icon.check {
@@ -1437,7 +1438,7 @@ gamelinks p {
 }
 
 gamelinks p a, gamelinks p a:hover, gamelinks p a:active, gamelinks p a:focus, gamelinks p a:visited {
-    color: hsl(var(--messageColorHSL));
+    color: hsl(var(--linkColorLightHSL));
     flex: 1;
     text-align: left;
     overflow: hidden;
