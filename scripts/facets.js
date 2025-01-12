@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.22',
+    appDataVersion: '2.0.23',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -477,16 +477,18 @@ var app = new Vue({
 
       if (this.currentGameGuessingCardCount === 5) {
         this.appDataCardsParked.push(new CardObject({ words: getUniqueWords(wordset, 4, getJustWords(allUsedWords)) }));
-      }
+        if (UseDebug) {
+          announce('HERE ARE THE CARD WORDS');
+          this.appDataCards.forEach((card) => {
+            console.log(JSON.stringify(card.words));
+          });
 
-      for (let i = this.appDataCardsParked.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [this.appDataCardsParked[i], this.appDataCardsParked[j]] = [this.appDataCardsParked[j], this.appDataCardsParked[i]];
+          for (let i = this.appDataCardsParked.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [this.appDataCardsParked[i], this.appDataCardsParked[j]] = [this.appDataCardsParked[j], this.appDataCardsParked[i]];
+          }
+        }
       }
-      if (this.currentGameGuessingCardCount === 4) {
-        this.appDataCardsParked.push(new CardObject({}));
-      }
-      this.appDataCardsParked.push(new CardObject({}));
 
       this.appDataCards = temp;
       await this.ShareBoard(false, true);
@@ -624,6 +626,11 @@ var app = new Vue({
         this.FillParkingLot();
       } catch (error) {
         console.error('Error:', error);
+        if (UseDebug && this.userSettingsUseExtraCard) {
+          payload = JSON.stringify({ result: ['1', '2', '3', '4'] });
+          this.SetAIHints(JSON.parse(payload).result);
+          this.FillParkingLot();
+        }
       }
     },
 
