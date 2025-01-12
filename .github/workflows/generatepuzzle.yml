@@ -4,6 +4,7 @@ on:
   schedule:
     - cron: '0 0 * * *' # Midnight GMT (4:00 PM PST)
     - cron: '29 4 * * *' # 4:55 AM GMT (8:55 PM PST)
+    workflow_dispatch: # Allows manual triggering
 
 jobs:
   open-url:
