@@ -60,6 +60,7 @@
     --wordHeight: 30px;
     --wordScale: 1;
     --wordAlignment: end;
+    --footerHeight: 80px;
     --defaultGap: 20px;
     --borderRadius: 5px;
     --tinyIconSize: 13px;
@@ -181,7 +182,7 @@ button {
     padding: calc(.75 * var(--defaultGap)) var(--defaultGap);
     border-radius: var(--borderRadius);
     color: hsl(var(--linkColorLightHSL));
-    background: hsl(var(--appBackgroundDarkHSL));
+    background: none;
     outline: none;
     border: none;
     -webkit-tap-highlight-color: transparent;
@@ -193,7 +194,7 @@ button {
 
     badge {
         border-radius: 50%;
-        display: none;
+        display: flex;
         color: hsl(var(--appForegroundHSL));
         background: hsl(var(--alertHSL));
         width: 24px;
@@ -204,15 +205,10 @@ button {
         font-size: 0.7em;
         font-weight: 800;
     }
-
-    badge.show {
-        display: flex;
-    }
 }
 
 button.secondary {
     color: hsl(var(--hueTheme), 40%, 50%);
-    border-color: hsl(var(--hueTheme), 50%, 50%);
 }
 
 button.inline {
@@ -389,6 +385,67 @@ icon.daily {
 icon.cal {
     mask-image: url(../images/icon-calendar.svg);
     -webkit-mask-image: url(../images/icon-calendar.svg);
+}
+
+
+icon.cal1 {
+    mask-image: url(../images/icon-calendar-1.svg);
+    -webkit-mask-image: url(../images/icon-calendar-1.svg);
+}
+
+icon.cal2 {
+    mask-image: url(../images/icon-calendar-2.svg);
+    -webkit-mask-image: url(../images/icon-calendar-2.svg);
+}
+
+icon.cal3 {
+    mask-image: url(../images/icon-calendar-3.svg);
+    -webkit-mask-image: url(../images/icon-calendar-3.svg);
+}
+
+icon.cal4 {
+    mask-image: url(../images/icon-calendar-4.svg);
+    -webkit-mask-image: url(../images/icon-calendar-4.svg);
+}
+
+icon.cal5 {
+    mask-image: url(../images/icon-calendar-5.svg);
+    -webkit-mask-image: url(../images/icon-calendar-5.svg);
+}
+
+icon.cal6 {
+    mask-image: url(../images/icon-calendar-6.svg);
+    -webkit-mask-image: url(../images/icon-calendar-6.svg);
+}
+
+icon.cal7 {
+    mask-image: url(../images/icon-calendar-7.svg);
+    -webkit-mask-image: url(../images/icon-calendar-7.svg);
+}
+
+icon.cal8 {
+    mask-image: url(../images/icon-calendar-8.svg);
+    -webkit-mask-image: url(../images/icon-calendar-8.svg);
+}
+
+icon.cal9 {
+    mask-image: url(../images/icon-calendar-9.svg);
+    -webkit-mask-image: url(../images/icon-calendar-9.svg);
+}
+
+icon.cal10 {
+    mask-image: url(../images/icon-calendar-10.svg);
+    -webkit-mask-image: url(../images/icon-calendar-10.svg);
+}
+
+icon.cal11 {
+    mask-image: url(../images/icon-calendar-11.svg);
+    -webkit-mask-image: url(../images/icon-calendar.-11svg);
+}
+
+icon.cal12 {
+    mask-image: url(../images/icon-calendar-12.svg);
+    -webkit-mask-image: url(../images/icon-calendar-12.svg);
 }
 
 icon.alert {
@@ -762,6 +819,7 @@ modal message {
 }
 
 modal section message {
+    color: hsl(var(--messageColorHSL));
     margin-top: 0;
 }
 
@@ -946,15 +1004,14 @@ modal controls {
     border-top: 1px solid hsla(var(--appBackgroundHSL), 1);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
-    padding: var(--defaultGap) 0;
+    padding: 0;
     gap: calc(.5 * var(--defaultGap));
-    height: auto;
+    height: var(--footerHeight);
     width: 100%;
     z-index: 100;
 }
 
 modal controls button {
-    border: 1px solid hsla(var(--linkColorDarkHSL), .75);
     font-size: 100%;
     width: unset;
 }
@@ -964,7 +1021,6 @@ modal controls button.small {
 }
 
 wrapper controls {
-    /* flex: 1; */
     justify-content: center;
 }
 
@@ -1388,7 +1444,7 @@ modal categories {
 modal categories category {
     display: block;
     flex: 1;
-    padding: calc(.5 * var(--defaultGap)) var(--defaultGap);
+    padding: calc(.5 * var(--defaultGap));
     color: hsla(var(--appForegroundHSL), .7);
     text-align: center;
     user-select: none;
@@ -1425,6 +1481,10 @@ gamelinks {
     display: block;
     counter-reset: recent-game-counter;
     width: 100%;
+
+    dot {
+        color: hsl(var(--alertHSL));
+    }
 }
 
 gamelinks p {
@@ -1433,11 +1493,11 @@ gamelinks p {
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
-    padding: 0 0 var(--defaultGap) 0;
+    padding: calc(.66 * var(--defaultGap)) 0;
     align-items: center;
-    margin-bottom: var(--defaultGap);
     gap: var(--defaultGap);
     border-bottom: 1px solid hsla(var(--appForegroundHSL), 0.1);
+    cursor: pointer;
 }
 
 gamelinks p a, gamelinks p a:hover, gamelinks p a:active, gamelinks p a:focus, gamelinks p a:visited {
@@ -1460,14 +1520,14 @@ gamelinks p button.inline {
     justify-content: center;
     display: flex;
     flex-direction: column;
-    gap: 1px;
+    gap: 6px;
     color: hsl(var(--appForegroundDiminishedHSL));
     transition: var(--shortTracnsition) ease-in-out all;
 }
 
 gamelinks p button.inline icon {
     opacity: .4;
-    background-color: hsla(var(--alertHSL), 1);
+    background-color: hsla(var(--appForegroundDiminishedHSL), .6);
     transition: var(--shortTransition) ease-in-out background-color;
 }
 
@@ -1491,7 +1551,7 @@ gamelinks small {
     text-align: left;
 }
 
-modal small {
+modal small, modal legal {
     font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
     display: block;
     font-size: 70%;
@@ -1501,6 +1561,13 @@ modal small {
     max-width: calc(100% - 2 * var(--defaultGap));
     transition: var(--mediumTransition) ease-in-out;
     transition-property: opacity, color, background-color;
+}
+
+modal legal {
+    position: absolute;
+    bottom: calc(var(--footerHeight) + (2 * var(--defaultGap)));
+    width: 80%;
+    max-width: calc(3 * var(--cardSize) + (4 * var(--defaultGap)));
 }
 
 modal section h3 small {
@@ -2061,6 +2128,10 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         width: 100%;
     }
 
+    modal legal {
+        bottom: calc(var(--footerHeight) + (1 * var(--defaultGap)));
+    }
+
     controls {
         padding: 0;
     }
@@ -2072,8 +2143,8 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     }
 
     gamelinks p button.inline {
-        width: calc(3 * var(--defaultGap) - 5px);
-        height: calc(3 * var(--defaultGap) - 5px);
+        width: calc(3 * var(--defaultGap) - 10px);
+        height: calc(2 * var(--defaultGap));
     }
 
     header h1 {

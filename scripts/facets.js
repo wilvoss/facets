@@ -71,7 +71,7 @@ var app = new Vue({
     appStateShowNotification: true,
     appParkingRightButtonDisabled: false,
     appStateShowMeta: false,
-    vsShowDaily: false,
+    vsShowDaily: true,
     appStateUseFlower: false,
 
     // current game
@@ -93,6 +93,7 @@ var app = new Vue({
     userSettingsStreaks: [],
     userSettingsFocus: true,
     userSettingsLanguage: 'en-us',
+    userSettingsLegalAccepted: false,
     // temp user settings
     tempName: '',
     tempID: 0,
@@ -798,7 +799,7 @@ var app = new Vue({
           } else {
             this.HandleNewGameClick();
           }
-        } else if (this.getIsAIGenerated || this.appStateForceAutoCheck) {
+        } else if (this.getCurrentDaily || this.appStateForceAutoCheck) {
           this.IsCurrentGuessCorrect();
         } else {
           this.ShareBoard();
@@ -829,7 +830,7 @@ var app = new Vue({
       this.currentGameSolutionGuessing = '';
       this.appDataMessage = '';
       stringArray.push('sendingName=Player 1');
-      stringArray.push('&generated=' + encodeURIComponent(_game.generated));
+      stringArray.push('&generated=' + encodeURIComponent(this.getIsAIGenerating ? this.getIsAIGenerating : _game.generated));
       stringArray.push('&key=' + encodeURIComponent(_game.key));
       stringArray.push('&puzzleName=Player 1');
       stringArray.push('&puzzleID=' + encodeURIComponent(_game.puzzleID));
@@ -839,7 +840,7 @@ var app = new Vue({
       stringArray.push('&sol=' + encodeURIComponent(_game.sol));
       stringArray.push('&board=' + encodeURIComponent(_game.board));
       this.appCurrentDailyGameKey = -1;
-      if (_game.generated && _game.generated.toString() === 'true' && _game.key) {
+      if (_game.date && _game.key) {
         stringArray.push('&key=' + encodeURIComponent(_game.key));
 
         if (!this.HasUserStartedGame(_game)) {
@@ -1300,7 +1301,7 @@ var app = new Vue({
     /* === COMMUNICATION === */
     ShareWin() {
       note('ShareWin() called');
-      let date = this.getCurrentDaily === this.getTodaysDaily ? `Today's` : `The ${this.getCurrentDaily.date}`;
+      let date = this.getCurrentDaily && this.getCurrentDaily === this.getTodaysDaily ? `Today's` : `The ${this.getCurrentDaily.date}`;
       let text = `I solved ${date} Daily in ${this.getCurrentDaily.guesses} tries! 😀 <https://facets.bigtentgames.com>`;
       this.ConstructAndSetShareURLForCurrentGame();
       if (this.getCurrentDaily.guesses === 1) {
@@ -1458,7 +1459,7 @@ var app = new Vue({
 
         urlString = encodeURIComponent(urlString);
         urlString += '?sendingName=' + encodeURIComponent(this.appDataPlayerCurrent.name);
-        urlString += '&generated=' + encodeURIComponent(this.getCurrentDaily ? true : this.getIsAIGenerated);
+        urlString += '&generated=' + encodeURIComponent(this.getCurrentDaily ? true : this.getIsAIGenerating);
         if (this.getCurrentDaily) {
           urlString += '&key=' + encodeURIComponent(this.getCurrentDaily.key);
         }
@@ -1991,7 +1992,7 @@ var app = new Vue({
           text = this.appDataActionButtonTexts.copy;
         }
         if (this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
-          if (this.getIsAIGenerated) {
+          if (this.getCurrentDaily) {
             text = this.appDataActionButtonTexts.share;
           } else {
             text = this.appDataActionButtonTexts.create;
@@ -2027,7 +2028,7 @@ var app = new Vue({
     },
     getDailyIsFreshToday: function () {
       const foundGame = this.getTodaysDaily ? this.HasUserStartedGame(this.getTodaysDaily) : null;
-      return foundGame ? false : true;
+      return !foundGame;
     },
     getDailyGamesWithWordSetNames: function () {
       return this.appDataDailyGames.map((game) => {
@@ -2067,6 +2068,14 @@ var app = new Vue({
           && this.appDataPlayerCurrent.role !== 'reviewer'
           && this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id);
       return inActive;
+    },
+    getCorrectCalIconClass: function () {
+      let checkDate = this.getCurrentDaily.date;
+      let day = parseInt(checkDate.split(' ')[1]);
+      const today = new Date();
+      let num = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate() / 12;
+      let iconIndex = Math.ceil(day / num);
+      return `cal${iconIndex}`;
     },
   },
 });

@@ -74,17 +74,17 @@
             <icon class="empty"></icon>
           </button>
           <button v-if="vsShowDaily" class="inline small" @click="ToggleShowDailyGames(event)">
-            Daily Puzzles
+            The Daily
             <badge v-if="vsShowDaily && getDailyIsFreshToday">{{appDataNumberOfNewDailies}}</badge>
           </button>
+          <button class="inline small" @click="ToggleShowGlobalCreated(event)">Player Puzzles</button>
           <button class="inline small" @click="ToggleShowTutorial(event)">How To Play</button>
           <button class="inline small" @click="ShowSettings(event)">Settings</button>
-          <button class="inline small" @click="ToggleShowGlobalCreated(event)">Recent Puzzles</button>
           <button class="inline small" @click="ToggleShowInfo(event)">Credits</button>
           <button class="inline small" @click="ToggleShowMeta(event)">Resume</button>
         </subtitle>
       </notification>
-      <modal v-if="appStateShowOOBE" class="tutorial">
+      <modal v-if="appStateShowOOBE || appStateShowIntro" class="tutorial">
         <h2>How To Play</h2>
         <section v-if="appStateIsGuessing">
           <p>{{appDataPlayerCurrent.name}}, when your friend created this word puzzle, they were given word-pairs that they had to "connect" by coming up with a clue that works for both words in each word-pair.</p>
@@ -173,8 +173,9 @@
             Facets!
             <small style="max-width: unset; font-size: 50%; padding-top: var(--defaultGap)"> A Puzzle Game of Words and Wits! </small>
           </h2>
-          <message>What's your name?</message>
+          <message>What's your game name?</message>
           <input style="text-align: center" spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" v-model="tempName" />
+          <legal>By continuing to use this game, you agree to our <a href="https://bigtentgames.com/#privacy" target="_blank">Privacy Policy</a>, which explains how we collect and use game names and temporary IDs necessary for game functionality.</legal>
         </section>
         <controls><button @click="HandleIntroButtonClick(event)">Next</button></controls>
       </modal>
@@ -184,6 +185,7 @@
           <h3>Created by</h3>
           <credit>Wil Voss</credit>
           <h3>Feedback and ideas</h3>
+          <credit>Lex Barbieri</credit>
           <credit>Perdis Hawkins</credit>
           <credit>Jerry Hoffmeister</credit>
           <credit>Chris Lehan</credit>
@@ -208,28 +210,19 @@
       <modal v-if="appStateShowCatChooser">
         <section>
           <h2>Puzzle Options</h2>
-          <message style="padding-top: 0px">Category</message>
+          <h3 style="padding-top: 0px">Category</h3>
           <categories>
             <category :class="{on: set.name === tempWordSetName }" @click="tempWordSetName = set.name" :class="{on: tempWordSetName === set.name}" v-for="set in getEnabledTempWordSet">{{set.name}}</category>
           </categories>
-          <!-- <leftright>
-            <p>Category</p>
-            <select v-model="tempWordSetName">
-              <option v-for="name in getEnabledTempWordSetNames" :key="name" :value="name">{{ name }}</option>
-            </select>
-          </leftright> -->
-          <message>Language</message>
-          <categories>
-            <category :class="{on: option.tag === tempUserSettingsLanguage }" @click="tempUserSettingsLanguage = option.tag" :class="{on: tempUserSettingsLanguage === option.tag}" v-for="option in getEnabledTempLanguages">{{option.name}}</category>
-          </categories>
-          <!-- <leftright>
+          <h3>Language</h3>
+          <leftright>
             <p>Selected</p>
             <select v-model="tempUserSettingsLanguage">
               <option v-for="option in getEnabledTempLanguages" :key="option.tag" :value="option.tag">{{ option.name }}</option>
               <option disabled>More coming!</option>
             </select>
-          </leftright> -->
-          <message>Difficulty</message>
+          </leftright>
+          <h3>Difficulty</h3>
           <checkbox title="Enable this to make your puzzle much harder to solve!" :class="{on: tempUseExtraCard}" @click="ToggleTempUseExtraCard()">
             Make it crazy hard
             <toggle></toggle>
@@ -277,8 +270,8 @@
       </modal>
       <modal v-if="appStateShowGlobalCreated">
         <section>
-          <h2>Recent Puzzles</h2>
-          <p>Play random puzzles recently created by anonymous players from around the world.</p>
+          <h2>Player Puzzles</h2>
+          <p>Play the most recent puzzles created by anonymous players from around the world.</p>
 
           <leftright style="margin: 20px 0">
             <a class="padded" :class="{disabled: appStateIsGettingLast10Games}" @click="GetLast10GlobalCreatedGames();">Refresh</a>
@@ -307,7 +300,7 @@
       </modal>
       <modal v-if="appStateShowDailyGames">
         <section>
-          <h2>The Daily Puzzle</h2>
+          <h2>The Daily</h2>
           <p>Daily puzzles can use any category. Some of them include a 5th card to make it that much harder 😈.</p>
           <message style="padding: calc(2 * var(--defaultGap)) 0" v-if="!appStateIsGettingDailyGames && getDailyGamesWithWordSetNames.length === 0">
             <p>😢</p>
@@ -315,13 +308,15 @@
           </message>
           <h3>Past 10 days</h3>
           <gamelinks>
-            <p :class="{done: game.solved}" @click="HandleOldGameClick(event, game)" v-for="game in getDailyGamesWithWordSetNames">
-              <a href=""><small>{{game.date}} – "{{game.name}}" {{game.useExtraCard === "true" ? '(5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a>
-              <button v-if="game.solved && game.guesses > 0" class="inline report" @click="HandleOldGameClick(event, game)">
+            <p :class="{done: game.solved}" @click="HandleOldGameClick(event, game)" v-for="(game, index) in getDailyGamesWithWordSetNames">
+              <a
+                ><small><dot v-if="index === 0 && ! HasUserStartedGame(game)">•</dot> {{game.date}} – "{{game.name}}" {{game.useExtraCard === "true" ? '(5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a
+              >
+              <button v-if="game.solved && game.guesses > 0" class="inline report">
                 <icon class="check"></icon>
                 In {{game.guesses}}
               </button>
-              <button v-if="!game.solved" class="inline report" @click="HandleOldGameClick(event, game)">
+              <button v-if="!game.solved" class="inline report">
                 <icon class="nope"></icon>
                 {{game.guesses}} {{game.guesses === 1 ? "Try" : "Tries"}}
               </button>
@@ -343,11 +338,11 @@
         <header :disabled="appStateShowNotification">
           <span> {{getCurrentDaily && vsShowDaily ? getCurrentDaily.key === getTodaysKey ? 'Today\'s' : getCurrentDaily.date.split(',')[0] : ''}} </span>
           <flogo></flogo>
-          <icon v-if="getCurrentDaily && !getCurrentDaily.solved" class="cal large" @click="ToggleShowDailyGames(event)"></icon>
+          <icon v-if="getCurrentDaily && !getCurrentDaily.solved" :class="getCorrectCalIconClass" class="large" @click="ToggleShowDailyGames(event)"></icon>
           <icon v-if="getCurrentDaily && getCurrentDaily.solved" class="check large" @click="ToggleShowDailyGames(event)"></icon>
           <icon v-if="!getCurrentDaily" class="logo" @click="appStateShowNotification = true"></icon>
           <span>
-            <count v-if="getCurrentDaily && getCurrentDaily.solved"> {{getCurrentDaily.guesses}} {{getCurrentDaily.guesses !== 1 ? 'tries' : 'try'}} </count>
+            <count v-if="getCurrentDaily && getCurrentDaily.solved"> in {{getCurrentDaily.guesses}} {{getCurrentDaily.guesses !== 1 ? 'tries' : 'try'}} </count>
             <count v-if="getCurrentDaily && !getCurrentDaily.solved"> Daily </count>
           </span>
           <button @click="HandleOldGameClick(event, getTodaysDaily)" class="small inline" :class="{show: vsShowDaily && getDailyIsFreshToday && (!appStateIsGuessing || appStateShowMeta)}">
