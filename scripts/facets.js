@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.20',
+    appDataVersion: '2.0.21',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -839,7 +839,7 @@ var app = new Vue({
       stringArray.push('&sol=' + encodeURIComponent(_game.sol));
       stringArray.push('&board=' + encodeURIComponent(_game.board));
       this.appCurrentDailyGameKey = -1;
-      if (_game.generated && _game.key) {
+      if (_game.generated && _game.generated.toString() === 'true' && _game.key) {
         stringArray.push('&key=' + encodeURIComponent(_game.key));
 
         if (!this.HasUserStartedGame(_game)) {
