@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.21',
+    appDataVersion: '2.0.22',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -1925,9 +1925,9 @@ var app = new Vue({
       } else {
         if (this.getCurrentDaily) {
           let today = new Date();
-          text = `<name>The Daily – ${this.getCurrentDaily.date.split(',')[0]}</name><subtitle> ${pronoun} "${this.currentGameGuessingWordSet.name}" puzzle</subtitle>`;
+          text = `<name>The Daily – ${this.getCurrentDaily.date.split(',')[0]}</name><subtitle>Puzzle category – "${this.currentGameGuessingWordSet.name}"</subtitle>`;
           if (this.getCurrentDaily.key === this.getTodaysDaily.key) {
-            text = `The Daily – Today<subtitle> ${pronoun} "${this.currentGameGuessingWordSet.name}" puzzle</subtitle>`;
+            text = `The Daily – Today<subtitle>Puzzle category –  "${this.currentGameGuessingWordSet.name}"</subtitle>`;
           }
         } else {
           text = `You are guessing ${name} "${this.currentGameGuessingWordSet.name}" puzzle!`;
