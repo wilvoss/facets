@@ -576,7 +576,7 @@ button.small {
     justify-content: center;
     padding: calc(.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
     cursor: pointer;
-    background: hsla(var(--appBackgroundDarkHSL), 0.8);
+    background: hsla(var(--appBackgroundDarkHSL), 1);
     border: 1px solid hsla(var(--appBackgroundHSL), 1);
     border-radius: calc(1 * var(--borderRadius));
     align-items: center;
@@ -797,7 +797,6 @@ wrapper:first-of-type {
         button.small {
             font-size: 90%;
             padding: calc(.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
-            border: 1px solid hsla(var(--messageColorHSL), .3);
             height: unset;
             transition: none;
         }

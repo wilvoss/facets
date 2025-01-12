@@ -51,10 +51,6 @@ modal controls {
     border-color: hsla(var(--messageColorHSL), .7);
 }
 
-wrapper:first-of-type controls button.small {
-    background: hsl(var(--appBackgroundHSL));
-}
-
 message {
     text-shadow: none;
 }
