@@ -2,8 +2,8 @@ name: Open URL at Midnight
 
 on:
   schedule:
-    - cron: '0 0 * * *'
-    - cron: '14 5 * * *'
+    - cron: '0 0 * * *' # Midnight GMT (4:00 PM PST)
+    - cron: '26 5 * * *' # 4:55 AM GMT (8:55 PM PST)
 
 jobs:
   open-url:
@@ -17,7 +17,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/puppeteer.js') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
@@ -26,8 +26,8 @@ jobs:
         with:
           node-version: '16'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install Puppeteer
+        run: npm install puppeteer
 
       - name: Execute Puppeteer script
         run: node puppeteer.js
