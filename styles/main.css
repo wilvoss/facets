@@ -1507,7 +1507,7 @@ gamelinks {
 
                 small {
                     white-space: nowrap;
-                    color: hsl(var(--appBackgroundLighterHSL));
+                    color: hsl(var(--appBackgroundLightestHSL));
                 }
 
                 value {
