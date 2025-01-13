@@ -287,10 +287,12 @@
           </message>
 
           <gamelinks>
-            <p @click="HandleOldGameClick(event, game)" v-for="game in getCreatedGamesWithWordSetNames">
-              <a href=""><small>{{game.name}} {{game.useExtraCard === "true" ? '(5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a>
-              <button title="Report this puzzle for offensive language." @click="ReportPuzzle(game)" class="inline report"><icon class="alert"></icon>Report</button>
-            </p>
+            <gamelink v-for="game in getCreatedGamesWithWordSetNames">
+              <p @click="HandleOldGameClick(event, game)">
+                <a href=""><small>{{game.name}} {{game.useExtraCard === "true" ? '(5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a>
+                <button title="Report this puzzle for offensive language." @click="ReportPuzzle(game)" class="inline report"><icon class="alert"></icon>Report</button>
+              </p>
+            </gamelink>
           </gamelinks>
 
           <controls>
@@ -308,19 +310,43 @@
           </message>
           <h3>Past 10 days</h3>
           <gamelinks>
-            <p :class="{done: game.solved}" @click="HandleOldGameClick(event, game)" v-for="(game, index) in getDailyGamesWithWordSetNames">
-              <a
-                ><small><dot v-if="index === 0 && ! HasUserStartedGame(game)">•</dot> {{game.date}} – "{{game.name}}" {{game.useExtraCard === "true" ? '(5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a
-              >
-              <button v-if="game.solved && game.guesses > 0" class="inline report">
-                <icon class="check"></icon>
-                In {{game.guesses}}
-              </button>
-              <button v-if="!game.solved" class="inline report">
-                <icon class="nope"></icon>
-                {{game.guesses}} {{game.guesses === 1 ? "Try" : "Tries"}}
-              </button>
-            </p>
+            <gamelink v-for="(game, index) in getDailyGamesWithWordSetNames">
+              <p :class="{done: game.solved}" @click="HandleOldGameClick(event, game)">
+                <a>
+                  <small>
+                    <dot v-if="index === 0 && ! HasUserStartedGame(game)">•</dot>
+                    {{game.date}} – "{{game.name}}" {{game.useExtraCard === "true" ? '(5-cards)' : ''}}
+                  </small>
+                  {{game.hints.replace(/:/g," - ")}}
+                </a>
+                <button v-if="game.solved && game.guesses > 0" class="inline report">
+                  <icon class="check"></icon>
+                  In {{game.guesses}}
+                </button>
+                <button v-if="!game.solved" class="inline report" :class="{alert: !game.solved && game.guesses > 0}">
+                  <icon class="nope"></icon>
+                  {{game.guesses}} {{game.guesses === 1 ? "Try" : "Tries"}}
+                </button>
+              </p>
+              <stats>
+                <stat>
+                  <value>{{game.stats.avg}} </value>
+                  <small>Avg # of Tries</small>
+                </stat>
+                <stat>
+                  <value>{{game.stats.guesscounts.g1 ? game.stats.guesscounts.g1 : 0}}</value>
+                  <small>Solved In 1</small>
+                </stat>
+                <stat>
+                  <value>{{game.stats.guesscounts.g2 ? game.stats.guesscounts.g2 : 0}}</value>
+                  <small>Solved In 2</small>
+                </stat>
+                <stat>
+                  <value>{{game.stats.guesscounts.beyond2}}</value>
+                  <small>Solved In 3+</small>
+                </stat>
+              </stats>
+            </gamelink>
           </gamelinks>
 
           <controls>

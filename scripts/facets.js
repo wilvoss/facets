@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.23',
+    appDataVersion: '2.0.24',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -46,6 +46,7 @@ var app = new Vue({
     appCurrentDailyGameKey: -1,
     appDailyIsFreshToday: true,
     appDataNumberOfNewDailies: 1,
+    appDataDailyGamesStats: [],
     // app state
     appStateForceAutoCheck: false,
     appStateIsDragging: false,
@@ -63,6 +64,7 @@ var app = new Vue({
     appStateShowInfo: false,
     appStateShowIntro: false,
     appStateShowOOBE: false,
+    appStateShowStats: false,
     appStateShowSettings: false,
     appStateShowTutorial: false,
     appStateTrayIsRotating: false,
@@ -782,6 +784,8 @@ var app = new Vue({
                 daily.guesses = previous.guesses;
               }
             });
+
+            this.GetDailyGameStats();
           })
           .catch((error) => {
             console.error('Error:', error);
@@ -790,6 +794,42 @@ var app = new Vue({
 
         this.appStateIsGettingDailyGames = false;
       }
+    },
+
+    async GetDailyGameStats() {
+      var requestUrl = 'https://old-frog-73f3.bigtentgames.workers.dev/';
+      await fetch(requestUrl, {
+        method: 'GET',
+        headers: {
+          Host: window.location.hostname,
+          Origin: window.location.origin,
+          'Access-Control-Request-Method': 'GET',
+          'Access-Control-Request-Headers': 'Content-Type',
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            this.appStateIsGettingDailyGames = false;
+            error('Server error: ' + response.status);
+          }
+          return response.text();
+        })
+        .then((payload) => {
+          this.appDataDailyGamesStats = JSON.parse(payload);
+          this.appDataDailyGames.forEach((game) => {
+            game.showStats = false;
+            for (const stat of this.appDataDailyGamesStats) {
+              if (stat.hasOwnProperty(game.key)) {
+                game.stats = stat[game.key];
+                console.log(game.stats);
+                break;
+              }
+            }
+          });
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
     },
 
     /* === HANDLERS === */
@@ -1591,6 +1631,12 @@ var app = new Vue({
       if (_card.isSelected) {
         this.appDataDraggedCard = _card;
       }
+    },
+
+    ToggleGameShowStats(_event) {
+      _event.preventDefault();
+      _event.stopPropagation();
+      this.appStateShowStats = !this.appStateShowStats;
     },
 
     RotateCard(e, _card, _inc) {

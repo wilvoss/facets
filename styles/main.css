@@ -1485,6 +1485,40 @@ gamelinks {
     dot {
         color: hsl(var(--alertHSL));
     }
+
+    gamelink {
+        display: flex;
+        flex-direction: column;
+        gap: calc(.25 * var(--defaultGap));
+        padding: calc(.66 * var(--defaultGap)) 0;
+
+        stats {
+            display: flex;
+            padding: 4px calc(.5 * var(--defaultGap)) 6px;
+            gap: var(--defaultGap);
+            background: hsla(var(--appBackgroundHSL), .4);
+            border: 1px solid hsla(var(--appBackgroundHSL), 2);
+            margin-bottom: calc(.5 * var(--defaultGap));
+            border-radius: var(--borderRadius);
+            user-select: none;
+            -webkit-user-select: none;
+            cursor: default;
+
+            stat {
+                display: flex;
+                gap: 3px;
+                flex-direction: column;
+
+                small {
+                    white-space: nowrap;
+                }
+
+                value {
+                    font-size: 1em;
+                }
+            }
+        }
+    }
 }
 
 gamelinks p {
@@ -1493,10 +1527,8 @@ gamelinks p {
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
-    padding: calc(.66 * var(--defaultGap)) 0;
     align-items: center;
     gap: var(--defaultGap);
-    border-bottom: 1px solid hsla(var(--appForegroundHSL), 0.1);
     cursor: pointer;
 }
 
@@ -1511,16 +1543,16 @@ gamelinks p a, gamelinks p a:hover, gamelinks p a:active, gamelinks p a:focus, g
 
 gamelinks p button.inline {
     z-index: 100;
-    padding: 5px 10px;
+    padding: 0 10px;
     width: calc(3 * var(--defaultGap) - 5px);
-    height: calc(3 * var(--defaultGap) - 5px);
+    height: calc(2.5 * var(--defaultGap) - 5px);
     font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
     font-size: .5em;
     text-transform: uppercase;
     justify-content: center;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 2px;
     color: hsl(var(--appForegroundDiminishedHSL));
     transition: var(--shortTracnsition) ease-in-out all;
 }
@@ -1529,6 +1561,11 @@ gamelinks p button.inline icon {
     opacity: .4;
     background-color: hsla(var(--appForegroundDiminishedHSL), .6);
     transition: var(--shortTransition) ease-in-out background-color;
+}
+
+gamelinks p button.inline.alert icon {
+    opacity: 1;
+    background-color: hsl(var(--alertHSL));
 }
 
 gamelinks p.done button.inline icon {
