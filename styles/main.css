@@ -1491,6 +1491,7 @@ gamelinks {
         flex-direction: column;
         gap: calc(.25 * var(--defaultGap));
         padding: calc(.66 * var(--defaultGap)) 0;
+        cursor: pointer;
 
         stats {
             display: flex;
@@ -1502,7 +1503,7 @@ gamelinks {
             border-radius: var(--borderRadius);
             user-select: none;
             -webkit-user-select: none;
-            cursor: default;
+            cursor: pointer;
 
             stat {
                 display: flex;

@@ -287,8 +287,8 @@
           </message>
 
           <gamelinks>
-            <gamelink v-for="game in getCreatedGamesWithWordSetNames">
-              <p @click="HandleOldGameClick(event, game)">
+            <gamelink v-for="game in getCreatedGamesWithWordSetNames" @click="HandleOldGameClick(event, game)">
+              <p>
                 <a href=""><small>{{game.name}} {{game.useExtraCard === "true" ? '(5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a>
                 <button title="Report this puzzle for offensive language." @click="ReportPuzzle(game)" class="inline report"><icon class="alert"></icon>Report</button>
               </p>
@@ -310,8 +310,8 @@
           </message>
           <h3>Past 10 days</h3>
           <gamelinks>
-            <gamelink v-for="(game, index) in getDailyGamesWithWordSetNames">
-              <p :class="{done: game.solved}" @click="HandleOldGameClick(event, game)">
+            <gamelink v-for="(game, index) in getDailyGamesWithWordSetNames" @click="HandleOldGameClick(event, game)">
+              <p :class="{done: game.solved}">
                 <a>
                   <small>
                     <dot v-if="index === 0 && ! HasUserStartedGame(game)">•</dot>
