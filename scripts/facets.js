@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.33',
+    appDataVersion: '2.0.34',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -823,6 +823,7 @@ var app = new Vue({
           this.appDataDailyGamesStats = JSON.parse(payload);
           this.appDataDailyGames.forEach((game) => {
             game.showStats = false;
+            game.stats = { avg: 0, guesscounts: { beyond2: 0 } };
             for (const stat of this.appDataDailyGamesStats) {
               if (stat.hasOwnProperty(game.key)) {
                 game.stats = stat[game.key];
