@@ -62,20 +62,6 @@ tray diamond {
     background-image: none;
 }
 
-card word {
-    display: flex;
-    justify-content: center;
-    align-items: baseline;
-    position: absolute;
-    text-align: center;
-    width: var(--cardSize);
-    overflow: visible;
-    height: calc(var(--wordHeight) - 10px);
-    padding-top: 10px;
-    font-size: calc(var(--wordScale)* 90%);
-    text-transform: capitalize;
-    line-height: 100%;
-}
 
 card, tray card, parking card, .multicolor.creating card, .multicolor.guessing card, .multicolor.guessing.reviewing card, .multicolor.solved.guessing card, card.ghost, card.ghost.empty, .guessing card.ghost.empty, .reviewing card.ghost.empty, .multicolor.creating card.ghost, .multicolor.guessing card.ghost, .multicolor.guessing.solved card.ghost, .multicolor.reviewing card.ghost, cards card, .multicolor.guessing cards card, .reviewing cards card {
     color: hsl(var(--simpleCardForegroundHSL));
