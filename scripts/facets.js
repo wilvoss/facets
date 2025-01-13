@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.25',
+    appDataVersion: '2.0.26',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -491,6 +491,11 @@ var app = new Vue({
           }
         }
       }
+
+      if (this.currentGameGuessingCardCount === 4) {
+        this.appDataCardsParked.push(new CardObject({}));
+      }
+      this.appDataCardsParked.push(new CardObject({}));
 
       this.appDataCards = temp;
       await this.ShareBoard(false, true);
