@@ -13,8 +13,8 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.40',
-    appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
+    appDataVersion: '2.0.41',
+    appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -2077,7 +2077,11 @@ var app = new Vue({
 
       if (this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
         if (this.appStateForceAutoCheck) {
-          text = this.getIsAIGenerated ? this.appDataActionButtonTexts.guess : this.appDataActionButtonTexts.guess;
+          // if (this.getCurrentDaily && this.getCurrentDaily.guesses >= 2) {
+          //   text = this.appDataActionButtonTexts.quit;
+          // } else {
+          text = this.appDataActionButtonTexts.guess;
+          // }
         }
         if (this.isChromeAndiOSoriPadOS && this.appDataShareURL.includes('facets.bigtentgames.com/game/?')) {
           text = this.appDataActionButtonTexts.copy;
@@ -2147,6 +2151,7 @@ var app = new Vue({
     getActionButtonState: function () {
       // prettier-ignore
       let inActive = 
+        (this.getCurrentDaily && this.getCurrentDaily.guesses <=2) &&
         (this.getNumberOfHintsThatHaveBeenFilled !== 4
           && this.appDataPlayerCurrent.role === 'creator') ||
         (this.getNumberOfCardsThatHaveBeenPlacedOnTray !== 4

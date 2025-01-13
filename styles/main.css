@@ -2058,7 +2058,7 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         }
 
         button.small.show {
-            transform: translate(0px, 10px);
+            transform: translate(0px, 14px);
         }
     }
 

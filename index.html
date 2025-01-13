@@ -380,10 +380,7 @@
             <count v-if="getCurrentDaily && getCurrentDaily.solved"> in {{getCurrentDaily.guesses}} {{getCurrentDaily.guesses !== 1 ? 'tries' : 'try'}} </count>
             <count v-if="getCurrentDaily && !getCurrentDaily.solved"> Daily </count>
           </span>
-          <button @click="HandleOldGameClick(event, getTodaysDaily)" class="small inline" :class="{show: vsShowDaily && getDailyIsFreshToday && (!appStateIsGuessing || appStateShowMeta)}">
-            <icon class="cal"></icon>
-            New Daily!
-          </button>
+          <button @click="HandleOldGameClick(event, getTodaysDaily)" class="small inline" :class="{show: !appStateShowNotification && vsShowDaily && getDailyIsFreshToday && appStateShowMeta}">Play Today's Daily!</button>
         </header>
         <controls :class="{disabled: getActionButtonState}">
           <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()">
