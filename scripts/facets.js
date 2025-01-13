@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.35',
+    appDataVersion: '2.0.36',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -849,7 +849,7 @@ var app = new Vue({
         this.appStateShowConfirmation = true;
       } else if (this.appStateIsGuessing) {
         if (this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
-          if (this.getIsAIGenerated) {
+          if (this.GetIsAIGenerated()) {
             this.ShareWin();
           } else {
             this.HandleNewGameClick();
@@ -1830,6 +1830,15 @@ var app = new Vue({
       return date;
     },
 
+    GetIsAIGenerated() {
+      if (window.location.search) {
+        let urlParams = new URLSearchParams(window.location.search);
+        return urlParams.has('generated') && urlParams.get('generated').toString() === 'true';
+      } else {
+        return false;
+      }
+    },
+
     /* === INITIALIZATION === */
     async NewGame(e, _appDataMessage = '', _rotate = true) {
       note('NewGame() called');
@@ -2113,13 +2122,7 @@ var app = new Vue({
       return window.location.href.indexOf(window.location.origin + '/generate.html') !== -1;
     },
     getIsAIGenerated: function () {
-      note('getIsAIGenerated() called');
-      if (window.location.search) {
-        let urlParams = new URLSearchParams(window.location.search);
-        return urlParams.has('generated') && urlParams.get('generated').toString() === 'true';
-      }
-
-      return false;
+      return this.GetIsAIGenerated();
     },
     getActionButtonState: function () {
       // prettier-ignore
