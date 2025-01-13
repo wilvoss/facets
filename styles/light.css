@@ -40,15 +40,17 @@ body {
     background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkHSL), 0) 200px), var(--textureHue), var(--texture2);
 }
 
+button {
+    color: hsl(var(--appBackgroundDarkestHSL));
+}
+
 button.secondary {
-    color: hsla(var(--messageColorHSL), .7);
-    border-color: hsla(var(--messageColorHSL), .7);
-    background-color: hsla(var(--hueCreating), 100%, 90%, 1)
+    color: hsl(var(--appBackgroundHSL));
 }
 
 modal controls {
-    background-color: hsla(var(--messageColorHSL), .7);
-    border-color: hsla(var(--messageColorHSL), .7);
+    background-color: hsla(var(--messageColorHSL), 8);
+    border-color: hsla(var(--messageColorHSL), 1);
 }
 
 message {
