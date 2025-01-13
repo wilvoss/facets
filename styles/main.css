@@ -534,7 +534,6 @@ icon.spinner.show {
     100% {
         transform: rotate(360deg);
     }
-
 }
 
 icon.add {
@@ -550,6 +549,11 @@ icon.recycle {
 icon.check {
     mask-image: url(../images/icon-check.svg);
     -webkit-mask-image: url(../images/icon-check.svg);
+}
+
+icon.play {
+    mask-image: url(../images/icon-play.svg);
+    -webkit-mask-image: url(../images/icon-play.svg);
 }
 
 icon.nope {
@@ -1465,40 +1469,30 @@ modal categories category.on {
     border: 1px solid hsla(var(--appForegroundHSL), 1);
 }
 
-/* modal categories category.on::before {
-    content: '❭❭';
-    display: inline-block;
-    padding-right: 10px;
-}
-
-modal categories category.on::after {
-    content: '❬❬';
-    display: inline-block;
-    padding-left: 10px;
-} */
-
 gamelinks {
     display: block;
     counter-reset: recent-game-counter;
     width: 100%;
 
     dot {
+        position: absolute;
+        transform: translateX(-10px);
         color: hsl(var(--alertHSL));
     }
 
     gamelink {
         display: flex;
         flex-direction: column;
-        gap: calc(.25 * var(--defaultGap));
+        gap: calc(.33 * var(--defaultGap));
         padding: calc(.66 * var(--defaultGap)) 0;
         cursor: pointer;
 
         stats {
             display: flex;
-            padding: 4px calc(.5 * var(--defaultGap)) 6px;
+            padding: 4px calc(.5 * var(--defaultGap)) 8px;
             gap: var(--defaultGap);
             background: hsla(var(--appBackgroundHSL), .4);
-            border: 1px solid hsla(var(--appBackgroundHSL), 2);
+            border: 1px solid hsla(var(--appBackgroundHSL), .5);
             margin-bottom: calc(.5 * var(--defaultGap));
             border-radius: var(--borderRadius);
             user-select: none;
@@ -1555,18 +1549,31 @@ gamelinks p button.inline {
     flex-direction: column;
     gap: 2px;
     color: hsl(var(--appForegroundDiminishedHSL));
-    transition: var(--shortTracnsition) ease-in-out all;
+    transition: none;
 }
 
 gamelinks p button.inline icon {
     opacity: .4;
     background-color: hsla(var(--appForegroundDiminishedHSL), .6);
-    transition: var(--shortTransition) ease-in-out background-color;
+    transition: none;
 }
 
 gamelinks p button.inline.alert icon {
     opacity: 1;
     background-color: hsl(var(--alertHSL));
+}
+
+
+gamelinks p button.inline icon.play {
+    opacity: 1;
+    background-color: hsla(var(--appForegroundDiminishedHSL), 1);
+
+}
+
+gamelinks gamelink:hover p button.inline icon.play {
+    opacity: 1;
+    background-color: hsla(var(--appForegroundHSL), 1);
+
 }
 
 gamelinks p.done button.inline icon {
@@ -1575,18 +1582,19 @@ gamelinks p.done button.inline icon {
     transition: var(--shortTransition) ease-in-out background-color;
 }
 
-gamelinks p button.inline:hover {
+gamelinks gamelink:hover p button.inline {
     color: hsl(var(--appForegroundHSL));
 
 }
 
-gamelinks p button.inline:hover icon {
+gamelinks gamelink:hover p button.inline icon {
     opacity: 1;
 }
 
 
 gamelinks small {
     text-align: left;
+    margin-bottom: 2px;
 }
 
 modal small, modal legal {
