@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.34',
+    appDataVersion: '2.0.35',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -168,6 +168,8 @@ var app = new Vue({
       this.appStateShowDailyGames = !this.appStateShowDailyGames;
       if (this.appDataDailyGames.length === 0) {
         this.GetDailyGames();
+      } else if (this.appStateShowDailyGames) {
+        this.GetDailyGameStats();
       }
     },
 
@@ -802,6 +804,7 @@ var app = new Vue({
     },
 
     async GetDailyGameStats() {
+      note('GetDailyGameStats() called');
       var requestUrl = 'https://old-frog-73f3.bigtentgames.workers.dev/';
       await fetch(requestUrl, {
         method: 'GET',
@@ -1887,8 +1890,10 @@ var app = new Vue({
           this.RestoreGame(boardPieces);
         } else if (!this.appStateIsGuessing) {
           if (this.getIsAIGenerating) {
-            this.currentGameGuessingCardCount = getRandomInt(4, 6);
-            this.userSettingsUseExtraCard = this.currentGameGuessingCardCount === 5;
+            this.currentGameGuessingCardCount = 4;
+
+            // this.currentGameGuessingCardCount = getRandomInt(4, 6);
+            // this.userSettingsUseExtraCard = this.currentGameGuessingCardCount === 5;
 
             this.currentGameWordSet = this.getEnabledWordSets[getRandomInt(0, this.getEnabledWordSets.length)];
             log(this.currentGameWordSet.name);
