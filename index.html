@@ -320,8 +320,8 @@
                   {{game.hints.replace(/:/g," - ")}}
                 </a>
                 <button v-if="game.guesses === 0" class="inline report">
-                  <icon class="play"></icon>
                   PLAY
+                  <icon class="play"></icon>
                 </button>
                 <button v-if="game.solved && game.guesses > 0" class="inline report">
                   <icon class="check"></icon>

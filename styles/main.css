@@ -1489,7 +1489,7 @@ gamelinks {
 
         stats {
             display: flex;
-            padding: 4px calc(.5 * var(--defaultGap)) 8px;
+            padding: 6px calc(.5 * var(--defaultGap)) 6px;
             gap: var(--defaultGap);
             background: hsla(var(--appBackgroundHSL), .4);
             border: 1px solid hsla(var(--appBackgroundHSL), .5);
@@ -1497,6 +1497,7 @@ gamelinks {
             border-radius: var(--borderRadius);
             user-select: none;
             -webkit-user-select: none;
+            color: hsl(var(--appBackgroundLightestHSL));
             cursor: pointer;
 
             stat {
@@ -1506,6 +1507,7 @@ gamelinks {
 
                 small {
                     white-space: nowrap;
+                    color: hsl(var(--appBackgroundLighterHSL));
                 }
 
                 value {
@@ -1519,6 +1521,7 @@ gamelinks {
 gamelinks p {
     text-align: left;
     display: flex;
+    font-size: 1.2em;
     flex-direction: row;
     width: 100%;
     justify-content: space-between;
@@ -1591,10 +1594,10 @@ gamelinks gamelink:hover p button.inline icon {
     opacity: 1;
 }
 
-
 gamelinks small {
     text-align: left;
     margin-bottom: 2px;
+    font-size: .8em;
 }
 
 modal small, modal legal {
