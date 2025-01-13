@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.32',
+    appDataVersion: '2.0.33',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -826,7 +826,6 @@ var app = new Vue({
             for (const stat of this.appDataDailyGamesStats) {
               if (stat.hasOwnProperty(game.key)) {
                 game.stats = stat[game.key];
-                console.log(game.stats);
                 break;
               }
             }
@@ -877,7 +876,6 @@ var app = new Vue({
       note('HandleOldGameClick() called');
       e.preventDefault();
       e.stopPropagation();
-      console.log(_game.generated);
       let stringArray = ['?'];
       this.currentGameSolutionGuessing = '';
       this.appDataMessage = '';
