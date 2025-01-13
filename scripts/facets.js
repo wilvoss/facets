@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.36',
+    appDataVersion: '2.0.37',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -878,8 +878,10 @@ var app = new Vue({
 
     HandleOldGameClick(e, _game) {
       note('HandleOldGameClick() called');
-      e.preventDefault();
-      e.stopPropagation();
+      if (e !== null) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
       let stringArray = ['?'];
       this.currentGameSolutionGuessing = '';
       this.appDataMessage = '';
@@ -1873,12 +1875,12 @@ var app = new Vue({
       }
     },
 
-    LoadPage() {
+    async LoadPage() {
       note('LoadPage() called');
       this.HandlePageVisibilityChange();
       announce('Player ' + this.appDataPlayerCurrent.id + ' has loaded v' + this.appDataVersion);
       this.GetLast10GlobalCreatedGames();
-      this.GetDailyGames();
+      await this.GetDailyGames();
       this.appDataTransitionLong = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
       this.appDataTransitionShort = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
       this.appStatePageHasLoaded = true;
@@ -1901,9 +1903,6 @@ var app = new Vue({
           if (this.getIsAIGenerating) {
             this.currentGameGuessingCardCount = 4;
 
-            // this.currentGameGuessingCardCount = getRandomInt(4, 6);
-            // this.userSettingsUseExtraCard = this.currentGameGuessingCardCount === 5;
-
             this.currentGameWordSet = this.getEnabledWordSets[getRandomInt(0, this.getEnabledWordSets.length)];
             log(this.currentGameWordSet.name);
             this.SelectWordSet(null, this.currentGameWordSet);
@@ -1913,10 +1912,11 @@ var app = new Vue({
               this.GetAISolution();
             }, 100);
           }
-          note(this.currentGameWordSet.name);
-
-          this.NewGame(null, '', false);
-          highlight(this.currentGameWordSet.name);
+          if (this.getTodaysDaily && !this.HasUserStartedGame(this.getTodaysDaily)) {
+            this.HandleOldGameClick(null, this.getTodaysDaily);
+          } else {
+            this.NewGame(null, '', false);
+          }
         }
       } catch (e) {
         warn(e.message);
