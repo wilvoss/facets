@@ -332,7 +332,7 @@
                   {{game.guesses}} {{game.guesses === 1 ? "Try" : "Tries"}}
                 </button>
               </p>
-              <stats>
+              <stats v-if="game.stats">
                 <stat>
                   <value>{{game.stats.avg}} </value>
                   <small>Avg # of Tries</small>
