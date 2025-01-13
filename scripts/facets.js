@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.37',
+    appDataVersion: '2.0.38',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -92,8 +92,9 @@ var app = new Vue({
     userSettingsUsesSimplifiedTheme: false,
     userSettingsUseMultiColoredGems: true,
     userSettingsUseWordSetThemes: false,
+    userSettingsShowAllCards: false,
     userSettingsStreaks: [],
-    userSettingsFocus: true,
+    vsUseFocus: true,
     userSettingsLanguage: 'en-us',
     userSettingsLegalAccepted: false,
     // temp user settings
@@ -103,6 +104,7 @@ var app = new Vue({
     tempUseMultiColoredGems: true,
     tempUserSettingsUsesLightTheme: false,
     tempUserSettingsUsesSimplifiedTheme: false,
+    tempUserSettingsShowAllCards: false,
     tempUseWordSetThemes: false,
     tempWordSetName: '',
     tempUsePortraitLayout: false,
@@ -141,9 +143,13 @@ var app = new Vue({
       }
     },
 
+    ToggleShowAllCards(_value) {
+      this.userSettingsShowAllCards = _value;
+    },
+
     ToggleFocus() {
       if (window.innerWidth <= 660) {
-        this.userSettingsFocus = !this.userSettingsFocus;
+        this.vsUseFocus = !this.vsUseFocus;
       }
     },
 
@@ -209,6 +215,11 @@ var app = new Vue({
     ToggleTempUseSimplifiedTheme() {
       note('ToggleTempUseSimplifiedTheme() called');
       this.tempUserSettingsUsesSimplifiedTheme = !this.tempUserSettingsUsesSimplifiedTheme;
+    },
+
+    ToggleTempShowAllCards() {
+      note('ToggleTempShowAllCards() called');
+      this.tempUserSettingsShowAllCards = !this.tempUserSettingsShowAllCards;
     },
 
     ToggleTempUsePortraitLayout() {
@@ -1135,6 +1146,12 @@ var app = new Vue({
         this.tempUserSettingsUsesSimplifiedTheme = this.userSettingsUsesSimplifiedTheme;
       }
 
+      let userSettingsShowAllCards = localStorage.getItem('userSettingsShowAllCards');
+      if (userSettingsShowAllCards !== undefined && userSettingsShowAllCards !== null) {
+        this.ToggleShowAllCards(JSON.parse(userSettingsShowAllCards));
+        this.tempUserSettingsShowAllCards = this.userSettingsShowAllCards;
+      }
+
       let userSettingsUseMultiColoredGems = localStorage.getItem('useMultiColoredGems');
       if (userSettingsUseMultiColoredGems !== undefined && userSettingsUseMultiColoredGems !== null) {
         this.userSettingsUseMultiColoredGems = JSON.parse(userSettingsUseMultiColoredGems);
@@ -1158,6 +1175,7 @@ var app = new Vue({
       this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
       this.tempUseExtraCard = this.userSettingsUseExtraCard;
       this.tempUserSettingsUsesSimplifiedTheme = this.userSettingsUsesSimplifiedTheme;
+      this.tempUserSettingsShowAllCards = this.userSettingsShowAllCards;
     },
 
     HandleIntroButtonClick(e) {
@@ -1196,6 +1214,7 @@ var app = new Vue({
         this.userSettingsUseExtraCard = this.tempUseExtraCard;
         this.ToggleUseLightTheme(this.tempUserSettingsUsesLightTheme);
         this.ToggleUseSimplifedTheme(this.tempUserSettingsUsesSimplifiedTheme);
+        this.ToggleShowAllCards(this.tempUserSettingsShowAllCards);
         this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
         this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
         this.SetWordSetTheme(this.currentGameGuessingWordSet);
@@ -1205,6 +1224,7 @@ var app = new Vue({
         localStorage.setItem('userSettingsLanguage', this.userSettingsLanguage);
         localStorage.setItem('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
         localStorage.setItem('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
+        localStorage.setItem('userSettingsShowAllCards', this.userSettingsShowAllCards);
         localStorage.setItem('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
         localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
         localStorage.setItem('wordSet', this.currentGameWordSet.id);
@@ -1653,7 +1673,7 @@ var app = new Vue({
       e.preventDefault();
       e.stopPropagation();
       this.appDataTransitionShort = parseInt(getComputedStyle(document.body).getPropertyValue('--mediumTransition').replace('ms', ''));
-      if (this.appStateIsGuessing && (!this.userSettingsFocus || (this.userSettingsFocus && e.target.parentElement.parentElement.id !== 'parking'))) {
+      if (this.appStateIsGuessing && (!this.vsUseFocus || (this.vsUseFocus && e.target.parentElement.parentElement.id !== 'parking'))) {
         this.appDataMessage = '';
         if (this.appDataTimeoutCardRotation) {
           clearTimeout(this.appDataTimeoutCardRotation);

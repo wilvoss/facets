@@ -57,7 +57,7 @@
       <link rel="stylesheet" v-if="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme)" href="styles/light.css" media="screen" />
       <link rel="stylesheet" v-if="appStateUseFlower || userSettingsUsesSimplifiedTheme" href="styles/simple.css" media="screen" />
       <link rel="stylesheet" v-if="appStateUseFlower" href="styles/flower.css" media="screen" />
-      <link rel="stylesheet" v-if="appStateUsePortraitLayout && (appStateIsGuessing || appDataPlayerCurrent.role === 'reviewer')" href="styles/focus.css" media="screen" />
+      <link rel="stylesheet" v-if="appStateUsePortraitLayout && !userSettingsShowAllCards && appDataPlayerCurrent.role !== 'creator'" href="styles/focus.css" media="screen" />
       <notification @click="appStateShowNotification = false" :class="{show: appStateShowNotification}">
         <message :title="getPlayerMessage" v-html="getPlayerMessage"></message>
       </notification>
@@ -239,7 +239,7 @@
           <h2>Settings</h2>
           <h3>Profile</h3>
           <leftright>
-            <p>Your name</p>
+            <p>Game name</p>
             <callout>
               <input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
             </callout>
@@ -253,6 +253,11 @@
             Category backgrounds
             <toggle></toggle>
           </checkbox>
+          <checkbox v-if="appStateUsePortraitLayout" :class="{on: tempUserSettingsShowAllCards}" @click="ToggleTempShowAllCards()">
+            Always show cards
+            <toggle></toggle>
+          </checkbox>
+
           <checkbox :class="{on: tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseSimplifiedTheme()">
             Simple visuals
             <toggle></toggle>
@@ -462,7 +467,7 @@
         </parking>
       </wrapper>
       <wrapper class="mobile" :class="{extra: currentGameGuessingCardCount === 5}">
-        <button class="scroller" :class="{disabled: appDataParkingScrollLeft <= 0}" @click="ScrollParking(event, 'right')" v-if="userSettingsFocus">
+        <button class="scroller" :class="{disabled: appDataParkingScrollLeft <= 0}" @click="ScrollParking(event, 'right')" v-if="vsUseFocus">
           <icon class="chevronleft large"></icon>
         </button>
         <parking id="parking">
@@ -474,7 +479,7 @@
             </card>
           </spot>
         </parking>
-        <button class="scroller" :class="{disabled: appParkingRightButtonDisabled}" @click="ScrollParking(event, 'left')" v-if="userSettingsFocus">
+        <button class="scroller" :class="{disabled: appParkingRightButtonDisabled}" @click="ScrollParking(event, 'left')" v-if="vsUseFocus">
           <icon class="chevronright large"></icon>
         </button>
       </wrapper>
