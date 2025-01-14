@@ -1832,6 +1832,7 @@ modal section {
     gap: calc(.5 * var(--defaultGap));
     margin-bottom: 160px;
     max-width: calc(3 * var(--cardSize) + (4 * var(--defaultGap)));
+    width: 100%;
 }
 
 modal hider {
