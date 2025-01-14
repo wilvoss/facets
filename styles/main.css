@@ -737,6 +737,7 @@ notification message {
     width: calc(100% - 2 * var(--defaultGap));
     max-width: calc(2.5 * var(--cardSize));
     padding: calc(1.5 * var(--defaultGap)) var(--defaultGap);
+    line-height: 1.5em;
     margin: var(--defaultGap);
     border: 1px solid hsl(var(--messageColorHSL));
     color: hsl(var(--appForegroundHSL));
@@ -806,7 +807,7 @@ p {
 }
 
 .alertbackground {
-    color: hsl(var(--alertHSL))
+    background-color: hsl(var(--alertHSL))
 }
 
 cta {
@@ -1560,16 +1561,10 @@ gamelinks p button.inline {
 }
 
 gamelinks p button.inline icon {
-    opacity: .4;
-    background-color: hsla(var(--appForegroundDiminishedHSL), .6);
+    opacity: 1;
+    background-color: hsla(var(--appForegroundDiminishedHSL), 1);
     transition: none;
 }
-
-gamelinks p button.inline.alert icon {
-    opacity: 1;
-    background-color: hsl(var(--alertHSL));
-}
-
 
 gamelinks p button.inline icon.play {
     opacity: 1;
@@ -1577,7 +1572,7 @@ gamelinks p button.inline icon.play {
 
 }
 
-gamelinks gamelink:hover p button.inline icon.play {
+gamelinks gamelink:hover p button.inline icon {
     opacity: 1;
     background-color: hsla(var(--appForegroundHSL), 1);
 
@@ -1587,6 +1582,10 @@ gamelinks p.done button.inline icon {
     opacity: 1;
     background-color: hsl(var(--linkColorLightHSL));
     transition: var(--shortTransition) ease-in-out background-color;
+}
+
+gamelinks p.done button.inline icon.alertbackground {
+    background-color: hsl(var(--alertHSL));
 }
 
 gamelinks gamelink:hover p button.inline {

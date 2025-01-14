@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.42',
+    appDataVersion: '2.0.43',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -364,7 +364,11 @@ var app = new Vue({
       let startedGame = this.GetUserStartedGame(_game);
       if (startedGame && !startedGame.solved) {
         startedGame.solved = _solved;
-        startedGame.guesses++;
+        if (!this.getCurrentDaily.quit) {
+          startedGame.guesses++;
+        } else {
+          startedGame.quit = true;
+        }
         localStorage.setItem('dailyGames', JSON.stringify(this.appDataUserDailyGamesStarted));
       }
       this.UpdateDailyGameFromStartedGameData(startedGame);
@@ -806,6 +810,9 @@ var app = new Vue({
               if (previous) {
                 daily.solved = previous.solved;
                 daily.guesses = previous.guesses;
+                if (previous.quit) {
+                  daily.quit = previous.quit;
+                }
               }
             });
 
@@ -1638,7 +1645,7 @@ var app = new Vue({
       levelMessage = useLowerCase ? levelMessage.charAt(0).toLowerCase() + levelMessage.slice(1) : levelMessage;
       let message = pretext + LevelEmoji[count][getRandomInt(0, LevelEmoji[count].length)] + ' ' + name + levelMessage;
       if (count === 4 && this.getCurrentDaily && this.getCurrentDaily.quit) {
-        message = `AI is hard! We're working hard to mkae these Daily Games better to play.`;
+        message = `AI is hard! We're working hard to make these Daily Games better to play.`;
       }
       announce(message);
       return message;
