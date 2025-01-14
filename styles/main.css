@@ -19,7 +19,6 @@
     inherits: false;
 }
 
-
 :root {
     --hueMainSource: 140;
     --hueMain: 140;
@@ -1544,6 +1543,18 @@ gamelinks p a, gamelinks p a:hover, gamelinks p a:active, gamelinks p a:focus, g
     text-wrap: nowrap;
 }
 
+gamelinks gamelink.done {
+    pointer-events: none;
+}
+
+gamelinks gamelink.done p a small {
+    font-style: italic;
+}
+
+gamelinks gamelink.done p a {
+    color: hsl(var(--appForegroundDiminishedHSL));
+}
+
 gamelinks p button.inline {
     z-index: 100;
     padding: 0 10px;
@@ -1578,13 +1589,13 @@ gamelinks gamelink:hover p button.inline icon {
 
 }
 
-gamelinks p.done button.inline icon {
+gamelinks gamelink.done p button.inline icon {
     opacity: 1;
     background-color: hsl(var(--linkColorLightHSL));
     transition: var(--shortTransition) ease-in-out background-color;
 }
 
-gamelinks p.done button.inline icon.alertbackground {
+gamelinks gamelink.done p button.inline icon.alertbackground {
     background-color: hsl(var(--alertHSL));
 }
 

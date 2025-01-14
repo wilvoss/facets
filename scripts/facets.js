@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.43',
+    appDataVersion: '2.0.44',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -906,6 +906,9 @@ var app = new Vue({
     },
 
     HandleOldGameClick(e, _game) {
+      if (_game.solved) {
+        return;
+      }
       note('HandleOldGameClick() called');
       if (e !== null) {
         e.preventDefault();
@@ -2178,7 +2181,7 @@ var app = new Vue({
 
       if (this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
         if (this.appStateForceAutoCheck) {
-          if (this.getCurrentDaily && this.getCurrentDaily.guesses > 1 && this.getNumberOfCardsThatHaveBeenPlacedOnTray !== 4) {
+          if (this.getCurrentDaily && !this.getCurrentDaily.solved && this.getCurrentDaily.guesses > 1 && this.getNumberOfCardsThatHaveBeenPlacedOnTray !== 4) {
             text = this.appDataActionButtonTexts.quit;
           } else {
             text = this.appDataActionButtonTexts.guess;
@@ -2251,7 +2254,7 @@ var app = new Vue({
     },
     getActionButtonState: function () {
       let inactive = false;
-      if (this.getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && this.getCurrentDaily && this.getCurrentDaily.guesses > 1) {
+      if (this.getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && this.getCurrentDaily && this.getCurrentDaily.guesses > 1 && !this.getCurrentDaily.quit) {
         inactive = false;
       } else if ((this.getNumberOfHintsThatHaveBeenFilled !== 4 && this.appDataPlayerCurrent.role === 'creator') || (this.getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && this.appDataPlayerCurrent.role !== 'reviewer' && this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id)) {
         inactive = true;
