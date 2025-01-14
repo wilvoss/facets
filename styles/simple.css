@@ -45,6 +45,11 @@ card {
     border-radius: var(--borderRadius);
 }
 
+word {
+    height: calc(var(--cardSize) - 10px);
+    padding-top: 10px;
+}
+
 spot.empty, parking spot.empty card, .reviewing.guessing parking spot.empty card, .creating parking spot.empty card {
     outline-color: hsl(var(--simpleCardForegroundHSL));
     outline-width: 1px;

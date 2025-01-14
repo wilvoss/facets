@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.41',
+    appDataVersion: '2.0.42',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -376,6 +376,9 @@ var app = new Vue({
       });
       foundGame.guesses = _gamestarted.guesses;
       foundGame.solved = _gamestarted.solved;
+      if (this.getCurrentDaily.quit) {
+        foundGame.quit = true;
+      }
 
       if (foundGame.solved) {
         this.SendGameStatsToServer(foundGame);
@@ -384,6 +387,9 @@ var app = new Vue({
 
     async SendGameStatsToServer(_stats) {
       let params = `id=${this.appDataPlayerCurrent.id}&key=${_stats.key}&guesses=${_stats.guesses}`;
+      if (_stats.quit) {
+        params = `id=${this.appDataPlayerCurrent.id}&key=${_stats.key}&guesses=${_stats.guesses}&quit=true`;
+      }
 
       const requestUrl = `https://empty-night-9bea.bigtentgames.workers.dev/${params}`;
       announce(requestUrl);
@@ -866,7 +872,12 @@ var app = new Vue({
             this.HandleNewGameClick();
           }
         } else if (this.getCurrentDaily || this.appStateForceAutoCheck) {
-          this.IsCurrentGuessCorrect();
+          if (this.getSubmitButtonText === this.appDataActionButtonTexts.quit) {
+            this.appDataConfirmationObject = { message: 'Give up and see the solution?', target: 'quit' };
+            this.appStateShowConfirmation = true;
+          } else {
+            this.IsCurrentGuessCorrect();
+          }
         } else {
           this.ShareBoard();
         }
@@ -947,8 +958,54 @@ var app = new Vue({
       this.appStateShowCatChooser = true;
     },
 
+    SolvePuzzleCurrent() {
+      note('SolvePuzzleCurrent() called');
+      let solArray = this.currentGameSolutionActual.split(':');
+
+      let topHint = solArray[0];
+      let hintIndex = this.appDataHints.findIndex((hint) => hint.value === topHint);
+
+      this.RotateTrayBasedOnInputFocus(hintIndex, false);
+
+      let anchorIDs = [parseInt(solArray[1]), parseInt(solArray[4]), parseInt(solArray[7]), parseInt(solArray[10])];
+
+      for (let i = 0; i < this.appDataCards.length; i++) {
+        const trayCard = this.appDataCards[i];
+        if (trayCard.words.length === 0) {
+          let parkedCard = this.appDataCardsParked.find((card) => {
+            return card.words.find((word) => word.id === anchorIDs[i]);
+          });
+          if (parkedCard) {
+            let wordIndex = parkedCard.words.findIndex((word) => word.id === anchorIDs[i]);
+            highlight('index of ' + anchorIDs[i] + ' = ' + wordIndex);
+            let modifier = 0;
+            switch (i) {
+              case 1:
+                modifier = 1;
+                break;
+              case 2:
+                modifier = -1;
+                break;
+              case 3:
+                modifier = 2;
+                break;
+            }
+            parkedCard.rotation = 4 - wordIndex + modifier;
+            this.SwapCards(trayCard, parkedCard);
+          }
+        }
+      }
+
+      this.ResetCardsAfterRotation();
+      this.IsCurrentGuessCorrect();
+    },
+
     HandleYesNo(_target, _value) {
       switch (_target) {
+        case 'quit':
+          this.getCurrentDaily.quit = true;
+          this.SolvePuzzleCurrent();
+          break;
         case 'correct':
           this.ShareBoard(_value);
           break;
@@ -1538,6 +1595,9 @@ var app = new Vue({
         urlString += '&generated=' + encodeURIComponent(this.getCurrentDaily ? true : this.getIsAIGenerating);
         if (this.getCurrentDaily) {
           urlString += '&key=' + encodeURIComponent(this.getCurrentDaily.key);
+          if (this.getCurrentDaily.quit) {
+            urlString += '&quit=true';
+          }
         }
         urlString += '&puzzleName=' + encodeURIComponent(this.appDataPlayerCreator.name);
         urlString += '&puzzleID=' + encodeURIComponent(this.appDataPlayerCreator.id);
@@ -1560,20 +1620,26 @@ var app = new Vue({
 
     GetMessageBasedOnTrayCount(_gotIt, _name) {
       note('GetMessageBasedOnTrayCount() called');
-      let index = this.getNumberOfCardsThatHaveBeenPlacedOnTray;
+      let count = this.getNumberOfCardsThatHaveBeenPlacedOnTray;
       let pretext = '';
+
       if (this.getNumberOfCardsThatHaveBeenPlacedOnTray < 4) {
-        pretext = index + '/4 ';
+        pretext = count + '/4 ';
       }
-      if (index === 4 && this.appDataPlayerCurrent.role === 'reviewer' && !_gotIt) {
-        index = 5;
+
+      if (count === 4 && this.appDataPlayerCurrent.role === 'reviewer' && !_gotIt) {
+        count = 5;
       }
-      let levelMessage = LevelMessage[index][getRandomInt(0, LevelMessage[index].length)];
+
+      let levelMessage = LevelMessage[count][getRandomInt(0, LevelMessage[count].length)];
       let usingName = _name !== '';
       let name = !usingName ? '' : _name + ', ';
       let useLowerCase = usingName && levelMessage.indexOf('I ') !== 0;
       levelMessage = useLowerCase ? levelMessage.charAt(0).toLowerCase() + levelMessage.slice(1) : levelMessage;
-      let message = pretext + LevelEmoji[index][getRandomInt(0, LevelEmoji[index].length)] + ' ' + name + levelMessage;
+      let message = pretext + LevelEmoji[count][getRandomInt(0, LevelEmoji[count].length)] + ' ' + name + levelMessage;
+      if (count === 4 && this.getCurrentDaily && this.getCurrentDaily.quit) {
+        message = `AI is hard! We're working hard to mkae these Daily Games better to play.`;
+      }
       announce(message);
       return message;
     },
@@ -1707,27 +1773,27 @@ var app = new Vue({
       }
     },
 
-    RotateTrayBasedOnInputFocus(_index) {
+    RotateTrayBasedOnInputFocus(_index, _useTimeout = true) {
       note('RotateTrayBasedOnInputFocus() called');
       if (_index != 0) {
         switch (_index) {
           case 0:
-            this.RotateTray(0);
+            this.RotateTray(0, _useTimeout);
             break;
           case 1:
-            this.RotateTray(-1);
+            this.RotateTray(-1, _useTimeout);
             break;
           case 2:
-            this.RotateTray(1);
+            this.RotateTray(1, _useTimeout);
             break;
           case 3:
-            this.RotateTray(-2);
+            this.RotateTray(-2, _useTimeout);
             break;
         }
       }
     },
 
-    RotateTray(_inc) {
+    RotateTray(_inc, _useTimeout = true) {
       note('RotateTray() called');
       if (!this.appStateTrayIsRotating) {
         this.appDataMessage = '';
@@ -1739,16 +1805,26 @@ var app = new Vue({
         if (this.getSelectedCard) this.getSelectedCard.isSelected = false;
         this.appStateTrayRotation = this.appStateTrayRotation + _inc;
         document.getElementById('parkingInput').focus();
-        this.appDataTimeoutTrayRotation = setTimeout(() => {
-          this.ResetTrayAfterRotation();
-        }, this.appDataTransitionLong);
+        if (_useTimeout) {
+          this.appDataTimeoutTrayRotation = setTimeout(() => {
+            this.ResetTrayAfterRotation();
+          }, this.appDataTransitionLong);
 
-        if (!this.appStateIsGuessing) {
-          setTimeout(() => {
+          if (!this.appStateIsGuessing) {
+            setTimeout(() => {
+              let hint0 = document.getElementById('hint0');
+              this.appDataParkingInputValue = '';
+              hint0.focus();
+            }, this.appDataTransitionLong);
+          }
+        } else {
+          this.ResetTrayAfterRotation();
+
+          if (!this.appStateIsGuessing) {
             let hint0 = document.getElementById('hint0');
             this.appDataParkingInputValue = '';
             hint0.focus();
-          }, this.appDataTransitionLong);
+          }
         }
       }
     },
@@ -1859,6 +1935,18 @@ var app = new Vue({
       } else {
         return false;
       }
+    },
+
+    GetBoardFromURL() {
+      let boardPieces = [];
+      if (window.location.search) {
+        urlParams = new URLSearchParams(window.location.search);
+        UseDebug = urlParams.has('useDebug') ? true : UseDebug;
+        let search = decodeURIComponent(window.location.search);
+        params = search.split('?')[1].split('&');
+        boardPieces = urlParams.get('board');
+      }
+      return boardPieces;
     },
 
     /* === INITIALIZATION === */
@@ -1984,8 +2072,14 @@ var app = new Vue({
     getFirstThreeParkedCards: function () {
       return this.appDataCardsParked.splice(0, 3);
     },
+    getFullCardsInTray: function () {
+      return this.appDataCards.filter((card) => card.words.length > 0);
+    },
+    getEmptyCardsInTray: function () {
+      return this.appDataCards.filter((card) => card.words.length === 0);
+    },
     getNumberOfCardsThatHaveBeenPlacedOnTray: function () {
-      return this.appDataCards === undefined ? 0 : this.appDataCards.filter((card) => card.words.length > 0).length;
+      return this.appDataCards === undefined ? 0 : this.getFullCardsInTray.length;
     },
     getNumberOfHintsThatHaveBeenFilled: function () {
       return this.appDataHints === undefined ? 0 : this.appDataHints.filter((hint) => hint.value != '').length;
@@ -2077,18 +2171,18 @@ var app = new Vue({
 
       if (this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
         if (this.appStateForceAutoCheck) {
-          // if (this.getCurrentDaily && this.getCurrentDaily.guesses >= 2) {
-          //   text = this.appDataActionButtonTexts.quit;
-          // } else {
-          text = this.appDataActionButtonTexts.guess;
-          // }
+          if (this.getCurrentDaily && this.getCurrentDaily.guesses > 1 && this.getNumberOfCardsThatHaveBeenPlacedOnTray !== 4) {
+            text = this.appDataActionButtonTexts.quit;
+          } else {
+            text = this.appDataActionButtonTexts.guess;
+          }
         }
         if (this.isChromeAndiOSoriPadOS && this.appDataShareURL.includes('facets.bigtentgames.com/game/?')) {
           text = this.appDataActionButtonTexts.copy;
         }
         if (this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
           if (this.getCurrentDaily) {
-            text = this.appDataActionButtonTexts.share;
+            text = this.getCurrentDaily.quit ? this.appDataActionButtonTexts.create : this.appDataActionButtonTexts.share;
           } else {
             text = this.appDataActionButtonTexts.create;
           }
@@ -2149,15 +2243,14 @@ var app = new Vue({
       return this.GetIsAIGenerated();
     },
     getActionButtonState: function () {
-      // prettier-ignore
-      let inActive = 
-        (this.getCurrentDaily && this.getCurrentDaily.guesses <=2) &&
-        (this.getNumberOfHintsThatHaveBeenFilled !== 4
-          && this.appDataPlayerCurrent.role === 'creator') ||
-        (this.getNumberOfCardsThatHaveBeenPlacedOnTray !== 4
-          && this.appDataPlayerCurrent.role !== 'reviewer'
-          && this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id);
-      return inActive;
+      let inactive = false;
+      if (this.getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && this.getCurrentDaily && this.getCurrentDaily.guesses > 1) {
+        inactive = false;
+      } else if ((this.getNumberOfHintsThatHaveBeenFilled !== 4 && this.appDataPlayerCurrent.role === 'creator') || (this.getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && this.appDataPlayerCurrent.role !== 'reviewer' && this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id)) {
+        inactive = true;
+      }
+
+      return inactive;
     },
     getCorrectCalIconClass: function () {
       let checkDate = this.getCurrentDaily.date;

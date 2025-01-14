@@ -308,7 +308,7 @@
       <modal v-if="appStateShowDailyGames">
         <section>
           <h2>The Daily</h2>
-          <p>You can play any of the Daily puzzles listed below. Daily puzzles can use any category. Some of them include a 5th card to make it that much harder 😈.</p>
+          <p>Play any of the AI-generated Daily puzzles listed below.</p>
           <message style="padding: calc(2 * var(--defaultGap)) 0" v-if="!appStateIsGettingDailyGames && getDailyGamesWithWordSetNames.length === 0">
             <p>😢</p>
             <p>Check back tomorrow!</p>
@@ -343,11 +343,11 @@
                   <small>Avg # of Tries</small>
                 </stat>
                 <stat>
-                  <value>{{game.stats.guesscounts.g1 ? game.stats.guesscounts.g1 : 0}}</value>
+                  <value>{{game.stats.guesscounts.g1 ? game.stats.guesscounts.g1 : '-'}}</value>
                   <small>Solved In 1</small>
                 </stat>
                 <stat>
-                  <value>{{game.stats.guesscounts.g2 ? game.stats.guesscounts.g2 : 0}}</value>
+                  <value>{{game.stats.guesscounts.g2 ? game.stats.guesscounts.g2 : '-'}}</value>
                   <small>Solved In 2</small>
                 </stat>
                 <stat>
@@ -374,7 +374,8 @@
           <span> {{getCurrentDaily && vsShowDaily ? getCurrentDaily.key === getTodaysKey ? 'Today\'s' : getCurrentDaily.date.split(',')[0] : ''}} </span>
           <flogo></flogo>
           <icon v-if="getCurrentDaily && !getCurrentDaily.solved" :class="getCorrectCalIconClass" class="large" @click="ToggleShowDailyGames(event)"></icon>
-          <icon v-if="getCurrentDaily && getCurrentDaily.solved" class="check large" @click="ToggleShowDailyGames(event)"></icon>
+          <icon v-if="getCurrentDaily && getCurrentDaily.solved && !getCurrentDaily.quit" class="check large" @click="ToggleShowDailyGames(event)"></icon>
+          <icon v-if="getCurrentDaily && getCurrentDaily.solved && getCurrentDaily.quit" style="background: hsl(var(--alertHSL))" class="nope large" @click="ToggleShowDailyGames(event)"></icon>
           <icon v-if="!getCurrentDaily" class="logo" @click="appStateShowNotification = true"></icon>
           <span>
             <count v-if="getCurrentDaily && getCurrentDaily.solved"> in {{getCurrentDaily.guesses}} {{getCurrentDaily.guesses !== 1 ? 'tries' : 'try'}} </count>

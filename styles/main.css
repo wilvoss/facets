@@ -805,6 +805,10 @@ p {
     color: hsl(var(--hueGuessing), 80%, 50%)
 }
 
+.alertbackground {
+    color: hsl(var(--alertHSL))
+}
+
 cta {
     display: inline-block;
     font-family: 'Theme';
