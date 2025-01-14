@@ -190,21 +190,22 @@ button {
     transition-property: color, background-color, opacity, border-color;
     user-select: none;
     -webkit-user-select: none;
-
-    badge {
-        border-radius: 50%;
-        display: flex;
-        color: hsl(var(--appForegroundHSL));
-        background: hsl(var(--alertHSL));
-        width: 24px;
-        height: 24px;
-        overflow: hidden;
-        justify-content: center;
-        align-items: center;
-        font-size: 0.7em;
-        font-weight: 800;
-    }
 }
+
+button badge {
+    border-radius: 50%;
+    display: flex;
+    color: hsl(var(--appForegroundHSL));
+    background: hsl(var(--alertHSL));
+    width: 24px;
+    height: 24px;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.7em;
+    font-weight: 800;
+}
+
 
 button.secondary {
     color: hsl(var(--hueTheme), 40%, 50%);
@@ -244,51 +245,51 @@ header {
     user-select: none;
     -webkit-user-select: none;
     cursor: default;
+}
 
-    icon {
-        pointer-events: all;
-        cursor: pointer;
-    }
+header icon {
+    pointer-events: all;
+    cursor: pointer;
+}
 
-    icon.check {
-        background: hsl(var(--linkColorLightHSL));
-    }
+header icon.check {
+    background: hsl(var(--linkColorLightHSL));
+}
 
-    span {
-        display: flex;
-        gap: 4px;
-        align-items: center;
-        padding-top: 1px;
-        flex: 1;
-    }
+header span {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+    padding-top: 1px;
+    flex: 1;
+}
 
-    span:first-of-type {
-        justify-content: end;
-    }
+header span:first-of-type {
+    justify-content: end;
+}
 
-    button.small {
-        position: fixed;
-        z-index: 300;
-        top: 0px;
-        padding: calc(.5 * var(--defaultGap)) var(--defaultGap);
-        height: auto;
-        background-color: hsl(var(--linkColorLightHSL));
-        border-radius: 0px 0px var(--borderRadius) var(--borderRadius);
-        border-width: 0px 1px 1px 1px;
-        color: hsl(var(--appBackgroundHSL));
-        transform: translate(0px, -60px);
-        transition: var(--mediumTransition) ease-in-out all;
-        font-family: "Theme";
+header button.small {
+    position: fixed;
+    z-index: 300;
+    top: 0px;
+    padding: calc(.5 * var(--defaultGap)) var(--defaultGap);
+    height: auto;
+    background-color: hsl(var(--linkColorLightHSL));
+    border-radius: 0px 0px var(--borderRadius) var(--borderRadius);
+    border-width: 0px 1px 1px 1px;
+    color: hsl(var(--appBackgroundHSL));
+    transform: translate(0px, -60px);
+    transition: var(--mediumTransition) ease-in-out all;
+    font-family: "Theme";
 
-        icon {
-            background: hsl(var(--appBackgroundHSL));
-        }
-    }
+}
 
-    button.small.show {
-        transform: translate(0px, 0px);
-    }
+header button.small icon {
+    background: hsl(var(--appBackgroundHSL));
+}
 
+header button.small.show {
+    transform: translate(0px, 0px);
 }
 
 header h1 {
@@ -528,8 +529,6 @@ icon.spinner.show {
 }
 
 @keyframes spin {
-
-
     100% {
         transform: rotate(360deg);
     }
@@ -664,7 +663,7 @@ button.small.strong.disabled {
 }
 
 notification button.inline, notification button.small {
-    width: 80%;
+    width: 90%;
 }
 
 notification {
@@ -684,34 +683,34 @@ notification {
     transition: var(--mediumTransition) ease-in-out opacity;
     opacity: 0;
     pointer-events: none;
+}
 
-    header {
-        flex-direction: column;
-        gap: 0px;
-        flex: unset;
-    }
+notification header {
+    flex-direction: column;
+    gap: 0px;
+    flex: unset;
+}
 
-    subtitles {
-        flex-basis: auto;
-    }
+notification subtitles {
+    flex-basis: auto;
+}
 
-    message {
-        flex-basis: auto;
-    }
+notification message {
+    flex-basis: auto;
+}
 
-    h2, p {
-        padding: 0;
-        text-align: center;
-        margin: 10px 0 0 0;
-        line-height: 1.4em;
-        color: hsl(var(--appForegroundHSL));
-    }
+notification h2, notification p {
+    padding: 0;
+    text-align: center;
+    margin: 10px 0 0 0;
+    line-height: 1.4em;
+    color: hsl(var(--appForegroundHSL));
+}
 
-    p {
-        margin: 0px 0 0 0;
-        color: hsl(var(--appForegroundDiminishedHSL));
-        font-size: 120%;
-    }
+notification p {
+    margin: 0px 0 0 0;
+    color: hsl(var(--appForegroundDiminishedHSL));
+    font-size: 120%;
 }
 
 notification.meta {
@@ -743,23 +742,23 @@ notification message {
     border-radius: var(--borderRadius);
     pointer-events: none;
     box-shadow: 0px 2px 8px rgba(0, 0, 0, .25);
+}
 
-    name {
-        display: flex;
-        justify-content: center;
+notification message name {
+    display: flex;
+    justify-content: center;
+}
 
-        icon {
-            margin: 0 4px 0 16px;
-        }
-    }
+notification message name icon {
+    margin: 0 4px 0 16px;
+}
 
-    subtitle {
-        color: hsl(var(--appForegroundDiminishedHSL));
-        display: block;
-        text-transform: capitalize;
-        padding-bottom: 0;
-        font-size: .8em;
-    }
+notification message subtitle {
+    color: hsl(var(--appForegroundDiminishedHSL));
+    display: block;
+    text-transform: capitalize;
+    padding-bottom: 0;
+    font-size: .8em;
 }
 
 message {
@@ -854,28 +853,28 @@ wrapper:first-of-type {
     max-width: calc(1124px - 7 * var(--defaultGap));
     align-items: center;
     gap: calc(2.5 * var(--defaultGap));
+}
 
-    controls {
-        padding: 0;
-        flex: 1;
-        justify-content: start;
+wrapper:first-of-type controls {
+    padding: 0;
+    flex: 1;
+    justify-content: start;
+}
 
-        button.small {
-            font-size: 90%;
-            padding: calc(.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
-            height: unset;
-            transition: none;
-        }
+wrapper:first-of-type controls button.small {
+    font-size: 90%;
+    padding: calc(.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
+    height: unset;
+    transition: none;
+}
 
-        button {
-            height: 100%;
-            padding: 0;
-        }
-    }
+wrapper:first-of-type controls button {
+    height: 100%;
+    padding: 0;
+}
 
-    controls:last-of-type {
-        justify-content: end;
-    }
+wrapper:first-of-type controls:last-of-type {
+    justify-content: end;
 }
 
 wrapper.main {
@@ -1061,15 +1060,15 @@ rotators button {
     line-height: 100%;
     background: none;
     padding: calc(1.25 * var(--defaultGap));
+}
 
-    icon {
-        padding-top: 12px;
-        width: var(--mediumIconSize);
-        height: var(--mediumIconSize);
-        mask-size: var(--mediumIconSize) var(--mediumIconSize);
-        -webkit-mask-size: var(--mediumIconSize) var(--mediumIconSize);
-        background-color: hsl(var(--messageColorHSL));
-    }
+rotators button icon {
+    padding-top: 12px;
+    width: var(--mediumIconSize);
+    height: var(--mediumIconSize);
+    mask-size: var(--mediumIconSize) var(--mediumIconSize);
+    -webkit-mask-size: var(--mediumIconSize) var(--mediumIconSize);
+    background-color: hsl(var(--messageColorHSL));
 }
 
 spot rotators button {
@@ -1163,40 +1162,33 @@ parking {
 .portrait wrapper.mobile {
     display: flex;
     transform: unset;
+}
 
-    button.scroller {
-        position: absolute;
-        margin-top: 0;
-        left: 0;
-        z-index: 100;
-        height: calc(var(--scale) * var(--cardSize));
-        padding-top: 0;
-        padding-bottom: 0;
-        transform: translateY(calc(-0.13 * var(--cardSize)));
-        background: none;
-        padding: 0;
-        width: 40px;
-        display: none;
-        align-items: center;
-        border-radius: 0px;
-        /* border: 0px solid hsla(var(--messageColorHSL), .4); */
-        /* border-width: 0px 1px 0px 0px; */
+.portrait wrapper.mobile button.scroller {
+    position: absolute;
+    margin-top: 0;
+    left: 0;
+    z-index: 100;
+    height: calc(var(--scale) * var(--cardSize));
+    padding-top: 0;
+    padding-bottom: 0;
+    transform: translateY(calc(-0.13 * var(--cardSize)));
+    background: none;
+    padding: 0;
+    width: 40px;
+    display: none;
+    align-items: center;
+    border-radius: 0px;
+}
 
-        icon {
-            background: hsl(var(--messageColorHSL));
-        }
-    }
+.portrait wrapper.mobile button.scroller icon {
+    background: hsl(var(--messageColorHSL));
+}
 
-    button.scroller:last-of-type {
-        left: unset;
-        right: 0;
-        justify-content: end;
-        /* border-width: 0px 0px 0px 1px; */
-    }
-
-    button.scroller.disabled {
-        /* border-color: hsla(var(--messageColorHSL), 0); */
-    }
+.portrait wrapper.mobile button.scroller:last-of-type {
+    left: unset;
+    right: 0;
+    justify-content: end;
 }
 
 wrapper.mobile parking {
@@ -1211,8 +1203,6 @@ wrapper.mobile parking {
     align-items: center;
     overflow: visible;
 }
-
-
 
 cards {
     display: flex;
@@ -1477,49 +1467,49 @@ gamelinks {
     display: block;
     counter-reset: recent-game-counter;
     width: 100%;
+}
 
-    dot {
-        position: absolute;
-        transform: translateX(-10px);
-        color: hsl(var(--alertHSL));
-    }
+gamelinks dot {
+    position: absolute;
+    transform: translateX(-10px);
+    color: hsl(var(--alertHSL));
+}
 
-    gamelink {
-        display: flex;
-        flex-direction: column;
-        gap: calc(.33 * var(--defaultGap));
-        padding: calc(.66 * var(--defaultGap)) 0;
-        cursor: pointer;
+gamelinks gamelink {
+    display: flex;
+    flex-direction: column;
+    gap: calc(.33 * var(--defaultGap));
+    padding: calc(.66 * var(--defaultGap)) 0;
+    cursor: pointer;
+}
 
-        stats {
-            display: flex;
-            padding: 6px calc(.5 * var(--defaultGap)) 6px;
-            gap: var(--defaultGap);
-            background: hsla(var(--appBackgroundHSL), .4);
-            border: 1px solid hsla(var(--appBackgroundHSL), .5);
-            margin-bottom: calc(.5 * var(--defaultGap));
-            border-radius: var(--borderRadius);
-            user-select: none;
-            -webkit-user-select: none;
-            color: hsl(var(--appBackgroundLightestHSL));
-            cursor: pointer;
+gamelinks gamelink stats {
+    display: flex;
+    padding: 6px calc(.5 * var(--defaultGap)) 6px;
+    gap: var(--defaultGap);
+    background: hsla(var(--appBackgroundHSL), .4);
+    border: 1px solid hsla(var(--appBackgroundHSL), .5);
+    margin-bottom: calc(.5 * var(--defaultGap));
+    border-radius: var(--borderRadius);
+    user-select: none;
+    -webkit-user-select: none;
+    color: hsl(var(--appBackgroundLightestHSL));
+    cursor: pointer;
+}
 
-            stat {
-                display: flex;
-                gap: 3px;
-                flex-direction: column;
+gamelinks gamelink stats stat {
+    display: flex;
+    gap: 3px;
+    flex-direction: column;
+}
 
-                small {
-                    white-space: nowrap;
-                    color: hsl(var(--appBackgroundLightestHSL));
-                }
+gamelinks gamelink stats stat small {
+    white-space: nowrap;
+    color: hsl(var(--appBackgroundLightestHSL));
+}
 
-                value {
-                    font-size: 1em;
-                }
-            }
-        }
-    }
+gamelinks gamelink stats stat value {
+    font-size: 1em;
 }
 
 gamelinks p {
@@ -2047,34 +2037,32 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         gap: 0px;
         justify-content: space-between;
         padding: calc(.5 * var(--defaultGap)) 0px;
+    }
 
-        controls {
-            button.small {
-                font-size: 120%;
-                padding: 6px calc(1 * var(--defaultGap));
-                background: none;
-                border: none;
-            }
+    wrapper:first-of-type controls button.small {
+        font-size: 120%;
+        padding: 6px calc(1 * var(--defaultGap));
+        background: none;
+        border: none;
+    }
 
-            button {
-                padding: 6px calc(1 * var(--defaultGap));
-                min-width: 70px;
-            }
-        }
+    wrapper:first-of-type controls button {
+        padding: 6px calc(1 * var(--defaultGap));
+        min-width: 70px;
     }
 
     header {
         gap: 6px;
         display: flex;
         justify-content: center;
+    }
 
-        button.small {
-            border-radius: var(--borderRadius);
-        }
+    header button.small {
+        border-radius: var(--borderRadius);
+    }
 
-        button.small.show {
-            transform: translate(0px, 14px);
-        }
+    header button.small.show {
+        transform: translate(0px, 14px);
     }
 
     header icon {
@@ -2087,7 +2075,6 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     }
 
     wrapper controls {
-        /* flex: 1; */
         padding: 0 calc(1 * var(--defaultGap));
     }
 
@@ -2222,12 +2209,9 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         font-size: 130%;
     }
 
-    notification {
-        message {
-            gap: calc(.5 * var(--defaultGap));
-            /* text-align: center; */
-            font-size: 1.3em;
-        }
+    notification message {
+        gap: calc(.5 * var(--defaultGap));
+        font-size: 1.3em;
     }
 
     callout {

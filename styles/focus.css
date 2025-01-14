@@ -21,10 +21,8 @@ wrapper:first-of-type, wrapper.main, wrapper.mobile {
 
     }
 
-    .portrait wrapper.mobile {
-        button.scroller {
-            display: flex;
-        }
+    .portrait wrapper.mobile button.scroller {
+        display: flex;
     }
 
     .portrait wrapper.mobile panbar {
