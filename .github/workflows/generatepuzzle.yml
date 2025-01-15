@@ -31,7 +31,9 @@ jobs:
         run: npm install puppeteer@24.0.0 # Ensures Puppeteer version aligns with required Node version
 
       - name: Execute Puppeteer script
-        run: node puppeteer.js
+        run: |
+          node puppeteer.js
+          echo "Script executed with exit code $?"
 
       - name: Log GitHub Action Status
         run: echo "GitHub Action completed successfully" # Custom log message

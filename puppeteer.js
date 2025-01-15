@@ -12,12 +12,10 @@ const puppeteer = require('puppeteer');
 
     await new Promise((resolve) => setTimeout(resolve, 120000)); // Increased wait time
     await page.reload();
-    await new Promise((resolve) => setTimeout(resolve, 120000)); // Increased wait time
-    await browser.close();
 
     console.log('Script executed successfully');
   } catch (error) {
-    console.error('Error during script execution:', error.message);
+    console.error('Error during script execution:', error);
     process.exit(1); // Ensure GitHub Action fails in case of error
   }
 })();
