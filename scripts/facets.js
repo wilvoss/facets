@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.63',
+    appDataVersion: '2.0.64',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -2192,8 +2192,8 @@ var app = new Vue({
       return daily ? daily : null;
     },
     getDailyIsFreshToday: function () {
-      const foundGame = this.getTodaysDaily ? this.HasUserStartedGame(this.getTodaysDaily) : null;
-      return !foundGame;
+      const isFresh = this.getTodaysDaily ? !this.HasUserStartedGame(this.getTodaysDaily) : false;
+      return isFresh;
     },
     getDailyGamesWithWordSetNames: function () {
       return this.appDataDailyGames.map((game) => {

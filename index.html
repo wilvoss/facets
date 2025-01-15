@@ -63,7 +63,7 @@
       <notification @click="appStateShowNotification = false" :class="{show: appStateShowNotification}">
         <message :title="getPlayerMessage" v-html="getPlayerMessage"></message>
       </notification>
-      <notification v-if="appStateShowMeta" class="meta show">
+      <notification v-if="appStateShowMeta" class="meta show" @click="ToggleShowMeta(event)">
         <header>
           <icon class="logo"></icon>
           <h2>Facets</h2>
@@ -324,8 +324,8 @@
               <p>
                 <a>
                   <small>
-                    <dot v-if="index === 0 && ! HasUserStartedGame(game)">•</dot>
-                    {{game.date}} – "{{game.name}}" {{game.useExtraCard === "true" ? '(5-cards)' : ''}}
+                    <dot v-if="index === 0 && getTodaysDaily!== getCurrentDaily && !HasUserStartedGame(game)|| !HasUserStartedGame(game)">•</dot>
+                    {{game.date}}
                   </small>
                   {{game.hints.replace(/:/g," - ")}}
                 </a>
