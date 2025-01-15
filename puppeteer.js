@@ -1,8 +1,9 @@
 const puppeteer = require('puppeteer');
 
 (async () => {
+  let browser;
   try {
-    const browser = await puppeteer.launch({
+    browser = await puppeteer.launch({
       args: ['--no-sandbox', '--disable-setuid-sandbox'],
     });
     const page = await browser.newPage();
@@ -17,5 +18,9 @@ const puppeteer = require('puppeteer');
   } catch (error) {
     console.error('Error during script execution:', error);
     process.exit(1); // Ensure GitHub Action fails in case of error
+  } finally {
+    if (browser) {
+      await browser.close(); // Close the browser to ensure script exits
+    }
   }
 })();
