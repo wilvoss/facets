@@ -80,9 +80,6 @@
   "url_handlers": [
     {
       "origin": "https://facets.bigtentgames.com"
-    },
-    {
-      "origin": "https://facets.bigtentgames.com"
     }
   ],
   "dir": "ltr",

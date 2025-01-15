@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.61',
+    appDataVersion: '2.0.62',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -1407,45 +1407,6 @@ var app = new Vue({
       }
     },
 
-    HandleServiceWorkerUnregistration() {
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function (registrations) {
-          // Loop through each registration
-          for (let registration of registrations) {
-            // Unregister the service worker
-            registration.unregister();
-            // Reload the page to remove the service worker
-            registration.active.postMessage('SKIP_WAITING');
-          }
-        });
-      }
-    },
-
-    HandleServiceWorkerRegistration() {
-      note('HandleServiceWorkerRegistration() called');
-      if ('serviceWorker' in navigator) {
-        // Register the service worker
-        navigator.serviceWorker.register('./sw.js').then((reg) => {
-          reg.addEventListener('updatefound', () => {
-            // An updated service worker has appeared in reg.installing!
-            this.serviceWorker = reg.installing;
-            this.serviceWorker.addEventListener('statechange', () => {
-              // Has service worker state changed?
-              switch (this.serviceWorker.state) {
-                case 'installed':
-                  // There is a new service worker available, show the notification
-                  if (navigator.serviceWorker.controller) {
-                    this.appStateIsNewVersionAvailable = true;
-                    // localStorage.setItem('newVersionAvailable', this.appStateIsNewVersionAvailable);
-                  }
-                  break;
-              }
-            });
-          });
-        });
-      }
-    },
-
     /* === COMMUNICATION === */
     ShareWin() {
       note('ShareWin() called');
@@ -2053,7 +2014,6 @@ var app = new Vue({
   },
 
   mounted() {
-    this.HandleServiceWorkerUnregistration();
     this.LoadPage();
     window.addEventListener('keydown', this.HandleKeyDownEvent);
     window.addEventListener('pointermove', this.HandlePointerMoveEvent);
