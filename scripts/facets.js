@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.57',
+    appDataVersion: '2.0.58',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -374,7 +374,7 @@ var app = new Vue({
       this.UpdateDailyGameFromStartedGameData(startedGame);
     },
 
-    UpdateDailyGameFromStartedGameData(_gamestarted) {
+    async UpdateDailyGameFromStartedGameData(_gamestarted) {
       let foundGame = this.appDataDailyGames.find((game) => {
         return game.key === _gamestarted.key;
       });
@@ -385,7 +385,8 @@ var app = new Vue({
       }
 
       if (foundGame.solved) {
-        this.SendGameStatsToServer(foundGame);
+        await this.SendGameStatsToServer(foundGame);
+        this.GetDailyGameStats();
       }
     },
 
