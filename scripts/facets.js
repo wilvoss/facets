@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.56',
+    appDataVersion: '2.0.57',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -2029,7 +2029,7 @@ var app = new Vue({
 
             setTimeout(() => {
               this.GetAISolution();
-            }, 1000);
+            }, 2000);
           }
           if (this.getTodaysDaily && !this.HasUserStartedGame(this.getTodaysDaily)) {
             this.HandleOldGameClick(null, this.getTodaysDaily);

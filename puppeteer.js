@@ -18,7 +18,7 @@ const puppeteer = require('puppeteer');
     // Navigate to the URL
     await page.goto('https://facets.bigtentgames.com/generate.html?generated=true');
 
-    await new Promise((resolve) => setTimeout(resolve, 120000)); // Increased wait time
+    await new Promise((resolve) => setTimeout(resolve, 60000)); // Increased wait time
     await page.reload();
 
     console.log('Script executed successfully');
