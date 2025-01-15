@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.58',
+    appDataVersion: '2.0.59',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -361,6 +361,7 @@ var app = new Vue({
     },
 
     UpdateGameGuessesCount(_game, _solved = false) {
+      note('UpdateGameGuessesCount() called');
       let startedGame = this.GetUserStartedGame(_game);
       if (startedGame && !startedGame.solved) {
         startedGame.solved = _solved;
@@ -375,6 +376,7 @@ var app = new Vue({
     },
 
     async UpdateDailyGameFromStartedGameData(_gamestarted) {
+      note('UpdateDailyGameFromStartedGameData() called');
       let foundGame = this.appDataDailyGames.find((game) => {
         return game.key === _gamestarted.key;
       });
@@ -391,6 +393,7 @@ var app = new Vue({
     },
 
     async SendGameStatsToServer(_stats) {
+      note('SendGameStatsToServer() called');
       let params = `id=${this.appDataPlayerCurrent.id}&key=${_stats.key}&guesses=${_stats.guesses}`;
       if (_stats.quit) {
         params = `id=${this.appDataPlayerCurrent.id}&key=${_stats.key}&guesses=${_stats.guesses}&quit=true`;
@@ -443,6 +446,7 @@ var app = new Vue({
 
         if (this.currentGameSolutionActual === this.currentGameSolutionGuessing) {
           this.RotateTray(8);
+          window.history.pushState({}, document.title, window.location.pathname);
         }
 
         if (this.getCurrentDaily) {
