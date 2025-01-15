@@ -32,3 +32,6 @@ jobs:
 
       - name: Execute Puppeteer script
         run: node puppeteer.js
+
+      - name: Log GitHub Action Status
+        run: echo "GitHub Action completed successfully" # Custom log message
