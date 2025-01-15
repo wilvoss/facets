@@ -176,7 +176,7 @@
             <small style="max-width: unset; font-size: 50%; padding-top: var(--defaultGap)"> A Puzzle Game of Words and Wits! </small>
           </h2>
           <message>What's your game name?</message>
-          <input style="text-align: center" spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" v-model="tempName" />
+          <input autocomplete="off" style="text-align: center" spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" v-model="tempName" />
           <legal>By continuing to use this game, you agree to our <a href="https://bigtentgames.com/#privacy" target="_blank">Privacy Policy</a>, which explains how we collect and use game names and temporary IDs necessary for game functionality.</legal>
         </section>
         <controls><button @click="HandleIntroButtonClick(event)">Next</button></controls>
@@ -243,7 +243,7 @@
           <leftright>
             <p>Game name</p>
             <callout>
-              <input spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
+              <input autocomplete="off" spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
             </callout>
           </leftright>
           <h3>Appearance</h3>
@@ -402,7 +402,7 @@
           <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateTray(1)"><icon class="rotate"></icon></button>
           <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise" @click="RotateTray(-1)"><icon class="rotate"></icon></button>
         </rotators>
-        <input aria-label="This is an input that holds focus while the tray is rotating. It's not used for anything else." aria-hidden="true" maxlength="0" :disabled="appStateIsGuessing" tabindex="-1" id="parkingInput" style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1" v-model="appDataParkingInputValue" tabindex="-1" />
+        <input autocomplete="off" aria-label="This is an input that holds focus while the tray is rotating. It's not used for anything else." aria-hidden="true" maxlength="0" :disabled="appStateIsGuessing" tabindex="-1" id="parkingInput" style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1" v-model="appDataParkingInputValue" tabindex="-1" />
         <ghost :style="{transform: 'translate(' + appDataGhostX + 'px, ' + appDataGhostY + 'px)'}">
           <card class="selected" :class="{show: appStateIsDragging, empty: appDataDraggedCard.words.length === 0}">
             <words>
@@ -432,7 +432,7 @@
           <diamond></diamond>
           <hints>
             <hint @pointerdown="RotateTrayBasedOnInputFocus(index)" :id="'h' + index" v-for="(hint, index) in appDataHints" :key="index">
-              <input autocapitalize="off" autocomplete="off" spellcheck="false" :id="'hint' + index" type="text" title="Please only use alphanumeric characters." pattern="[A-Za-z0-9]*" :disabled="appStateIsGuessing || index > 0" v-model="hint.value" maxlength="14" type="text" onfocus="this.placeholder=''" onblur="this.placeholder='tap'" placeholder="tap" />
+              <input autocomplete="off" autocapitalize="off" autocomplete="off" spellcheck="false" :id="'hint' + index" type="text" title="Please only use alphanumeric characters." pattern="[A-Za-z0-9]*" :disabled="appStateIsGuessing || index > 0" v-model="hint.value" maxlength="14" type="text" onfocus="this.placeholder=''" onblur="this.placeholder='tap'" placeholder="tap" />
             </hint>
           </hints>
           <cards :class="{disabled: appStateIsModalShowing}">
