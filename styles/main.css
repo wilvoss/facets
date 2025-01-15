@@ -2289,6 +2289,7 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     }
 
     .portrait wrapper.mobile {
+        transform: translateY(30px);
         position: absolute;
     }
 }
