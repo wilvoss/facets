@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.65',
+    appDataVersion: '2.0.66',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -1228,6 +1228,9 @@ var app = new Vue({
       if (userSettingsUseMultiColoredGems !== undefined && userSettingsUseMultiColoredGems !== null) {
         this.userSettingsUseMultiColoredGems = JSON.parse(userSettingsUseMultiColoredGems);
         this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
+      }
+      if (!document.hidden) {
+        this.GetDailyGames();
       }
     },
 
