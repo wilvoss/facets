@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.52',
+    appDataVersion: '2.0.53',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -2020,7 +2020,7 @@ var app = new Vue({
         } else if (!this.appStateIsGuessing) {
           if (this.getIsAIGenerating) {
             this.currentGameGuessingCardCount = 4;
-            this.appDataPlayerCurrent.id = 10;
+            this.appDataPlayerCurrent.id = 0;
 
             this.currentGameWordSet = this.getEnabledWordSets.find((set) => set.id === '100');
             log(this.currentGameWordSet.name);
@@ -2029,7 +2029,7 @@ var app = new Vue({
 
             setTimeout(() => {
               this.GetAISolution();
-            }, 100);
+            }, 1000);
           }
           if (this.getTodaysDaily && !this.HasUserStartedGame(this.getTodaysDaily)) {
             this.HandleOldGameClick(null, this.getTodaysDaily);
