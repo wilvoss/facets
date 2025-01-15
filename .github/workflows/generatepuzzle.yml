@@ -25,10 +25,10 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '16'
+          node-version: '18' # Updated Node version to 18
 
       - name: Install Puppeteer
-        run: npm install puppeteer
+        run: npm install puppeteer@24.0.0 # Ensures Puppeteer version aligns with required Node version
 
       - name: Execute Puppeteer script
         run: node puppeteer.js
