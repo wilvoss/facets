@@ -251,19 +251,22 @@
             Light theme
             <toggle></toggle>
           </checkbox>
+          <small>Enable this if you want a brighter, lighter visual experience.</small>
           <checkbox :class="{on: tempUseWordSetThemes}" @click="ToggleTempUseWordSetThemes()">
             Category backgrounds
             <toggle></toggle>
           </checkbox>
+          <small>Enable this to display category related background.</small>
           <checkbox v-if="appStateUsePortraitLayout" :class="{on: tempUserSettingsShowAllCards}" @click="ToggleTempShowAllCards()">
-            Always show cards
+            Show all unused cards
             <toggle></toggle>
           </checkbox>
-
+          <small v-if="appStateUsePortraitLayout">Enable this if you want to see all of the unused cards on the screen. </small>
           <checkbox :class="{on: tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseSimplifiedTheme()">
             Simple visuals
             <toggle></toggle>
           </checkbox>
+          <small>Enable this if you want remove the gem theme entirely. </small>
           <checkbox :class="{disabled: tempUserSettingsUsesSimplifiedTheme, on: !tempUseMultiColoredGems && !tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseMultiColoredGems()">
             Monocolored gem
             <toggle></toggle>

@@ -1598,7 +1598,7 @@ gamelinks gamelink:hover p button.inline icon {
     opacity: 1;
 }
 
-gamelinks small {
+modal gamelinks small {
     text-align: left;
     margin-bottom: 2px;
     font-size: .8em;
@@ -1614,6 +1614,7 @@ modal small, modal legal {
     max-width: calc(100% - 2 * var(--defaultGap));
     transition: var(--mediumTransition) ease-in-out;
     transition-property: opacity, color, background-color;
+    margin-bottom: calc(.5 * var(--defaultGap));
 }
 
 modal legal {
