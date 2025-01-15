@@ -2283,4 +2283,12 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
             scale: .6;
         }
     }
+
+    app.portrait {
+        justify-content: start;
+    }
+
+    .portrait wrapper.mobile {
+        position: absolute;
+    }
 }
