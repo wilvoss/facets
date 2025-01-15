@@ -8,6 +8,13 @@ const puppeteer = require('puppeteer');
     });
     const page = await browser.newPage();
 
+    // Capture console errors
+    page.on('console', (msg) => {
+      if (msg.type() === 'error') {
+        console.error(`Error on page: ${msg.text()}`);
+      }
+    });
+
     // Navigate to the URL
     await page.goto('https://facets.bigtentgames.com/generate.html?generated=true');
 
