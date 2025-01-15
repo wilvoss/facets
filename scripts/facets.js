@@ -13,8 +13,8 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.64',
-    appDataActionButtonTexts: { send: 'Send', guess: 'Guess', check: 'Check', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
+    appDataVersion: '2.0.65',
+    appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
     appDataLanguages: AllLanguages,
@@ -2137,7 +2137,7 @@ var app = new Vue({
       return this.appDataWordSets.find((set) => set.isSelected).name;
     },
     getSubmitButtonText: function () {
-      let text = this.appDataActionButtonTexts.check;
+      let text = this.appDataActionButtonTexts.send;
 
       if (this.appDataPlayerCurrent.role === 'reviewer') {
         text = this.appDataActionButtonTexts.respond;
