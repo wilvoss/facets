@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.69',
+    appDataVersion: '2.0.70',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -70,7 +70,7 @@ var app = new Vue({
     appStateTrayIsRotating: false,
     appStateTrayRotation: 0,
     appStateUsePortraitLayout: false,
-    appStateShowNotification: true,
+    appStateShowNotification: false,
     appParkingRightButtonDisabled: false,
     appStateShowMeta: true,
     vsShowDaily: true,
