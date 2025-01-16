@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.68',
+    appDataVersion: '2.0.69',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -72,7 +72,7 @@ var app = new Vue({
     appStateUsePortraitLayout: false,
     appStateShowNotification: true,
     appParkingRightButtonDisabled: false,
-    appStateShowMeta: false,
+    appStateShowMeta: true,
     vsShowDaily: true,
     appStateUseFlower: false,
 
@@ -1986,6 +1986,7 @@ var app = new Vue({
         if (boardPieces.length >= 40) {
           document.title = 'Facets!';
           this.RestoreGame(boardPieces);
+          this.appStateShowMeta = false;
         } else if (!this.appStateIsGuessing) {
           if (this.getIsAIGenerating) {
             this.currentGameGuessingCardCount = 4;
@@ -2000,11 +2001,8 @@ var app = new Vue({
               this.GetAISolution();
             }, 2000);
           }
-          if (this.getTodaysDaily && !this.HasUserStartedGame(this.getTodaysDaily)) {
-            this.HandleOldGameClick(null, this.getTodaysDaily);
-          } else {
-            this.NewGame(null, '', false);
-          }
+          this.NewGame(null, '', false);
+          this.ToggleShowMeta(null);
         }
       } catch (e) {
         warn(e.message);
@@ -2071,7 +2069,7 @@ var app = new Vue({
     },
     getPlayerMessage: function () {
       clearTimeout(this.appDataTimeoutNotification);
-      let time = 3000;
+      let time = 2000;
       let pronoun = this.currentGameGuessingWordSet.startsWithVowel ? 'an' : 'a';
       let name = this.appStateForceAutoCheck ? pronoun : this.appDataPlayerCreator.name + "'s ";
       let text = '';

@@ -677,7 +677,7 @@ notification {
     gap: calc(2 * var(--defaultGap));
     justify-content: center;
     align-items: center;
-    z-index: 400;
+    z-index: 200;
     background: hsla(var(--appBackgroundDarkestHSL), .4);
     backdrop-filter: blur(10px);
     transition: var(--mediumTransition) ease-in-out opacity;
@@ -714,13 +714,13 @@ notification p {
 }
 
 notification.meta {
-    z-index: 200;
+    z-index: 300;
     background: hsl(var(--appBackgroundDarkestHSL));
     background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0) 50%), var(--textureHueSource), var(--textureSource);
     background-size: cover, cover, cover;
     background-repeat: no-repeat, no-repeat, repeat;
     justify-content: center;
-    transition-duration: 0s;
+    /* transition-duration: 0s; */
 }
 
 notification.show {

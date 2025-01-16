@@ -63,7 +63,7 @@
       <notification @click="appStateShowNotification = false" :class="{show: appStateShowNotification}">
         <message :title="getPlayerMessage" v-html="getPlayerMessage"></message>
       </notification>
-      <notification v-if="appStateShowMeta" class="meta show" @click="ToggleShowMeta(event)">
+      <notification :class="{show: appStateShowMeta}" class="meta" @click="ToggleShowMeta(event)">
         <header>
           <icon class="logo"></icon>
           <h2>Facets</h2>
