@@ -2223,7 +2223,7 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     }
 
     modal section {
-        width: 80%;
+        width: 85%;
         padding: 0;
         gap: calc(.5 * var(--defaultGap));
     }
