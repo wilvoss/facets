@@ -1419,6 +1419,10 @@ modal input, hints hint input {
     -webkit-tap-highlight-color: transparent;
 }
 
+modal input#nameInput {
+    margin-bottom: calc(3 * var(--defaultGap));
+}
+
 modal select option {
     color: unset;
 }
@@ -1615,6 +1619,14 @@ modal small, modal legal {
     transition: var(--mediumTransition) ease-in-out;
     transition-property: opacity, color, background-color;
     margin-bottom: calc(.5 * var(--defaultGap));
+}
+
+modal instructions {
+    width: 100%;
+    margin-top: var(--defaultGap);
+    max-width: calc(100% - 2 * var(--defaultGap));
+    color: hsl(var(--appForegroundDiminishedHSL));
+    line-height: 150%;
 }
 
 modal legal {

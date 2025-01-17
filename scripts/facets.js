@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.70',
+    appDataVersion: '2.0.72',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -75,6 +75,7 @@ var app = new Vue({
     appStateShowMeta: true,
     vsShowDaily: true,
     appStateUseFlower: false,
+    appStateBrowserNotificationInterval: null,
 
     // current game
     currentGameGuessCount: 0,
@@ -92,6 +93,7 @@ var app = new Vue({
     userSettingsUsesSimplifiedTheme: false,
     userSettingsUseMultiColoredGems: true,
     userSettingsUseWordSetThemes: false,
+    userSettingsUserWantsDailyReminder: false,
     userSettingsShowAllCards: false,
     userSettingsStreaks: [],
     vsUseFocus: true,
@@ -106,6 +108,7 @@ var app = new Vue({
     tempUserSettingsUsesSimplifiedTheme: false,
     tempUserSettingsShowAllCards: false,
     tempUseWordSetThemes: false,
+    tempUserWantsDailyReminder: false,
     tempWordSetName: '',
     tempUsePortraitLayout: false,
     tempUseExtraCard: false,
@@ -205,6 +208,22 @@ var app = new Vue({
     ToggleTempUseWordSetThemes() {
       note('ToggleTempUseWordSetThemes() called');
       this.tempUseWordSetThemes = !this.tempUseWordSetThemes;
+    },
+
+    async ToggleTempUserWantsDailyReminder() {
+      note('ToggleTempUserWantsDailyReminder() called');
+
+      this.tempUserWantsDailyReminder = !this.tempUserWantsDailyReminder;
+
+      if (this.tempUserWantsDailyReminder) {
+        let confirmed = await this.EnableDailyReminders();
+        if (confirmed) {
+          this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder = true;
+          this.ScheduleDailyNotification();
+        } else {
+          this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder = false;
+        }
+      }
     },
 
     ToggleTempUseLightTheme() {
@@ -1194,6 +1213,12 @@ var app = new Vue({
         this.SetWordSetTheme(this.currentGameWordSet);
       }
 
+      let userSettingsUserWantsDailyReminder = localStorage.getItem('userSettingsUserWantsDailyReminder');
+      if (userSettingsUserWantsDailyReminder !== undefined && userSettingsUserWantsDailyReminder !== null) {
+        this.userSettingsUserWantsDailyReminder = JSON.parse(userSettingsUserWantsDailyReminder);
+        this.tempUserWantsDailyReminder = this.userSettingsUserWantsDailyReminder;
+      }
+
       if (this.appStateIsGuessing) {
         this.documentCssRoot.style.setProperty('--wordScale', this.currentGameGuessingWordSet.scale);
       } else {
@@ -1246,6 +1271,7 @@ var app = new Vue({
       this.tempID = this.appDataPlayerCurrent.id;
       this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
       this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
+      this.tempUserWantsDailyReminder = this.userSettingsUserWantsDailyReminder;
       this.tempUserSettingsLanguage = this.userSettingsLanguage;
       this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
       this.tempUseExtraCard = this.userSettingsUseExtraCard;
@@ -1286,6 +1312,7 @@ var app = new Vue({
 
         this.appDataPlayerCurrent.id = this.tempID;
         this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
+        this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder;
         this.userSettingsUseExtraCard = this.tempUseExtraCard;
         this.ToggleUseLightTheme(this.tempUserSettingsUsesLightTheme);
         this.ToggleUseSimplifedTheme(this.tempUserSettingsUsesSimplifiedTheme);
@@ -1296,6 +1323,7 @@ var app = new Vue({
 
         localStorage.setItem('userID', this.appDataPlayerCurrent.id);
         localStorage.setItem('useWordSetThemes', this.userSettingsUseWordSetThemes);
+        localStorage.setItem('userSettingsUserWantsDailyReminder', this.userSettingsUserWantsDailyReminder);
         localStorage.setItem('userSettingsLanguage', this.userSettingsLanguage);
         localStorage.setItem('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
         localStorage.setItem('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
@@ -1986,7 +2014,6 @@ var app = new Vue({
         if (boardPieces.length >= 40) {
           document.title = 'Facets!';
           this.RestoreGame(boardPieces);
-          this.appStateShowMeta = false;
         } else if (!this.appStateIsGuessing) {
           if (this.getIsAIGenerating) {
             this.currentGameGuessingCardCount = 4;
@@ -2012,17 +2039,147 @@ var app = new Vue({
 
       this.appStateUsePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
     },
-  },
 
+    async CheckSyncSupport() {
+      note('CheckSyncSupport() called');
+      return new Promise((resolve) => {
+        navigator.serviceWorker.addEventListener('message', (event) => {
+          if (event.data.type === 'sync-support') {
+            resolve(event.data.status);
+          }
+        });
+
+        // Send message to service worker to check for sync support
+        if (navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage('check-sync-support');
+        }
+      });
+    },
+
+    async ScheduleDailyNotification() {
+      note('ScheduleDailyNotification() called');
+      this.ClearNotificationInterval();
+      if (this.userSettingsUserWantsDailyReminder && this.getUserAcceptedNotificationsPermission && !this.HasUserStartedGame(this.getTodaysDaily)) {
+        console.log('ScheduleDailyNotification() called');
+
+        const scheduleNotification = async () => {
+          if (!this.HasUserStartedGame(this.getTodaysDaily)) {
+            const syncSupportStatus = await this.CheckSyncSupport();
+            if (syncSupportStatus === 'supported') {
+              navigator.serviceWorker.ready.then((registration) => {
+                registration.sync.register('daily-reminder').catch(() => {
+                  console.log('Background Sync not supported, using fallback.');
+                  this.ShowDailyReminder(); // Fallback function call
+                });
+              });
+            } else {
+              console.log('Background Sync via syncSupportStatus not supported, using fallback.');
+              this.ShowDailyReminder(); // Fallback function call
+            }
+          }
+        };
+
+        const now = new Date();
+        if (UseDebug) {
+          let nextMinute = new Date(now.getTime() + 60 * 1000);
+          nextMinute.setSeconds(0, 0);
+          const timeout = nextMinute.getTime() - now.getTime();
+          console.log('timeout = ' + timeout);
+          setTimeout(scheduleNotification, 2000); // 5 seconds for debug mode
+        } else {
+          let next8AM = new Date();
+          next8AM.setHours(8, 0, 0, 0);
+
+          if (next8AM <= now) {
+            next8AM.setDate(next8AM.getDate() + 1);
+          }
+          const timeout = next8AM.getTime() - now.getTime();
+
+          setTimeout(scheduleNotification, timeout);
+          this.appStateBrowserNotificationInterval = setInterval(scheduleNotification, 24 * 60 * 60 * 1000); // 24 hours for normal mode
+        }
+
+        // Adding step 4 logic to send message to service worker
+        if (navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage('daily-reminder');
+        }
+      }
+    },
+
+    HandleServiceWorkerRegistration() {
+      note('HandleServiceWorkerRegistration() called');
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .register('/service-worker.js', { scope: '/' }) // Explicitly set scope
+          .then((registration) => {
+            console.log('Service Worker registered with scope:', registration.scope);
+          })
+          .catch((error) => {
+            console.log('Service Worker registration failed:', error);
+          });
+      } else {
+        console.log('Service Workers are not supported');
+      }
+      this.ScheduleDailyNotification();
+    },
+
+    ShowDailyReminder() {
+      note('ShowDailyReminder() called');
+      const options = {
+        body: "Today's Daily Facets puzzle is ready!",
+        icon: '/images/icon192.png',
+        badge: '/images/icon96.png',
+      };
+
+      new Notification('Daily Reminder', options);
+      note('Notification displayed directly from main thread');
+    },
+
+    ClearNotificationInterval() {
+      if (this.appStateBrowserNotificationInterval) {
+        clearInterval(this.appStateBrowserNotificationInterval);
+        this.appStateBrowserNotificationInterval = null;
+      }
+    },
+
+    EnableDailyReminders() {
+      return new Promise((resolve, reject) => {
+        if (Notification.permission === 'granted') {
+          this.HandleServiceWorkerRegistration();
+          resolve(true);
+        } else {
+          Notification.requestPermission()
+            .then((permission) => {
+              if (permission === 'granted') {
+                this.HandleServiceWorkerRegistration();
+                resolve(true);
+              } else {
+                resolve(false);
+              }
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        }
+      });
+    },
+  },
+  beforeDestroy() {
+    this.ClearNotificationInterval();
+  },
   mounted() {
+    window.addEventListener('beforeunload', this.ClearNotificationInterval);
     this.LoadPage();
+    this.HandleServiceWorkerRegistration();
     window.addEventListener('keydown', this.HandleKeyDownEvent);
     window.addEventListener('pointermove', this.HandlePointerMoveEvent);
     window.addEventListener('visibilitychange', this.HandlePageVisibilityChange);
     window.addEventListener('resize', this.HandleResize);
     window.addEventListener('popstate', this.HandlePopState);
   },
-
+  destroyed() {
+    window.removeEventListener('beforeunload', this.ClearNotificationInterval);
+  },
   watch: {
     userSettingsLanguage: function (newLang, oldLang) {
       highlight('userSettingsLanguage watch triggered');
@@ -2194,6 +2351,13 @@ var app = new Vue({
     },
     getDailyIsFreshToday: function () {
       const isFresh = this.getTodaysDaily ? !this.HasUserStartedGame(this.getTodaysDaily) : false;
+      if (this.getIsBadgeSupported) {
+        if (isFresh) {
+          navigator.setAppBadge();
+        } else {
+          navigator.clearAppBadge();
+        }
+      }
       return isFresh;
     },
     getDailyGamesWithWordSetNames: function () {
@@ -2236,6 +2400,15 @@ var app = new Vue({
       let num = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate() / 12;
       let iconIndex = Math.ceil(day / num);
       return `cal${iconIndex}`;
+    },
+    getUserAcceptedNotificationsPermission() {
+      return Notification.permission !== 'denied';
+    },
+    getIsBadgeSupported: function () {
+      return navigator.setAppBadge !== undefined && navigator.setAppBadge !== null;
+    },
+    isPWAOnHomeScreen: function () {
+      return window.matchMedia('(display-mode: standalone)').matches;
     },
   },
 });

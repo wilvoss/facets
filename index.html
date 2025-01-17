@@ -177,6 +177,11 @@
           </h2>
           <message>What's your game name?</message>
           <input autocomplete="off" style="text-align: center" spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" v-model="tempName" />
+          <checkbox :class="{on: tempUserWantsDailyReminder && getUserAcceptedNotificationsPermission, disabled: !getUserAcceptedNotificationsPermission}" @click="ToggleTempUserWantsDailyReminder()">
+            Allow notifications
+            <toggle></toggle>
+          </checkbox>
+
           <legal>By continuing to use this game, you agree to our <a href="https://bigtentgames.com/#privacy" target="_blank">Privacy Policy</a>, which explains how we collect and use game names and temporary IDs necessary for game functionality.</legal>
         </section>
         <controls><button @click="HandleIntroButtonClick(event)">Next</button></controls>
@@ -243,7 +248,7 @@
           <leftright>
             <p>Game name</p>
             <callout>
-              <input autocomplete="off" spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
+              <input autocomplete="off" spellcheck="false" maxlength="14" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
             </callout>
           </leftright>
           <h3>Appearance</h3>
@@ -272,6 +277,29 @@
             <toggle></toggle>
           </checkbox>
           <small :class="{disabled: tempUserSettingsUsesSimplifiedTheme}">Enable this if you want the gem to remain green when you are creating, guessing, or reviewing.</small>
+          <checkbox :class="{on: tempUserWantsDailyReminder, disabled: !getUserAcceptedNotificationsPermission}" @click="ToggleTempUserWantsDailyReminder()">
+            Notifications
+            <toggle></toggle>
+          </checkbox>
+          <small v-if="getUserAcceptedNotificationsPermission"> Enable this to get Daily Reminder notifications (once a day at 8:00 am). </small>
+          <instructions v-if="!getUserAcceptedNotificationsPermission && !isPWAOnHomeScreen">
+            Notifications are currently disabled in your browser settings. To enable notifications for Facets, please follow these steps:
+            <ul>
+              <li>Open your browser's settings.</li>
+              <li>Navigate to Privacy and Security > Site Settings > Notifications.</li>
+              <li>Find Facets ({{location.hostname}}) in the list and change the setting to "Allow."</li>
+            </ul>
+            Once you have updated your browser settings, refresh close and reopen Facets, after which you can enable notifications here.
+          </instructions>
+          <instructions v-if="isPWAOnHomeScreen">
+            If you aren't getting notifications for Facets, they may be disabled on your device:
+            <ul>
+              <li>Open your device settings.</li>
+              <li>Navigate to Apps and Notifications > App info (or equivalent).</li>
+              <li>Find Facets in the list, and make sure notifications are enabled.</li>
+            </ul>
+            Once you have updated your device settings, restart Facets, and then enable notifications here.
+          </instructions>
         </section>
         <controls>
           <button class="secondary" @click="CancelSettings(event)">Cancel</button>
