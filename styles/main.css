@@ -158,6 +158,7 @@ a, a:hover, a:focus, a:visited, a:active {
     text-decoration: none;
     user-select: none;
     -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
     cursor: pointer;
 }
 
@@ -312,6 +313,7 @@ icon {
     -webkit-mask-repeat: no-repeat;
     mask-position: center;
     -webkit-mask-position: center;
+    -webkit-tap-highlight-color: transparent;
     background-color: hsl(var(--appForegroundDiminishedHSL));
     pointer-events: none;
 }
@@ -1490,6 +1492,7 @@ gamelinks gamelink {
     gap: calc(.33 * var(--defaultGap));
     padding: calc(.66 * var(--defaultGap)) 0;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 }
 
 gamelinks gamelink stats {
