@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.79',
+    appDataVersion: '2.0.80',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -976,6 +976,7 @@ var app = new Vue({
         this.ToggleShowGlobalCreated(e);
       }
       this.LoadPage();
+      this.ToggleShowMeta(e);
       this.appStateShowNotification = true;
       this.RotateTray(-4);
     },
