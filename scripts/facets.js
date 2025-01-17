@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.73',
+    appDataVersion: '2.0.74',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -2014,6 +2014,7 @@ var app = new Vue({
         if (boardPieces.length >= 40) {
           document.title = 'Facets!';
           this.RestoreGame(boardPieces);
+          this.ToggleShowMeta(null);
         } else if (!this.appStateIsGuessing) {
           if (this.getIsAIGenerating) {
             this.currentGameGuessingCardCount = 4;
