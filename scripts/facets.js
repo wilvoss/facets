@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.77',
+    appDataVersion: '2.0.78',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -2109,18 +2109,26 @@ var app = new Vue({
 
     HandleServiceWorkerRegistration() {
       note('HandleServiceWorkerRegistration() called');
+
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker
-          .register('/service-worker.js', { scope: '/' }) // Explicitly set scope
-          .then((registration) => {
-            console.log('Service Worker registered with scope:', registration.scope);
-          })
-          .catch((error) => {
-            console.log('Service Worker registration failed:', error);
-          });
+        navigator.serviceWorker.getRegistration().then((registration) => {
+          if (registration) {
+            console.log('Service Worker is already registered with scope:', registration.scope);
+          } else {
+            navigator.serviceWorker
+              .register('/service-worker.js', { scope: '/' }) // Explicitly set scope
+              .then((registration) => {
+                console.log('Service Worker registered with scope:', registration.scope);
+              })
+              .catch((error) => {
+                console.log('Service Worker registration failed:', error);
+              });
+          }
+        });
       } else {
         console.log('Service Workers are not supported');
       }
+
       this.ScheduleDailyNotification();
     },
 
