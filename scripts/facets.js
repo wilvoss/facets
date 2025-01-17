@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.75',
+    appDataVersion: '2.0.77',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -2403,7 +2403,10 @@ var app = new Vue({
       return `cal${iconIndex}`;
     },
     getUserAcceptedNotificationsPermission() {
-      return Notification.permission !== 'denied';
+      if ('Notification' in window) {
+        return Notification.permission !== 'denied';
+      }
+      return false;
     },
     getIsBadgeSupported: function () {
       return navigator.setAppBadge !== undefined && navigator.setAppBadge !== null;
