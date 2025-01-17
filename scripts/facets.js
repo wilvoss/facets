@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.82',
+    appDataVersion: '2.0.83',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -797,9 +797,8 @@ var app = new Vue({
             console.error('Error:', error);
             this.appStateIsGettingLast10Games = false;
           });
-
-        this.appStateIsGettingLast10Games = false;
       }
+      this.appStateIsGettingLast10Games = false;
     },
 
     async GetDailyGames() {
@@ -846,9 +845,8 @@ var app = new Vue({
             console.error('Error:', error);
             this.appStateIsGettingDailyGames = false;
           });
-
-        this.appStateIsGettingDailyGames = false;
       }
+      this.appStateIsGettingDailyGames = false;
     },
 
     async GetDailyGameStats() {
