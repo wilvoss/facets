@@ -275,7 +275,7 @@ header button.small {
     padding: calc(.5 * var(--defaultGap)) var(--defaultGap);
     height: auto;
     background-color: hsl(var(--linkColorLightHSL));
-    border-radius: 0px 0px var(--borderRadius) var(--borderRadius);
+    border-radius: var(--borderRadius);
     border-width: 0px 1px 1px 1px;
     color: hsl(var(--appBackgroundHSL));
     transform: translate(0px, -60px);
@@ -289,7 +289,7 @@ header button.small icon {
 }
 
 header button.small.show {
-    transform: translate(0px, 0px);
+    transform: translate(0px, var(--defaultGap));
 }
 
 header h1 {

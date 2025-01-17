@@ -48,6 +48,13 @@ button.secondary {
     color: hsl(var(--appBackgroundHSL));
 }
 
+
+button badge {
+
+    color: hsl(var(--appBackgroundDarkestHSL));
+}
+
+
 modal controls {
     background-color: hsla(var(--messageColorHSL), 8);
     border-color: hsla(var(--messageColorHSL), 1);
