@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.86',
+    appDataVersion: '2.0.87',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -2057,7 +2057,7 @@ var app = new Vue({
     },
 
     async ScheduleDailyNotification() {
-      if (this.getSyncIsSupported) {
+      if (this.getSyncIsSupported && this.isPWAOnHomeScreen) {
         note('ScheduleDailyNotification() called');
         this.ClearNotificationInterval();
         if (this.userSettingsUserWantsDailyReminder && this.getUserAcceptedNotificationsPermission && !this.HasUserStartedGame(this.getTodaysDaily)) {
@@ -2109,7 +2109,7 @@ var app = new Vue({
     },
 
     HandleServiceWorkerRegistration() {
-      if (this.getSyncIsSupported) {
+      if (this.getSyncIsSupported && this.isPWAOnHomeScreen) {
         note('HandleServiceWorkerRegistration() called');
 
         if ('serviceWorker' in navigator) {
