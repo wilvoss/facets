@@ -252,6 +252,11 @@ header icon {
     cursor: pointer;
 }
 
+notification header icon {
+    pointer-events: none;
+    cursor: default;
+}
+
 header icon.check {
     background: hsl(var(--linkColorLightHSL));
 }
