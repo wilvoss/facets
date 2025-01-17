@@ -200,6 +200,12 @@
           <credit>Elaine Soennichsen</credit>
           <credit>Kathleen Voss</credit>
           <credit>Sonna Voss</credit>
+          <h3>Playtesting</h3>
+          <credit>Everyone in above</credit>
+          <credit>Jaime Bortello</credit>
+          <credit>Summer Bronson</credit>
+          <credit>Marianne Giesemann</credit>
+
           <h3>How can you help?</h3>
           <a class="padded" @click="ShareText('https://bigtentgames.com/facets', '')">Share with friends!</a>
           <a class="padded" :href="'mailto:bigtentgames@icloud.com?subject=Feedback - Facets! v' + appDataVersion">Give feedback!</a>
@@ -508,11 +514,19 @@
         </button>
         <parking id="parking">
           <spot v-for="(card, index) in appDataCardsParked" v-if="index < currentGameGuessingCardCount" :class="{empty: card.words.length === 0, selected: card.isSelected}">
+            <rotators v-if="!userSettingsShowAllCards">
+              <button aria-label="Rotate Tray Clockwise" class="clockwise" @pointerdown="RotateCard(event, card, 1)"><icon class="rotate"></icon></button>
+              <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise" @pointerdown="RotateCard(event, card, -1)"><icon class="rotate"></icon></button>
+            </rotators>
             <card @pointerup="HandleCardPointerUp(event, card)" @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}" :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
               <words>
                 <word v-for="word in card.words">{{word.value}}</word>
               </words>
             </card>
+            <rotators v-if="!userSettingsShowAllCards">
+              <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateCard(event, card, 1)"><icon class="rotate"></icon></button>
+              <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise" @click="RotateCard(event, card, -1)"><icon class="rotate"></icon></button>
+            </rotators>
           </spot>
         </parking>
         <button class="scroller" :class="{disabled: appParkingRightButtonDisabled}" @click="ScrollParking(event, 'left')" v-if="vsUseFocus">
