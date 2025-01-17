@@ -75,6 +75,11 @@ notification message {
     background-color: hsl(var(--appBackgroundDarkestHSL));
 }
 
+header button.small {
+    background-color: hsl(var(--messageColorHSL));
+    color: hsla(var(--appBackgroundDarkestHSL), 1)
+}
+
 tray diamond {
     background-image: url(../images/diamond-light-2.svg);
 }
@@ -137,7 +142,7 @@ hints hint input:disabled {
 
 .multicolor.guessing hints hint input:disabled {
     opacity: 1;
-    color: hsl(var(--hueGuessing), 90%, 42%);
+    color: hsl(var(--hueGuessing), 90%, 32%);
 }
 
 .multicolor.guessing.reviewing hints hint input:disabled {
