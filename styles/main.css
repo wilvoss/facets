@@ -570,6 +570,11 @@ icon.play {
     -webkit-mask-image: url(../images/icon-play.svg);
 }
 
+icon.continue {
+    mask-image: url(../images/icon-continue.svg);
+    -webkit-mask-image: url(../images/icon-continue.svg);
+}
+
 icon.nope {
     mask-image: url(../images/icon-x.svg);
     -webkit-mask-image: url(../images/icon-x.svg);

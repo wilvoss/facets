@@ -376,10 +376,9 @@
                   <icon class="nope alertbackground"></icon>
                   In {{game.guesses}}
                 </button>
-
                 <button v-if="!game.solved && game.guesses > 0" class="inline report" :class="{alert: !game.solved && game.guesses > 0}">
-                  <icon class="nope"></icon>
                   {{game.guesses}} {{game.guesses === 1 ? "Try" : "Tries"}}
+                  <icon class="continue"></icon>
                 </button>
               </p>
               <stats v-if="game.stats">
