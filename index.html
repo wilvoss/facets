@@ -79,10 +79,11 @@
             The Daily
             <badge v-if="vsShowDaily && getDailyIsFreshToday">{{appDataNumberOfNewDailies}}</badge>
           </button>
-          <button class="inline small" @click="ToggleShowGlobalCreated(event)">Player Puzzles</button>
+          <!-- <button class="inline small" @click="ToggleShowGlobalCreated(event)">Player Puzzles</button> -->
           <button class="inline small" @click="ToggleShowTutorial(event)">How To Play</button>
           <button class="inline small" @click="ShowSettings(event)">Settings</button>
           <button class="inline small" @click="ToggleShowInfo(event)">Credits</button>
+          <button class="inline small" @click="window.open('https://www.buymeacoffee.com/wilvoss', '_blank')">Buy Me a Coffee!</button>
           <button class="inline small" @click="ToggleShowMeta(event)">Resume</button>
         </subtitle>
       </notification>
@@ -189,10 +190,15 @@
       <modal v-if="appStateShowInfo">
         <section>
           <h2>Credits</h2>
+
           <h3>Created by</h3>
           <credit>Wil Voss</credit>
-          <h3>Feedback and ideas</h3>
+
+          <h3>Feedback, testing, and ideas</h3>
           <credit>Lex Barbieri</credit>
+          <credit>Jaime Bortello</credit>
+          <credit>Summer Bronson</credit>
+          <credit>Marianne Giesemann</credit>
           <credit>Perdis Hawkins</credit>
           <credit>Jerry Hoffmeister</credit>
           <credit>Chris Lehan</credit>
@@ -200,11 +206,6 @@
           <credit>Elaine Soennichsen</credit>
           <credit>Kathleen Voss</credit>
           <credit>Sonna Voss</credit>
-          <h3>Playtesting</h3>
-          <credit>Everyone in above</credit>
-          <credit>Jaime Bortello</credit>
-          <credit>Summer Bronson</credit>
-          <credit>Marianne Giesemann</credit>
 
           <h3>How can you help?</h3>
           <a class="padded" @click="ShareText('https://bigtentgames.com/facets', '')">Share with friends!</a>
