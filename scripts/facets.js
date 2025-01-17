@@ -7,13 +7,13 @@ Vue.config.debug = false;
 Vue.config.silent = true;
 // }
 
-Vue.config.ignoredElements = ['app'];
+Vue.config.ignoredElements = ['app', 'preload', 'notification', 'message', 'icon', 'subtitle', 'badge', 'modal', 'controls', 'hider', 'confirmation', 'checkbox', 'toggle', 'legal', 'credit', 'version', 'categories', 'category', 'leftright', 'small', 'callout', 'instructions', 'gamelinks', 'gamelink', 'stats', 'stat', 'value', 'flogo', 'count', 'rotators', 'ghost', 'card', 'words', 'word', 'parking', 'spot', 'tray', 'diamond', 'hints', 'hint', 'cards'];
 
 var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.84',
+    appDataVersion: '2.0.85',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
