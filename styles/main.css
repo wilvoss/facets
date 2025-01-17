@@ -205,6 +205,7 @@ button badge {
     align-items: center;
     font-size: 0.7em;
     font-weight: 800;
+    margin-left: calc(.25 * var(--defaultGap))
 }
 
 
@@ -217,7 +218,7 @@ button.inline {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    gap: calc(var(--defaultGap) / 2);
+    gap: calc(var(--defaultGap) / 4);
 }
 
 button.small {
@@ -233,6 +234,14 @@ button.small {
     letter-spacing: 1px;
     opacity: 1;
     text-wrap: nowrap;
+}
+
+button.small.highlightText {
+    color: hsl(var(--messageColorHSL))
+}
+
+button.small.highlightText icon {
+    /* background: hsl(var(--messageColorHSL)) */
 }
 
 header {
@@ -809,6 +818,10 @@ p {
 
 .greenText {
     color: hsl(var(--hueGuessing), 80%, 50%)
+}
+
+.highlightText {
+    color: hsl(var(--hueHighlight), 80%, 50%)
 }
 
 .alertbackground {

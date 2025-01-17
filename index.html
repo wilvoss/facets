@@ -83,7 +83,7 @@
           <button class="inline small" @click="ToggleShowTutorial(event)">How To Play</button>
           <button class="inline small" @click="ShowSettings(event)">Settings</button>
           <button class="inline small" @click="ToggleShowInfo(event)">Credits</button>
-          <button class="inline small" @click="window.open('https://www.buymeacoffee.com/wilvoss', '_blank')">Buy Me a Coffee!</button>
+          <button class="inline small highlightText" @click="window.open('https://www.buymeacoffee.com/wilvoss', '_blank')">Buy Me a Coffee!</button>
           <button class="inline small" @click="ToggleShowMeta(event)">Resume</button>
         </subtitle>
       </notification>
@@ -241,7 +241,7 @@
             Make it crazy hard
             <toggle></toggle>
           </checkbox>
-          <small>Enable this to add an extra random guessing card that doesn't belong in the solution. This is really hard 😈. /ser</small>
+          <small>Enable this to add an extra random guessing card that doesn't belong in the solution.</small>
         </section>
         <controls>
           <button class="secondary" @click="appStateShowCatChooser = false">Cancel</button>
