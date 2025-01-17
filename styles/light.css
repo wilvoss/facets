@@ -40,20 +40,18 @@ body {
     background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkHSL), 0) 200px), var(--textureHue), var(--texture2);
 }
 
-button {
+modal controls button {
     color: hsl(var(--appBackgroundDarkestHSL));
 }
 
-button.secondary {
+modal controls button.secondary {
     color: hsl(var(--appBackgroundHSL));
 }
 
 
 button badge {
-
     color: hsl(var(--appBackgroundDarkestHSL));
 }
-
 
 modal controls {
     background-color: hsla(var(--messageColorHSL), 8);
@@ -69,10 +67,8 @@ notification {
     backdrop-filter: blur(6px);
 }
 
-
 notification.meta {
     background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkHSL), .0) 50%), var(--textureHueSource), var(--textureSource);
-
 }
 
 notification message {
@@ -82,7 +78,6 @@ notification message {
 tray diamond {
     background-image: url(../images/diamond-light-2.svg);
 }
-
 
 cards card, .multicolor.guessing cards card, .reviewing cards card {
     color: hsl(var(--hueMain), 100%, 14%);
@@ -108,7 +103,6 @@ card.ghost, card.ghost.empty, .guessing card.ghost.empty, .reviewing card.ghost.
     border-color: hsla(var(--hueMain), 100%, 40%, .7);
 }
 
-
 .multicolor.creating card.ghost {
     border: 1px solid hsla(var(--hueCreating), 100%, 40%, .7);
 }
@@ -128,7 +122,6 @@ card.ghost, card.ghost.empty, .guessing card.ghost.empty, .reviewing card.ghost.
 hints hint input {
     text-shadow: 0px 1px 1px hsla(var(--appBackgroundDarkestHSL), .6);
 }
-
 
 .multicolor.creating hints hint input, .multicolor.creating hints hint input:disabled {
     color: hsla(var(--hueCreating), 100%, 36%, 1);
@@ -194,7 +187,6 @@ parking spot rotators button icon {
 .multicolor.solved.guessing parking spot rotators button icon {
     background: hsla(var(--hueSolved), 100%, 40%, 0.46);
 }
-
 
 checkbox toggle:before {
     background: hsl(var(--appBackgroundDarkestHSL));
