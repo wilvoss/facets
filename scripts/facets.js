@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.83',
+    appDataVersion: '2.0.84',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -2057,78 +2057,89 @@ var app = new Vue({
     },
 
     async ScheduleDailyNotification() {
-      note('ScheduleDailyNotification() called');
-      this.ClearNotificationInterval();
-      if (this.userSettingsUserWantsDailyReminder && this.getUserAcceptedNotificationsPermission && !this.HasUserStartedGame(this.getTodaysDaily)) {
-        console.log('ScheduleDailyNotification() called');
+      if (this.getSyncIsSupported) {
+        note('ScheduleDailyNotification() called');
+        this.ClearNotificationInterval();
+        if (this.userSettingsUserWantsDailyReminder && this.getUserAcceptedNotificationsPermission && !this.HasUserStartedGame(this.getTodaysDaily)) {
+          console.log('ScheduleDailyNotification() called');
 
-        const scheduleNotification = async () => {
-          if (!this.HasUserStartedGame(this.getTodaysDaily)) {
-            const syncSupportStatus = await this.CheckSyncSupport();
-            if (syncSupportStatus === 'supported') {
-              navigator.serviceWorker.ready.then((registration) => {
-                registration.sync.register('daily-reminder').catch(() => {
-                  console.log('Background Sync not supported, using fallback.');
-                  this.ShowDailyReminder(); // Fallback function call
+          const scheduleNotification = async () => {
+            if (!this.HasUserStartedGame(this.getTodaysDaily)) {
+              const syncSupportStatus = await this.CheckSyncSupport();
+              if (syncSupportStatus === 'supported') {
+                navigator.serviceWorker.ready.then((registration) => {
+                  registration.sync.register('daily-reminder').catch(() => {
+                    console.log('Background Sync not supported, using fallback.');
+                    this.ShowDailyReminder(); // Fallback function call
+                  });
                 });
-              });
-            } else {
-              console.log('Background Sync via syncSupportStatus not supported, using fallback.');
-              this.ShowDailyReminder(); // Fallback function call
+              } else {
+                console.log('Background Sync via syncSupportStatus not supported, using fallback.');
+                this.ShowDailyReminder(); // Fallback function call
+              }
             }
+          };
+
+          const now = new Date();
+          if (UseDebug) {
+            let nextMinute = new Date(now.getTime() + 60 * 1000);
+            nextMinute.setSeconds(0, 0);
+            const timeout = nextMinute.getTime() - now.getTime();
+            console.log('timeout = ' + timeout);
+            setTimeout(scheduleNotification, 2000); // 5 seconds for debug mode
+          } else {
+            let next8AM = new Date();
+            next8AM.setHours(8, 0, 0, 0);
+
+            if (next8AM <= now) {
+              next8AM.setDate(next8AM.getDate() + 1);
+            }
+            const timeout = next8AM.getTime() - now.getTime();
+
+            setTimeout(scheduleNotification, timeout);
+            this.appStateBrowserNotificationInterval = setInterval(scheduleNotification, 24 * 60 * 60 * 1000); // 24 hours for normal mode
           }
-        };
 
-        const now = new Date();
-        if (UseDebug) {
-          let nextMinute = new Date(now.getTime() + 60 * 1000);
-          nextMinute.setSeconds(0, 0);
-          const timeout = nextMinute.getTime() - now.getTime();
-          console.log('timeout = ' + timeout);
-          setTimeout(scheduleNotification, 2000); // 5 seconds for debug mode
-        } else {
-          let next8AM = new Date();
-          next8AM.setHours(8, 0, 0, 0);
-
-          if (next8AM <= now) {
-            next8AM.setDate(next8AM.getDate() + 1);
+          // Adding step 4 logic to send message to service worker
+          if (navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage('daily-reminder');
           }
-          const timeout = next8AM.getTime() - now.getTime();
-
-          setTimeout(scheduleNotification, timeout);
-          this.appStateBrowserNotificationInterval = setInterval(scheduleNotification, 24 * 60 * 60 * 1000); // 24 hours for normal mode
-        }
-
-        // Adding step 4 logic to send message to service worker
-        if (navigator.serviceWorker.controller) {
-          navigator.serviceWorker.controller.postMessage('daily-reminder');
         }
       }
     },
 
     HandleServiceWorkerRegistration() {
-      note('HandleServiceWorkerRegistration() called');
+      if (this.getSyncIsSupported) {
+        note('HandleServiceWorkerRegistration() called');
 
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistration().then((registration) => {
-          if (registration) {
-            console.log('Service Worker is already registered with scope:', registration.scope);
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistration().then((registration) => {
+            if (registration) {
+              console.log('Service Worker is already registered with scope:', registration.scope);
+            } else {
+              navigator.serviceWorker
+                .register('/service-worker.js', { scope: '/' }) // Explicitly set scope
+                .then((registration) => {
+                  console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch((error) => {
+                  console.log('Service Worker registration failed:', error);
+                });
+            }
+          });
+        } else {
+          console.log('Service Workers are not supported');
+        }
+        this.ScheduleDailyNotification();
+      } else {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          if (registrations.length) {
+            registrations.forEach((registration) => registration.unregister());
           } else {
-            navigator.serviceWorker
-              .register('/service-worker.js', { scope: '/' }) // Explicitly set scope
-              .then((registration) => {
-                console.log('Service Worker registered with scope:', registration.scope);
-              })
-              .catch((error) => {
-                console.log('Service Worker registration failed:', error);
-              });
+            console.log('No service workers to unregister');
           }
         });
-      } else {
-        console.log('Service Workers are not supported');
       }
-
-      this.ScheduleDailyNotification();
     },
 
     ShowDailyReminder() {
@@ -2414,6 +2425,9 @@ var app = new Vue({
         return Notification.permission !== 'denied';
       }
       return false;
+    },
+    getSyncIsSupported: function () {
+      return 'SyncManager' in window;
     },
     getIsBadgeSupported: function () {
       return navigator.setAppBadge !== undefined && navigator.setAppBadge !== null;
