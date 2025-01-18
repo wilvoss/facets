@@ -240,10 +240,6 @@ button.small.highlightText {
     color: hsl(var(--messageColorHSL))
 }
 
-button.small.highlightText icon {
-    /* background: hsl(var(--messageColorHSL)) */
-}
-
 header {
     display: flex;
     justify-content: center;
@@ -578,6 +574,11 @@ icon.continue {
 icon.nope {
     mask-image: url(../images/icon-x.svg);
     -webkit-mask-image: url(../images/icon-x.svg);
+}
+
+icon.quit {
+    mask-image: url(../images/icon-quit.svg);
+    -webkit-mask-image: url(../images/icon-quit.svg);
 }
 
 icon.rotate {
