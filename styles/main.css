@@ -737,11 +737,11 @@ notification p {
 notification.meta {
     z-index: 300;
     background: hsl(var(--appBackgroundDarkestHSL));
-    background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0) 50%), var(--textureHueSource), var(--textureSource);
-    background-size: cover, cover, cover;
+    background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0) 50%), var(--textureHue), var(--texture2);
+    background-size: cover, cover, var(--textureSize);
     background-repeat: no-repeat, no-repeat, repeat;
+    background-position: top center;
     justify-content: center;
-    /* transition-duration: 0s; */
 }
 
 notification.show {
