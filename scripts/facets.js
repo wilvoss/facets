@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.96',
+    appDataVersion: '2.0.97',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -917,6 +917,7 @@ var app = new Vue({
               if (stat.key === game.key) {
                 Vue.set(game, 'guesses', stat.guesses);
                 Vue.set(game, 'quit', stat.quit);
+                Vue.set(game, 'solved', true);
               }
             }
           });
@@ -1324,7 +1325,7 @@ var app = new Vue({
       this.appStateShowOOBE = true;
     },
 
-    SubmitSettings(e) {
+    async SubmitSettings(e) {
       note('SubmitSettings() called');
       if (e !== null) {
         e.preventDefault();
@@ -1349,10 +1350,8 @@ var app = new Vue({
           this.SetWordSetTheme(this.currentGameGuessingWordSet);
         }
 
-        if (this.appDataPlayerCurrent.id !== this.tempID) {
-          this.appDataPlayerCurrent.id = this.tempID;
-          this.GetDailyGameStats();
-        }
+        let userChangedID = this.appDataPlayerCurrent.id !== this.tempID;
+        this.appDataPlayerCurrent.id = this.tempID;
         this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
         this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder;
         this.userSettingsUseExtraCard = this.tempUseExtraCard;
@@ -1373,6 +1372,11 @@ var app = new Vue({
         localStorage.setItem('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
         localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
         localStorage.setItem('wordSet', this.currentGameWordSet.id);
+
+        if (userChangedID) {
+          await this.GetDailyGameStats();
+          window.location.reload();
+        }
       }
       this.appStateIsModalShowing = false;
       this.appStateShowSettings = false;
