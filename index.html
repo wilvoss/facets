@@ -75,9 +75,9 @@
             Create A Puzzle!
             <icon class="empty"></icon>
           </button>
-          <button v-if="vsShowDaily" class="inline small" @click="ToggleShowDailyGames(event)">
+          <button v-if="vsShowDaily" class="small" @click="ToggleShowDailyGames(event)">
             The Daily
-            <badge v-if="vsShowDaily && getDailyIsFreshToday">{{appDataNumberOfNewDailies}}</badge>
+            <badge :class="{show:getDailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
           </button>
           <button class="inline small" @click="ToggleShowGlobalCreated(event)">Player Puzzles</button>
           <button class="inline small" @click="ToggleShowTutorial(event)">How To Play</button>
@@ -417,9 +417,9 @@
       </modal>
       <wrapper>
         <controls>
-          <button class="inline small" @click="ToggleShowMeta(event)">
+          <button class="small" @click="ToggleShowMeta(event)">
             Menu
-            <badge v-if="vsShowDaily && getDailyIsFreshToday">{{appDataNumberOfNewDailies}}</badge>
+            <badge :class="{show:getDailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
           </button>
         </controls>
         <header :disabled="appStateShowNotification">

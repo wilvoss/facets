@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.98',
+    appDataVersion: '2.0.99',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -73,7 +73,7 @@ var app = new Vue({
     appStateUsePortraitLayout: false,
     appStateShowNotification: false,
     appParkingRightButtonDisabled: false,
-    appStateShowMeta: true,
+    appStateShowMeta: false,
     vsShowDaily: true,
     appStateUseFlower: false,
     appStateBrowserNotificationInterval: null,
@@ -1015,7 +1015,7 @@ var app = new Vue({
         this.ToggleShowGlobalCreated(e);
       }
       this.LoadPage();
-      this.ToggleShowMeta(e);
+      // this.ToggleShowMeta(e);
       this.appStateShowNotification = true;
       this.RotateTray(-4);
     },
@@ -2059,8 +2059,8 @@ var app = new Vue({
 
         if (boardPieces.length >= 40) {
           document.title = 'Facets!';
+          // this.ToggleShowMeta(null);
           this.RestoreGame(boardPieces);
-          this.ToggleShowMeta(null);
         } else if (!this.appStateIsGuessing) {
           if (this.getIsAIGenerating) {
             this.currentGameGuessingCardCount = 4;

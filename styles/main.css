@@ -198,14 +198,26 @@ button badge {
     display: flex;
     color: hsl(var(--appForegroundHSL));
     background: hsl(var(--alertHSL));
-    width: 24px;
-    height: 24px;
     overflow: hidden;
     justify-content: center;
     align-items: center;
     font-size: 0.7em;
     font-weight: 800;
-    margin-left: calc(.25 * var(--defaultGap))
+    margin-left: 0px;
+    opacity: 0;
+    transition: var(--mediumTransition) ease-in-out all;
+    transition-delay: var(--mediumTransition);
+    width: 0px;
+    height: 0px;
+    scale: 0;
+}
+
+button badge.show {
+    scale: 1;
+    width: 24px;
+    height: 24px;
+    opacity: 1;
+    margin-left: calc(.5 * var(--defaultGap));
 }
 
 
@@ -743,6 +755,7 @@ notification.meta {
     background-repeat: no-repeat, no-repeat, repeat;
     background-position: top center;
     justify-content: center;
+    transition: none;
 }
 
 notification.show {
