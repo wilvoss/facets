@@ -258,6 +258,13 @@
               <input autocomplete="off" spellcheck="false" maxlength="14" placeholder="_ _ _ _ _ _" onpointerup="this.select()" v-model="tempName" />
             </callout>
           </leftright>
+          <leftright>
+            <p>Player ID</p>
+            <callout>
+              <input spellcheck="false" onpointerup="this.select()" inputmode="numeric" type="number" pattern="\d*" v-model="tempID" oninput="if (this.value.length > 8) this.value = this.value.slice(0, 8);" maxlength="8" />
+            </callout>
+          </leftright>
+          <small>To avoid connection issues when sharing games across different devices, ensure this Player ID matches on all your browsers.</small>
           <h3>Appearance</h3>
           <checkbox :class="{on: tempUserSettingsUsesLightTheme}" @click="ToggleTempUseLightTheme()">
             Light theme
@@ -310,7 +317,7 @@
         </section>
         <controls>
           <button class="secondary" @click="CancelSettings(event)">Cancel</button>
-          <button :disabled="tempID.toString().length !== 8" title="Please only use numbers." :class="{disabled: tempID.toString().length < 6}" @click="SubmitSettings(event)">Save</button>
+          <button :disabled="tempID.toString().length !== 8" title="Please only use numbers." :class="{disabled: tempID.toString().length !== 8}" @click="SubmitSettings(event)">Save</button>
         </controls>
       </modal>
       <modal v-if="appStateShowGlobalCreated">
