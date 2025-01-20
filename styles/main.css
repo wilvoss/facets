@@ -826,6 +826,10 @@ p {
     color: hsl(var(--hueGuessing), 80%, 50%)
 }
 
+.alertText {
+    color: hsl(var(--alertHSL))
+}
+
 .highlightText {
     color: hsl(var(--hueHighlight), 80%, 50%)
 }
@@ -1586,6 +1590,7 @@ gamelinks p button.inline {
     text-transform: uppercase;
     justify-content: center;
     display: flex;
+    white-space: nowrap;
     flex-direction: column;
     gap: 2px;
     color: hsl(var(--appForegroundDiminishedHSL));

@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.95',
+    appDataVersion: '2.0.96',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -47,6 +47,7 @@ var app = new Vue({
     appDailyIsFreshToday: true,
     appDataNumberOfNewDailies: 1,
     appDataDailyGamesStats: [],
+    appDataInc: 0,
     // app state
     appStateForceAutoCheck: false,
     appStateIsDragging: false,
@@ -880,6 +881,45 @@ var app = new Vue({
               }
             }
           });
+          this.GetUsersStats();
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    },
+
+    async GetUsersStats() {
+      note('GetUsersStats() called');
+      var requestUrl = 'https://calm-glitter-d861.bigtentgames.workers.dev/' + this.appDataPlayerCurrent.id;
+      await fetch(requestUrl, {
+        method: 'GET',
+        headers: {
+          Host: window.location.hostname,
+          Origin: window.location.origin,
+          'Access-Control-Request-Method': 'GET',
+          'Access-Control-Request-Headers': 'Content-Type',
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            error('Server error: ' + response.status);
+          }
+          return response.text();
+        })
+        .then((payload) => {
+          let userStats = JSON.parse(payload);
+          for (const game of this.appDataDailyGames) {
+            Vue.set(game, 'guesses', 0);
+            Vue.set(game, 'quit', false);
+          }
+          userStats.forEach((stat) => {
+            for (const game of this.appDataDailyGames) {
+              if (stat.key === game.key) {
+                Vue.set(game, 'guesses', stat.guesses);
+                Vue.set(game, 'quit', stat.quit);
+              }
+            }
+          });
         })
         .catch((error) => {
           console.error('Error:', error);
@@ -1309,7 +1349,10 @@ var app = new Vue({
           this.SetWordSetTheme(this.currentGameGuessingWordSet);
         }
 
-        this.appDataPlayerCurrent.id = this.tempID;
+        if (this.appDataPlayerCurrent.id !== this.tempID) {
+          this.appDataPlayerCurrent.id = this.tempID;
+          this.GetDailyGameStats();
+        }
         this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
         this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder;
         this.userSettingsUseExtraCard = this.tempUseExtraCard;
@@ -2369,7 +2412,10 @@ var app = new Vue({
       return daily ? daily : null;
     },
     getDailyIsFreshToday: function () {
-      const isFresh = this.getTodaysDaily ? !this.HasUserStartedGame(this.getTodaysDaily) : false;
+      if (this.getTodaysDaily === undefined) {
+        return false;
+      }
+      const isFresh = this.getTodaysDaily.guesses === 0 && !this.HasUserStartedGame(this.getTodaysDaily);
       if (this.getIsBadgeSupported) {
         if (isFresh) {
           navigator.setAppBadge();

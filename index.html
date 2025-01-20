@@ -264,7 +264,8 @@
               <input spellcheck="false" onpointerup="this.select()" inputmode="numeric" type="number" pattern="\d*" v-model="tempID" oninput="if (this.value.length > 8) this.value = this.value.slice(0, 8);" maxlength="8" />
             </callout>
           </leftright>
-          <small>To avoid connection issues when sharing games across different devices, ensure this Player ID matches on all your browsers.</small>
+          <small class="alertText" v-if="tempID.toString().length !== 8">Your ID must be 8 numbers long.</small>
+          <small>To avoid connection issues when sharing games across different devices, ensure this Player ID matches on all your browsers. Write this ID down before changing it.</small>
           <h3>Appearance</h3>
           <checkbox :class="{on: tempUserSettingsUsesLightTheme}" @click="ToggleTempUseLightTheme()">
             Light theme
@@ -366,7 +367,7 @@
               <p>
                 <a>
                   <small>
-                    <dot v-if="index === 0 && getTodaysDaily!== getCurrentDaily && !HasUserStartedGame(game)|| !HasUserStartedGame(game)">•</dot>
+                    <dot v-if="index === 0 && getTodaysDaily !== getCurrentDaily && game.guesses === 0 && getDailyIsFreshToday || game.guesses === 0 && !HasUserStartedGame(game)">•</dot>
                     {{game.date}}
                   </small>
                   {{game.hints.replace(/:/g," - ")}}
@@ -388,21 +389,21 @@
                   <icon class="continue"></icon>
                 </button>
               </p>
-              <stats v-if="game.stats">
+              <stats>
                 <stat>
-                  <value>{{game.stats.avg}} </value>
+                  <value>{{game.stats ? game.stats.avg : '-'}} </value>
                   <small>Avg # of Tries</small>
                 </stat>
                 <stat>
-                  <value>{{game.stats.guesscounts.g1 ? game.stats.guesscounts.g1 : '-'}}</value>
+                  <value>{{game.stats && game.stats.guesscounts.g1 ? game.stats.guesscounts.g1 : '-'}}</value>
                   <small>Solved In 1</small>
                 </stat>
                 <stat>
-                  <value>{{game.stats.guesscounts.g2 ? game.stats.guesscounts.g2 : '-'}}</value>
+                  <value>{{game.stats && game.stats.guesscounts.g2 ? game.stats.guesscounts.g2 : '-'}}</value>
                   <small>Solved In 2</small>
                 </stat>
                 <stat>
-                  <value>{{game.stats.guesscounts.beyond2}}</value>
+                  <value>{{game.stats ? game.stats.guesscounts.beyond2 : '-'}}</value>
                   <small>Solved In 3+</small>
                 </stat>
               </stats>
