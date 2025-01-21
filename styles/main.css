@@ -1581,6 +1581,10 @@ gamelinks p a, gamelinks p a:hover, gamelinks p a:active, gamelinks p a:focus, g
     text-wrap: nowrap;
 }
 
+gamelinks gamelink.quit {
+    pointer-events: none;
+}
+
 gamelinks gamelink.done p a small {
     font-style: italic;
 }

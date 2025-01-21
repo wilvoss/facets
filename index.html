@@ -363,7 +363,7 @@
           </message>
           <h3>Past 10 days</h3>
           <gamelinks>
-            <gamelink :class="{done: game.solved}" v-for="(game, index) in getDailyGamesWithWordSetNames" @click="HandleOldGameClick(event, game)">
+            <gamelink :class="{done: game.solved, quit: game.quit}" v-for="(game, index) in getDailyGamesWithWordSetNames" @click="HandleOldGameClick(event, game)">
               <p>
                 <a>
                   <small>
