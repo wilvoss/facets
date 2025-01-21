@@ -356,7 +356,7 @@
       <modal v-if="appStateShowDailyGames">
         <section>
           <h2>The Daily</h2>
-          <p>Play any of the AI-generated Daily puzzles listed below. In fact, it's kinda hard to know how an AI thinks! Any solved puzzles here can be shared with your friends at any time.</p>
+          <p>It's tricky to guess how an AI thinks! These AI-generated Daily puzzles can be quite challenging!</p>
 
           <h3 v-show="appStateIsGettingDailyGames">Past 10 days</h3>
           <message style="padding: calc(2 * var(--defaultGap)) 0" v-if="!appStateIsGettingDailyGames && getDailyGamesWithWordSetNames.length === 0">
