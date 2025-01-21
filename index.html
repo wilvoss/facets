@@ -45,7 +45,7 @@
     <app
       id="app"
       v-cloak
-      :class="{ai: getIsAIGenerated, multicolor: userSettingsUseMultiColoredGems, solved: appStateIsGuessing &&  currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, dragging: appStateIsDragging, guessing: appStateIsGuessing, simple: userSettingsUsesSimplifiedTheme, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}"
+      :class="{ai: getIsAIGenerated, multicolor: userSettingsUseMultiColoredGems, solved: appStateIsGuessing &&  currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, wallpaper: tempUseWordSetThemes, dragging: appStateIsDragging, guessing: appStateIsGuessing, simple: userSettingsUsesSimplifiedTheme, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}"
       @pointerdown="HandleBodyPointerDown(event)"
       @pointerup="HandleBodyPointerUp(event, appStateIsDragging ? appDataDraggedCard : getSelectedCard)"
     >
@@ -79,12 +79,12 @@
             The Daily
             <badge :class="{show:getDailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
           </button>
-          <button class="inline small" @click="ToggleShowGlobalCreated(event)">Player Puzzles</button>
-          <button class="inline small" @click="ToggleShowTutorial(event)">How To Play</button>
-          <button class="inline small" @click="ShowSettings(event)">Settings</button>
-          <button class="inline small" @click="ToggleShowInfo(event)">Credits</button>
-          <button class="inline small highlightText" @click="window.open('https://www.buymeacoffee.com/wilvoss', '_blank')">Buy Me a Coffee!</button>
-          <button class="inline small" @click="ToggleShowMeta(event)">Resume</button>
+          <button class="small" @click="ToggleShowGlobalCreated(event)">Player Puzzles</button>
+          <button class="small" @click="ToggleShowTutorial(event)">How To Play</button>
+          <button class="small" @click="ShowSettings(event)">Settings</button>
+          <button class="small" @click="ToggleShowInfo(event)">Credits</button>
+          <button class="small highlightText" @click="window.open('https://www.buymeacoffee.com/wilvoss', '_blank')">Buy Me a Coffee!</button>
+          <button class="small" @click="ToggleShowMeta(event)">Resume</button>
         </subtitle>
       </notification>
       <modal v-if="appStateShowOOBE || appStateShowIntro" class="tutorial">

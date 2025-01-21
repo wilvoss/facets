@@ -248,7 +248,7 @@ button.small {
     text-wrap: nowrap;
 }
 
-button.small.highlightText {
+.wallpaper button.small.highlightText, button.small.highlightText {
     color: hsl(var(--messageColorHSL))
 }
 
@@ -669,13 +669,17 @@ button.small {
     justify-content: center;
     padding: calc(.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
     cursor: pointer;
-    background: hsla(var(--appBackgroundDarkHSL), 1);
+    background: hsla(var(--appBackgroundDarkHSL), .6);
     border: 1px solid hsla(var(--appBackgroundHSL), 1);
     border-radius: calc(1 * var(--borderRadius));
     align-items: center;
     -webkit-tap-highlight-color: transparent;
     transition: var(--mediumTransition) ease-in-out;
     transition-property: background-color, border-color, opacity;
+}
+
+.wallpaper button.small {
+    color: hsl(var(--appForegroundHSL));
 }
 
 button.small.main {
@@ -686,8 +690,7 @@ button.small.main {
 }
 
 button.small.strong {
-    background-color: hsl(var(--messageColorHSL));
-    color: hsl(var(--appBackgroundDarkestHSL));
+    color: hsl(var(--appForegroundHSL));
 }
 
 button.small.strong.disabled {
@@ -2076,9 +2079,7 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
         width: 100%;
         height: 100%;
         overflow: hidden;
-
         background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), .0) 200px), var(--textureHue), var(--texture2);
-
     }
 
     app {
