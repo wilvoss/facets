@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.1.02',
+    appDataVersion: '2.1.03',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -73,7 +73,7 @@ var app = new Vue({
     appStateUsePortraitLayout: false,
     appStateShowNotification: false,
     appParkingRightButtonDisabled: false,
-    appStateShowMeta: false,
+    appStateShowMeta: true,
     vsShowDaily: true,
     appStateUseFlower: false,
     appStateBrowserNotificationInterval: null,
@@ -133,6 +133,7 @@ var app = new Vue({
     },
 
     ToggleUseLightTheme(_value) {
+      note('ToggleUseLightTheme() called');
       this.userSettingsUsesLightTheme = _value;
       if (this.userSettingsUsesLightTheme) {
         document.getElementById('themeColor').content = 'hsl(140, 100%, 92%)';
@@ -142,6 +143,7 @@ var app = new Vue({
     },
 
     ToggleUseSimplifedTheme(_value) {
+      note('ToggleUseSimplifedTheme() called');
       this.userSettingsUsesSimplifiedTheme = _value;
       if (this.userSettingsUsesSimplifiedTheme) {
         this.tempUseMultiColoredGems = true;
@@ -149,10 +151,12 @@ var app = new Vue({
     },
 
     ToggleShowAllCards(_value) {
+      note('ToggleShowAllCards() called');
       this.userSettingsShowAllCards = _value;
     },
 
     ToggleFocus() {
+      note('ToggleFocus() called');
       if (window.innerWidth <= 660) {
         this.vsUseFocus = !this.vsUseFocus;
       }
@@ -249,16 +253,17 @@ var app = new Vue({
     },
 
     ToggleTempUseMultiColoredGems() {
-      note('ToggleTempUsePortraitLayout() called');
+      note('ToggleTempUseMultiColoredGems() called');
       this.tempUseMultiColoredGems = !this.tempUseMultiColoredGems;
     },
 
     ToggleTempUseExtraCard() {
-      note('ToggleTempUseExtraCard() called');
+      note('ToggleTemp≈UseExtraCard() called');
       this.tempUseExtraCard = !this.tempUseExtraCard;
     },
 
     ShowCategoryPicker() {
+      note('ShowCategoryPicker() called');
       this.tempWordSetName = this.getCurrentSelectedTempWordSetName;
     },
 
@@ -302,6 +307,7 @@ var app = new Vue({
     },
 
     async LoadTranslatedWords() {
+      note('LoadTranslatedWords() called');
       // Fetch the new words based on the selected language
       let translatedWords = await this.GetCurrentGameWordSet();
 
@@ -649,6 +655,7 @@ var app = new Vue({
     },
 
     async GetAISolution() {
+      note('GetAISolution() called');
       let words, wordElements;
       words = [];
       wordElements = document.getElementsByTagName('word');
@@ -691,6 +698,7 @@ var app = new Vue({
     },
 
     SetAIHints(_array) {
+      note('SetAIHints() called');
       for (let index = 0; index < this.appDataHints.length; index++) {
         const element = this.appDataHints[index];
         element.value = _array[index];
@@ -771,8 +779,8 @@ var app = new Vue({
     },
 
     async GetLast10GlobalCreatedGames() {
+      note('GetLast10GlobalCreatedGames() called');
       if (window.location.href !== window.location.origin + '/generate.html?generated=true') {
-        note('GetLast10GlobalCreatedGames() called');
         this.appStateIsGettingLast10Games = true;
         this.appDataGlobalCreatedGames = [];
         var requestUrl = 'https://worker-falling-frost-2926.bigtentgames.workers.dev/';
@@ -804,9 +812,9 @@ var app = new Vue({
     },
 
     async GetDailyGames() {
+      note('GetDailyGames() called');
       if (this.vsShowDaily && window.location.href !== window.location.origin + '/generate.html?generated=true') {
-        note('GetDailyGames() called');
-        this.appStateIsGettingLast10Games = true;
+        this.appStateIsGettingDailyGames = true;
         this.appDataDailyGames = [];
         var requestUrl = 'https://lucky-bread-acb4.bigtentgames.workers.dev/';
         await fetch(requestUrl, {
@@ -820,7 +828,6 @@ var app = new Vue({
         })
           .then((response) => {
             if (!response.ok) {
-              this.appStateIsGettingDailyGames = false;
               error('Server error: ' + response.status);
             }
             return response.text();
@@ -845,9 +852,10 @@ var app = new Vue({
           })
           .catch((error) => {
             console.error('Error:', error);
+          })
+          .finally(() => {
             this.appStateIsGettingDailyGames = false;
           });
-        this.appStateIsGettingDailyGames = false;
       }
     },
 
@@ -958,26 +966,28 @@ var app = new Vue({
     },
 
     GetUserStartedGame(_game) {
+      note('GetUserStartedGame() called');
       return this.appDataUserDailyGamesStarted.find((game) => {
         return game.key === _game.key;
       });
     },
 
     HasUserStartedGame(_game) {
+      note('HasUserStartedGame() called');
       let foundGame = false;
       foundGame = this.GetUserStartedGame(_game) ? true : false;
       return foundGame;
     },
 
     HandleOldGameClick(e, _game) {
-      if (_game.solved) {
-        this.ShareWin(_game);
-        return;
-      }
       note('HandleOldGameClick() called');
       if (e !== null) {
         e.preventDefault();
         e.stopPropagation();
+      }
+      if (_game.solved) {
+        this.ShareWin(_game);
+        return;
       }
       let stringArray = ['?'];
       this.currentGameSolutionGuessing = '';
@@ -1010,14 +1020,13 @@ var app = new Vue({
       if (this.appStateShowDailyGames) {
         this.ToggleShowDailyGames(e);
       }
-      if (this.appStateShowMeta) {
+      if (!this.appStateShowMeta) {
         this.ToggleShowMeta(e);
       }
       if (this.appStateShowGlobalCreated) {
         this.ToggleShowGlobalCreated(e);
       }
       this.LoadPage();
-      // this.ToggleShowMeta(e);
       this.appStateShowNotification = true;
       this.RotateTray(-4);
     },
@@ -1077,6 +1086,7 @@ var app = new Vue({
     },
 
     HandleYesNo(_target, _value) {
+      note('HandleYesNo() called');
       switch (_target) {
         case 'quit':
           this.getCurrentDaily.quit = true;
@@ -1118,7 +1128,6 @@ var app = new Vue({
     },
 
     HandleBodyPointerUp(e, _card) {
-      note('HandleBodyPointerUp() called');
       this.appStateShareError = false;
       if (!this.appStateIsModalShowing) {
         this.appStateIsDragging = false;
@@ -1134,7 +1143,6 @@ var app = new Vue({
     },
 
     HandleCardPointerDown(e, _card) {
-      note('HandleCardPointerDown() called');
       if (e !== null) {
         e.preventDefault();
         e.stopPropagation();
@@ -1150,7 +1158,6 @@ var app = new Vue({
     },
 
     HandleCardPointerUp(e, _card) {
-      note('HandleCardPointerUp() called');
       e.preventDefault();
       e.stopPropagation();
       this.appDataMessage = '';
@@ -1190,21 +1197,8 @@ var app = new Vue({
       }, 300);
     },
 
-    HandlePickerCardClicked(e, _card) {
-      note('HandlePickerCardClicked() called');
-      e.preventDefault();
-      e.stopPropagation();
-      this.appDataMessage = '';
-
-      if (_card === null) {
-        _card = this.getFirstAvailableParkingSpot;
-      }
-
-      this.SwapCards(_card, this.appDataDraggedCard);
-      this.appStateIsModalShowing = false;
-    },
-
     HandlePageVisibilityChange() {
+      note('HandlePageVisibilityChange() called');
       let id = localStorage.getItem('userID');
       if (id !== undefined && id !== null) {
         id = JSON.parse(id);
@@ -1386,15 +1380,6 @@ var app = new Vue({
       this.appStateShowIntro = false;
     },
 
-    HandleShareGameButton(e, _text, _url) {
-      note('ShowSettings() called');
-      if (e != null) {
-        e.stopPropagation();
-        e.preventDefault();
-      }
-      this.ShareText(_text, _url);
-    },
-
     HandleKeyDownEvent(e) {
       if (!e.metaKey && !e.ctrlKey && !e.altKey) {
         switch (e.key) {
@@ -1476,17 +1461,6 @@ var app = new Vue({
       }
     },
 
-    CheckForServiceWorkerUpdate() {
-      note('CheckForServiceWorkerUpdate() called');
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function (registrations) {
-          for (let registration of registrations) {
-            registration.update();
-          }
-        });
-      }
-    },
-
     /* === COMMUNICATION === */
     ShareWin(_game = this.getCurrentDaily) {
       note('ShareWin() called');
@@ -1546,8 +1520,8 @@ var app = new Vue({
     },
 
     async ShareText(_text, _url) {
+      note('ShareText() called');
       if (!this.getIsAIGenerating) {
-        note('ShareText() called');
         this.appDataMessage = '';
         note('_text = ' + _text);
         note('_url = ' + _url);
@@ -1576,7 +1550,6 @@ var app = new Vue({
           this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
         }
       }
-      highlight('test');
     },
 
     async ShareBoard(_gotIt = false, _isNew = false) {
@@ -1618,15 +1591,21 @@ var app = new Vue({
           })
           .catch((error) => {
             console.error('Error:', error);
-            this.appStateShareError = true;
+            if (!UseDebug) {
+              this.appStateShareError = true;
+            }
           })
           .finally(() => {
             this.appStateIsGettingTinyURL = false;
           });
+        if (UseDebug) {
+          this.ShareText(text, this.appDataShareURL);
+        }
       }
     },
 
     ReportPuzzle(_game) {
+      note('ReportPuzzle() called');
       location.href = 'mailto:bigtentgames@icloud.com?subject=Facets Puzzle Reported&body=Puzzle ID# ' + _game.key + '%0D%0A This puzzle contains offensive language.%0D%0A' + _game.hints;
     },
 
@@ -1752,7 +1731,6 @@ var app = new Vue({
     },
 
     HandleCardClick(e, _card) {
-      note('HandleCardClick() called');
       e.preventDefault();
       e.stopPropagation();
       this.ToggleCardSelection(_card);
@@ -1789,12 +1767,6 @@ var app = new Vue({
       if (_card.isSelected) {
         this.appDataDraggedCard = _card;
       }
-    },
-
-    ToggleGameShowStats(_event) {
-      _event.preventDefault();
-      _event.stopPropagation();
-      this.appStateShowStats = !this.appStateShowStats;
     },
 
     RotateCard(e, _card, _inc) {
@@ -2071,7 +2043,7 @@ var app = new Vue({
 
         if (boardPieces.length >= 40) {
           document.title = 'Facets!';
-          // this.ToggleShowMeta(null);
+          this.ToggleShowMeta(null);
           this.RestoreGame(boardPieces);
         } else if (!this.appStateIsGuessing) {
           if (this.getIsAIGenerating) {

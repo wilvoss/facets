@@ -356,12 +356,14 @@
       <modal v-if="appStateShowDailyGames">
         <section>
           <h2>The Daily</h2>
-          <p>Play any of the AI-generated Daily puzzles listed below.</p>
+          <p>Play any of the AI-generated Daily puzzles listed below. In fact, it's kinda hard to know how an AI thinks! Any solved puzzles here can be shared with your friends at any time.</p>
+
+          <h3 v-show="appStateIsGettingDailyGames">Past 10 days</h3>
           <message style="padding: calc(2 * var(--defaultGap)) 0" v-if="!appStateIsGettingDailyGames && getDailyGamesWithWordSetNames.length === 0">
-            <p>😢</p>
-            <p>Check back tomorrow!</p>
+            <p v-if="Navigator.online">There was an error. 😢</p>
+            <p v-if="!Navigator.online">You appear to be offline. 😢</p>
           </message>
-          <h3>Past 10 days</h3>
+          <icon v-show="appStateIsGettingDailyGames" style="position: relative" class="spinner show"></icon>
           <gamelinks>
             <gamelink :class="{done: game.solved, quit: game.quit}" v-for="(game, index) in getDailyGamesWithWordSetNames" @click="HandleOldGameClick(event, game)">
               <p>
