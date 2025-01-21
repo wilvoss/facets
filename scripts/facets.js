@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.0.99',
+    appDataVersion: '2.1.00',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -970,6 +970,7 @@ var app = new Vue({
 
     HandleOldGameClick(e, _game) {
       if (_game.solved) {
+        this.ShareWin(_game);
         return;
       }
       note('HandleOldGameClick() called');
@@ -1485,15 +1486,17 @@ var app = new Vue({
     },
 
     /* === COMMUNICATION === */
-    ShareWin() {
+    ShareWin(_game = this.getCurrentDaily) {
       note('ShareWin() called');
-      let date = this.getCurrentDaily && this.getCurrentDaily === this.getTodaysDaily ? `Today's` : `The ${this.getCurrentDaily.date}`;
-      let text = `I solved ${date} Daily in ${this.getCurrentDaily.guesses} tries! 😀 <https://facets.bigtentgames.com>`;
-      this.ConstructAndSetShareURLForCurrentGame();
-      if (this.getCurrentDaily.guesses === 1) {
-        text = `I solved ${date} Daily in 1 try! 🥳 <https://facets.bigtentgames.com>`;
+      if (_game.solved) {
+        let date = _game && this.getTodaysDaily === _game ? `Today's` : `The ${_game.date}`;
+        let text = `I solved ${date} Daily in ${_game.guesses} tries! 😀 <https://facets.bigtentgames.com>`;
+        this.ConstructAndSetShareURLForCurrentGame();
+        if (_game.guesses === 1) {
+          text = `I solved ${date} Daily in 1 try! 🥳 <https://facets.bigtentgames.com>`;
+        }
+        this.ShareText(text, '');
       }
-      this.ShareText(text, '');
     },
 
     async CopyTextToClipboard(_text) {
@@ -1982,7 +1985,9 @@ var app = new Vue({
     },
 
     GetIsAIGenerated() {
-      if (window.location.search) {
+      if (this.getCurrentDaily) {
+        return true;
+      } else if (window.location.search) {
         let urlParams = new URLSearchParams(window.location.search);
         return urlParams.has('generated') && urlParams.get('generated').toString() === 'true';
       } else {
