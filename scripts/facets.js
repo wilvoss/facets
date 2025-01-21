@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.1.05',
+    appDataVersion: '2.1.06',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -941,7 +941,7 @@ var app = new Vue({
       note('HandleSubmitButtonPress() called');
       if (this.appDataPlayerCurrent.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
         this.appStateIsModalShowing = true;
-        this.appDataConfirmationObject = { message: 'Did they have the right answer?', target: 'correct' };
+        this.appDataConfirmationObject = { message: `Did ${this.appDataPlayerSender.name} have the right answer?`, target: 'correct' };
         this.appStateShowConfirmation = true;
       } else if (this.appStateIsGuessing) {
         if (this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
