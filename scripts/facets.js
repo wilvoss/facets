@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.1.01',
+    appDataVersion: '2.1.02',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -77,6 +77,7 @@ var app = new Vue({
     vsShowDaily: true,
     appStateUseFlower: false,
     appStateBrowserNotificationInterval: null,
+    appStateShareError: false,
 
     // current game
     currentGameGuessCount: 0,
@@ -1118,6 +1119,7 @@ var app = new Vue({
 
     HandleBodyPointerUp(e, _card) {
       note('HandleBodyPointerUp() called');
+      this.appStateShareError = false;
       if (!this.appStateIsModalShowing) {
         this.appStateIsDragging = false;
         this.appDataDraggedCard = this.appDataEmptyCard;
@@ -1610,12 +1612,17 @@ var app = new Vue({
             highlight('Success');
             return response.text();
           })
-          .then((shortUrlParam) => (this.appDataShareURL = location.origin + '/game/?' + shortUrlParam))
-          .catch((error) => console.error('Error:', error));
-
-        this.appStateIsGettingTinyURL = false;
-
-        this.ShareText(text, this.appDataShareURL);
+          .then((shortUrlParam) => {
+            this.appDataShareURL = location.origin + '/game/?' + shortUrlParam;
+            this.ShareText(text, this.appDataShareURL);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+            this.appStateShareError = true;
+          })
+          .finally(() => {
+            this.appStateIsGettingTinyURL = false;
+          });
       }
     },
 
@@ -2367,7 +2374,9 @@ var app = new Vue({
     },
     getSubmitButtonText: function () {
       let text = this.appDataActionButtonTexts.send;
-
+      if (this.appStateShareError) {
+        return 'Retry';
+      }
       if (this.appDataPlayerCurrent.role === 'reviewer') {
         text = this.appDataActionButtonTexts.respond;
       } else if (this.appDataPlayerCurrent.role === 'creator') {
