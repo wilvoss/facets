@@ -71,12 +71,12 @@
         </header>
         <icon :class="{show: appStateIsGettingLast10Games || appStateIsGettingDailyGames || appStateIsGettingDailyGameStats || appStateIsGettingUserStats}" style="position: relative" class="spinner"></icon>
         <subtitle>
-          <button v-if="getNumberOfHintsThatHaveBeenFilled !== 0" class="small highlightText" @click="ToggleShowMeta(event)">Resume</button>
           <button class="inline small main" @click="HandleNewGameClick()">
             <icon class="empty"></icon>
             Create A Puzzle!
             <icon class="empty"></icon>
           </button>
+          <button v-if="getNumberOfHintsThatHaveBeenFilled !== 0" class="small highlightText" @click="ToggleShowMeta(event)">Continue {{getResumeText}}</button>
           <button v-if="vsShowDaily" class="small" @click="ToggleShowDailyGames(event)">
             The Daily
             <badge :class="{show: getDailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>

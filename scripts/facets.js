@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.1.07',
+    appDataVersion: '2.1.08',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -2476,6 +2476,22 @@ var app = new Vue({
     },
     getIsBadgeSupported: function () {
       return navigator.setAppBadge !== undefined && navigator.setAppBadge !== null;
+    },
+    getResumeText: function () {
+      let text = '';
+      highlight(this.appDataPlayerCurrent.role);
+      switch (this.appDataPlayerCurrent.role) {
+        case 'creator':
+          text = 'Creating';
+          break;
+        case 'reviewer':
+          text = 'Reviewing';
+          break;
+        case 'guesser':
+          text = 'Guessing';
+          break;
+      }
+      return text;
     },
     isPWAOnHomeScreen: function () {
       return window.matchMedia('(display-mode: standalone)').matches;

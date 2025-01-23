@@ -651,7 +651,7 @@ subtitle {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: calc(.5 * var(--defaultGap));
+    gap: calc(.25 * var(--defaultGap));
     width: 100%;
     color: hsla(var(--linkColorDarkHSL), 1);
     display: flex;
@@ -2274,7 +2274,6 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     }
 
     subtitle {
-        gap: calc(.25 * var(--defaultGap));
         font-size: 130%;
     }
 
