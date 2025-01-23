@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.1.06',
+    appDataVersion: '2.1.07',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -54,6 +54,8 @@ var app = new Vue({
     appStateIsGettingTinyURL: false,
     appStateIsGettingLast10Games: false,
     appStateIsGettingDailyGames: false,
+    appStateIsGettingDailyGameStats: false,
+    appStateIsGettingUserStats: false,
     appStateIsGuessing: false,
     appStateIsModalShowing: false,
     appStateIsNewVersionAvailable: false,
@@ -181,11 +183,6 @@ var app = new Vue({
         e.preventDefault();
       }
       this.appStateShowDailyGames = !this.appStateShowDailyGames;
-      if (this.appDataDailyGames.length === 0) {
-        this.GetDailyGames();
-      } else if (!this.appStateShowDailyGames) {
-        this.GetDailyGameStats();
-      }
     },
 
     ToggleShowInfo(e) {
@@ -415,7 +412,6 @@ var app = new Vue({
 
       if (foundGame.solved) {
         await this.SendGameStatsToServer(foundGame);
-        this.GetDailyGameStats();
       }
     },
 
@@ -427,25 +423,27 @@ var app = new Vue({
       }
 
       const requestUrl = `https://empty-night-9bea.bigtentgames.workers.dev/${params}`;
-      announce(requestUrl);
 
-      try {
-        const response = await fetch(requestUrl, {
-          method: 'GET',
-          headers: {
-            Origin: window.location.origin,
-            'Access-Control-Request-Method': 'GET',
-            'Access-Control-Request-Headers': 'Content-Type',
-          },
+      await fetch(requestUrl, {
+        method: 'GET',
+        headers: {
+          Origin: window.location.origin,
+          'Access-Control-Request-Method': 'GET',
+          'Access-Control-Request-Headers': 'Content-Type',
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            error('Server error: ' + response.status);
+          }
+          return response.json();
+        })
+        .catch((error) => {
+          error('Error:', error);
+        })
+        .finally(() => {
+          this.GetDailyGameStats();
         });
-
-        if (!response.ok) {
-          this.appStateIsGettingLast10Games = false;
-          error('Server error: ' + response.status);
-        }
-      } catch (error) {
-        console.error('Error:', error);
-      }
     },
 
     IsCurrentGuessCorrect() {
@@ -665,7 +663,6 @@ var app = new Vue({
         words.push(element.innerHTML);
       }
       words = words.join(',');
-      highlight(words);
 
       const encodedWords = encodeURIComponent(words);
       const requestUrl = `https://divine-dream-3aa5.bigtentgames.workers.dev/?${encodedWords}`;
@@ -681,7 +678,6 @@ var app = new Vue({
         });
 
         if (!response.ok) {
-          this.appStateIsGettingLast10Games = false;
           error('Server error: ' + response.status);
         }
         const payload = await response.text();
@@ -779,44 +775,95 @@ var app = new Vue({
     },
 
     async GetLast10GlobalCreatedGames() {
-      note('GetLast10GlobalCreatedGames() called');
-      if (window.location.href !== window.location.origin + '/generate.html?generated=true') {
-        this.appStateIsGettingLast10Games = true;
-        this.appDataGlobalCreatedGames = [];
-        var requestUrl = 'https://worker-falling-frost-2926.bigtentgames.workers.dev/';
-        await fetch(requestUrl, {
-          method: 'GET',
-          headers: {
-            Host: window.location.hostname,
-            Origin: window.location.origin,
-            'Access-Control-Request-Method': 'GET',
-            'Access-Control-Request-Headers': 'Content-Type',
-          },
-        })
-          .then((response) => {
-            if (!response.ok) {
+      if (!this.appStateIsGettingLast10Games) {
+        note('GetLast10GlobalCreatedGames() called');
+        if (window.location.href !== window.location.origin + '/generate.html?generated=true') {
+          this.appStateIsGettingLast10Games = true;
+          this.appDataGlobalCreatedGames = [];
+          var requestUrl = 'https://worker-falling-frost-2926.bigtentgames.workers.dev/';
+          await fetch(requestUrl, {
+            method: 'GET',
+            headers: {
+              Host: window.location.hostname,
+              Origin: window.location.origin,
+              'Access-Control-Request-Method': 'GET',
+              'Access-Control-Request-Headers': 'Content-Type',
+            },
+          })
+            .then((response) => {
+              if (!response.ok) {
+                error('Server error: ' + response.status);
+              }
+              return response.text();
+            })
+            .then((payload) => {
+              this.appDataGlobalCreatedGames = JSON.parse(payload);
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            })
+            .finally(() => {
               this.appStateIsGettingLast10Games = false;
-              error('Server error: ' + response.status);
-            }
-            return response.text();
-          })
-          .then((payload) => {
-            this.appDataGlobalCreatedGames = JSON.parse(payload);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-            this.appStateIsGettingLast10Games = false;
-          });
+            });
+        }
       }
-      this.appStateIsGettingLast10Games = false;
     },
 
     async GetDailyGames() {
-      note('GetDailyGames() called');
-      if (this.vsShowDaily && window.location.href !== window.location.origin + '/generate.html?generated=true') {
-        this.appStateIsGettingDailyGames = true;
-        this.appDataDailyGames = [];
-        var requestUrl = 'https://lucky-bread-acb4.bigtentgames.workers.dev/';
+      if (!this.appStateIsGettingDailyGames) {
+        note('GetDailyGames() called');
+        if (this.vsShowDaily && window.location.href !== window.location.origin + '/generate.html?generated=true') {
+          this.appStateIsGettingDailyGames = true;
+          this.appStateIsGettingUserStats = true;
+          this.appDataDailyGames = [];
+          var requestUrl = 'https://lucky-bread-acb4.bigtentgames.workers.dev/';
+          await fetch(requestUrl, {
+            method: 'GET',
+            headers: {
+              Host: window.location.hostname,
+              Origin: window.location.origin,
+              'Access-Control-Request-Method': 'GET',
+              'Access-Control-Request-Headers': 'Content-Type',
+            },
+          })
+            .then((response) => {
+              if (!response.ok) {
+                error('Server error: ' + response.status);
+              }
+              return response.text();
+            })
+            .then((payload) => {
+              this.appDataDailyGames = JSON.parse(payload);
+              let today = new Date();
+
+              this.appDataDailyGames.forEach((daily) => {
+                let previous = this.GetUserStartedGame(daily);
+                daily.guesses = 0;
+                if (previous) {
+                  daily.solved = previous.solved;
+                  daily.guesses = previous.guesses;
+                  if (previous.quit) {
+                    daily.quit = previous.quit;
+                  }
+                }
+              });
+              this.GetDailyGameStats();
+            })
+            .catch((error) => {
+              console.error('Error:', error);
+            })
+            .finally(() => {
+              this.appStateIsGettingDailyGames = false;
+            });
+        }
+      }
+    },
+
+    async GetDailyGameStats() {
+      if (!this.appStateIsGettingDailyGameStats) {
+        note('GetDailyGameStats() called');
+        this.appStateIsGettingDailyGameStats = true;
+        var requestUrl = 'https://old-frog-73f3.bigtentgames.workers.dev/';
         await fetch(requestUrl, {
           method: 'GET',
           headers: {
@@ -833,72 +880,31 @@ var app = new Vue({
             return response.text();
           })
           .then((payload) => {
-            this.appDataDailyGames = JSON.parse(payload);
-            let today = new Date();
-
-            this.appDataDailyGames.forEach((daily) => {
-              let previous = this.GetUserStartedGame(daily);
-              daily.guesses = 0;
-              if (previous) {
-                daily.solved = previous.solved;
-                daily.guesses = previous.guesses;
-                if (previous.quit) {
-                  daily.quit = previous.quit;
+            this.appDataDailyGamesStats = JSON.parse(payload);
+            this.appDataDailyGames.forEach((game) => {
+              game.showStats = false;
+              game.stats = { avg: 0, guesscounts: { beyond2: 0 } };
+              for (const stat of this.appDataDailyGamesStats) {
+                if (stat.hasOwnProperty(game.key)) {
+                  game.stats = stat[game.key];
+                  break;
                 }
               }
             });
-
-            this.GetDailyGameStats();
           })
           .catch((error) => {
             console.error('Error:', error);
           })
           .finally(() => {
-            this.appStateIsGettingDailyGames = false;
+            this.GetUsersStats();
+            this.appStateIsGettingDailyGameStats = false;
           });
       }
     },
 
-    async GetDailyGameStats() {
-      note('GetDailyGameStats() called');
-      var requestUrl = 'https://old-frog-73f3.bigtentgames.workers.dev/';
-      await fetch(requestUrl, {
-        method: 'GET',
-        headers: {
-          Host: window.location.hostname,
-          Origin: window.location.origin,
-          'Access-Control-Request-Method': 'GET',
-          'Access-Control-Request-Headers': 'Content-Type',
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            this.appStateIsGettingDailyGames = false;
-            error('Server error: ' + response.status);
-          }
-          return response.text();
-        })
-        .then((payload) => {
-          this.appDataDailyGamesStats = JSON.parse(payload);
-          this.appDataDailyGames.forEach((game) => {
-            game.showStats = false;
-            game.stats = { avg: 0, guesscounts: { beyond2: 0 } };
-            for (const stat of this.appDataDailyGamesStats) {
-              if (stat.hasOwnProperty(game.key)) {
-                game.stats = stat[game.key];
-                break;
-              }
-            }
-          });
-          this.GetUsersStats();
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    },
-
     async GetUsersStats() {
       note('GetUsersStats() called');
+      this.appStateIsGettingUserStats = true;
       var requestUrl = 'https://calm-glitter-d861.bigtentgames.workers.dev/' + this.appDataPlayerCurrent.id;
       await fetch(requestUrl, {
         method: 'GET',
@@ -933,6 +939,9 @@ var app = new Vue({
         })
         .catch((error) => {
           console.error('Error:', error);
+        })
+        .finally(() => {
+          this.appStateIsGettingUserStats = false;
         });
     },
 
@@ -1062,7 +1071,6 @@ var app = new Vue({
           });
           if (parkedCard) {
             let wordIndex = parkedCard.words.findIndex((word) => word.id === anchorIDs[i]);
-            highlight('index of ' + anchorIDs[i] + ' = ' + wordIndex);
             let modifier = 0;
             switch (i) {
               case 1:
@@ -1199,6 +1207,97 @@ var app = new Vue({
 
     HandlePageVisibilityChange() {
       note('HandlePageVisibilityChange() called');
+      if (!document.hidden) {
+        this.GetDailyGames();
+      }
+    },
+
+    CancelSettings(e) {
+      note('CancelSettings() called');
+      if (e !== null) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      this.appStateIsModalShowing = false;
+      this.appStateShowSettings = false;
+      this.appStateShowIntro = false;
+      this.tempID = this.appDataPlayerCurrent.id;
+      this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
+      this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
+      this.tempUserWantsDailyReminder = this.userSettingsUserWantsDailyReminder;
+      this.tempUserSettingsLanguage = this.userSettingsLanguage;
+      this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
+      this.tempUseExtraCard = this.userSettingsUseExtraCard;
+      this.tempUserSettingsUsesSimplifiedTheme = this.userSettingsUsesSimplifiedTheme;
+      this.tempUserSettingsShowAllCards = this.userSettingsShowAllCards;
+    },
+
+    HandleIntroButtonClick(e) {
+      note('HandleIntroButtonClick() called');
+      this.SubmitSettings(null);
+      this.appStateShowOOBE = true;
+    },
+
+    async SubmitSettings(e) {
+      note('SubmitSettings() called');
+      if (e !== null) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      this.appDataPlayerCurrent.name = this.tempName !== '' ? this.tempName.trim() : this.appDataPlayerCurrent.name;
+      if (!this.appStateIsGuessing) {
+        this.appDataPlayerCreator.name = this.appDataPlayerCurrent.name;
+      }
+      localStorage.setItem('name', this.appDataPlayerCurrent.name);
+      if (this.appStateShowSettings || this.appStateShowCatChooser) {
+        this.userSettingsLanguage = this.tempUserSettingsLanguage;
+        let newSelectedWordSet = this.tempWordSets.find((set) => set.name === this.tempWordSetName);
+        this.SelectWordSet(e, newSelectedWordSet);
+
+        let wordSetChanged = false;
+        wordSetChanged = this.appDataWordSets.find((set) => set.isSelected === true).id !== this.tempWordSets.find((set) => set.isSelected === true).id;
+        this.appDataWordSets = this.tempWordSets;
+        this.currentGameWordSet = this.appDataWordSets.find((set) => set.isSelected === true);
+        if ((wordSetChanged && !this.appStateIsGuessing) || this.appStateShowCatChooser) {
+          this.NewGame();
+          this.SetWordSetTheme(this.currentGameGuessingWordSet);
+        }
+
+        let userChangedID = this.appDataPlayerCurrent.id !== this.tempID;
+        this.appDataPlayerCurrent.id = this.tempID;
+        this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
+        this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder;
+        this.userSettingsUseExtraCard = this.tempUseExtraCard;
+        this.ToggleUseLightTheme(this.tempUserSettingsUsesLightTheme);
+        this.ToggleUseSimplifedTheme(this.tempUserSettingsUsesSimplifiedTheme);
+        this.ToggleShowAllCards(this.tempUserSettingsShowAllCards);
+        this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
+        this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
+        this.SetWordSetTheme(this.currentGameGuessingWordSet);
+
+        localStorage.setItem('userID', this.appDataPlayerCurrent.id);
+        localStorage.setItem('useWordSetThemes', this.userSettingsUseWordSetThemes);
+        localStorage.setItem('userSettingsUserWantsDailyReminder', this.userSettingsUserWantsDailyReminder);
+        localStorage.setItem('userSettingsLanguage', this.userSettingsLanguage);
+        localStorage.setItem('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
+        localStorage.setItem('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
+        localStorage.setItem('userSettingsShowAllCards', this.userSettingsShowAllCards);
+        localStorage.setItem('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
+        localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
+        localStorage.setItem('wordSet', this.currentGameWordSet.id);
+
+        if (userChangedID) {
+          await this.GetDailyGameStats();
+          window.location.reload();
+        }
+      }
+      this.appStateIsModalShowing = false;
+      this.appStateShowSettings = false;
+      this.appStateShowIntro = false;
+    },
+
+    GetUserSettings() {
+      note('GetUserSettings() called');
       let id = localStorage.getItem('userID');
       if (id !== undefined && id !== null) {
         id = JSON.parse(id);
@@ -1291,95 +1390,7 @@ var app = new Vue({
         this.userSettingsUseMultiColoredGems = JSON.parse(userSettingsUseMultiColoredGems);
         this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
       }
-      if (!document.hidden) {
-        this.GetDailyGames();
-      }
     },
-
-    CancelSettings(e) {
-      note('CancelSettings() called');
-      if (e !== null) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      this.appStateIsModalShowing = false;
-      this.appStateShowSettings = false;
-      this.appStateShowIntro = false;
-      this.tempID = this.appDataPlayerCurrent.id;
-      this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
-      this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
-      this.tempUserWantsDailyReminder = this.userSettingsUserWantsDailyReminder;
-      this.tempUserSettingsLanguage = this.userSettingsLanguage;
-      this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
-      this.tempUseExtraCard = this.userSettingsUseExtraCard;
-      this.tempUserSettingsUsesSimplifiedTheme = this.userSettingsUsesSimplifiedTheme;
-      this.tempUserSettingsShowAllCards = this.userSettingsShowAllCards;
-    },
-
-    HandleIntroButtonClick(e) {
-      note('HandleIntroButtonClick() called');
-      this.SubmitSettings(null);
-      this.appStateShowOOBE = true;
-    },
-
-    async SubmitSettings(e) {
-      note('SubmitSettings() called');
-      if (e !== null) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      this.appDataPlayerCurrent.name = this.tempName !== '' ? this.tempName.trim() : this.appDataPlayerCurrent.name;
-      if (!this.appStateIsGuessing) {
-        this.appDataPlayerCreator.name = this.appDataPlayerCurrent.name;
-      }
-      localStorage.setItem('name', this.appDataPlayerCurrent.name);
-      if (this.appStateShowSettings || this.appStateShowCatChooser) {
-        this.userSettingsLanguage = this.tempUserSettingsLanguage;
-        let newSelectedWordSet = this.tempWordSets.find((set) => set.name === this.tempWordSetName);
-        this.SelectWordSet(e, newSelectedWordSet);
-
-        let wordSetChanged = false;
-        wordSetChanged = this.appDataWordSets.find((set) => set.isSelected === true).id !== this.tempWordSets.find((set) => set.isSelected === true).id;
-        this.appDataWordSets = this.tempWordSets;
-        this.currentGameWordSet = this.appDataWordSets.find((set) => set.isSelected === true);
-        if ((wordSetChanged && !this.appStateIsGuessing) || this.appStateShowCatChooser) {
-          this.NewGame();
-          this.SetWordSetTheme(this.currentGameGuessingWordSet);
-        }
-
-        let userChangedID = this.appDataPlayerCurrent.id !== this.tempID;
-        this.appDataPlayerCurrent.id = this.tempID;
-        this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
-        this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder;
-        this.userSettingsUseExtraCard = this.tempUseExtraCard;
-        this.ToggleUseLightTheme(this.tempUserSettingsUsesLightTheme);
-        this.ToggleUseSimplifedTheme(this.tempUserSettingsUsesSimplifiedTheme);
-        this.ToggleShowAllCards(this.tempUserSettingsShowAllCards);
-        this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
-        this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
-        this.SetWordSetTheme(this.currentGameGuessingWordSet);
-
-        localStorage.setItem('userID', this.appDataPlayerCurrent.id);
-        localStorage.setItem('useWordSetThemes', this.userSettingsUseWordSetThemes);
-        localStorage.setItem('userSettingsUserWantsDailyReminder', this.userSettingsUserWantsDailyReminder);
-        localStorage.setItem('userSettingsLanguage', this.userSettingsLanguage);
-        localStorage.setItem('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
-        localStorage.setItem('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
-        localStorage.setItem('userSettingsShowAllCards', this.userSettingsShowAllCards);
-        localStorage.setItem('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
-        localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
-        localStorage.setItem('wordSet', this.currentGameWordSet.id);
-
-        if (userChangedID) {
-          await this.GetDailyGameStats();
-          window.location.reload();
-        }
-      }
-      this.appStateIsModalShowing = false;
-      this.appStateShowSettings = false;
-      this.appStateShowIntro = false;
-    },
-
     HandleKeyDownEvent(e) {
       if (!e.metaKey && !e.ctrlKey && !e.altKey) {
         switch (e.key) {
@@ -1582,7 +1593,6 @@ var app = new Vue({
                 error('(' + e.statusCode + ') ' + e.message);
               });
             }
-            highlight('Success');
             return response.text();
           })
           .then((shortUrlParam) => {
@@ -2022,10 +2032,10 @@ var app = new Vue({
 
     async LoadPage() {
       note('LoadPage() called');
-      this.HandlePageVisibilityChange();
+      this.GetUserSettings();
       announce('Player ' + this.appDataPlayerCurrent.id + ' has loaded v' + this.appDataVersion);
+      this.GetDailyGames();
       this.GetLast10GlobalCreatedGames();
-      await this.GetDailyGames();
       this.appDataTransitionLong = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
       this.appDataTransitionShort = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
       this.appStatePageHasLoaded = true;
@@ -2232,7 +2242,6 @@ var app = new Vue({
   },
   watch: {
     userSettingsLanguage: function (newLang, oldLang) {
-      highlight('userSettingsLanguage watch triggered');
       this.LoadTranslatedWords();
     },
   },
@@ -2405,7 +2414,7 @@ var app = new Vue({
       if (this.getTodaysDaily === undefined) {
         return false;
       }
-      const isFresh = this.getTodaysDaily.guesses === 0 && !this.HasUserStartedGame(this.getTodaysDaily);
+      const isFresh = this.getTodaysDaily.guesses === 0 && !this.HasUserStartedGame(this.getTodaysDaily) && !this.appStateIsGettingDailyGames && !this.appStateIsGettingUserStats;
       if (this.getIsBadgeSupported) {
         if (isFresh) {
           navigator.setAppBadge();

@@ -206,7 +206,6 @@ button badge {
     margin-left: 0px;
     opacity: 0;
     transition: var(--mediumTransition) ease-in-out all;
-    transition-delay: var(--mediumTransition);
     width: 0px;
     height: 0px;
     scale: 0;
@@ -667,6 +666,7 @@ button.small {
     line-height: 140%;
     flex-direction: row;
     justify-content: center;
+    color: hsl(var(--appForegroundHSL));
     padding: calc(.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
     cursor: pointer;
     background: hsla(var(--appBackgroundDarkHSL), .6);
@@ -676,10 +676,6 @@ button.small {
     -webkit-tap-highlight-color: transparent;
     transition: var(--mediumTransition) ease-in-out;
     transition-property: background-color, border-color, opacity;
-}
-
-.wallpaper button.small {
-    color: hsl(var(--appForegroundHSL));
 }
 
 button.small.main {
@@ -693,13 +689,18 @@ button.small.strong {
     color: hsl(var(--appForegroundHSL));
 }
 
+
+button.small.disabled {
+    opacity: .4;
+}
+
 button.small.strong.disabled {
     opacity: .4;
     background-color: hsl(var(--appBackgroundHSL));
     color: hsl(var(--appForegroundHSL));
 }
 
-notification button.inline, notification button.small {
+notification button.inline, notification button.small, notification.meta leftright {
     width: 90%;
 }
 
@@ -759,6 +760,15 @@ notification.meta {
     background-position: top center;
     justify-content: center;
     transition: none;
+    gap: calc(.75 * var(--defaultGap));
+}
+
+notification.meta leftright {
+    background: none;
+    padding: 0;
+    border: none;
+    max-width: calc(2 * var(--cardSize));
+    gap: calc(.25 * var(--defaultGap));
 }
 
 notification.show {

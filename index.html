@@ -63,13 +63,15 @@
       <notification @click="appStateShowNotification = false" :class="{show: appStateShowNotification}">
         <message :title="getPlayerMessage" v-html="getPlayerMessage"></message>
       </notification>
-      <notification :class="{show: appStateShowMeta}" class="meta" @click="ToggleShowMeta(event)">
+      <notification :class="{show: appStateShowMeta}" class="meta">
         <header>
           <icon class="logo"></icon>
           <h2>Facets</h2>
           <p>Hi, {{appDataPlayerCurrent.name}}!</p>
         </header>
+        <icon :class="{show: appStateIsGettingLast10Games || appStateIsGettingDailyGames || appStateIsGettingDailyGameStats || appStateIsGettingUserStats}" style="position: relative" class="spinner"></icon>
         <subtitle>
+          <button v-if="getNumberOfHintsThatHaveBeenFilled !== 0" class="small highlightText" @click="ToggleShowMeta(event)">Resume</button>
           <button class="inline small main" @click="HandleNewGameClick()">
             <icon class="empty"></icon>
             Create A Puzzle!
@@ -77,14 +79,15 @@
           </button>
           <button v-if="vsShowDaily" class="small" @click="ToggleShowDailyGames(event)">
             The Daily
-            <badge :class="{show:getDailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
+            <badge :class="{show: getDailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
           </button>
           <button class="small" @click="ToggleShowGlobalCreated(event)">Player Puzzles</button>
           <button class="small" @click="ToggleShowTutorial(event)">How To Play</button>
           <button class="small" @click="ShowSettings(event)">Settings</button>
-          <button class="small" @click="ToggleShowInfo(event)">Credits</button>
-          <button class="small highlightText" @click="window.open('https://www.buymeacoffee.com/wilvoss', '_blank')">Buy Me a Coffee!</button>
-          <button class="small" @click="ToggleShowMeta(event)">Resume</button>
+          <leftright>
+            <button class="small" @click="ToggleShowInfo(event)">Credits</button>
+            <button class="small" @click="window.open('https://www.buymeacoffee.com/wilvoss', '_blank')">Donate!</button>
+          </leftright>
         </subtitle>
       </notification>
       <modal v-if="appStateShowOOBE || appStateShowIntro" class="tutorial">
