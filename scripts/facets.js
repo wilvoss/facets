@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.1.11',
+    appDataVersion: '2.1.12',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -353,7 +353,7 @@ var app = new Vue({
         let dataArrays = await Promise.all(fetchPromises);
         allWords = [].concat(...dataArrays);
       } catch (error) {
-        console.error('Error:', error);
+        error('Error:', error);
       }
 
       return allWords;
@@ -379,7 +379,7 @@ var app = new Vue({
         let dataArrays = await Promise.all(fetchPromises);
         allWords = [].concat(...dataArrays);
       } catch (error) {
-        console.error('Error:', error);
+        error('Error:', error);
       }
 
       return allWords;
@@ -538,7 +538,7 @@ var app = new Vue({
         if (UseDebug) {
           announce('HERE ARE THE CARD WORDS');
           this.appDataCards.forEach((card) => {
-            console.log(JSON.stringify(card.words));
+            log(JSON.stringify(card.words));
           });
 
           for (let i = this.appDataCardsParked.length - 1; i > 0; i--) {
@@ -687,7 +687,7 @@ var app = new Vue({
         this.SetAIHints(JSON.parse(payload).result);
         this.FillParkingLot();
       } catch (error) {
-        console.error('Error:', error);
+        error('Error:', error);
         if (UseDebug && this.userSettingsUseExtraCard) {
           payload = JSON.stringify({ result: ['1', '2', '3', '4'] });
           this.SetAIHints(JSON.parse(payload).result);
@@ -803,7 +803,7 @@ var app = new Vue({
               this.appDataGlobalCreatedGames = JSON.parse(payload);
             })
             .catch((error) => {
-              console.error('Error:', error);
+              error('Error:', error);
             })
             .finally(() => {
               this.appStateIsGettingLast10Games = false;
@@ -853,7 +853,7 @@ var app = new Vue({
               this.GetDailyGameStats();
             })
             .catch((error) => {
-              console.error('Error:', error);
+              error('Error:', error);
             })
             .finally(() => {
               this.appStateIsGettingDailyGames = false;
@@ -896,7 +896,7 @@ var app = new Vue({
             });
           })
           .catch((error) => {
-            console.error('Error:', error);
+            error('Error:', error);
           })
           .finally(() => {
             this.GetUsersStats();
@@ -941,7 +941,7 @@ var app = new Vue({
           });
         })
         .catch((error) => {
-          console.error('Error:', error);
+          error('Error:', error);
         })
         .finally(() => {
           this.appStateIsGettingUserStats = false;
@@ -1573,7 +1573,7 @@ var app = new Vue({
             })
             .catch((err) => {
               this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
-              console.error('Failed to share via navigator.share(): ', err);
+              error('Failed to share via navigator.share(): ', err);
             });
         } else {
           // fall back to clipboard
@@ -1619,7 +1619,7 @@ var app = new Vue({
             this.ShareText(text, this.appDataShareURL);
           })
           .catch((error) => {
-            console.error('Error:', error);
+            error('Error:', error);
             if (!UseDebug) {
               this.appStateShareError = true;
             }
@@ -2111,7 +2111,7 @@ var app = new Vue({
         note('ScheduleDailyNotification() called');
         this.ClearNotificationInterval();
         if (this.userSettingsUserWantsDailyReminder && this.getUserAcceptedNotificationsPermission && !this.HasUserStartedGame(this.getTodaysDaily)) {
-          console.log('ScheduleDailyNotification() called');
+          log('ScheduleDailyNotification() called');
 
           const scheduleNotification = async () => {
             if (!this.HasUserStartedGame(this.getTodaysDaily)) {
@@ -2119,12 +2119,12 @@ var app = new Vue({
               if (syncSupportStatus === 'supported') {
                 navigator.serviceWorker.ready.then((registration) => {
                   registration.sync.register('daily-reminder').catch(() => {
-                    console.log('Background Sync not supported, using fallback.');
+                    log('Background Sync not supported, using fallback.');
                     this.ShowDailyReminder(); // Fallback function call
                   });
                 });
               } else {
-                console.log('Background Sync via syncSupportStatus not supported, using fallback.');
+                log('Background Sync via syncSupportStatus not supported, using fallback.');
                 this.ShowDailyReminder(); // Fallback function call
               }
             }
@@ -2135,7 +2135,7 @@ var app = new Vue({
             let nextMinute = new Date(now.getTime() + 60 * 1000);
             nextMinute.setSeconds(0, 0);
             const timeout = nextMinute.getTime() - now.getTime();
-            console.log('timeout = ' + timeout);
+            log('timeout = ' + timeout);
             setTimeout(scheduleNotification, 2000); // 5 seconds for debug mode
           } else {
             let next8AM = new Date();
@@ -2165,20 +2165,20 @@ var app = new Vue({
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.getRegistration().then((registration) => {
             if (registration) {
-              console.log('Service Worker is already registered with scope:', registration.scope);
+              log('Service Worker is already registered with scope:', registration.scope);
             } else {
               navigator.serviceWorker
                 .register('/service-worker.js', { scope: '/' }) // Explicitly set scope
                 .then((registration) => {
-                  console.log('Service Worker registered with scope:', registration.scope);
+                  log('Service Worker registered with scope:', registration.scope);
                 })
                 .catch((error) => {
-                  console.log('Service Worker registration failed:', error);
+                  log('Service Worker registration failed:', error);
                 });
             }
           });
         } else {
-          console.log('Service Workers are not supported');
+          log('Service Workers are not supported');
         }
         this.ScheduleDailyNotification();
       } else {
@@ -2186,7 +2186,7 @@ var app = new Vue({
           if (registrations.length) {
             registrations.forEach((registration) => registration.unregister());
           } else {
-            console.log('No service workers to unregister');
+            log('No service workers to unregister');
           }
         });
       }
