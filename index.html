@@ -371,9 +371,9 @@
           </message>
           <icon v-show="appStateIsGettingDailyGames" style="position: relative" class="spinner show"></icon>
           <gamelinks>
-            <gamelink :class="{done: game.solved, quit: game.quit}" v-for="(game, index) in getDailyGamesWithWordSetNames">
+            <gamelink @click="HandleOldGameClick(event, game)" :class="{done: game.solved, quit: game.quit}" v-for="(game, index) in getDailyGamesWithWordSetNames">
               <p>
-                <a @click="HandleOldGameClick(event, game)">
+                <a>
                   <small>
                     <dot v-if="index === 0 && getTodaysDaily !== getCurrentDaily && game.guesses === 0 && getDailyIsFreshToday || game.guesses === 0 && !HasUserStartedGame(game)">•</dot>
                     {{game.date}}
