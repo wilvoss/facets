@@ -886,6 +886,10 @@ modal section message {
     margin-top: 0;
 }
 
+modal credit {
+    text-align: center;
+}
+
 message.clickable {
     cursor: pointer;
 }
