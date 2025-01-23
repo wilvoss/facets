@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.1.08',
+    appDataVersion: '2.1.09',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -56,6 +56,7 @@ var app = new Vue({
     appStateIsGettingDailyGames: false,
     appStateIsGettingDailyGameStats: false,
     appStateIsGettingUserStats: false,
+    appStateSolving: false,
     appStateIsGuessing: false,
     appStateIsModalShowing: false,
     appStateIsNewVersionAvailable: false,
@@ -96,7 +97,7 @@ var app = new Vue({
     userSettingsUsesLightTheme: false,
     userSettingsUsesSimplifiedTheme: false,
     userSettingsUseMultiColoredGems: true,
-    userSettingsUseWordSetThemes: false,
+    userSettingsUseWordSetThemes: true,
     userSettingsUserWantsDailyReminder: false,
     userSettingsShowAllCards: false,
     userSettingsStreaks: [],
@@ -111,7 +112,7 @@ var app = new Vue({
     tempUserSettingsUsesLightTheme: false,
     tempUserSettingsUsesSimplifiedTheme: false,
     tempUserSettingsShowAllCards: false,
-    tempUseWordSetThemes: false,
+    tempUseWordSetThemes: true,
     tempUserWantsDailyReminder: false,
     tempWordSetName: '',
     tempUsePortraitLayout: false,
@@ -416,34 +417,36 @@ var app = new Vue({
     },
 
     async SendGameStatsToServer(_stats) {
-      note('SendGameStatsToServer() called');
-      let params = `id=${this.appDataPlayerCurrent.id}&key=${_stats.key}&guesses=${_stats.guesses}`;
-      if (_stats.quit) {
-        params = `id=${this.appDataPlayerCurrent.id}&key=${_stats.key}&guesses=${_stats.guesses}&quit=true`;
+      if (!this.appStateSolving) {
+        note('SendGameStatsToServer() called');
+        let params = `id=${this.appDataPlayerCurrent.id}&key=${_stats.key}&guesses=${_stats.guesses}`;
+        if (_stats.quit) {
+          params = `id=${this.appDataPlayerCurrent.id}&key=${_stats.key}&guesses=${_stats.guesses}&quit=true`;
+        }
+
+        const requestUrl = `https://empty-night-9bea.bigtentgames.workers.dev/${params}`;
+
+        await fetch(requestUrl, {
+          method: 'GET',
+          headers: {
+            Origin: window.location.origin,
+            'Access-Control-Request-Method': 'GET',
+            'Access-Control-Request-Headers': 'Content-Type',
+          },
+        })
+          .then((response) => {
+            if (!response.ok) {
+              error('Server error: ' + response.status);
+            }
+            return response.json();
+          })
+          .catch((error) => {
+            error('Error:', error);
+          })
+          .finally(() => {
+            this.GetDailyGameStats();
+          });
       }
-
-      const requestUrl = `https://empty-night-9bea.bigtentgames.workers.dev/${params}`;
-
-      await fetch(requestUrl, {
-        method: 'GET',
-        headers: {
-          Origin: window.location.origin,
-          'Access-Control-Request-Method': 'GET',
-          'Access-Control-Request-Headers': 'Content-Type',
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            error('Server error: ' + response.status);
-          }
-          return response.json();
-        })
-        .catch((error) => {
-          error('Error:', error);
-        })
-        .finally(() => {
-          this.GetDailyGameStats();
-        });
     },
 
     IsCurrentGuessCorrect() {
@@ -975,26 +978,24 @@ var app = new Vue({
     },
 
     GetUserStartedGame(_game) {
-      note('GetUserStartedGame() called');
       return this.appDataUserDailyGamesStarted.find((game) => {
         return game.key === _game.key;
       });
     },
 
     HasUserStartedGame(_game) {
-      note('HasUserStartedGame() called');
       let foundGame = false;
       foundGame = this.GetUserStartedGame(_game) ? true : false;
       return foundGame;
     },
 
-    HandleOldGameClick(e, _game) {
+    HandleOldGameClick(e, _game, _showsol = false) {
       note('HandleOldGameClick() called');
       if (e !== null) {
         e.preventDefault();
         e.stopPropagation();
       }
-      if (_game.solved) {
+      if (_game.solved && !_showsol) {
         this.ShareWin(_game);
         return;
       }
@@ -1050,6 +1051,24 @@ var app = new Vue({
       note('HandleNewGameClick() called');
       this.GetCategoryNames();
       this.appStateShowCatChooser = true;
+    },
+
+    HandleSolvedPuzzleButtonClick(e, _game) {
+      note('HandleSolvedPuzzleButtonClick() called');
+      e.stopPropagation();
+      e.preventDefault();
+
+      this.appStateSolving = true;
+      warn('this.appStateSolving = ' + this.appStateSolving);
+      this.HandleOldGameClick(e, _game, true);
+      this.appStateShowNotification = false;
+      setTimeout(() => {
+        this.SolvePuzzleCurrent();
+        this.appStateSolving = false;
+        this.appStateShowNotification = false;
+        warn('this.appStateSolving = ' + this.appStateSolving);
+        history.pushState(null, null, window.location.origin + window.location.pathname);
+      }, 200);
     },
 
     SolvePuzzleCurrent() {
@@ -1850,7 +1869,7 @@ var app = new Vue({
         if (this.getSelectedCard) this.getSelectedCard.isSelected = false;
         this.appStateTrayRotation = this.appStateTrayRotation + _inc;
         document.getElementById('parkingInput').focus();
-        if (_useTimeout) {
+        if (_useTimeout && !this.appStateSolving) {
           this.appDataTimeoutTrayRotation = setTimeout(() => {
             this.ResetTrayAfterRotation();
           }, this.appDataTransitionLong);
@@ -1987,11 +2006,11 @@ var app = new Vue({
     GetBoardFromURL() {
       let boardPieces = [];
       if (window.location.search) {
-        urlParams = new URLSearchParams(window.location.search);
+        let urlParams = new URLSearchParams(window.location.search);
         UseDebug = urlParams.has('useDebug') ? true : UseDebug;
         let search = decodeURIComponent(window.location.search);
         params = search.split('?')[1].split('&');
-        boardPieces = urlParams.get('board');
+        boardPieces = urlParams.has('board') ? urlParams.get('board').split(':') : [];
       }
       return boardPieces;
     },
@@ -2039,18 +2058,8 @@ var app = new Vue({
       this.appDataTransitionLong = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
       this.appDataTransitionShort = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
       this.appStatePageHasLoaded = true;
-      var urlParams = '';
-      var params = [];
-      let boardPieces = [];
+      let boardPieces = this.GetBoardFromURL();
       try {
-        if (window.location.search) {
-          urlParams = new URLSearchParams(window.location.search);
-          UseDebug = urlParams.has('useDebug') ? true : UseDebug;
-          let search = decodeURIComponent(window.location.search);
-          params = search.split('?')[1].split('&');
-          boardPieces = urlParams.has('board') ? urlParams.get('board').split(':') : [];
-        }
-
         if (boardPieces.length >= 40) {
           document.title = 'Facets!';
           this.ToggleShowMeta(null);

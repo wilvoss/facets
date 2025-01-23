@@ -76,7 +76,7 @@
             Create A Puzzle!
             <icon class="empty"></icon>
           </button>
-          <button v-if="getNumberOfHintsThatHaveBeenFilled !== 0" class="small highlightText" @click="ToggleShowMeta(event)">Continue {{getResumeText}}</button>
+          <button v-if="getNumberOfHintsThatHaveBeenFilled !== 0 && currentGameSolutionGuessing !== currentGameSolutionActual" class="small highlightText" @click="ToggleShowMeta(event)">Continue {{getResumeText}}</button>
           <button v-if="vsShowDaily" class="small" @click="ToggleShowDailyGames(event)">
             The Daily
             <badge :class="{show: getDailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
@@ -116,7 +116,6 @@
         <section>
           <h2>How to play</h2>
           <p>In the game of Facets, you are either <span class="blueText">creating</span> a word puzzle to send to your friends or <span class="greenText">guessing</span> the solution to a word puzzle that a friend sent to you.</p>
-          <p>Other than The Daily Puzzle, there is no single player mode. The game requires sharing between friends via text, chat, email, or some other social media.</p>
 
           <hider v-if="!appStateIsGuessing">
             <h3>Creating</h3>
@@ -136,7 +135,7 @@
             <p>Right now, you are attempting to solve a word puzzle that our AI created. It was given word-pairs that it had to "connect" by coming up with a clue that works for both words in each word-pair.</p>
             <p class="greenText">It's your job to figure out what word-pairs it was given based on the clues it came up with.</p>
           </hider>
-          <hider v-if="appStateForceAutoCheck">
+          <hider v-if="appStateForceAutoCheck && !getIsAIGenerated">
             <p>Right now, you are solving a word puzzle that another, anonymous player created. They were given word-pairs that they had to "connect" by coming up with a clue that works for both words in each word-pair.</p>
             <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they came up with.</p>
           </hider>
@@ -368,9 +367,9 @@
           </message>
           <icon v-show="appStateIsGettingDailyGames" style="position: relative" class="spinner show"></icon>
           <gamelinks>
-            <gamelink :class="{done: game.solved, quit: game.quit}" v-for="(game, index) in getDailyGamesWithWordSetNames" @click="HandleOldGameClick(event, game)">
+            <gamelink :class="{done: game.solved, quit: game.quit}" v-for="(game, index) in getDailyGamesWithWordSetNames">
               <p>
-                <a>
+                <a @click="HandleOldGameClick(event, game)">
                   <small>
                     <dot v-if="index === 0 && getTodaysDaily !== getCurrentDaily && game.guesses === 0 && getDailyIsFreshToday || game.guesses === 0 && !HasUserStartedGame(game)">•</dot>
                     {{game.date}}
@@ -381,7 +380,7 @@
                   PLAY
                   <icon class="play"></icon>
                 </button>
-                <button v-if="game.solved && game.guesses > 0 && !game.quit" class="inline report">
+                <button @click="HandleSolvedPuzzleButtonClick(event, game)" v-if="game.solved && game.guesses > 0 && !game.quit" class="inline report">
                   <icon class="check"></icon>
                   In {{game.guesses}}
                 </button>
@@ -427,7 +426,7 @@
             <badge :class="{show:getDailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
           </button>
         </controls>
-        <header :disabled="appStateShowNotification">
+        <header :disabled="appStateShowNotification" :class="{disabled: appStateSolving}">
           <span> {{getCurrentDaily && vsShowDaily ? getCurrentDaily.key === getTodaysKey ? 'Today\'s' : getCurrentDaily.date.split(',')[0] : ''}} </span>
           <flogo></flogo>
           <icon v-if="getCurrentDaily && !getCurrentDaily.solved" :class="getCorrectCalIconClass" class="large" @click="ToggleShowDailyGames(event)"></icon>
@@ -447,7 +446,7 @@
           </button>
         </controls>
       </wrapper>
-      <wrapper class="main">
+      <wrapper class="main" :class="{disabled: appStateSolving}">
         <rotators style="width: calc(3.25 * var(--cardSize))">
           <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateTray(1)"><icon class="rotate"></icon></button>
           <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise" @click="RotateTray(-1)"><icon class="rotate"></icon></button>
