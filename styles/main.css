@@ -1531,7 +1531,6 @@ modal categories category {
     padding: calc(.5 * var(--defaultGap));
     color: hsla(var(--appForegroundHSL), .7);
     text-align: center;
-    user-select: none;
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
     background: var(--backgroundCover);
@@ -1541,6 +1540,8 @@ modal categories category {
     border: 1px solid hsla(var(--appForegroundHSL), .1);
     text-shadow: 0px 0px 4px hsl(var(--appBackgroundDarkestHSL));
     max-width: 26%;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 modal categories category.on {
@@ -1951,6 +1952,8 @@ modal img {
     width: 100%;
     max-width: calc(2.5 * var(--cardSize));
     margin: var(--defaultGap) 0;
+    user-select: none;
+    -webkit-user-select: none;
 }
 
 callout, select {

@@ -36,9 +36,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="128x128" href="favicon.png" />
 
-    <link rel="stylesheet" href="styles/normalize.css" media="screen" />
-    <link rel="stylesheet" href="styles/main.css" media="screen" />
-    <link rel="stylesheet" href="styles/checkbox.min.css" media="screen" />
+    <link rel="stylesheet" href="styles/normalize.css?2.1.17" media="screen" />
+    <link rel="stylesheet" href="styles/main.css?2.1.17" media="screen" />
+    <link rel="stylesheet" href="styles/checkbox.min.css?2.1.17" media="screen" />
   </head>
 
   <body>
@@ -56,10 +56,10 @@
 
         <img v-for="wordset in getEnabledWordSets" width="0px" height="0px" alt="preload image that can't be seen" :style="{backgroundImage: 'url('+ wordset.textureImage + ')'}" />
       </preload>
-      <link rel="stylesheet" v-if="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme)" href="styles/light.css" media="screen" />
-      <link rel="stylesheet" v-if="appStateUseFlower || userSettingsUsesSimplifiedTheme" href="styles/simple.css" media="screen" />
-      <link rel="stylesheet" v-if="appStateUseFlower" href="styles/flower.css" media="screen" />
-      <link rel="stylesheet" v-if="appStateUsePortraitLayout && !userSettingsShowAllCards && appDataPlayerCurrent.role !== 'creator'" href="styles/focus.css" media="screen" />
+      <link rel="stylesheet" v-if="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme)" href="styles/light.css?2.1.17" media="screen" />
+      <link rel="stylesheet" v-if="appStateUseFlower || userSettingsUsesSimplifiedTheme" href="styles/simple.css?2.1.17" media="screen" />
+      <link rel="stylesheet" v-if="appStateUseFlower" href="styles/flower.css?2.1.17" media="screen" />
+      <link rel="stylesheet" v-if="appStateUsePortraitLayout && !userSettingsShowAllCards && appDataPlayerCurrent.role !== 'creator'" href="styles/focus.css?2.1.17" media="screen" />
       <notification @click="appStateShowNotification = false" :class="{show: appStateShowNotification}">
         <message :title="getPlayerMessage" v-html="getPlayerMessage"></message>
       </notification>
@@ -86,7 +86,10 @@
           <button class="small" @click="ShowSettings(event)">Settings</button>
           <leftright>
             <button class="small" @click="ToggleShowInfo(event)">Credits</button>
-            <button class="small" @click="window.open('https://www.buymeacoffee.com/wilvoss', '_blank')">Donate!</button>
+            <button class="small inline" @click="window.open('https://www.buymeacoffee.com/wilvoss', '_blank')">
+              Coffee!
+              <icon class="bmc extrasmall"></icon>
+            </button>
           </leftright>
         </subtitle>
       </notification>
@@ -551,14 +554,14 @@
         </button>
       </wrapper>
     </app>
-    <script src="helpers/console-enhancer.js" type="text/javascript"></script>
-    <script src="models/LanguageObject.min.js" type="text/javascript"></script>
-    <script src="models/ProgressMessageObject.min.js" type="text/javascript"></script>
-    <script src="models/WordSetObject.min.js" type="text/javascript"></script>
-    <script src="models/WordObject.min.js" type="text/javascript"></script>
-    <script src="models/CardObject.min.js" type="text/javascript"></script>
-    <script src="models/PlayerObject.min.js" type="text/javascript"></script>
+    <script src="helpers/console-enhancer.js?2.1.17" type="text/javascript"></script>
+    <script src="models/LanguageObject.min.js?2.1.17" type="text/javascript"></script>
+    <script src="models/ProgressMessageObject.min.js?2.1.17" type="text/javascript"></script>
+    <script src="models/WordSetObject.min.js?2.1.17" type="text/javascript"></script>
+    <script src="models/WordObject.min.js?2.1.17" type="text/javascript"></script>
+    <script src="models/CardObject.min.js?2.1.17" type="text/javascript"></script>
+    <script src="models/PlayerObject.min.js?2.1.17" type="text/javascript"></script>
     <script src="helpers/vue.min.js" type="text/javascript"></script>
-    <script src="scripts/facets.js" type="text/javascript"></script>
+    <script src="scripts/facets.js?2.1.17" type="text/javascript"></script>
   </body>
 </html>

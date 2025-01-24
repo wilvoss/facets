@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.1.16',
+    appDataVersion: '2.1.17',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -226,7 +226,6 @@ var app = new Vue({
         let confirmed = await this.EnableDailyReminders();
         if (confirmed) {
           this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder = true;
-          this.ScheduleDailyNotification();
         } else {
           this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder = false;
         }
@@ -1227,6 +1226,7 @@ var app = new Vue({
 
     HandlePageVisibilityChange() {
       note('HandlePageVisibilityChange() called');
+      this.UpdateServiceWorkerNotificationSettings();
       if (!document.hidden) {
         this.GetDailyGames();
       }
@@ -1295,6 +1295,8 @@ var app = new Vue({
         this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
         this.SetWordSetTheme(this.currentGameGuessingWordSet);
 
+        this.UpdateServiceWorkerNotificationSettings();
+
         localStorage.setItem('userID', this.appDataPlayerCurrent.id);
         localStorage.setItem('useWordSetThemes', this.userSettingsUseWordSetThemes);
         localStorage.setItem('userSettingsUserWantsDailyReminder', this.userSettingsUserWantsDailyReminder);
@@ -1314,6 +1316,28 @@ var app = new Vue({
       this.appStateIsModalShowing = false;
       this.appStateShowSettings = false;
       this.appStateShowIntro = false;
+    },
+
+    UpdateServiceWorkerNotificationSettings() {
+      note('UpdateServiceWorkerNotificationSettings() called');
+      const updatedReminderSetting = this.tempUserWantsDailyReminder;
+
+      if (navigator.serviceWorker.controller) {
+        this.Retry(() =>
+          navigator.serviceWorker.controller.postMessage({
+            type: 'USER_WANTS_REMINDER',
+            tempUserWantsDailyReminder: updatedReminderSetting,
+          }),
+        )
+          .then(() => {
+            console.log('User setting sent to Service Worker:', updatedReminderSetting);
+          })
+          .catch(() => {
+            console.log('Failed to send user setting to Service Worker');
+          });
+      } else {
+        console.log('No active service worker controller found');
+      }
     },
 
     GetUserSettings() {
@@ -1411,6 +1435,7 @@ var app = new Vue({
         this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
       }
     },
+
     HandleKeyDownEvent(e) {
       if (!e.metaKey && !e.ctrlKey && !e.altKey) {
         switch (e.key) {
@@ -2101,72 +2126,20 @@ Can you do better?
       this.appStateUsePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
     },
 
-    async CheckSyncSupport() {
-      note('CheckSyncSupport() called');
-      return new Promise((resolve) => {
-        navigator.serviceWorker.addEventListener('message', (event) => {
-          if (event.data.type === 'sync-support') {
-            resolve(event.data.status);
-          }
-        });
-
-        // Send message to service worker to check for sync support
-        if (navigator.serviceWorker.controller) {
-          navigator.serviceWorker.controller.postMessage('check-sync-support');
-        }
+    Retry(fn, retriesLeft = 3, interval = 1000) {
+      return new Promise((resolve, reject) => {
+        fn()
+          .then(resolve)
+          .catch((error) => {
+            if (retriesLeft === 1) {
+              reject(error);
+            } else {
+              setTimeout(() => {
+                retry(fn, retriesLeft - 1, interval * 2).then(resolve, reject);
+              }, interval);
+            }
+          });
       });
-    },
-
-    async ScheduleDailyNotification() {
-      if (this.getSyncIsSupported && this.isPWAOnHomeScreen) {
-        note('ScheduleDailyNotification() called');
-        this.ClearNotificationInterval();
-        if (this.userSettingsUserWantsDailyReminder && this.getUserAcceptedNotificationsPermission && !this.HasUserStartedGame(this.getTodaysDaily)) {
-          log('ScheduleDailyNotification() called');
-
-          const scheduleNotification = async () => {
-            if (!this.HasUserStartedGame(this.getTodaysDaily)) {
-              const syncSupportStatus = await this.CheckSyncSupport();
-              if (syncSupportStatus === 'supported') {
-                navigator.serviceWorker.ready.then((registration) => {
-                  registration.sync.register('daily-reminder').catch(() => {
-                    log('Background Sync not supported, using fallback.');
-                    this.ShowDailyReminder(); // Fallback function call
-                  });
-                });
-              } else {
-                log('Background Sync via syncSupportStatus not supported, using fallback.');
-                this.ShowDailyReminder(); // Fallback function call
-              }
-            }
-          };
-
-          const now = new Date();
-          if (UseDebug) {
-            let nextMinute = new Date(now.getTime() + 60 * 1000);
-            nextMinute.setSeconds(0, 0);
-            const timeout = nextMinute.getTime() - now.getTime();
-            log('timeout = ' + timeout);
-            setTimeout(scheduleNotification, 2000); // 5 seconds for debug mode
-          } else {
-            let next8AM = new Date();
-            next8AM.setHours(8, 0, 0, 0);
-
-            if (next8AM <= now) {
-              next8AM.setDate(next8AM.getDate() + 1);
-            }
-            const timeout = next8AM.getTime() - now.getTime();
-
-            setTimeout(scheduleNotification, timeout);
-            this.appStateBrowserNotificationInterval = setInterval(scheduleNotification, 24 * 60 * 60 * 1000); // 24 hours for normal mode
-          }
-
-          // Adding step 4 logic to send message to service worker
-          if (navigator.serviceWorker.controller) {
-            navigator.serviceWorker.controller.postMessage('daily-reminder');
-          }
-        }
-      }
     },
 
     HandleServiceWorkerRegistration() {
@@ -2174,14 +2147,47 @@ Can you do better?
         note('HandleServiceWorkerRegistration() called');
 
         if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.getRegistration().then((registration) => {
+          this.Retry(() => navigator.serviceWorker.getRegistration()).then((registration) => {
+            const userSettings = this.GetUserSettings();
             if (registration) {
               log('Service Worker is already registered with scope:', registration.scope);
+
+              if (registration.active) {
+                registration.active.postMessage({
+                  type: 'USER_WANTS_REMINDER',
+                  tempUserWantsDailyReminder: this.tempUserWantsDailyReminder,
+                });
+                console.log('User setting sent to Service Worker:', this.tempUserWantsDailyReminder);
+              }
+
+              navigator.serviceWorker.addEventListener('message', (event) => {
+                if (event.data && event.data.type === 'NEW_VERSION_AVAILABLE') {
+                  this.HandleVersionAvailable();
+                }
+              });
             } else {
-              navigator.serviceWorker
-                .register('/service-worker.js', { scope: '/' }) // Explicitly set scope
+              this.Retry(() => navigator.serviceWorker.register('/service-worker.js', { scope: '/' }))
                 .then((registration) => {
                   log('Service Worker registered with scope:', registration.scope);
+
+                  if (registration.active) {
+                    registration.active.postMessage({
+                      type: 'USER_WANTS_REMINDER',
+                      tempUserWantsDailyReminder: this.tempUserWantsDailyReminder,
+                    });
+                    console.log('User setting sent to Service Worker:', this.tempUserWantsDailyReminder);
+                  }
+
+                  if ('sync' in registration) {
+                    return registration.sync
+                      .register('daily-reminder')
+                      .then(() => {
+                        log('Daily reminder sync registered');
+                      })
+                      .catch((error) => {
+                        log('Sync registration failed:', error);
+                      });
+                  }
                 })
                 .catch((error) => {
                   log('Service Worker registration failed:', error);
@@ -2191,34 +2197,14 @@ Can you do better?
         } else {
           log('Service Workers are not supported');
         }
-        this.ScheduleDailyNotification();
       } else {
-        navigator.serviceWorker.getRegistrations().then((registrations) => {
+        this.Retry(() => navigator.serviceWorker.getRegistrations()).then((registrations) => {
           if (registrations.length) {
             registrations.forEach((registration) => registration.unregister());
           } else {
             log('No service workers to unregister');
           }
         });
-      }
-    },
-
-    ShowDailyReminder() {
-      note('ShowDailyReminder() called');
-      const options = {
-        body: "Today's Daily Facets puzzle is ready!",
-        icon: '/images/icon192.png',
-        badge: '/images/icon96.png',
-      };
-
-      new Notification('Daily Reminder', options);
-      note('Notification displayed directly from main thread');
-    },
-
-    ClearNotificationInterval() {
-      if (this.appStateBrowserNotificationInterval) {
-        clearInterval(this.appStateBrowserNotificationInterval);
-        this.appStateBrowserNotificationInterval = null;
       }
     },
 
@@ -2243,12 +2229,12 @@ Can you do better?
         }
       });
     },
+    HandleVersionAvailable() {
+      note('HandleVersionAvailable() called');
+    },
   },
-  beforeDestroy() {
-    this.ClearNotificationInterval();
-  },
+
   mounted() {
-    window.addEventListener('beforeunload', this.ClearNotificationInterval);
     this.LoadPage();
     this.HandleServiceWorkerRegistration();
     window.addEventListener('keydown', this.HandleKeyDownEvent);
@@ -2256,9 +2242,6 @@ Can you do better?
     window.addEventListener('visibilitychange', this.HandlePageVisibilityChange);
     window.addEventListener('resize', this.HandleResize);
     window.addEventListener('popstate', this.HandlePopState);
-  },
-  destroyed() {
-    window.removeEventListener('beforeunload', this.ClearNotificationInterval);
   },
   watch: {
     userSettingsLanguage: function (newLang, oldLang) {
