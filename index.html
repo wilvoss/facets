@@ -65,10 +65,10 @@
       </notification>
       <notification :class="{show: appStateShowMeta}" class="meta">
         <header>
-          <icon class="logo"></icon>
-          <h2>Facets</h2>
-          <p>Hi, {{appDataPlayerCurrent.name}}!</p>
+          <icon class="logo giant"></icon>
+          <!-- <h2>Facets</h2> -->
         </header>
+        <p>Hi, {{appDataPlayerCurrent.name}}!</p>
         <icon :class="{show: appStateIsGettingLast10Games || appStateIsGettingDailyGames || appStateIsGettingDailyGameStats || appStateIsGettingUserStats}" style="position: relative" class="spinner"></icon>
         <subtitle>
           <button class="inline small main" @click="HandleNewGameClick()">
@@ -284,10 +284,10 @@
           </checkbox>
           <small>Enable this to display category related backgrounds.</small>
           <checkbox v-if="appStateUsePortraitLayout" :class="{on: tempUserSettingsShowAllCards}" @click="ToggleTempShowAllCards()">
-            Show all unused cards
+            Shrink to fit
             <toggle></toggle>
           </checkbox>
-          <small v-if="appStateUsePortraitLayout">Enable this if you want to see all of the unused cards on the screen. </small>
+          <small v-if="appStateUsePortraitLayout">Enable this if you want to shrink all cards to fit on the screen. </small>
           <checkbox :class="{on: tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseSimplifiedTheme()">
             Simple visuals
             <toggle></toggle>
@@ -441,7 +441,7 @@
             <count v-if="getCurrentDaily && getCurrentDaily.solved"> in {{getCurrentDaily.guesses}} {{getCurrentDaily.guesses !== 1 ? 'tries' : 'try'}} </count>
             <count v-if="getCurrentDaily && !getCurrentDaily.solved"> Daily </count>
           </span>
-          <button @click="HandleOldGameClick(event, getTodaysDaily)" class="small inline" :class="{show: !appStateShowNotification && vsShowDaily && getDailyIsFreshToday && appStateShowMeta}">Play Today's Daily!</button>
+          <button @click="HandleOldGameClick(event, getTodaysDaily)" class="dailycta" :class="{show: !appStateShowNotification && vsShowDaily && getDailyIsFreshToday && appStateShowMeta}">Start Today's Daily!</button>
         </header>
         <controls :class="{disabled: getActionButtonState}">
           <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()">

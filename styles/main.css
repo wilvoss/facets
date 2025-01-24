@@ -68,6 +68,7 @@
     --smallIconSize: 24px;
     --mediumIconSize: 32px;
     --largeIconSize: 48px;
+    --giantIconSize: 72px;
     --cardDropShadow: 0px 0px 10px rgba(0, 0, 0, .3);
     --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, .5);
     --statShadow: 0px 4px 10px rgba(0, 0, 0, .25);
@@ -269,7 +270,7 @@ header icon {
     cursor: pointer;
 }
 
-notification header icon {
+notification header icon.logo {
     pointer-events: none;
     cursor: default;
 }
@@ -290,27 +291,26 @@ header span:first-of-type {
     justify-content: end;
 }
 
-header button.small {
+button.dailycta {
     position: fixed;
     z-index: 300;
     top: 0px;
-    padding: calc(.5 * var(--defaultGap)) var(--defaultGap);
+    padding: calc(.5 * var(--defaultGap)) calc(2 * var(--defaultGap));
     height: auto;
     background-color: hsl(var(--linkColorLightHSL));
+    border: 1px solid hsla(var(--linkColorLightHSL), 1);
     border-radius: var(--borderRadius);
-    border-width: 0px 1px 1px 1px;
-    color: hsl(var(--appBackgroundHSL));
+    color: hsl(var(--appBackgroundDarkestHSL));
     transform: translate(0px, -60px);
     transition: var(--mediumTransition) ease-in-out all;
-    font-family: "Theme";
-
+    font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
 }
 
-header button.small icon {
+button.dailycta icon {
     background: hsl(var(--appBackgroundHSL));
 }
 
-header button.small.show {
+button.dailycta.show {
     transform: translate(0px, var(--defaultGap));
 }
 
@@ -360,6 +360,14 @@ icon.large {
     height: var(--largeIconSize);
     mask-size: calc(.75 * var(--largeIconSize)) calc(.75 * var(--largeIconSize));
     -webkit-mask-size: calc(.75 * var(--largeIconSize)) calc(.75 * var(--largeIconSize));
+}
+
+
+icon.giant, icon.logo.giant {
+    width: var(--giantIconSize);
+    height: var(--giantIconSize);
+    mask-size: var(--giantIconSize) var(--giantIconSize);
+    -webkit-mask-size: var(--giantIconSize) var(--giantIconSize);
 }
 
 icon.empty {
@@ -729,6 +737,12 @@ notification header {
     flex: unset;
 }
 
+notification header h2 {
+    padding: 0;
+    margin: 0;
+    color: hsl(var(--appForegroundDiminishedHSL));
+}
+
 notification subtitles {
     flex-basis: auto;
 }
@@ -746,9 +760,7 @@ notification h2, notification p {
 }
 
 notification p {
-    margin: 0px 0 0 0;
-    color: hsl(var(--appForegroundDiminishedHSL));
-    font-size: 120%;
+    margin: 0;
 }
 
 notification.meta {
@@ -1072,6 +1084,7 @@ modal controls {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     padding: 0;
+    padding-bottom: calc(.5 * env(safe-area-inset-bottom));
     gap: calc(.5 * var(--defaultGap));
     height: var(--footerHeight);
     width: 100%;
@@ -2125,17 +2138,13 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     }
 
     header {
-        gap: 6px;
+        gap: 10px;
         display: flex;
         justify-content: center;
     }
 
-    header button.small {
-        border-radius: var(--borderRadius);
-    }
-
-    header button.small.show {
-        transform: translate(0px, 14px);
+    button.dailycta {
+        font-size: 130%;
     }
 
     header icon {
@@ -2270,11 +2279,6 @@ app.dragging, .dragging tray, .dragging card, .dragging spot, .dragging rotators
     gamelinks p button.inline {
         width: calc(3 * var(--defaultGap) - 10px);
         height: calc(2 * var(--defaultGap));
-    }
-
-    header h1 {
-        letter-spacing: 1px;
-        font-size: 250%;
     }
 
     subtitle {

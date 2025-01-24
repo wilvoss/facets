@@ -65,6 +65,14 @@ modal controls {
     border-color: hsla(var(--messageColorHSL), 1);
 }
 
+modal callout, modal select {
+    border: 1px solid hsla(var(--appBackgroundLighterHSL), 1);
+}
+
+leftright callout, select {
+    background: hsl(var(--hueMain), 100%, 100%)
+}
+
 message {
     text-shadow: none;
 }
@@ -239,10 +247,6 @@ button.update icon {
 
 .blueText {
     color: hsl(var(--hueCreating), 100%, 48%);
-}
-
-leftright callout {
-    background: hsl(var(--hueMain), 100%, 100%)
 }
 
 @media screen and (max-width:678px) {
