@@ -1,5 +1,3 @@
-let tempUserWantsDailyReminder = false;
-
 // Install event
 self.addEventListener('install', (event) => {
   console.log('Service Worker installed');
@@ -21,25 +19,34 @@ self.addEventListener('activate', (event) => {
   );
 });
 
+// Sync event
 self.addEventListener('sync', (event) => {
   if (event.tag === 'daily-reminder') {
     event.waitUntil(showDailyReminder());
   }
 });
 
-// Listen for messages from the client
-self.addEventListener('message', (event) => {
-  if (event.data.type === 'USER_WANTS_REMINDER') {
-    tempUserWantsDailyReminder = event.data.tempUserWantsDailyReminder;
-    console.log('Received user preference:', tempUserWantsDailyReminder);
-  }
-});
+// Helper function to calculate delay until next 8:00 am
+function getDelayUntilNext8AM() {
+  const now = new Date();
+  const next8AM = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 0, 0, 0);
 
+  if (now.getTime() >= next8AM.getTime()) {
+    next8AM.setDate(next8AM.getDate() + 1);
+  }
+
+  return next8AM.getTime() - now.getTime();
+}
+
+// Function to show daily reminder notification
 function showDailyReminder() {
   console.log('showDailyReminder() called');
 
+  // Assuming you have logic to verify if user wants daily reminders
+  const userWantsDailyReminder = true;
+
   self.clients.matchAll().then((clients) => {
-    if (clients.length > 0 && tempUserWantsDailyReminder) {
+    if (clients.length > 0 && userWantsDailyReminder) {
       const client = clients[0];
 
       const options = {
@@ -57,8 +64,38 @@ function showDailyReminder() {
         .catch((error) => {
           console.error('Failed to display notification:', error);
         });
+
+      // Schedule the next notification
+      const delay = getDelayUntilNext8AM();
+      setTimeout(() => {
+        navigator.serviceWorker.ready.then((registration) => {
+          registration.sync
+            .register('daily-reminder')
+            .then(() => {
+              console.log('Sync event registered for the next notification');
+            })
+            .catch((error) => {
+              console.error('Sync registration failed:', error);
+            });
+        });
+      }, delay + 86400000); // Add 24 hours (86400000 milliseconds) to the delay
     } else {
       console.log('Daily reminder notification not shown: User preference is disabled or no clients');
     }
   });
 }
+
+// Register the initial sync event from the client-side code
+navigator.serviceWorker.ready.then((registration) => {
+  const delay = getDelayUntilNext8AM();
+  setTimeout(() => {
+    registration.sync
+      .register('daily-reminder')
+      .then(() => {
+        console.log('Sync event registered for the first time');
+      })
+      .catch((error) => {
+        console.error('Sync registration failed:', error);
+      });
+  }, delay);
+});
