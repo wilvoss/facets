@@ -69,6 +69,7 @@
     --mediumIconSize: 32px;
     --largeIconSize: 48px;
     --giantIconSize: 72px;
+    --massiveIconSize: 128px;
     --cardDropShadow: 0px 0px 10px rgba(0, 0, 0, .3);
     --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, .5);
     --statShadow: 0px 4px 10px rgba(0, 0, 0, .25);
@@ -273,6 +274,12 @@ header icon {
 notification header icon.logo {
     pointer-events: none;
     cursor: default;
+}
+
+notification header flogo {
+    width: calc(2 * var(--massiveIconSize));
+    height: var(--massiveIconSize);
+    background-size: contain;
 }
 
 header icon.check {
