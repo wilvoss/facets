@@ -344,15 +344,15 @@ icon {
 icon.tiny {
     width: var(--tinyIconSize);
     height: var(--tinyIconSize);
-    mask-size: calc(.75 * var(--tinyIconSize)) calc(.75 * var(--tinyIconSize));
-    -webkit-mask-size: calc(.75 * var(--tinyIconSize)) calc(.75 * var(--tinyIconSize));
+    mask-size: calc(1 * var(--tinyIconSize)) calc(1 * var(--tinyIconSize));
+    -webkit-mask-size: calc(1 * var(--tinyIconSize)) calc(1 * var(--tinyIconSize));
 }
 
 icon.extrasmall {
     width: var(--extraSmallIconSize);
     height: var(--extraSmallIconSize);
-    mask-size: calc(.75 * var(--extraSmallIconSize)) calc(.75 * var(--extraSmallIconSize));
-    -webkit-mask-size: calc(.75 * var(--extraSmallIconSize)) calc(.75 * var(--extraSmallIconSize));
+    mask-size: calc(1 * var(--extraSmallIconSize)) calc(1 * var(--extraSmallIconSize));
+    -webkit-mask-size: calc(1 * var(--extraSmallIconSize)) calc(1 * var(--extraSmallIconSize));
 }
 
 icon.medium {
@@ -541,17 +541,15 @@ icon.info {
 icon.info.small {
     background-color: hsl(0, 100%, 100%);
     width: var(--tiniestIconSize);
+    height: var(--tiniestIconSize);
     padding-left: 4px;
     padding-bottom: 5px;
-    height: var(--tiniestIconSize);
     mask-size: var(--tiniestIconSize) var(--tiniestIconSize);
     -webkit-mask-size: var(--tiniestIconSize) var(--tiniestIconSize);
 }
 
 icon.spinner {
     mask-image: url(../images/icon-spinner.svg);
-    mask-size: calc(.75* var(--mediumIconSize)) calc(.75* var(--mediumIconSize));
-    -webkit-mask-size: calc(.75* var(--mediumIconSize)) calc(.75* var(--mediumIconSize));
     -webkit-mask-image: url(../images/icon-spinner.svg);
     animation: spin 1s steps(10, start) infinite;
     -webkit-animation: spin 1s steps(10, start) infinite;
@@ -1586,6 +1584,16 @@ gamelinks gamelink stats {
     cursor: pointer;
 }
 
+gamelinks gamelink.done stats {
+    background-color: hsla(var(--appBackgroundHSL), .2);
+    border-color: hsla(var(--appBackgroundHSL), .3);
+    color: hsla(var(--appBackgroundLightestHSL), .8);
+}
+
+gamelinks gamelink.done stats stat small {
+    color: hsla(var(--appBackgroundLightestHSL), .8);
+}
+
 gamelinks gamelink stats stat {
     display: flex;
     gap: 3px;
@@ -1623,11 +1631,18 @@ gamelinks p a, gamelinks p a:hover, gamelinks p a:active, gamelinks p a:focus, g
 }
 
 gamelinks gamelink.quit {
-    pointer-events: none;
+    /* pointer-events: none; */
+}
+
+gamelinks gamelink p a small {
+    display: flex;
+    align-items: center;
+    gap: calc(.5 * var(--defaultGap));
+    flex-direction: row;
 }
 
 gamelinks gamelink.done p a small {
-    font-style: italic;
+    color: hsl(var(--appForegroundDiminishedHSL));
 }
 
 gamelinks gamelink.done p a {

@@ -376,6 +376,7 @@
                 <a>
                   <small>
                     <dot v-if="index === 0 && getTodaysDaily !== getCurrentDaily && game.guesses === 0 && getDailyIsFreshToday || game.guesses === 0 && !HasUserStartedGame(game)">•</dot>
+                    <icon v-if="game.solved" class="share tiny"></icon>
                     {{game.date}}
                   </small>
                   {{game.hints.replace(/:/g," - ")}}
@@ -388,7 +389,7 @@
                   <icon class="check"></icon>
                   In {{game.guesses}}
                 </button>
-                <button v-if="game.solved && game.guesses > 0 && game.quit" class="inline report">
+                <button @click="HandleSolvedPuzzleButtonClick(event, game)" v-if="game.solved && game.guesses > 0 && game.quit" class="inline report">
                   <icon class="quit alertbackground"></icon>
                   In {{game.guesses}}
                 </button>
@@ -399,19 +400,19 @@
               </p>
               <stats>
                 <stat>
-                  <value>{{game.stats ? game.stats.avg : '-'}} </value>
+                  <value>{{!appStateIsGettingDailyGameStats && game.stats && game.stats.avg ? game.stats.avg : '-'}} </value>
                   <small>Avg # of Tries</small>
                 </stat>
                 <stat>
-                  <value>{{game.stats && game.stats.guesscounts.g1 ? game.stats.guesscounts.g1 : '-'}}</value>
+                  <value>{{!appStateIsGettingDailyGameStats && game.stats && game.stats.guesscounts.g1 ? game.stats.guesscounts.g1 : '-'}}</value>
                   <small>Solved In 1</small>
                 </stat>
                 <stat>
-                  <value>{{game.stats && game.stats.guesscounts.g2 ? game.stats.guesscounts.g2 : '-'}}</value>
+                  <value>{{!appStateIsGettingDailyGameStats && game.stats && game.stats.guesscounts.g2 ? game.stats.guesscounts.g2 : '-'}}</value>
                   <small>Solved In 2</small>
                 </stat>
                 <stat>
-                  <value>{{game.stats ? game.stats.guesscounts.beyond2 : '-'}}</value>
+                  <value>{{!appStateIsGettingDailyGameStats && game.stats && game.stats.guesscounts.beyond2 ? game.stats.guesscounts.beyond2 : '-'}}</value>
                   <small>Solved In 3+</small>
                 </stat>
               </stats>

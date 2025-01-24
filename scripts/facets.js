@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.1.15',
+    appDataVersion: '2.1.16',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -184,6 +184,9 @@ var app = new Vue({
         e.preventDefault();
       }
       this.appStateShowDailyGames = !this.appStateShowDailyGames;
+      if (this.appStateShowDailyGames) {
+        this.GetDailyGameStats();
+      }
     },
 
     ToggleShowInfo(e) {
@@ -1059,16 +1062,14 @@ var app = new Vue({
       e.preventDefault();
 
       this.appStateSolving = true;
-      warn('this.appStateSolving = ' + this.appStateSolving);
       this.HandleOldGameClick(e, _game, true);
       this.appStateShowNotification = false;
       setTimeout(() => {
         this.SolvePuzzleCurrent();
         this.appStateSolving = false;
         this.appStateShowNotification = false;
-        warn('this.appStateSolving = ' + this.appStateSolving);
         history.pushState(null, null, window.location.origin + window.location.pathname);
-      }, 200);
+      }, 150);
     },
 
     SolvePuzzleCurrent() {
@@ -1496,10 +1497,20 @@ var app = new Vue({
       note('ShareWin() called');
       if (_game.solved) {
         let date = _game && this.getTodaysDaily === _game ? `Today's` : `The ${_game.date}`;
-        let text = `I solved ${date} Daily in ${_game.guesses} tries! 😀 <https://facets.bigtentgames.com>`;
+        let text = `I solved ${date} Daily in ${_game.guesses} tries! 😀
+Can you do better?
+
+<https://facets.bigtentgames.com>`;
         this.ConstructAndSetShareURLForCurrentGame();
         if (_game.guesses === 1) {
-          text = `I solved ${date} Daily in 1 try! 🥳 <https://facets.bigtentgames.com>`;
+          text = `🥳 I solved ${date} Daily in 1 try! Can you?
+
+<https://facets.bigtentgames.com>`;
+        }
+        if (_game.quit) {
+          text = `😱 I gave up on ${date} Daily! Can you solve it?
+
+<https://facets.bigtentgames.com>`;
         }
         this.ShareText(text, '');
       }
@@ -1985,7 +1996,7 @@ var app = new Vue({
 
       if (_nice) {
         let d = new Date(year, month, day); // Use Intl.DateTimeFormat to format the date
-        let options = { year: 'numeric', month: 'short', day: 'numeric' };
+        let options = { month: 'short', day: 'numeric' };
         date = new Intl.DateTimeFormat(undefined, options).format(d);
       }
 
@@ -2082,7 +2093,7 @@ var app = new Vue({
           this.ToggleShowMeta(null);
         }
       } catch (e) {
-        warn(e.message);
+        error(e.message);
         boardPieces = [];
         this.NewGame(null, '😕 - Something went wrong.', false);
       }
