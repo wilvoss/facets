@@ -497,6 +497,7 @@ icon.download {
 }
 
 icon.bmc {
+    transform: translateY(-1px);
     mask-image: url(../images/icon-bmc.svg);
     -webkit-mask-image: url(../images/icon-bmc.svg);
 }
@@ -878,7 +879,11 @@ p {
 }
 
 .highlightText {
-    color: hsl(var(--hueHighlight), 80%, 50%)
+    color: hsl(var(--messageColorHSL));
+}
+
+.highlightBackground {
+    background-color: hsl(var(--messageColorHSL))
 }
 
 .alertbackground {
@@ -1629,10 +1634,6 @@ gamelinks p a, gamelinks p a:hover, gamelinks p a:active, gamelinks p a:focus, g
     overflow: hidden;
     text-overflow: ellipsis;
     text-wrap: nowrap;
-}
-
-gamelinks gamelink.quit {
-    /* pointer-events: none; */
 }
 
 gamelinks gamelink p a small {
