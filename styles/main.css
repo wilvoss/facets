@@ -775,6 +775,10 @@ notification.meta {
     gap: calc(.75 * var(--defaultGap));
 }
 
+notification.meta p {
+    color: hsl(var(--messageColorHSL));
+}
+
 notification.meta leftright {
     background: none;
     padding: 0;
