@@ -28,7 +28,6 @@
   --hueReviewing: 355;
   --hueSolved: 175;
   --hueHighlight: 140;
-
   --appBackgroundLightestHSL: var(--hueTheme), 80%, 70%;
   --appBackgroundLighterHSL: var(--hueTheme), 50%, 41%;
   --appBackgroundHSL: var(--hueTheme), 55%, 20%;
@@ -50,11 +49,9 @@
   --simpleCardForegroundHSL: 0, 100%, 100%;
   --statBackground: hsla(var(--appBackgroundLighterHSL), 0.25);
   --statBorder: hsla(var(--appBackgroundLighterHSL), 0.7);
-
   --longTransition: 400ms;
   --mediumTransition: 250ms;
   --shortTransition: 150ms;
-
   --cardSize: 180px;
   --wordHeight: 30px;
   --wordScale: 1;
@@ -73,9 +70,7 @@
   --cardDropShadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
   --trayDropShadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
   --statShadow: 0px 4px 10px rgba(0, 0, 0, 0.25);
-
   --wordFont: 'Abel', 'Segoe UI', 'Helvetica Neue';
-
   --textureSource: radial-gradient(circle at center 400px, hsla(var(--appBackgroundHSL), 0.7) 1%, hsla(var(--appBackgroundHSL), 0.7) 40%, hsla(var(--appBackgroundDarkestHSL), 1) 80%);
   --texture2: var(--textureSource);
   --textureHueSource: linear-gradient(hsla(var(--appBackgroundHSL), 0), hsla(var(--appBackgroundHSL), 0));
@@ -85,47 +80,47 @@
 }
 
 html {
-  min-height: 100%;
-  height: 100%;
-  width: 100%;
   overflow: hidden;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
 }
 
 body {
+  display: block;
   overflow: hidden;
-  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
-  font-size: 1.3em;
-  color: hsl(var(--appForegroundHSL));
-  line-height: 1.3em;
-  margin: 0px 0px;
-  background: hsl(var(--appBackgroundDarkestHSL));
-  background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 50%), var(--textureHue), var(--texture2);
-  background-size: cover, cover, var(--textureSize);
-  background-repeat: no-repeat, no-repeat, repeat;
-  background-position: top center;
   width: 100%;
   height: 100%;
-  display: block;
+  margin: 0px 0px;
+  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
+  font-size: 1.3em;
+  line-height: 1.3em;
+  color: hsl(var(--appForegroundHSL));
+  background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 50%), var(--textureHue), var(--texture2);
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-position: top center;
+  background-size: cover, cover, var(--textureSize);
+  background: hsl(var(--appBackgroundDarkestHSL));
 }
 
 app {
+  display: flex;
   overflow: hidden;
   height: 100%;
-  display: flex;
   flex-direction: column;
-  gap: var(--defaultGap);
   justify-content: center;
+  gap: var(--defaultGap);
   min-height: 620px;
   transition: var(--mediumTransition) ease-in-out background-color;
 }
 
 preload {
   display: block;
-  opacity: 0;
+  position: fixed;
+  overflow: hidden;
   width: 0px;
   height: 0px;
-  overflow: hidden;
-  position: fixed;
+  opacity: 0;
   pointer-events: none;
   user-select: none;
 }
@@ -140,9 +135,9 @@ h2,
 h3,
 h4,
 h5 {
-  font-weight: normal;
   margin: calc(3 * var(--defaultGap)) 0 calc(2 * var(--defaultGap));
   font-family: 'Theme';
+  font-weight: normal;
   text-align: center;
   user-select: none;
   -webkit-user-select: none;
@@ -164,8 +159,8 @@ a:focus,
 a:visited,
 a:active {
   text-align: center;
-  color: hsl(var(--linkColorLightHSL));
   text-decoration: none;
+  color: hsl(var(--linkColorLightHSL));
   user-select: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
@@ -173,9 +168,9 @@ a:active {
 }
 
 a.padded {
-  border-radius: var(--borderRadius);
-  padding: 8px 16px;
   width: calc(90% - 32px);
+  padding: 8px 16px;
+  border-radius: var(--borderRadius);
 }
 
 a.inline {
@@ -188,44 +183,44 @@ section h3 {
 }
 
 button {
-  cursor: pointer;
   padding: calc(0.75 * var(--defaultGap)) var(--defaultGap);
-  border-radius: var(--borderRadius);
+  border: none;
+  font-family: 'Theme';
   color: hsl(var(--linkColorLightHSL));
+  transition-property: color, background-color, opacity, border-color;
+  cursor: pointer;
+  border-radius: var(--borderRadius);
   background: none;
   outline: none;
-  border: none;
   -webkit-tap-highlight-color: transparent;
-  font-family: 'Theme';
   transition: var(--mediumTransition) ease-in-out;
-  transition-property: color, background-color, opacity, border-color;
   user-select: none;
   -webkit-user-select: none;
 }
 
 button badge {
-  border-radius: 50%;
   display: flex;
-  color: hsl(var(--appForegroundHSL));
-  background: hsl(var(--alertHSL));
   overflow: hidden;
-  justify-content: center;
-  align-items: center;
-  font-size: 0.7em;
-  font-weight: 800;
-  margin-left: 0px;
-  opacity: 0;
-  transition: var(--mediumTransition) ease-in-out all;
   width: 0px;
   height: 0px;
+  font-size: 0.7em;
+  font-weight: 800;
+  color: hsl(var(--appForegroundHSL));
+  opacity: 0;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background: hsl(var(--alertHSL));
+  margin-left: 0px;
+  transition: var(--mediumTransition) ease-in-out all;
   scale: 0;
 }
 
 button badge.show {
-  scale: 1;
   width: 24px;
   height: 24px;
   opacity: 1;
+  scale: 1;
   margin-left: calc(0.5 * var(--defaultGap));
 }
 
@@ -242,17 +237,17 @@ button.inline {
 }
 
 button.small {
-  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
-  padding: var(--defaultGap);
-  width: auto;
-  cursor: pointer;
-  text-align: center;
-  background: none;
-  color: hsla(var(--appForegroundDiminishedHSL), 1);
   display: flex;
+  width: auto;
+  padding: var(--defaultGap);
+  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
+  text-align: center;
   text-transform: uppercase;
-  letter-spacing: 1px;
+  color: hsla(var(--appForegroundDiminishedHSL), 1);
   opacity: 1;
+  cursor: pointer;
+  background: none;
+  letter-spacing: 1px;
   text-wrap: nowrap;
 }
 
@@ -263,12 +258,12 @@ button.small.highlightText {
 
 header {
   display: flex;
+  color: hsl(var(--appForegroundDiminishedHSL));
   justify-content: center;
   align-items: center;
   gap: 1em;
   white-space: nowrap;
   flex: 1;
-  color: hsl(var(--appForegroundDiminishedHSL));
   user-select: none;
   -webkit-user-select: none;
   cursor: default;
@@ -296,8 +291,8 @@ header icon.check {
 
 header span {
   display: flex;
-  gap: 4px;
   align-items: center;
+  gap: 4px;
   padding-top: 1px;
   flex: 1;
 }
@@ -309,16 +304,16 @@ header span:first-of-type {
 button.dailycta {
   position: fixed;
   z-index: 300;
-  top: 0px;
-  padding: calc(0.5 * var(--defaultGap)) calc(2 * var(--defaultGap));
   height: auto;
-  background-color: hsl(var(--linkColorLightHSL));
+  padding: calc(0.5 * var(--defaultGap)) calc(2 * var(--defaultGap));
   border: 1px solid hsla(var(--linkColorLightHSL), 1);
-  border-radius: var(--borderRadius);
-  color: hsl(var(--appBackgroundDarkestHSL));
-  transform: translate(0px, -60px);
-  transition: var(--mediumTransition) ease-in-out all;
   font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
+  color: hsl(var(--appBackgroundDarkestHSL));
+  background-color: hsl(var(--linkColorLightHSL));
+  transform: translate(0px, -60px);
+  top: 0px;
+  border-radius: var(--borderRadius);
+  transition: var(--mediumTransition) ease-in-out all;
 }
 
 button.dailycta icon {
@@ -338,6 +333,7 @@ icon {
   display: block;
   width: var(--smallIconSize);
   height: var(--smallIconSize);
+  background-color: hsl(var(--appForegroundDiminishedHSL));
   mask-size: calc(0.75 * var(--smallIconSize)) calc(0.75 * var(--smallIconSize));
   -webkit-mask-size: calc(0.75 * var(--smallIconSize)) calc(0.75 * var(--smallIconSize));
   mask-repeat: no-repeat;
@@ -345,7 +341,6 @@ icon {
   mask-position: center;
   -webkit-mask-position: center;
   -webkit-tap-highlight-color: transparent;
-  background-color: hsl(var(--appForegroundDiminishedHSL));
   pointer-events: none;
 }
 
@@ -390,22 +385,22 @@ icon.empty {
 }
 
 icon.emoji {
-  background-color: none;
-  padding: 0;
-  margin: 0;
   width: auto;
   height: auto;
+  margin: 0;
+  padding: 0;
   line-height: inherit;
+  background-color: none;
 }
 
 icon.logo {
   width: var(--largeIconSize);
   height: var(--largeIconSize);
+  background-color: hsl(var(--appForegroundHSL));
   mask-size: var(--largeIconSize) var(--largeIconSize);
   -webkit-mask-size: var(--largeIconSize) var(--largeIconSize);
   mask-image: url(../images/logo-facets.svg);
   -webkit-mask-image: url(../images/logo-facets.svg);
-  background-color: hsl(var(--appForegroundHSL));
 }
 
 icon.share {
@@ -525,21 +520,21 @@ small {
 }
 
 message small {
-  color: hsl(var(--linkColorLightHSL));
   line-height: 100%;
+  color: hsl(var(--linkColorLightHSL));
 }
 
 message small.messageShare {
-  padding: 0 0 var(--defaultGap);
   display: inline-block;
+  padding: 0 0 var(--defaultGap);
   margin-top: -18px;
 }
 
 message icon.share {
   display: inline-block;
+  overflow: visible;
   width: var(--extraSmallIconSize);
   height: var(--extraSmallIconSize);
-  overflow: visible;
   padding: 0;
   background-color: hsl(var(--linkColorLightHSL));
   mask-size: calc(0.75 * var(--extraSmallIconSize)) calc(0.75 * var(--extraSmallIconSize));
@@ -552,9 +547,9 @@ icon.info {
 }
 
 icon.info.small {
-  background-color: hsl(0, 100%, 100%);
   width: var(--tiniestIconSize);
   height: var(--tiniestIconSize);
+  background-color: hsl(0, 100%, 100%);
   padding-left: 4px;
   padding-bottom: 5px;
   mask-size: var(--tiniestIconSize) var(--tiniestIconSize);
@@ -562,19 +557,19 @@ icon.info.small {
 }
 
 icon.spinner {
+  position: absolute;
+  opacity: 0;
+  animation: spin 1s steps(10, start) infinite;
+  transition-delay: 0ms;
   mask-image: url(../images/icon-spinner.svg);
   -webkit-mask-image: url(../images/icon-spinner.svg);
-  animation: spin 1s steps(10, start) infinite;
   -webkit-animation: spin 1s steps(10, start) infinite;
   transition: var(--mediumTransition) linear opacity;
-  transition-delay: 0ms;
-  opacity: 0;
-  position: absolute;
 }
 
 icon.spinner.show {
-  transition-delay: 0ms;
   opacity: 1;
+  transition-delay: 0ms;
 }
 
 @keyframes spin {
@@ -641,30 +636,30 @@ icon.settings {
 hintcard {
   display: flex;
   width: 100%;
+  border: none;
+  font-size: 90%;
+  opacity: 0.7;
   justify-content: center;
   align-items: center;
   margin-bottom: var(--defaultGap);
   pointer-events: none;
-  font-size: 90%;
-  opacity: 0.7;
-  border: none;
 }
 
 hintcard card {
-  background: none;
-  color: hsl(var(--appForegroundHSL));
   border: none;
+  color: hsl(var(--appForegroundHSL));
+  background: none;
 }
 
 header h1 {
-  cursor: default;
+  font-family: 'Theme';
+  font-size: 280%;
+  font-weight: normal;
+  line-height: 84%;
   text-align: center;
   text-transform: uppercase;
+  cursor: default;
   letter-spacing: 1px;
-  font-family: 'Theme';
-  font-weight: normal;
-  font-size: 280%;
-  line-height: 84%;
 }
 
 icon.logo {
@@ -673,41 +668,41 @@ icon.logo {
 }
 
 subtitle {
+  display: flex;
+  width: 100%;
+  color: hsla(var(--linkColorDarkHSL), 1);
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: calc(0.25 * var(--defaultGap));
-  width: 100%;
-  color: hsla(var(--linkColorDarkHSL), 1);
-  display: flex;
   padding-bottom: var(--defaultGap);
 }
 
 button.small {
-  max-width: calc(2 * var(--cardSize));
-  text-transform: unset;
-  letter-spacing: 0px;
   display: flex;
+  padding: calc(0.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
+  border: 1px solid hsla(var(--appBackgroundHSL), 1);
   line-height: 140%;
+  text-transform: unset;
+  color: hsl(var(--appForegroundHSL));
+  transition-property: background-color, border-color, opacity;
   flex-direction: row;
   justify-content: center;
-  color: hsl(var(--appForegroundHSL));
-  padding: calc(0.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
+  align-items: center;
+  max-width: calc(2 * var(--cardSize));
+  letter-spacing: 0px;
   cursor: pointer;
   background: hsla(var(--appBackgroundDarkHSL), 0.6);
-  border: 1px solid hsla(var(--appBackgroundHSL), 1);
   border-radius: calc(1 * var(--borderRadius));
-  align-items: center;
   -webkit-tap-highlight-color: transparent;
   transition: var(--mediumTransition) ease-in-out;
-  transition-property: background-color, border-color, opacity;
 }
 
 button.small.main {
+  font-family: 'Theme';
+  color: hsl(var(--linkColorLightHSL));
   padding-top: calc(0.75 * var(--defaultGap));
   padding-bottom: calc(0.7 * var(--defaultGap));
-  color: hsl(var(--linkColorLightHSL));
-  font-family: 'Theme';
 }
 
 button.small.strong {
@@ -719,9 +714,9 @@ button.small.disabled {
 }
 
 button.small.strong.disabled {
-  opacity: 0.4;
-  background-color: hsl(var(--appBackgroundHSL));
   color: hsl(var(--appForegroundHSL));
+  background-color: hsl(var(--appBackgroundHSL));
+  opacity: 0.4;
 }
 
 notification button.inline,
@@ -732,20 +727,20 @@ notification.meta leftright {
 
 notification {
   display: flex;
-  flex-direction: column;
   position: fixed;
+  z-index: 200;
   width: calc(100% - 2 * var(--defaultGap));
-  padding: var(--defaultGap);
   height: calc(100% - 2 * var(--defaultGap));
-  top: 0;
-  gap: calc(2 * var(--defaultGap));
+  padding: var(--defaultGap);
+  opacity: 0;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 200;
+  top: 0;
+  gap: calc(2 * var(--defaultGap));
   background: hsla(var(--appBackgroundDarkestHSL), 0.4);
   backdrop-filter: blur(10px);
   transition: var(--mediumTransition) ease-in-out opacity;
-  opacity: 0;
   pointer-events: none;
 }
 
@@ -756,8 +751,8 @@ notification header {
 }
 
 notification header h2 {
-  padding: 0;
   margin: 0;
+  padding: 0;
   color: hsl(var(--appForegroundDiminishedHSL));
 }
 
@@ -771,10 +766,10 @@ notification message {
 
 notification h2,
 notification p {
-  padding: 0;
-  text-align: center;
   margin: 10px 0 0 0;
+  padding: 0;
   line-height: 1.4em;
+  text-align: center;
   color: hsl(var(--appForegroundHSL));
 }
 
@@ -784,12 +779,12 @@ notification p {
 
 notification.meta {
   z-index: 300;
-  background: hsl(var(--appBackgroundDarkestHSL));
   background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 50%), var(--textureHue), var(--texture2);
-  background-size: cover, cover, var(--textureSize);
   background-repeat: no-repeat, no-repeat, repeat;
   background-position: top center;
+  background-size: cover, cover, var(--textureSize);
   justify-content: center;
+  background: hsl(var(--appBackgroundDarkestHSL));
   transition: none;
   gap: calc(0.75 * var(--defaultGap));
 }
@@ -799,9 +794,9 @@ notification.meta p {
 }
 
 notification.meta leftright {
-  background: none;
   padding: 0;
   border: none;
+  background: none;
   max-width: calc(2 * var(--cardSize));
   gap: calc(0.25 * var(--defaultGap));
 }
@@ -812,16 +807,16 @@ notification.show {
 }
 
 notification message {
+  width: calc(100% - 2 * var(--defaultGap));
+  margin: var(--defaultGap);
+  padding: calc(1.5 * var(--defaultGap)) var(--defaultGap);
+  border: 1px solid hsl(var(--messageColorHSL));
+  font-size: 1.1em;
+  line-height: 1.5em;
+  color: hsl(var(--appForegroundHSL));
   gap: calc(0.25 * var(--defaultGap));
   background: black;
-  font-size: 1.1em;
-  width: calc(100% - 2 * var(--defaultGap));
   max-width: calc(2.5 * var(--cardSize));
-  padding: calc(1.5 * var(--defaultGap)) var(--defaultGap);
-  line-height: 1.5em;
-  margin: var(--defaultGap);
-  border: 1px solid hsl(var(--messageColorHSL));
-  color: hsl(var(--appForegroundHSL));
   border-radius: var(--borderRadius);
   pointer-events: none;
   box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25);
@@ -837,20 +832,20 @@ notification message name icon {
 }
 
 notification message subtitle {
-  color: hsl(var(--appForegroundDiminishedHSL));
   display: block;
-  text-transform: capitalize;
-  padding-bottom: 0;
   font-size: 0.8em;
+  text-transform: capitalize;
+  color: hsl(var(--appForegroundDiminishedHSL));
+  padding-bottom: 0;
 }
 
 message {
   display: flex;
+  width: 100%;
+  text-align: center;
   flex-direction: column;
   border-color: hsl(var(--messageColorHSL));
   text-shadow: 0px -1px 2px black;
-  text-align: center;
-  width: 100%;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -873,9 +868,9 @@ h2 + h3:first-of-type {
 }
 
 p {
+  width: 100%;
   margin: 0;
   line-height: 140%;
-  width: 100%;
 }
 
 .blueText {
@@ -933,36 +928,36 @@ message.clickable {
 }
 
 wrapper {
-  width: 100%;
-  max-width: 1124px;
-  margin: 0 auto;
   display: flex;
+  width: 100%;
+  margin: 0 auto;
   padding: 0;
+  flex-direction: row;
   justify-content: center;
   align-items: start;
-  flex-direction: row;
+  max-width: 1124px;
   gap: var(--defaultGap);
 }
 
 wrapper:first-of-type {
   padding: calc(0.5 * var(--defaultGap)) calc(0.5 var(--cardSize)) 0;
   justify-content: space-between;
+  align-items: center;
   min-height: unset;
   max-width: calc(1124px - 7 * var(--defaultGap));
-  align-items: center;
   gap: calc(2.5 * var(--defaultGap));
 }
 
 wrapper:first-of-type controls {
   padding: 0;
-  flex: 1;
   justify-content: start;
+  flex: 1;
 }
 
 wrapper:first-of-type controls button.small {
-  font-size: 90%;
-  padding: calc(0.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
   height: unset;
+  padding: calc(0.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
+  font-size: 90%;
   transition: none;
 }
 
@@ -978,8 +973,8 @@ wrapper:first-of-type controls:last-of-type {
 wrapper.main {
   width: calc(100% - 2 * var(--defaultGap));
   padding: var(--defaultGap);
-  align-items: center;
   justify-content: center;
+  align-items: center;
 }
 
 .portrait wrapper.main {
@@ -987,9 +982,9 @@ wrapper.main {
 }
 
 app.portrait {
+  padding: 30px;
   justify-content: space-between;
   align-items: center;
-  padding: 30px;
 }
 
 wrapper.mobile {
@@ -1016,8 +1011,8 @@ wrapper message {
 }
 
 [v-cloak] {
-  transition: 0ms ease-out opacity;
   opacity: 0;
+  transition: 0ms ease-out opacity;
 }
 
 .clockwise {
@@ -1048,25 +1043,26 @@ tray {
 }
 
 tray diamond {
+  position: absolute;
+  z-index: -1;
+  overflow: hidden;
   width: 100%;
   height: 100%;
-  position: absolute;
-  background: url(../images/diamond.svg) no-repeat;
+  background-image: url(../images/diamond.svg);
+  background-repeat: no-repeat;
   background-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize));
   pointer-events: none;
   mask-repeat: no-repeat;
   -webkit-mask-repeat: no-repeat;
-  z-index: -1;
-  overflow: hidden;
 }
 
 diamond.back {
+  opacity: 0.8;
   mask-image: url(../images/diamond-back.svg);
   -webkit-mask-image: url(../images/diamond-back.svg);
   mask-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize));
   -webkit-mask-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize));
   background: hsl(var(--trayGuessingBackgroundHSL));
-  opacity: 0.8;
 }
 
 .multicolor.creating diamond.back {
@@ -1086,8 +1082,8 @@ diamond.back {
 }
 
 tray.rotating {
-  transition: var(--longTransition) ease-in-out;
   transition-property: transform, rotate;
+  transition: var(--longTransition) ease-in-out;
 }
 
 flogo {
@@ -1096,32 +1092,32 @@ flogo {
 
 controls {
   display: flex;
-  justify-content: center;
-  align-items: center;
   height: 100%;
   padding: 0;
-  transition: var(--mediumTransition) ease-in-out;
   transition-property: background-color, border-color;
+  justify-content: center;
+  align-items: center;
+  transition: var(--mediumTransition) ease-in-out;
 }
 
 modal controls {
   position: fixed;
-  bottom: 0px;
+  z-index: 100;
+  width: 100%;
+  height: var(--footerHeight);
+  padding: 0;
   background-color: hsla(var(--appBackgroundDarkHSL), 0.7);
+  bottom: 0px;
   border-top: 1px solid hsla(var(--appBackgroundHSL), 1);
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  padding: 0;
   padding-bottom: calc(0.5 * env(safe-area-inset-bottom));
   gap: calc(0.5 * var(--defaultGap));
-  height: var(--footerHeight);
-  width: 100%;
-  z-index: 100;
 }
 
 modal controls button {
-  font-size: 100%;
   width: unset;
+  font-size: 100%;
 }
 
 modal controls button.small {
@@ -1133,18 +1129,18 @@ wrapper controls {
 }
 
 wrapper controls button {
-  background: none;
-  font-size: 145%;
   height: 100%;
+  font-size: 145%;
+  background: none;
 }
 
 rotators {
   position: absolute;
-  pointer-events: none;
   z-index: 100;
-  padding: 0;
   width: calc(var(--cardSize) * 2 + (calc(var(--defaultGap) * 10)));
+  padding: 0;
   justify-content: space-between;
+  pointer-events: none;
 }
 
 wrapper > rotators {
@@ -1152,32 +1148,32 @@ wrapper > rotators {
 }
 
 rotators button {
-  transition: var(--mediumTransition) ease-in-out;
-  transition-property: opacity, color;
-  pointer-events: all;
-  justify-content: center;
-  align-items: center;
+  padding: calc(1.25 * var(--defaultGap));
   font-size: 200%;
   line-height: 100%;
+  transition-property: opacity, color;
+  justify-content: center;
+  align-items: center;
+  transition: var(--mediumTransition) ease-in-out;
+  pointer-events: all;
   background: none;
-  padding: calc(1.25 * var(--defaultGap));
 }
 
 rotators button icon {
-  padding-top: 12px;
   width: var(--mediumIconSize);
   height: var(--mediumIconSize);
+  background-color: hsl(var(--messageColorHSL));
+  padding-top: 12px;
   mask-size: var(--mediumIconSize) var(--mediumIconSize);
   -webkit-mask-size: var(--mediumIconSize) var(--mediumIconSize);
-  background-color: hsl(var(--messageColorHSL));
 }
 
 spot rotators button {
   display: flex;
-  justify-content: end;
-  align-items: start;
   width: calc(0.3 * var(--cardSize));
   height: calc(0.3 * var(--cardSize));
+  justify-content: end;
+  align-items: start;
 }
 
 spot rotators button icon {
@@ -1207,11 +1203,11 @@ spot rotators button:first-of-type {
 }
 
 spot rotators {
-  opacity: 1;
   position: absolute;
   z-index: 100;
-  padding: 0px 0px 0px;
   width: var(--cardSize);
+  padding: 0px 0px 0px;
+  opacity: 1;
   margin-top: 0px;
   pointer-events: none;
 }
@@ -1219,8 +1215,8 @@ spot rotators {
 spot.empty rotators,
 spot.empty:hover rotators,
 .guessing spot.empty:hover rotators {
-  opacity: 0;
   display: none;
+  opacity: 0;
 }
 
 .guessing spot:hover rotators,
@@ -1229,25 +1225,25 @@ spot.empty:hover rotators,
 }
 
 spot rotators:last-of-type {
-  scale: -1;
   transform: translateY(calc(0.3 * var(--cardSize)));
+  scale: -1;
 }
 
 spot rotators button,
 spot.empty rotators button:hover {
-  opacity: 0;
-  font-size: 100%;
   padding: 0px 6px;
-  transition: var(--mediumTransition) ease-in-out;
-  transition-property: opacity, color;
+  font-size: 100%;
   color: hsl(var(--linkColorDarkHSL));
+  opacity: 0;
+  transition-property: opacity, color;
+  transition: var(--mediumTransition) ease-in-out;
   pointer-events: none;
 }
 
 .guessing spot rotators button,
 .guessing spot.empty rotators button:hover {
-  pointer-events: all;
   opacity: 1;
+  pointer-events: all;
 }
 
 spot rotators button:hover {
@@ -1256,9 +1252,9 @@ spot rotators button:hover {
 
 parking {
   display: flex;
-  gap: var(--defaultGap);
-  flex-direction: column;
   padding: var(--defaultGap);
+  flex-direction: column;
+  gap: var(--defaultGap);
 }
 
 .portrait parking {
@@ -1271,19 +1267,19 @@ parking {
 }
 
 .portrait wrapper.mobile button.scroller {
+  display: none;
   position: absolute;
+  z-index: 100;
+  width: 40px;
+  height: calc(var(--scale) * var(--cardSize));
+  padding: 0;
+  transform: translateY(calc(-0.13 * var(--cardSize)));
+  align-items: center;
   margin-top: 0;
   left: 0;
-  z-index: 100;
-  height: calc(var(--scale) * var(--cardSize));
   padding-top: 0;
   padding-bottom: 0;
-  transform: translateY(calc(-0.13 * var(--cardSize)));
   background: none;
-  padding: 0;
-  width: 40px;
-  display: none;
-  align-items: center;
   border-radius: 0px;
 }
 
@@ -1292,9 +1288,9 @@ parking {
 }
 
 .portrait wrapper.mobile button.scroller:last-of-type {
+  justify-content: end;
   left: unset;
   right: 0;
-  justify-content: end;
 }
 
 wrapper.mobile parking {
@@ -1303,21 +1299,26 @@ wrapper.mobile parking {
 }
 
 .mobile parking {
-  flex-direction: row;
+  overflow: visible;
   width: 100%;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  overflow: visible;
+}
+
+.portrait .mobile parking spot rotators button {
+  width: calc(0.2 * var(--cardSize));
+  height: calc(0.2 * var(--cardSize));
 }
 
 cards {
   display: flex;
-  padding: var(--defaultGap);
   width: calc(var(--cardSize) * 2 + var(--defaultGap));
   height: calc(var(--cardSize) * 2 + var(--defaultGap));
+  padding: var(--defaultGap);
+  transform: translateY(60px);
   flex-wrap: wrap;
   gap: var(--defaultGap);
-  transform: translateY(60px);
 }
 
 cards.disabled {
@@ -1349,9 +1350,9 @@ spot {
 }
 
 parking spot {
+  opacity: 1;
   background: hsla(var(--appBackgroundDarkestHSL), 0.8);
   outline: 1px solid hsla(var(--hueMain), 100%, 70%, 0.7);
-  opacity: 1;
 }
 
 parking spot.empty {
@@ -1359,23 +1360,23 @@ parking spot.empty {
 }
 
 .multicolor.creating parking spot {
-  outline: 1px solid hsla(var(--hueCreating), 100%, 70%, 0.7);
   opacity: 1;
+  outline: 1px solid hsla(var(--hueCreating), 100%, 70%, 0.7);
 }
 
 .multicolor.guessing parking spot {
-  outline: 1px solid hsla(var(--hueGuessing), 100%, 70%, 0.7);
   opacity: 1;
+  outline: 1px solid hsla(var(--hueGuessing), 100%, 70%, 0.7);
 }
 
 .multicolor.guessing.reviewing parking spot {
-  outline: 1px solid hsla(var(--hueReviewing), 100%, 70%, 0.7);
   opacity: 1;
+  outline: 1px solid hsla(var(--hueReviewing), 100%, 70%, 0.7);
 }
 
 .multicolor.guessing.solved parking spot {
-  outline: 1px solid hsla(var(--hueSolved), 100%, 70%, 0.7);
   opacity: 1;
+  outline: 1px solid hsla(var(--hueSolved), 100%, 70%, 0.7);
 }
 
 .multicolor.creating parking spot.empty,
@@ -1403,24 +1404,24 @@ parking spot.empty {
 }
 
 card {
-  background: transparent;
-  background-size: 100% 100%;
   display: block;
+  z-index: 100;
   width: var(--cardSize);
   height: var(--cardSize);
+  color: hsl(var(--hueMain), 100%, 90%);
+  background-size: 100% 100%;
+  background: transparent;
   user-select: none;
   -webkit-user-select: none;
   cursor: grab;
-  color: hsl(var(--hueMain), 100%, 90%);
-  z-index: 100;
   touch-action: none;
 }
 
 cards card,
 .multicolor.guessing cards card,
 .reviewing cards card {
-  background: none;
   color: hsl(var(--hueMain), 100%, 86%);
+  background: none;
 }
 
 .multicolor.creating card {
@@ -1441,26 +1442,26 @@ cards card,
 
 ghost {
   display: block;
+  position: fixed;
+  z-index: 200;
   width: var(--cardSize);
   height: var(--cardSize);
   transform-origin: 50% 50%;
   -webkit-transform-origin: 50% 50%;
-  position: fixed;
   top: calc(-0.5 * var(--cardSize));
   left: calc(-0.5 * var(--cardSize));
   pointer-events: none;
-  z-index: 200;
 }
 
 ghost card,
 ghost card.empty,
 .guessing ghost card.empty,
 .reviewing ghost card.empty {
+  border: 1px solid hsla(var(--hueMain), 100%, 70%, 0.7);
+  opacity: 0;
   background: hsla(var(--appBackgroundDarkestHSL), 0.8);
   transition: 0ms ease-in 0ms opacity;
-  opacity: 0;
   pointer-events: none;
-  border: 1px solid hsla(var(--hueMain), 100%, 70%, 0.7);
 }
 
 .multicolor.creating ghost card {
@@ -1480,8 +1481,8 @@ ghost card.empty,
 }
 
 ghost card.show {
-  transition: 0ms ease-in 150ms opacity;
   opacity: 0.9;
+  transition: 0ms ease-in 150ms opacity;
 }
 
 card.rotating {
@@ -1490,9 +1491,9 @@ card.rotating {
 
 hints {
   position: absolute;
+  z-index: -1;
   width: 100%;
   height: 100%;
-  z-index: -1;
   font-size: 130%;
   transform: translateY(60px);
 }
@@ -1500,17 +1501,17 @@ hints {
 hints hint {
   display: block;
   position: absolute;
-  height: var(--wordHeight);
-  background-size: 256px 256px;
-  padding: calc(var(--defaultGap) / 4) calc(var(--defaultGap) / 4) calc(var(--defaultGap));
   width: calc(1.75 * var(--cardSize));
+  height: var(--wordHeight);
+  padding: calc(var(--defaultGap) / 4) calc(var(--defaultGap) / 4) calc(var(--defaultGap));
+  background-size: 256px 256px;
   perspective: var(--cardSize);
 }
 
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
-  -webkit-appearance: none;
   margin: 0;
+  -webkit-appearance: none;
 }
 
 input[type='number'] {
@@ -1520,15 +1521,15 @@ input[type='number'] {
 
 modal input,
 hints hint input {
-  text-align: center;
-  outline: none;
-  border: none;
-  background: none;
-  color: hsl(var(--hueMain), 100%, 70%);
-  font-family: 'ClueFont';
   width: 100%;
-  line-height: 120%;
   padding: 0;
+  border: none;
+  font-family: 'ClueFont';
+  line-height: 120%;
+  text-align: center;
+  color: hsl(var(--hueMain), 100%, 70%);
+  outline: none;
+  background: none;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -1545,30 +1546,30 @@ modal input.large {
 }
 
 modal categories {
-  --backgroundCoverOn: hsla(var(--appBackgroundHSL), 1);
-  --backgroundCover: hsla(var(--appBackgroundDarkHSL), 1);
   display: flex;
+  width: 100%;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: calc(0.5 * var(--defaultGap));
   justify-content: center;
   align-items: center;
-  width: 100%;
+  --backgroundCoverOn: hsla(var(--appBackgroundHSL), 1);
+  --backgroundCover: hsla(var(--appBackgroundDarkHSL), 1);
+  gap: calc(0.5 * var(--defaultGap));
 }
 
 modal categories category {
   display: block;
-  flex: 1;
   padding: calc(0.5 * var(--defaultGap));
-  color: hsla(var(--appForegroundHSL), 0.7);
+  border: 1px solid hsla(var(--appForegroundHSL), 0.1);
   text-align: center;
+  color: hsla(var(--appForegroundHSL), 0.7);
+  background-size: 140%;
+  flex: 1;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   background: var(--backgroundCover);
-  background-size: 140%;
   text-wrap: nowrap;
   border-radius: var(--borderRadius);
-  border: 1px solid hsla(var(--appForegroundHSL), 0.1);
   text-shadow: 0px 0px 4px hsl(var(--appBackgroundDarkestHSL));
   max-width: 26%;
   user-select: none;
@@ -1576,28 +1577,28 @@ modal categories category {
 }
 
 modal categories category.on {
-  background: var(--backgroundCoverOn);
-  color: hsla(var(--appForegroundHSL), 1);
   border: 1px solid hsla(var(--appForegroundHSL), 1);
+  color: hsla(var(--appForegroundHSL), 1);
+  background: var(--backgroundCoverOn);
 }
 
 gamelinks {
   display: block;
-  counter-reset: recent-game-counter;
   width: 100%;
+  counter-reset: recent-game-counter;
 }
 
 gamelinks dot {
   position: absolute;
-  transform: translateX(-14px);
   color: hsl(var(--alertHSL));
+  transform: translateX(-14px);
 }
 
 gamelinks gamelink {
   display: flex;
+  padding: calc(0.66 * var(--defaultGap)) 0;
   flex-direction: column;
   gap: calc(0.33 * var(--defaultGap));
-  padding: calc(0.66 * var(--defaultGap)) 0;
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
@@ -1605,21 +1606,21 @@ gamelinks gamelink {
 gamelinks gamelink stats {
   display: flex;
   padding: 6px calc(0.5 * var(--defaultGap)) 6px;
+  border: 1px solid hsla(var(--appBackgroundHSL), 0.5);
+  color: hsl(var(--appBackgroundLightestHSL));
   gap: var(--defaultGap);
   background: hsla(var(--appBackgroundHSL), 0.4);
-  border: 1px solid hsla(var(--appBackgroundHSL), 0.5);
   margin-bottom: calc(0.5 * var(--defaultGap));
   border-radius: var(--borderRadius);
   user-select: none;
   -webkit-user-select: none;
-  color: hsl(var(--appBackgroundLightestHSL));
   cursor: pointer;
 }
 
 gamelinks gamelink.done stats {
+  color: hsla(var(--appBackgroundLightestHSL), 0.8);
   background-color: hsla(var(--appBackgroundHSL), 0.2);
   border-color: hsla(var(--appBackgroundHSL), 0.5);
-  color: hsla(var(--appBackgroundLightestHSL), 0.8);
 }
 
 gamelinks gamelink.done stats stat small {
@@ -1628,13 +1629,13 @@ gamelinks gamelink.done stats stat small {
 
 gamelinks gamelink stats stat {
   display: flex;
-  gap: 3px;
   flex-direction: column;
+  gap: 3px;
 }
 
 gamelinks gamelink stats stat small {
-  white-space: nowrap;
   color: hsl(var(--appBackgroundLightestHSL));
+  white-space: nowrap;
 }
 
 gamelinks gamelink stats stat value {
@@ -1642,11 +1643,11 @@ gamelinks gamelink stats stat value {
 }
 
 gamelinks p {
-  text-align: left;
   display: flex;
-  font-size: 1.2em;
-  flex-direction: row;
   width: 100%;
+  font-size: 1.2em;
+  text-align: left;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   gap: var(--defaultGap);
@@ -1655,8 +1656,8 @@ gamelinks p {
 
 gamelinks clues {
   display: flex;
-  align-items: center;
   flex-direction: row;
+  align-items: center;
   gap: calc(0.25 * var(--defaultGap));
 }
 
@@ -1665,19 +1666,19 @@ gamelinks p a:hover,
 gamelinks p a:active,
 gamelinks p a:focus,
 gamelinks p a:visited {
+  overflow: hidden;
+  text-align: left;
   color: hsl(var(--linkColorLightHSL));
   flex: 1;
-  text-align: left;
-  overflow: hidden;
   text-overflow: ellipsis;
   text-wrap: nowrap;
 }
 
 gamelinks gamelink p a small {
   display: flex;
+  flex-direction: row;
   align-items: center;
   gap: calc(0.25 * var(--defaultGap));
-  flex-direction: row;
 }
 
 gamelinks gamelink.done p a small {
@@ -1689,41 +1690,41 @@ gamelinks gamelink.done p a {
 }
 
 gamelinks p button.inline {
+  display: flex;
   z-index: 100;
-  padding: 0 10px;
   width: calc(3 * var(--defaultGap) - 5px);
   height: calc(2.5 * var(--defaultGap) - 5px);
+  padding: 0 10px;
   font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
   font-size: 0.5em;
   text-transform: uppercase;
-  justify-content: center;
-  display: flex;
-  white-space: nowrap;
-  flex-direction: column;
-  gap: 2px;
   color: hsl(var(--appForegroundDiminishedHSL));
+  flex-direction: column;
+  justify-content: center;
+  white-space: nowrap;
+  gap: 2px;
   transition: none;
 }
 
 gamelinks p button.inline icon {
-  opacity: 1;
   background-color: hsla(var(--appForegroundDiminishedHSL), 1);
+  opacity: 1;
   transition: none;
 }
 
 gamelinks p button.inline icon.play {
-  opacity: 1;
   background-color: hsla(var(--appForegroundDiminishedHSL), 1);
+  opacity: 1;
 }
 
 gamelinks gamelink:hover p button.inline icon {
-  opacity: 1;
   background-color: hsla(var(--appForegroundHSL), 1);
+  opacity: 1;
 }
 
 gamelinks gamelink.done p button.inline icon {
-  opacity: 1;
   background-color: hsl(var(--linkColorLightHSL));
+  opacity: 1;
   transition: var(--shortTransition) ease-in-out background-color;
 }
 
@@ -1740,37 +1741,37 @@ gamelinks gamelink:hover p button.inline icon {
 }
 
 modal gamelinks small {
+  font-size: 0.8em;
   text-align: left;
   margin-bottom: 2px;
-  font-size: 0.8em;
 }
 
 modal small,
 modal legal {
-  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
   display: block;
-  font-size: 70%;
-  color: hsl(var(--appForegroundDiminishedHSL));
-  line-height: 120%;
   width: 100%;
+  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
+  font-size: 70%;
+  line-height: 120%;
+  color: hsl(var(--appForegroundDiminishedHSL));
+  transition-property: opacity, color, background-color;
   max-width: calc(100% - 2 * var(--defaultGap));
   transition: var(--mediumTransition) ease-in-out;
-  transition-property: opacity, color, background-color;
   margin-bottom: calc(0.5 * var(--defaultGap));
 }
 
 modal instructions {
   width: 100%;
+  line-height: 150%;
+  color: hsl(var(--appForegroundDiminishedHSL));
   margin-top: var(--defaultGap);
   max-width: calc(100% - 2 * var(--defaultGap));
-  color: hsl(var(--appForegroundDiminishedHSL));
-  line-height: 150%;
 }
 
 modal legal {
   position: absolute;
-  bottom: calc(var(--footerHeight) + (2 * var(--defaultGap)));
   width: 80%;
+  bottom: calc(var(--footerHeight) + (2 * var(--defaultGap)));
   max-width: calc(3 * var(--cardSize) + (4 * var(--defaultGap)));
 }
 
@@ -1780,10 +1781,10 @@ modal section h3 small {
 }
 
 hints hint input {
+  font-size: 120%;
   transform: rotateX(24deg) rotateY(0deg);
   transform-style: preserve-3d;
   text-shadow: 0px -1px 1px hsla(var(--appBackgroundDarkestHSL), 0.6);
-  font-size: 120%;
 }
 
 .multicolor.creating hints hint input {
@@ -1814,24 +1815,24 @@ hints hint input::placeholder {
 
 modal input {
   font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
-  color: hsl(var(--appForegroundHSL));
   font-size: 110%;
   text-align: left;
+  color: hsl(var(--appForegroundHSL));
 }
 
 hints hint input:disabled {
-  opacity: 1;
   color: hsl(var(--hueMain), 100%, 70%);
+  opacity: 1;
 }
 
 .multicolor.creating hints hint input:disabled {
-  opacity: 1;
   color: hsl(var(--hueCreating), 100%, 70%);
+  opacity: 1;
 }
 
 .multicolor.guessing hints hint input:disabled {
-  opacity: 1;
   color: hsl(var(--hueGuessing), 94%, 80%);
+  opacity: 1;
 }
 
 .multicolor.guessing.reviewing hints hint input:disabled {
@@ -1849,23 +1850,23 @@ hints hint input:disabled {
 }
 
 hints hint:nth-child(1) {
-  rotate: 0deg;
   transform: translate(0px, calc(-1.825 * var(--wordHeight)));
+  rotate: 0deg;
 }
 
 hints hint:nth-child(2) {
-  rotate: 90deg;
   transform: translate(calc(var(--cardSize) + (var(--defaultGap) / 8)), calc(-1 * var(--cardSize) + calc(var(--wordHeight) * -1.9)));
+  rotate: 90deg;
 }
 
 hints hint:nth-child(3) {
-  rotate: -90deg;
   transform: translate(calc(-1 * var(--cardSize) - var(--defaultGap) / 8), calc(-1 * var(--cardSize) + calc(var(--wordHeight) * -1.9)));
+  rotate: -90deg;
 }
 
 hints hint:nth-child(4) {
-  rotate: 180deg;
   transform: translate(0px, calc(var(--cardSize) * -2.33));
+  rotate: 180deg;
 }
 
 card.empty {
@@ -1874,10 +1875,10 @@ card.empty {
 
 card menu {
   display: block;
+  position: absolute;
   width: calc(0.5 * var(--cardSize));
   height: calc(0.5 * var(--cardSize));
   padding: 0;
-  position: absolute;
 }
 
 words {
@@ -1885,25 +1886,25 @@ words {
 }
 
 word {
-  font-family: var(--wordFont);
   display: flex;
-  justify-content: center;
-  align-items: baseline;
   position: absolute;
-  text-align: center;
-  width: var(--cardSize);
   overflow: visible;
+  width: var(--cardSize);
   height: calc(var(--cardSize) - 2px);
-  padding-top: 2px;
+  font-family: var(--wordFont);
   font-size: calc(var(--wordScale) * 90%);
   line-height: 100%;
+  text-align: center;
+  justify-content: center;
+  align-items: baseline;
+  padding-top: 2px;
   user-select: none;
   -webkit-user-select: none;
 }
 
 parking word {
-  padding-top: 8px;
   height: calc(var(--cardSize) - 8px);
+  padding-top: 8px;
 }
 
 cards word {
@@ -1927,26 +1928,26 @@ word:nth-child(4) {
 }
 
 modal {
-  position: absolute;
-  top: 0;
   display: flex;
+  position: absolute;
+  z-index: 500;
+  width: 100%;
+  height: 100%;
+  opacity: 1;
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  width: 100%;
-  height: 100%;
+  top: 0;
   overflow-x: hidden;
   background: hsla(var(--appBackgroundDarkestHSL), 1);
-  opacity: 1;
-  z-index: 500;
   gap: var(--defaultGap);
   transition: var(--mediumTransition) ease-in-out all;
 }
 
 modal.centered {
+  font-size: 130%;
   justify-content: center;
   gap: calc(4 * var(--defaultGap));
-  font-size: 130%;
 }
 
 modal.centered section,
@@ -1968,49 +1969,49 @@ modal confirmation {
 }
 
 modal section {
+  width: 100%;
   gap: calc(0.5 * var(--defaultGap));
   margin-bottom: 160px;
   max-width: calc(3 * var(--cardSize) + (4 * var(--defaultGap)));
-  width: 100%;
 }
 
 modal hider {
   display: flex;
-  gap: calc(0.5 * var(--defaultGap));
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  gap: calc(0.5 * var(--defaultGap));
 }
 
 modal img {
   width: 100%;
-  max-width: calc(2.5 * var(--cardSize));
   margin: var(--defaultGap) 0;
+  max-width: calc(2.5 * var(--cardSize));
   user-select: none;
   -webkit-user-select: none;
 }
 
 callout,
 select {
-  max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
-  width: 100%;
   display: flex;
+  width: 100%;
+  padding: calc(0.5 * var(--defaultGap)) var(--defaultGap);
+  text-align: center;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  text-align: center;
-  padding: calc(0.5 * var(--defaultGap)) var(--defaultGap);
+  max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
   background: hsla(var(--appBackgroundHSL), 1);
   transition: var(--mediumTransition) ease-in-out all;
 }
 
 select {
-  outline: none;
   border: none;
-  background: hsla(var(--appBackgroundHSL), 1);
-  -webkit-tap-highlight-color: transparent;
   font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
   color: hsl(var(--appForegroundHSL));
+  outline: none;
+  background: hsla(var(--appBackgroundHSL), 1);
+  -webkit-tap-highlight-color: transparent;
   border-radius: var(--borderRadius);
   appearance: unset;
   -webkit-appearance: unset;
@@ -2024,24 +2025,24 @@ section input {
 leftright {
   display: flex;
   width: calc(100%);
+  margin: 0px;
   padding: 5px 0px;
-  flex-direction: row;
-  background: hsla(var(--appBackgroundHSL), 0.4);
   border: 1px solid hsla(var(--appBackgroundHSL), 1);
+  transition-property: background-color, border-color;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  margin: 0px;
+  background: hsla(var(--appBackgroundHSL), 0.4);
   border-radius: var(--borderRadius);
   gap: calc(0.5 * var(--defaultGap));
   transition: var(--mediumTransition) ease-in-out;
-  transition-property: background-color, border-color;
 }
 
 leftright message,
 leftright callout,
 leftright p {
-  text-align: left;
   width: calc(1 * var(--cardSize));
+  text-align: left;
   border-radius: var(--borderRadius);
 }
 
@@ -2051,10 +2052,10 @@ leftright p {
 
 leftright callout,
 leftright select {
-  padding: calc(0.3 * var(--defaultGap)) calc(0.5 * var(--defaultGap));
-  border-radius: var(--borderRadius) calc(0.5 * var(--borderRadius)) calc(0.5 * var(--borderRadius)) var(--borderRadius);
   width: unset;
   margin: 0 5px 0 0;
+  padding: calc(0.3 * var(--defaultGap)) calc(0.5 * var(--defaultGap));
+  border-radius: var(--borderRadius) calc(0.5 * var(--borderRadius)) calc(0.5 * var(--borderRadius)) var(--borderRadius);
   flex: 2;
 }
 
@@ -2067,11 +2068,11 @@ leftright p {
 }
 
 modal cards {
-  background: none;
   height: auto;
+  transition-delay: 150ms;
+  background: none;
   pointer-events: all;
   transition: 0 linear all;
-  transition-delay: 150ms;
 }
 
 .guessing.reviewing modal cards,
@@ -2094,17 +2095,15 @@ modal cards card.intray {
 
 modal::-webkit-scrollbar {
   display: none;
-
   -ms-overflow-style: none;
   scrollbar-width: none;
-
   touch-action: auto;
   scroll-behavior: smooth;
 }
 
 .disabled {
-  pointer-events: none;
   opacity: 0.3;
+  pointer-events: none;
 }
 
 .mobile {
@@ -2117,11 +2116,11 @@ modal::-webkit-scrollbar {
 }
 
 version {
-  text-align: center;
+  display: flex;
   font-size: 12px;
+  text-align: center;
   color: hsl(var(--appForegroundHSL));
   padding-top: var(--defaultGap);
-  display: flex;
   gap: var(--defaultGap);
 }
 
@@ -2439,10 +2438,8 @@ app.dragging,
     padding-bottom: 0px;
   }
 
-  header {
-    icon {
-      scale: 0.6;
-    }
+  header icon {
+    scale: 0.6;
   }
 
   app.portrait {

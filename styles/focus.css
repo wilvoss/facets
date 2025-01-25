@@ -61,10 +61,8 @@ wrapper.mobile {
   wrapper.mobile parking::-webkit-scrollbar,
   .portrait wrapper.mobile parking::-webkit-scrollbar {
     display: none;
-
     -ms-overflow-style: none;
     scrollbar-width: none;
-
     /* touch-action: auto; */
     scroll-behavior: smooth;
   }

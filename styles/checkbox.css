@@ -1,64 +1,63 @@
 checkbox {
   display: flex;
+  width: 100%;
+  padding: calc(0.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
+  border: 1px solid hsla(var(--appBackgroundHSL), 1);
   line-height: 140%;
+  transition-property: background-color, border-color, opacity;
   flex-direction: row;
   justify-content: space-between;
-  padding: calc(0.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
-  /* margin: 0 calc(1 * var(--defaultGap)); */
+  align-items: center;
   cursor: pointer;
   max-width: calc((100% - calc(2 * var(--defaultGap))));
-  width: 100%;
   background: hsla(var(--appBackgroundHSL), 0.4);
-  border: 1px solid hsla(var(--appBackgroundHSL), 1);
   border-radius: calc(1 * var(--borderRadius));
-  align-items: center;
   -webkit-tap-highlight-color: transparent;
   transition: var(--mediumTransition) ease-in-out;
-  transition-property: background-color, border-color, opacity;
   user-select: none;
   -webkit-user-select: none;
 }
 
 checkbox toggle {
-  box-shadow: inset 0px 1px 4px hsla(0, 0%, 0%, 0.4);
   display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
-  margin: 0px;
+  overflow: hidden;
   width: 46px;
   height: 26px;
+  margin: 0px;
+  flex-direction: row;
+  justify-content: flex-start;
+  box-shadow: inset 0px 1px 4px hsla(0, 0%, 0%, 0.4);
   background: hsla(var(--appBackgroundLighterHSL), 1);
   border-radius: 13px;
-  overflow: hidden;
   transition: var(--mediumTransition) ease-in-out all;
 }
 
 checkbox:after {
-  content: '(off)';
-  text-transform: uppercase;
-  font-size: 0.8em;
-  opacity: 0.7;
   display: none;
   position: absolute;
+  font-size: 0.8em;
+  text-transform: uppercase;
+  opacity: 0.7;
   transform: translateX(64px);
+  content: '(off)';
   transition: var(--mediumTransition) ease-in-out all;
 }
 
 checkbox.on:after {
-  content: '(on)';
-  opacity: 1;
   color: hsl(var(--linkColorLightHSL));
+  opacity: 1;
+  content: '(on)';
 }
 
 checkbox toggle:before {
-  content: ' ';
   display: block;
-  margin: 2px;
   width: 22px;
   height: 22px;
+  margin: 2px;
+  font-family: 'Bangers';
+  content: ' ';
   background: hsl(var(--appBackgroundHSL));
   border-radius: 50%;
-  font-family: 'Bangers';
   transition: var(--mediumTransition) ease-in-out all;
   box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.4);
 }

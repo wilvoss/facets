@@ -13,8 +13,8 @@ tray {
 }
 
 cards {
-  scale: 1.1;
   transform: translateY(54px);
+  scale: 1.1;
 }
 
 cards spot:nth-child(1) card words word:nth-child(2),
@@ -29,8 +29,8 @@ cards spot:nth-child(4) card words word:nth-child(4) {
 }
 
 spot {
-  outline: none;
   border: none;
+  outline: none;
   border-radius: var(--borderRadius);
 }
 
@@ -72,13 +72,13 @@ diamond.back,
 .multicolor.reviewing diamond.back,
 .multicolor.guessing diamond.back,
 .multicolor.solved.guessing diamond.back {
-  background: none;
   background-image: none;
+  background: none;
 }
 
 tray diamond {
-  background: none;
   background-image: none;
+  background: none;
 }
 
 card,
@@ -99,10 +99,10 @@ card.ghost.empty,
 cards card,
 .multicolor.guessing cards card,
 .reviewing cards card {
+  border: none;
   color: hsl(var(--simpleCardForegroundHSL));
   background: hsl(var(--simpleCardBackgroundHSL));
   box-shadow: 0px 3px 10px hsla(0, 0%, 0%, 0.2);
-  border: none;
 }
 
 .multicolor.solved.guessing cards card {
@@ -131,8 +131,8 @@ card.ghost.empty,
 }
 
 hints hint input {
-  text-shadow: 0px 1px 1px hsla(var(--simpleCardBackgroundHSL), 0.6);
   transform: unset;
+  text-shadow: 0px 1px 1px hsla(var(--simpleCardBackgroundHSL), 0.6);
 }
 
 .multicolor.creating hints hint input,
@@ -145,8 +145,8 @@ hints hint input:disabled,
 }
 
 .multicolor.guessing hints hint input:disabled {
-  opacity: 1;
   color: hsla(var(--simpleCardForegroundHSL), 1);
+  opacity: 1;
 }
 
 .multicolor.guessing parking spot card,

@@ -7,7 +7,6 @@
   --hueReviewing: 335;
   --hueSolved: 235;
   --hueHighlight: 140;
-
   --appBackgroundLightestHSL: var(--hueTheme), 40%, 50%;
   --appBackgroundLighterHSL: var(--hueTheme), 40%, 71%;
   --appBackgroundHSL: var(--hueTheme), 100%, 83%;
@@ -28,7 +27,6 @@
   --simpleCardBackgroundHSL: 0, 100%, 100%;
   --statBackground: hsla(var(--hueTheme), 100%, 98%, 0.7);
   --statBorder: hsla(var(--hueTheme), 60%, 80%, 1);
-
   --textureSource: radial-gradient(circle at center 400px, hsla(var(--appBackgroundDarkestHSL), 0.7) 1%, hsla(var(--appBackgroundDarkestHSL), 0.7) 40%, hsla(var(--appBackgroundHSL), 1) 80%);
   /* --texture2: var(--textureSource); */
   --textureSize: cover;
@@ -95,8 +93,8 @@ notification message {
 }
 
 header button.small {
-  background-color: hsl(var(--messageColorHSL));
   color: hsla(var(--appBackgroundDarkestHSL), 1);
+  background-color: hsl(var(--messageColorHSL));
 }
 
 tray diamond {
@@ -166,8 +164,8 @@ hints hint input:disabled {
 }
 
 .multicolor.guessing hints hint input:disabled {
-  opacity: 1;
   color: hsl(var(--hueGuessing), 90%, 32%);
+  opacity: 1;
 }
 
 .multicolor.guessing.reviewing hints hint input:disabled {
@@ -223,9 +221,9 @@ checkbox toggle:before {
 }
 
 button.update {
-  background: hsla(var(--hueCreating), 80%, 40%, 1);
   border: 1px solid hsla(var(--hueCreating), 80%, 40%, 1);
   color: white;
+  background: hsla(var(--hueCreating), 80%, 40%, 1);
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
 }
 
