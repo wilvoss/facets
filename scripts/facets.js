@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.1.20',
+    appDataVersion: '2.1.21',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -577,7 +577,7 @@ var app = new Vue({
 
       if (this.appDataPlayerSender.id !== this.appDataPlayerCreator.id && this.appDataPlayerCreator.id !== this.appDataPlayerCurrent.id && !this.appStateForceAutoCheck) {
         this.appStateIsModalShowing = true;
-        this.appDataConfirmationObject = { message: 'Are you, (' + this.appDataPlayerCreator.name + '), the original creator of this puzzle?', target: 'creator' };
+        this.appDataConfirmationObject = { message: `Are you "${this.appDataPlayerCreator.name}," the original creator of this puzzle?`, target: 'creator' };
         this.appStateShowConfirmation = true;
       }
 
