@@ -405,6 +405,11 @@ icon.share {
     -webkit-mask-image: url(../images/icon-share.svg);
 }
 
+icon.eye {
+    mask-image: url(../images/icon-eye.svg);
+    -webkit-mask-image: url(../images/icon-eye.svg);
+}
+
 icon.chevronleft {
     mask-image: url(../images/icon-chevron-left.svg);
     -webkit-mask-image: url(../images/icon-chevron-left.svg);
@@ -1592,7 +1597,7 @@ gamelinks gamelink stats {
 
 gamelinks gamelink.done stats {
     background-color: hsla(var(--appBackgroundHSL), .2);
-    border-color: hsla(var(--appBackgroundHSL), .3);
+    border-color: hsla(var(--appBackgroundHSL), .5);
     color: hsla(var(--appBackgroundLightestHSL), .8);
 }
 
@@ -1627,6 +1632,13 @@ gamelinks p {
     cursor: pointer;
 }
 
+gamelinks clues {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    gap: calc(.25 * var(--defaultGap));
+}
+
 gamelinks p a, gamelinks p a:hover, gamelinks p a:active, gamelinks p a:focus, gamelinks p a:visited {
     color: hsl(var(--linkColorLightHSL));
     flex: 1;
@@ -1639,7 +1651,7 @@ gamelinks p a, gamelinks p a:hover, gamelinks p a:active, gamelinks p a:focus, g
 gamelinks gamelink p a small {
     display: flex;
     align-items: center;
-    gap: calc(.5 * var(--defaultGap));
+    gap: calc(.25 * var(--defaultGap));
     flex-direction: row;
 }
 

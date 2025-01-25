@@ -13,7 +13,7 @@ var app = new Vue({
   el: '#app',
   data: {
     // app data
-    appDataVersion: '2.1.21',
+    appDataVersion: '2.1.22',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -960,7 +960,7 @@ var app = new Vue({
       } else if (this.appStateIsGuessing) {
         if (this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
           if (this.GetIsAIGenerated()) {
-            this.ShareWin();
+            this.ShareWin(null);
           } else {
             this.HandleNewGameClick();
           }
@@ -997,10 +997,7 @@ var app = new Vue({
         e.preventDefault();
         e.stopPropagation();
       }
-      if (_game.solved && !_showsol) {
-        this.ShareWin(_game);
-        return;
-      }
+
       let stringArray = ['?'];
       this.currentGameSolutionGuessing = '';
       this.appDataMessage = '';
@@ -1053,6 +1050,17 @@ var app = new Vue({
       note('HandleNewGameClick() called');
       this.GetCategoryNames();
       this.appStateShowCatChooser = true;
+    },
+
+    HandleGameLinkClick(e, game) {
+      note('HandleGameLinkClick() called');
+      e.stopPropagation();
+      e.preventDefault();
+      if (game.solved && game.guesses > 0) {
+        this.HandleSolvedPuzzleButtonClick(e, game);
+      } else {
+        this.HandleOldGameClick(e, game);
+      }
     },
 
     HandleSolvedPuzzleButtonClick(e, _game) {
@@ -1518,7 +1526,11 @@ var app = new Vue({
     },
 
     /* === COMMUNICATION === */
-    ShareWin(_game = this.getCurrentDaily) {
+    ShareWin(e, _game = this.getCurrentDaily) {
+      if (e !== null) {
+        e.stopPropagation();
+        e.preventDefault();
+      }
       note('ShareWin() called');
       if (_game.solved) {
         let date = _game && this.getTodaysDaily === _game ? `Today's` : `The ${_game.date}`;
@@ -1538,6 +1550,7 @@ Can you do better?
 <https://facets.bigtentgames.com>`;
         }
         this.ShareText(text, '');
+        history.pushState(null, null, window.location.origin + window.location.pathname);
       }
     },
 
@@ -2380,7 +2393,7 @@ Can you do better?
         }
         if (this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
           if (this.getCurrentDaily) {
-            text = this.getCurrentDaily.quit ? this.appDataActionButtonTexts.create : this.appDataActionButtonTexts.share;
+            text = this.appDataActionButtonTexts.share;
           } else {
             text = this.appDataActionButtonTexts.create;
           }
