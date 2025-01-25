@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.30',
+    appDataVersion: '2.1.32',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -2161,7 +2161,7 @@ Can you do better?
               reject(error);
             } else {
               setTimeout(() => {
-                retry(fn, retriesLeft - 1, interval * 2).then(resolve, reject);
+                this.Retry(fn, retriesLeft - 1, interval * 2).then(resolve, reject);
               }, interval);
             }
           });
