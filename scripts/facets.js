@@ -1,19 +1,16 @@
 /// <reference path="../models/WordObject.js" />
 /// <reference path="../models/CardObject.js" />
 
-// if (!UseDebug) {
 Vue.config.devtools = false;
-Vue.config.debug = false;
 Vue.config.silent = true;
-// }
 
 Vue.config.ignoredElements = ['app', 'preload', 'notification', 'message', 'icon', 'subtitle', 'badge', 'modal', 'controls', 'hider', 'confirmation', 'checkbox', 'toggle', 'legal', 'credit', 'version', 'categories', 'category', 'leftright', 'small', 'callout', 'instructions', 'gamelinks', 'gamelink', 'stats', 'stat', 'value', 'flogo', 'count', 'rotators', 'ghost', 'card', 'words', 'word', 'parking', 'spot', 'tray', 'diamond', 'hints', 'hint', 'cards'];
 
 var app = new Vue({
   el: '#app',
   data: {
-    // app data
-    appDataVersion: '2.1.23',
+    //#region APP DATA
+    appDataVersion: '2.1.24',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -48,7 +45,9 @@ var app = new Vue({
     appDataNumberOfNewDailies: 1,
     appDataDailyGamesStats: [],
     appDataInc: 0,
-    // app state
+    //#endregion
+
+    //#region STATE MANAGEMENT
     appStateForceAutoCheck: false,
     appStateIsDragging: false,
     appStateIsGettingTinyURL: false,
@@ -81,8 +80,9 @@ var app = new Vue({
     appStateUseFlower: false,
     appStateBrowserNotificationInterval: null,
     appStateShareError: false,
+    //#endregion
 
-    // current game
+    //#region CURRENT GAME
     currentGameGuessCount: 0,
     currentGameGuessersName: '',
     currentGameLanguage: '',
@@ -92,7 +92,9 @@ var app = new Vue({
     currentGameSolutionActual: '',
     currentGameSolutionGuessing: [],
     currentGameWordSet: WordSets.find((m) => m.id === '100'),
-    // user settings
+    //#endregion
+
+    //#region USER SETTINGS
     userSettingsUseExtraCard: false,
     userSettingsUsesLightTheme: false,
     userSettingsUsesSimplifiedTheme: false,
@@ -104,7 +106,9 @@ var app = new Vue({
     vsUseFocus: true,
     userSettingsLanguage: 'en-us',
     userSettingsLegalAccepted: false,
-    // temp user settings
+    //#endregion
+
+    //#region TEMP USER SETTINGS
     tempName: '',
     tempID: 0,
     tempShareURLCode: '',
@@ -119,13 +123,16 @@ var app = new Vue({
     tempUseExtraCard: false,
     tempWordSets: [],
     tempUserSettingsLanguage: 'en-us',
-    // DOM reference
+    //#endregion
+
+    //#region DOM REFERENCE
     documentCssRoot: document.querySelector(':root'),
     cssStyles: window.getComputedStyle(document.querySelector(':root')),
+    //#endregion
   },
 
   methods: {
-    /* === STATE MANAGEMENT === */
+    //#region STATE MANAGEMENT
     ToggleShowTutorial(e) {
       note('ToggleShowTutorial() called');
       if (e != null) {
@@ -286,8 +293,9 @@ var app = new Vue({
       });
       this.tempName = this.appDataPlayerCurrent.name;
     },
+    //#endregion
 
-    /* === DATA MANAGEMENT === */
+    //#region DATA MANAGEMENT
     SetWordSetTheme(_wordset) {
       note('SetWordSetTheme() called');
       if (this.userSettingsUseWordSetThemes) {
@@ -696,6 +704,7 @@ var app = new Vue({
           this.FillParkingLot();
         }
       }
+      this.ToggleShowMeta(null);
     },
 
     SetAIHints(_array) {
@@ -949,8 +958,9 @@ var app = new Vue({
           this.appStateIsGettingUserStats = false;
         });
     },
+    //#endregion
 
-    /* === HANDLERS === */
+    //#region HANDLERS
     HandleSubmitButtonPress() {
       note('HandleSubmitButtonPress() called');
       if (this.appDataPlayerCurrent.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
@@ -1524,8 +1534,9 @@ var app = new Vue({
         this.NewGame(null);
       }
     },
+    //#endregion
 
-    /* === COMMUNICATION === */
+    //#region COMMUNICATION
     ShareWin(e, _game = this.getCurrentDaily) {
       if (e !== null) {
         e.stopPropagation();
@@ -1778,8 +1789,9 @@ Can you do better?
       }
       return text;
     },
+    //#endregion
 
-    /* === CARD MANIPULATION === */
+    //#region CARD MANIPULATION
     SwapCards(_card1, _card2) {
       note('SwapCards() called');
 
@@ -2063,8 +2075,9 @@ Can you do better?
       }
       return boardPieces;
     },
+    //#endregion
 
-    /* === INITIALIZATION === */
+    //#region INITIALIZATION
     async NewGame(e, _appDataMessage = '', _rotate = true) {
       note('NewGame() called');
       document.title = 'Facets!';
@@ -2245,6 +2258,7 @@ Can you do better?
     HandleVersionAvailable() {
       note('HandleVersionAvailable() called');
     },
+    //#endregion
   },
 
   mounted() {
@@ -2256,6 +2270,7 @@ Can you do better?
     window.addEventListener('resize', this.HandleResize);
     window.addEventListener('popstate', this.HandlePopState);
   },
+
   watch: {
     userSettingsLanguage: function (newLang, oldLang) {
       this.LoadTranslatedWords();
@@ -2263,6 +2278,7 @@ Can you do better?
   },
 
   computed: {
+    //#region COMPUTED
     getSelectedCard: function () {
       return this.appDataCards.concat(this.appDataCardsParked).find((card) => card.isSelected === true);
     },
@@ -2512,5 +2528,6 @@ Can you do better?
     isPWAOnHomeScreen: function () {
       return window.matchMedia('(display-mode: standalone)').matches;
     },
+    //#endregion
   },
 });
