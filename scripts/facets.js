@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.32',
+    appDataVersion: '2.1.33',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -363,7 +363,7 @@ var app = new Vue({
         let dataArrays = await Promise.all(fetchPromises);
         allWords = [].concat(...dataArrays);
       } catch (error) {
-        error('Error:', error);
+        error(error);
       }
 
       return allWords;
@@ -389,7 +389,7 @@ var app = new Vue({
         let dataArrays = await Promise.all(fetchPromises);
         allWords = [].concat(...dataArrays);
       } catch (error) {
-        error('Error:', error);
+        error(error);
       }
 
       return allWords;
@@ -446,12 +446,12 @@ var app = new Vue({
         })
           .then((response) => {
             if (!response.ok) {
-              error('Server error: ' + response.status);
+              error(response.status);
             }
             return response.json();
           })
           .catch((error) => {
-            error('Error:', error);
+            error(error);
           })
           .finally(() => {
             this.GetDailyGameStats();
@@ -691,13 +691,13 @@ var app = new Vue({
         });
 
         if (!response.ok) {
-          error('Server error: ' + response.status);
+          error(response.status);
         }
         const payload = await response.text();
         this.SetAIHints(JSON.parse(payload).result);
         this.FillParkingLot();
       } catch (error) {
-        error('Error:', error);
+        error(error);
         if (UseDebug && this.userSettingsUseExtraCard) {
           payload = JSON.stringify({ result: ['1', '2', '3', '4'] });
           this.SetAIHints(JSON.parse(payload).result);
@@ -806,7 +806,7 @@ var app = new Vue({
           })
             .then((response) => {
               if (!response.ok) {
-                error('Server error: ' + response.status);
+                error(response.status);
               }
               return response.text();
             })
@@ -814,7 +814,7 @@ var app = new Vue({
               this.appDataGlobalCreatedGames = JSON.parse(payload);
             })
             .catch((error) => {
-              error('Error:', error);
+              error(error);
             })
             .finally(() => {
               this.appStateIsGettingLast10Games = false;
@@ -842,7 +842,7 @@ var app = new Vue({
           })
             .then((response) => {
               if (!response.ok) {
-                error('Server error: ' + response.status);
+                error(response.status);
               }
               return response.text();
             })
@@ -864,7 +864,7 @@ var app = new Vue({
               this.GetDailyGameStats();
             })
             .catch((error) => {
-              error('Error:', error);
+              error(error);
             })
             .finally(() => {
               this.appStateIsGettingDailyGames = false;
@@ -889,7 +889,7 @@ var app = new Vue({
         })
           .then((response) => {
             if (!response.ok) {
-              error('Server error: ' + response.status);
+              error(response.status);
             }
             return response.text();
           })
@@ -907,7 +907,7 @@ var app = new Vue({
             });
           })
           .catch((error) => {
-            error('Error:', error);
+            error(error);
           })
           .finally(() => {
             this.GetUsersStats();
@@ -931,7 +931,7 @@ var app = new Vue({
       })
         .then((response) => {
           if (!response.ok) {
-            error('Server error: ' + response.status);
+            error(response.status);
           }
           return response.text();
         })
@@ -952,7 +952,7 @@ var app = new Vue({
           });
         })
         .catch((error) => {
-          error('Error:', error);
+          error(error);
         })
         .finally(() => {
           this.appStateIsGettingUserStats = false;
@@ -1581,7 +1581,7 @@ Can you do better?
               this.appStateShowNotification = true;
             })
             .catch((err) => {
-              error('Failed to copy text via navigator.clipboard.write: ', err);
+              error(err);
               this.CopyToClipboardViaExecCommand(_text);
             });
         } else {
@@ -1594,7 +1594,7 @@ Can you do better?
               this.appStateShowNotification = true;
             })
             .catch((err) => {
-              error('Failed to copy text via navigator.clipboard.writeText: ', err);
+              error(err);
               this.CopyToClipboardViaExecCommand(_text);
             });
         }
@@ -1679,7 +1679,7 @@ Can you do better?
             this.ShareText(text, this.appDataShareURL);
           })
           .catch((error) => {
-            error('Error:', error);
+            error(error);
             if (!UseDebug) {
               this.appStateShareError = true;
             }

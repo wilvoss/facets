@@ -6,7 +6,6 @@ self.addEventListener('install', (event) => {
 
 // Activate event
 self.addEventListener('activate', (event) => {
-  console.log('Service Worker activated');
   event.waitUntil(
     clients.claim().then(() => {
       return self.clients.matchAll().then((clients) => {
@@ -17,6 +16,7 @@ self.addEventListener('activate', (event) => {
       });
     }),
   );
+  console.log('Service Worker activated');
 });
 
 // Sync event
@@ -42,13 +42,11 @@ function getDelayUntilNext8AM() {
 function showDailyReminder() {
   console.log('showDailyReminder() called');
 
-  // Assuming you have logic to verify if user wants daily reminders
   const userWantsDailyReminder = true;
 
   self.clients.matchAll().then((clients) => {
     if (clients.length > 0 && userWantsDailyReminder) {
       const client = clients[0];
-
       const options = {
         body: "Today's Daily Facets puzzle is ready!",
         icon: '/images/icon192.png',
@@ -58,26 +56,16 @@ function showDailyReminder() {
 
       self.registration
         .showNotification('Daily Reminder', options)
-        .then(() => {
-          console.log('Notification displayed successfully');
-        })
-        .catch((error) => {
-          console.error('Failed to display notification:', error);
-        });
+        .then(() => console.log('Notification displayed successfully'))
+        .catch((error) => console.error('Failed to display notification:', error));
 
       // Schedule the next notification
       const delay = getDelayUntilNext8AM();
       setTimeout(() => {
-        navigator.serviceWorker.ready.then((registration) => {
-          registration.sync
-            .register('daily-reminder')
-            .then(() => {
-              console.log('Sync event registered for the next notification');
-            })
-            .catch((error) => {
-              console.error('Sync registration failed:', error);
-            });
-        });
+        registration.sync
+          .register('daily-reminder')
+          .then(() => console.log('Sync event registered for the next notification'))
+          .catch((error) => console.error('Sync registration failed:', error));
       }, delay + 86400000); // Add 24 hours (86400000 milliseconds) to the delay
     } else {
       console.log('Daily reminder notification not shown: User preference is disabled or no clients');
@@ -91,11 +79,7 @@ navigator.serviceWorker.ready.then((registration) => {
   setTimeout(() => {
     registration.sync
       .register('daily-reminder')
-      .then(() => {
-        console.log('Sync event registered for the first time');
-      })
-      .catch((error) => {
-        console.error('Sync registration failed:', error);
-      });
+      .then(() => console.log('Sync event registered for the first time'))
+      .catch((error) => console.error('Sync registration failed:', error));
   }, delay);
 });
