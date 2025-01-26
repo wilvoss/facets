@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.45',
+    appDataVersion: '2.1.46',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -229,7 +229,7 @@ var app = new Vue({
 
       this.tempUserWantsDailyReminder = !this.tempUserWantsDailyReminder;
 
-      if (this.tempUserWantsDailyReminder && !this.getUserAcceptedNotificationsPermission) {
+      if (this.tempUserWantsDailyReminder) {
         let confirmed = await this.EnableDailyReminders();
         if (confirmed) {
           this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder = true;
@@ -2282,7 +2282,6 @@ Can you do better?
     EnableDailyReminders() {
       return new Promise((resolve, reject) => {
         if (Notification.permission === 'granted') {
-          this.HandleServiceWorkerRegistration();
           resolve(true);
         } else {
           Notification.requestPermission()
