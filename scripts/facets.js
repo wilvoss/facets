@@ -4,13 +4,13 @@
 Vue.config.devtools = false;
 Vue.config.silent = true;
 
-Vue.config.ignoredElements = ['app', 'preload', 'notification', 'message', 'icon', 'subtitle', 'badge', 'modal', 'controls', 'hider', 'confirmation', 'checkbox', 'toggle', 'legal', 'credit', 'version', 'categories', 'category', 'leftright', 'small', 'callout', 'instructions', 'gamelinks', 'gamelink', 'stats', 'stat', 'value', 'flogo', 'count', 'rotators', 'ghost', 'card', 'words', 'word', 'parking', 'spot', 'tray', 'diamond', 'hints', 'hint', 'cards'];
+Vue.config.ignoredElements = ['app', 'preload', 'notification', 'message', 'icon', 'subtitle', 'badge', 'modal', 'controls', 'hider', 'confirmation', 'checkbox', 'toggle', 'legal', 'credit', 'version', 'categories', 'category', 'leftright', 'small', 'callout', 'instructions', 'gamelinks', 'gamelink', 'stats', 'stat', 'value', 'flogo', 'count', 'rotators', 'ghost', 'card', 'words', 'word', 'parking', 'spot', 'tray', 'diamond', 'hints', 'hint', 'cards', 'cta', 'dot', 'clues'];
 
 var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.52',
+    appDataVersion: '2.1.53',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -72,6 +72,7 @@ var app = new Vue({
     appStateShowTutorial: false,
     appStateTrayIsRotating: false,
     appStateTrayRotation: 0,
+    appStateUseNotifications: UseDebug,
     appStateUsePortraitLayout: false,
     appStateShowNotification: false,
     appParkingRightButtonDisabled: false,
@@ -229,7 +230,7 @@ var app = new Vue({
 
       this.tempUserWantsDailyReminder = !this.tempUserWantsDailyReminder;
 
-      if (this.tempUserWantsDailyReminder) {
+      if (this.tempUserWantsDailyReminder && this.isNotificationSupported) {
         let confirmed = await this.EnableDailyReminders();
         if (confirmed) {
           this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder = true;
@@ -2126,7 +2127,9 @@ Can you do better?
 
       this.appStateUsePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
     },
+    //#endregion
 
+    //#region SERVICE WORKER MANAGEMENT
     DeregisterServiceWorkers() {
       if ('serviceWorker' in navigator) {
         navigator.serviceWorker
@@ -2143,7 +2146,35 @@ Can you do better?
         console.log('Service workers are not supported in this browser.');
       }
     },
+    //#endregion
 
+    //#region NOTIFICATIONS MANAGEMENT
+    EnableDailyReminders() {
+      return new Promise((resolve, reject) => {
+        if (Notification.permission === 'granted') {
+          resolve(true);
+        } else {
+          Notification.requestPermission()
+            .then((permission) => {
+              if (permission === 'granted') {
+                this.HandleServiceWorkerRegistration();
+                resolve(true);
+              } else {
+                resolve(false);
+              }
+            })
+            .catch((e) => {
+              reject(e);
+            });
+        }
+      });
+    },
+    HandleServiceWorkerRegistration() {
+      note('HandleServiceWorkerRegistration() called');
+    },
+    HandleVersionAvailable() {
+      note('HandleVersionAvailable() called');
+    },
     //#endregion
   },
 
@@ -2333,7 +2364,7 @@ Can you do better?
         return false;
       }
       const isFresh = this.getTodaysDaily.guesses === 0 && !this.HasUserStartedGame(this.getTodaysDaily) && !this.appStateIsGettingDailyGames && !this.appStateIsGettingUserStats;
-      if (this.getIsBadgeSupported) {
+      if (this.isBadgeSupported) {
         if (isFresh) {
           navigator.setAppBadge();
         } else {
@@ -2383,18 +2414,6 @@ Can you do better?
       let iconIndex = Math.ceil(day / num);
       return `cal${iconIndex}`;
     },
-    getUserAcceptedNotificationsPermission() {
-      if ('Notification' in window) {
-        return Notification.permission !== 'denied';
-      }
-      return false;
-    },
-    getSyncIsSupported: function () {
-      return 'SyncManager' in window;
-    },
-    getIsBadgeSupported: function () {
-      return navigator.setAppBadge !== undefined && navigator.setAppBadge !== null;
-    },
     getResumeText: function () {
       let text = '';
       highlight(this.appDataPlayerCurrent.role);
@@ -2410,6 +2429,21 @@ Can you do better?
           break;
       }
       return text;
+    },
+    isSyncSupported: function () {
+      if (UseDebug) {
+        return true;
+      }
+      return 'SyncManager' in window;
+    },
+    isNotificationSupported: function () {
+      if (UseDebug) {
+        return true;
+      }
+      return 'Notification' in window;
+    },
+    isBadgeSupported: function () {
+      return navigator.setAppBadge !== undefined && navigator.setAppBadge !== null;
     },
     isPWAOnHomeScreen: function () {
       return window.matchMedia('(display-mode: standalone)').matches;
