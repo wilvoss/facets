@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.48',
+    appDataVersion: '2.1.49',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -2184,7 +2184,7 @@ Can you do better?
 
         if ('serviceWorker' in navigator) {
           this.Retry(() => navigator.serviceWorker.getRegistration()).then((registration) => {
-            const userSettings = this.GetUserSettings();
+            this.GetUserSettings();
             if (registration) {
               log('Service Worker is already registered with scope:', registration.scope);
 
@@ -2216,17 +2216,6 @@ Can you do better?
                     console.log('User setting sent to Service Worker:', this.tempUserWantsDailyReminder);
 
                     this.ScheduleInitialPeriodicSync();
-                  }
-
-                  if ('sync' in registration) {
-                    return registration.sync
-                      .register('daily-reminder')
-                      .then(() => {
-                        log('Daily reminder sync registered');
-                      })
-                      .catch((e) => {
-                        log(e);
-                      });
                   }
                 })
                 .catch((e) => {
@@ -2308,7 +2297,9 @@ Can you do better?
 
   mounted() {
     this.LoadPage();
-    this.HandleServiceWorkerRegistration();
+    if (Notification.permission === 'default') {
+      this.HandleServiceWorkerRegistration();
+    }
     window.addEventListener('keydown', this.HandleKeyDownEvent);
     window.addEventListener('pointermove', this.HandlePointerMoveEvent);
     window.addEventListener('visibilitychange', this.HandlePageVisibilityChange);

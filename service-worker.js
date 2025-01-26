@@ -19,13 +19,6 @@ self.addEventListener('activate', (event) => {
   console.log('Service Worker activated');
 });
 
-// Sync event
-self.addEventListener('sync', (event) => {
-  if (event.tag === 'daily-reminder') {
-    event.waitUntil(showDailyReminder());
-  }
-});
-
 // Periodic Sync event
 self.addEventListener('periodicsync', (event) => {
   if (event.tag === 'daily-reminder') {
@@ -42,19 +35,6 @@ self.addEventListener('message', (event) => {
     console.warn('Service Worker received unknown message type:', event.data.type);
   }
 });
-
-// Helper function to calculate delay until next 8:00 am
-function getInternalDelayUntilNext8AM() {
-  const now = new Date();
-  const next8AM = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 0, 0, 0);
-
-  if (now.getTime() >= next8AM.getTime()) {
-    next8AM.setDate(next8AM.getDate() + 1);
-  }
-  const delay = next8AM.getTime() - now.getTime();
-  console.log(`Calculated delay until next 8:00 AM: ${delay} milliseconds`);
-  return delay;
-}
 
 // Function to show daily reminder notification
 function showDailyReminder() {
@@ -75,18 +55,6 @@ function showDailyReminder() {
         .showNotification('Daily Reminder', options)
         .then(() => console.log('Notification displayed successfully'))
         .catch((error) => console.error('Failed to display notification:', error));
-
-      const delay = getInternalDelayUntilNext8AM() + 10000;
-      console.log(`Setting timeout with delay: ${delay} milliseconds`);
-      setTimeout(() => {
-        self.registration.periodicSync
-          .register({
-            tag: 'daily-reminder',
-            minInterval: 24 * 60 * 60 * 1000, // 24 hours
-          })
-          .then(() => console.log('Periodic sync registered for 24 hours'))
-          .catch((error) => console.error('Periodic sync registration failed:', error));
-      }, delay);
     } else {
       console.log('Daily reminder notification not shown: User preference is disabled or no clients');
     }
