@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.49',
+    appDataVersion: '2.1.50',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -631,7 +631,7 @@ var app = new Vue({
           this.currentGameSolutionActual = urlParams.get('sol');
           if (urlParams.has('final')) {
             this.currentGameSolutionGuessing = this.currentGameSolutionActual;
-            this.appDataMessage = this.appDataPlayerCurrent.name + ", here's the solution.";
+            this.appDataMessage = `${this.appDataPlayerCurrent.name}, here's the solution to ${this.appDataPlayerSender.name}'s puzzle.`;
             this.currentGameReviewIsFinal = true;
           }
         } else {
