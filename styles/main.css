@@ -1115,6 +1115,11 @@ modal controls {
   gap: calc(0.5 * var(--defaultGap));
 }
 
+modal callout,
+modal select {
+  border: 1px solid hsla(var(--appBackgroundLighterHSL), 0.5);
+}
+
 modal controls button {
   width: unset;
   font-size: 100%;
