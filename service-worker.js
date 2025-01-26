@@ -33,6 +33,14 @@ self.addEventListener('periodicsync', (event) => {
   }
 });
 
+// Message event to receive user preference updates
+self.addEventListener('message', (event) => {
+  if (event.data.type === 'USER_WANTS_REMINDER') {
+    self.userWantsDailyReminder = event.data.tempUserWantsDailyReminder;
+    console.log('Service Worker received updated user preference:', self.userWantsDailyReminder);
+  }
+});
+
 // Helper function to calculate delay until next 8:00 am
 function getInternalDelayUntilNext8AM() {
   const now = new Date();
@@ -50,7 +58,7 @@ function getInternalDelayUntilNext8AM() {
 function showDailyReminder() {
   console.log('showDailyReminder() called');
 
-  const userWantsDailyReminder = true;
+  const userWantsDailyReminder = self.userWantsDailyReminder !== undefined ? self.userWantsDailyReminder : true;
 
   self.clients.matchAll().then((clients) => {
     if (clients.length > 0 && userWantsDailyReminder) {
