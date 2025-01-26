@@ -38,6 +38,8 @@ self.addEventListener('message', (event) => {
   if (event.data.type === 'USER_WANTS_REMINDER') {
     self.userWantsDailyReminder = event.data.tempUserWantsDailyReminder;
     console.log('Service Worker received updated user preference:', self.userWantsDailyReminder);
+  } else {
+    console.warn('Service Worker received unknown message type:', event.data.type);
   }
 });
 

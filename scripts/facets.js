@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.38',
+    appDataVersion: '2.1.40',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -1350,11 +1350,28 @@ var app = new Vue({
           .then(() => {
             console.log('User setting sent to Service Worker:', updatedReminderSetting);
           })
-          .catch(() => {
-            console.log('Failed to send user setting to Service Worker');
+          .catch((error) => {
+            console.error(`Failed to send user setting to Service Worker due to: ${error}`);
           });
       } else {
-        console.log('No active service worker controller found');
+        console.warn('No active service worker controller found.');
+
+        // Additional logging for readiness check
+        navigator.serviceWorker.ready
+          .then((registration) => {
+            if (registration.active) {
+              registration.active.postMessage({
+                type: 'USER_WANTS_REMINDER',
+                tempUserWantsDailyReminder: updatedReminderSetting,
+              });
+              console.log('User setting sent to Service Worker:', updatedReminderSetting);
+            } else {
+              console.warn('Service worker is not active during readiness check.');
+            }
+          })
+          .catch((registrationError) => {
+            console.error('Service Worker ready function failed:', registrationError);
+          });
       }
     },
 
