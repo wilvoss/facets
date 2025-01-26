@@ -2040,7 +2040,7 @@ leftright {
   background: hsla(var(--appBackgroundHSL), 0.4);
   border-radius: var(--borderRadius);
   gap: calc(0.5 * var(--defaultGap));
-  transition: var(--mediumTransition) ease-in-out;
+  transition: var(--mediumTransition) ease-in-out border-color, background-color;
 }
 
 leftright message,

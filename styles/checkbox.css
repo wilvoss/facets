@@ -13,7 +13,7 @@ checkbox {
   background: hsla(var(--appBackgroundHSL), 0.4);
   border-radius: calc(1 * var(--borderRadius));
   -webkit-tap-highlight-color: transparent;
-  transition: var(--mediumTransition) ease-in-out;
+  transition: var(--mediumTransition) ease-in-out border-color, background-color;
   user-select: none;
   -webkit-user-select: none;
 }
