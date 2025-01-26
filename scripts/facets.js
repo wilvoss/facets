@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.43',
+    appDataVersion: '2.1.44',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -1341,17 +1341,12 @@ var app = new Vue({
       const updatedReminderSetting = this.tempUserWantsDailyReminder;
 
       if (navigator.serviceWorker.controller) {
-        navigator.serviceWorker.controller
-          .postMessage({
-            type: 'USER_WANTS_REMINDER',
-            tempUserWantsDailyReminder: updatedReminderSetting,
-          })
-          .then(() => {
-            console.log('User setting sent to Service Worker:', updatedReminderSetting);
-          })
-          .catch((error) => {
-            console.error(`Failed to send user setting to Service Worker due to: ${error}`);
-          });
+        // Remove the .then() call here as postMessage is not a promise
+        navigator.serviceWorker.controller.postMessage({
+          type: 'USER_WANTS_REMINDER',
+          tempUserWantsDailyReminder: updatedReminderSetting,
+        });
+        console.log('User setting sent to Service Worker:', updatedReminderSetting);
       } else {
         console.warn('No active service worker controller found.');
 
