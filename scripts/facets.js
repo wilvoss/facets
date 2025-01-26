@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.36',
+    appDataVersion: '2.1.37',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -2184,6 +2184,8 @@ Can you do better?
                   tempUserWantsDailyReminder: this.tempUserWantsDailyReminder,
                 });
                 console.log('User setting sent to Service Worker:', this.tempUserWantsDailyReminder);
+
+                this.ScheduleInitialPeriodicSync();
               }
 
               navigator.serviceWorker.addEventListener('message', (event) => {
@@ -2202,6 +2204,8 @@ Can you do better?
                       tempUserWantsDailyReminder: this.tempUserWantsDailyReminder,
                     });
                     console.log('User setting sent to Service Worker:', this.tempUserWantsDailyReminder);
+
+                    this.ScheduleInitialPeriodicSync();
                   }
 
                   if ('sync' in registration) {
@@ -2232,6 +2236,37 @@ Can you do better?
           }
         });
       }
+    },
+
+    ScheduleInitialPeriodicSync() {
+      if ('serviceWorker' in navigator && 'periodicSync' in ServiceWorkerRegistration.prototype) {
+        navigator.serviceWorker.ready
+          .then((registration) => {
+            const delay = this.GetDelayUntilNext8AM() - 30000; // 30 seconds before 8:00 AM
+            setTimeout(() => {
+              registration.periodicSync
+                .register({
+                  tag: 'daily-reminder',
+                  minInterval: 24 * 60 * 60 * 1000, // 24 hours
+                })
+                .then(() => console.log('Periodic sync registered successfully'))
+                .catch((error) => console.error('Periodic sync registration failed:', error));
+            }, delay);
+          })
+          .catch((registrationError) => {
+            console.error('SW ready failed: ', registrationError);
+          });
+      }
+    },
+
+    GetDelayUntilNext8AM() {
+      const now = new Date();
+      const next8AM = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 0, 0, 0);
+
+      if (now.getTime() >= next8AM.getTime()) {
+        next8AM.setDate(next8AM.getDate() + 1);
+      }
+      return next8AM.getTime() - now.getTime();
     },
 
     EnableDailyReminders() {
