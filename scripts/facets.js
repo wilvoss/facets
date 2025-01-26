@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.41',
+    appDataVersion: '2.1.42',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -1341,12 +1341,11 @@ var app = new Vue({
       const updatedReminderSetting = this.tempUserWantsDailyReminder;
 
       if (navigator.serviceWorker.controller) {
-        this.Retry(() =>
-          navigator.serviceWorker.controller.postMessage({
+        navigator.serviceWorker.controller
+          .postMessage({
             type: 'USER_WANTS_REMINDER',
             tempUserWantsDailyReminder: updatedReminderSetting,
-          }),
-        )
+          })
           .then(() => {
             console.log('User setting sent to Service Worker:', updatedReminderSetting);
           })
@@ -1356,7 +1355,6 @@ var app = new Vue({
       } else {
         console.warn('No active service worker controller found.');
 
-        // Additional logging for readiness check
         navigator.serviceWorker.ready
           .then((registration) => {
             if (registration.active) {
