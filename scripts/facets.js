@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.44',
+    appDataVersion: '2.1.45',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -1313,8 +1313,6 @@ var app = new Vue({
         this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
         this.SetWordSetTheme(this.currentGameGuessingWordSet);
 
-        this.UpdateServiceWorkerNotificationSettings();
-
         localStorage.setItem('userID', this.appDataPlayerCurrent.id);
         localStorage.setItem('useWordSetThemes', this.userSettingsUseWordSetThemes);
         localStorage.setItem('userSettingsUserWantsDailyReminder', this.userSettingsUserWantsDailyReminder);
@@ -1325,6 +1323,8 @@ var app = new Vue({
         localStorage.setItem('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
         localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
         localStorage.setItem('wordSet', this.currentGameWordSet.id);
+
+        this.UpdateServiceWorkerNotificationSettings();
 
         if (userChangedID) {
           await this.GetDailyGameStats();
