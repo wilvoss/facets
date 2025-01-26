@@ -26,7 +26,7 @@
     <meta name="keywords" content="Facets, Facets!, Big Tent Games, Games, Casual game, Puzzle game, Word game, Boardgame, Wil Voss" />
     <meta name="description" content="Facets: A Puzzle Game of Words and Wits!" />
 
-    <link rel="manifest" href="manifest.webmanifest?2.1.51" />
+    <link rel="manifest" href="manifest.webmanifest?2.1.52" />
 
     <link rel="apple-touch-icon" sizes="120x120" href="images/icon180.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="images/icon180.png" />
@@ -36,9 +36,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="128x128" href="favicon.png" />
 
-    <link rel="stylesheet" href="styles/normalize.css?2.1.51" media="screen" />
-    <link rel="stylesheet" href="styles/main.css?2.1.51" media="screen" />
-    <link rel="stylesheet" href="styles/checkbox.min.css?2.1.51" media="screen" />
+    <link rel="stylesheet" href="styles/normalize.css?2.1.52" media="screen" />
+    <link rel="stylesheet" href="styles/main.css?2.1.52" media="screen" />
+    <link rel="stylesheet" href="styles/checkbox.min.css?2.1.52" media="screen" />
   </head>
 
   <body>
@@ -56,10 +56,10 @@
 
         <img v-for="wordset in getEnabledWordSets" width="0px" height="0px" alt="preload image that can't be seen" :style="{backgroundImage: 'url('+ wordset.textureImage + ')'}" />
       </preload>
-      <link rel="stylesheet" v-if="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme)" href="styles/light.css?2.1.51" media="screen" />
-      <link rel="stylesheet" v-if="appStateUseFlower || userSettingsUsesSimplifiedTheme" href="styles/simple.css?2.1.51" media="screen" />
-      <link rel="stylesheet" v-if="appStateUseFlower" href="styles/flower.css?2.1.51" media="screen" />
-      <link rel="stylesheet" v-if="appStateUsePortraitLayout && !userSettingsShowAllCards && appDataPlayerCurrent.role !== 'creator'" href="styles/focus.css?2.1.51" media="screen" />
+      <link rel="stylesheet" v-if="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme)" href="styles/light.css?2.1.52" media="screen" />
+      <link rel="stylesheet" v-if="appStateUseFlower || userSettingsUsesSimplifiedTheme" href="styles/simple.css?2.1.52" media="screen" />
+      <link rel="stylesheet" v-if="appStateUseFlower" href="styles/flower.css?2.1.52" media="screen" />
+      <link rel="stylesheet" v-if="appStateUsePortraitLayout && !userSettingsShowAllCards && appDataPlayerCurrent.role !== 'creator'" href="styles/focus.css?2.1.52" media="screen" />
       <notification @click="appStateShowNotification = false" :class="{show: appStateShowNotification}">
         <message :title="getPlayerMessage" v-html="getPlayerMessage"></message>
       </notification>
@@ -162,10 +162,6 @@
           </h2>
           <message>What's your game name?</message>
           <input autocomplete="off" style="text-align: center" spellcheck="false" maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _" v-model="tempName" />
-          <checkbox v-if="getSyncIsSupported && isPWAOnHomeScreen" :class="{on: tempUserWantsDailyReminder && getUserAcceptedNotificationsPermission, disabled: !getUserAcceptedNotificationsPermission}" @click="ToggleTempUserWantsDailyReminder()">
-            Allow notifications
-            <toggle></toggle>
-          </checkbox>
 
           <legal>By continuing to use this game, you agree to our <a href="https://bigtentgames.com/#privacy" target="_blank">Privacy Policy</a>, which explains how we collect and use game names and temporary IDs necessary for game functionality.</legal>
         </section>
@@ -280,31 +276,8 @@
             <toggle></toggle>
           </checkbox>
           <small :class="{disabled: tempUserSettingsUsesSimplifiedTheme}">Enable this if you want the gem to remain green when you are creating, guessing, or reviewing.</small>
-          <checkbox v-if="getSyncIsSupported && isPWAOnHomeScreen" :class="{on: tempUserWantsDailyReminder, disabled: !getUserAcceptedNotificationsPermission}" @click="ToggleTempUserWantsDailyReminder()">
-            Notifications
-            <toggle></toggle>
-          </checkbox>
-          <small v-if="getSyncIsSupported && isPWAOnHomeScreen && getUserAcceptedNotificationsPermission"> Enable this to get Daily Reminder notifications (once a day at 8:00 am). </small>
-          <instructions v-if="getSyncIsSupported && isPWAOnHomeScreen && !getUserAcceptedNotificationsPermission && !isPWAOnHomeScreen">
-            Notifications are currently disabled in your browser settings. To enable notifications for Facets, please follow these steps:
-            <ul>
-              <li>Open your browser's settings.</li>
-              <li>Navigate to Privacy and Security > Site Settings > Notifications.</li>
-              <li>Find Facets ({{location.hostname}}) in the list and change the setting to "Allow."</li>
-            </ul>
-            Once you have updated your browser settings, refresh close and reopen Facets, after which you can enable notifications here.
-          </instructions>
-          <instructions v-if="getSyncIsSupported && isPWAOnHomeScreen && isPWAOnHomeScreen">
-            If you aren't getting notifications for Facets, they may be disabled on your device:
-            <ul>
-              <li>Open your device settings.</li>
-              <li>Navigate to Apps and Notifications > App info (or equivalent).</li>
-              <li>Find Facets in the list, and make sure notifications are enabled.</li>
-            </ul>
-            Once you have updated your device settings, restart Facets, and then enable notifications here.
-          </instructions>
           <leftright style="margin-top: calc(2 * var(--defaultGap))">
-            <a class="padded" @click="window.location.reload()">Force refresh Facets</a>
+            <a class="padded" @click="window.location.reload()">Reload Facets</a>
           </leftright>
           <small>App version {{appDataVersion}}, hit this button to load the latest and greatest.</small>
         </section>
@@ -537,14 +510,14 @@
         </button>
       </wrapper>
     </app>
-    <script src="helpers/console-enhancer.js?2.1.51" type="text/javascript"></script>
-    <script src="models/LanguageObject.min.js?2.1.51" type="text/javascript"></script>
-    <script src="models/ProgressMessageObject.min.js?2.1.51" type="text/javascript"></script>
-    <script src="models/WordSetObject.min.js?2.1.51" type="text/javascript"></script>
-    <script src="models/WordObject.min.js?2.1.51" type="text/javascript"></script>
-    <script src="models/CardObject.min.js?2.1.51" type="text/javascript"></script>
-    <script src="models/PlayerObject.min.js?2.1.51" type="text/javascript"></script>
+    <script src="helpers/console-enhancer.js?2.1.52" type="text/javascript"></script>
+    <script src="models/LanguageObject.min.js?2.1.52" type="text/javascript"></script>
+    <script src="models/ProgressMessageObject.min.js?2.1.52" type="text/javascript"></script>
+    <script src="models/WordSetObject.min.js?2.1.52" type="text/javascript"></script>
+    <script src="models/WordObject.min.js?2.1.52" type="text/javascript"></script>
+    <script src="models/CardObject.min.js?2.1.52" type="text/javascript"></script>
+    <script src="models/PlayerObject.min.js?2.1.52" type="text/javascript"></script>
     <script src="helpers/vue.min.js" type="text/javascript"></script>
-    <script src="scripts/facets.js?2.1.51" type="text/javascript"></script>
+    <script src="scripts/facets.js?2.1.52" type="text/javascript"></script>
   </body>
 </html>

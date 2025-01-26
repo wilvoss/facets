@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.51',
+    appDataVersion: '2.1.52',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -1244,7 +1244,6 @@ var app = new Vue({
 
     HandlePageVisibilityChange() {
       note('HandlePageVisibilityChange() called');
-      this.UpdateServiceWorkerNotificationSettings();
       if (!document.hidden) {
         this.GetDailyGames();
       }
@@ -1324,8 +1323,6 @@ var app = new Vue({
         localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
         localStorage.setItem('wordSet', this.currentGameWordSet.id);
 
-        this.UpdateServiceWorkerNotificationSettings();
-
         if (userChangedID) {
           await this.GetDailyGameStats();
           window.location.reload();
@@ -1334,38 +1331,6 @@ var app = new Vue({
       this.appStateIsModalShowing = false;
       this.appStateShowSettings = false;
       this.appStateShowIntro = false;
-    },
-
-    UpdateServiceWorkerNotificationSettings() {
-      note('UpdateServiceWorkerNotificationSettings() called');
-      const updatedReminderSetting = this.tempUserWantsDailyReminder;
-
-      if (navigator.serviceWorker.controller) {
-        // Remove the .then() call here as postMessage is not a promise
-        navigator.serviceWorker.controller.postMessage({
-          type: 'USER_WANTS_REMINDER',
-          tempUserWantsDailyReminder: updatedReminderSetting,
-        });
-        console.log('User setting sent to Service Worker:', updatedReminderSetting);
-      } else {
-        console.warn('No active service worker controller found.');
-
-        navigator.serviceWorker.ready
-          .then((registration) => {
-            if (registration.active) {
-              registration.active.postMessage({
-                type: 'USER_WANTS_REMINDER',
-                tempUserWantsDailyReminder: updatedReminderSetting,
-              });
-              console.log('User setting sent to Service Worker:', updatedReminderSetting);
-            } else {
-              console.warn('Service worker is not active during readiness check.');
-            }
-          })
-          .catch((registrationError) => {
-            console.error('Service Worker ready function failed:', registrationError);
-          });
-      }
     },
 
     GetUserSettings() {
@@ -2162,144 +2127,29 @@ Can you do better?
       this.appStateUsePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
     },
 
-    Retry(fn, retriesLeft = 3, interval = 1000) {
-      return new Promise((resolve, reject) => {
-        fn()
-          .then(resolve)
-          .catch((e) => {
-            if (retriesLeft === 1) {
-              reject(e);
-            } else {
-              setTimeout(() => {
-                this.Retry(fn, retriesLeft - 1, interval * 2).then(resolve, reject);
-              }, interval);
+    DeregisterServiceWorkers() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker
+          .getRegistrations()
+          .then(function (registrations) {
+            for (let registration of registrations) {
+              registration.unregister();
             }
-          });
-      });
-    },
-
-    HandleServiceWorkerRegistration() {
-      if (this.getSyncIsSupported && this.isPWAOnHomeScreen) {
-        note('HandleServiceWorkerRegistration() called');
-
-        if ('serviceWorker' in navigator) {
-          this.Retry(() => navigator.serviceWorker.getRegistration()).then((registration) => {
-            this.GetUserSettings();
-            if (registration) {
-              log('Service Worker is already registered with scope:', registration.scope);
-
-              if (registration.active) {
-                registration.active.postMessage({
-                  type: 'USER_WANTS_REMINDER',
-                  tempUserWantsDailyReminder: this.tempUserWantsDailyReminder,
-                });
-                console.log('User setting sent to Service Worker:', this.tempUserWantsDailyReminder);
-
-                this.ScheduleInitialPeriodicSync();
-              }
-
-              navigator.serviceWorker.addEventListener('message', (event) => {
-                if (event.data && event.data.type === 'NEW_VERSION_AVAILABLE') {
-                  this.HandleVersionAvailable();
-                }
-              });
-            } else {
-              this.Retry(() => navigator.serviceWorker.register('/service-worker.js', { scope: '/' }))
-                .then((registration) => {
-                  log('Service Worker registered with scope:', registration.scope);
-
-                  if (registration.active) {
-                    registration.active.postMessage({
-                      type: 'USER_WANTS_REMINDER',
-                      tempUserWantsDailyReminder: this.tempUserWantsDailyReminder,
-                    });
-                    console.log('User setting sent to Service Worker:', this.tempUserWantsDailyReminder);
-
-                    this.ScheduleInitialPeriodicSync();
-                  }
-                })
-                .catch((e) => {
-                  log(e);
-                });
-            }
-          });
-        } else {
-          log('Service Workers are not supported');
-        }
-      } else {
-        this.Retry(() => navigator.serviceWorker.getRegistrations()).then((registrations) => {
-          if (registrations.length) {
-            registrations.forEach((registration) => registration.unregister());
-          } else {
-            log('No service workers to unregister');
-          }
-        });
-      }
-    },
-
-    ScheduleInitialPeriodicSync() {
-      if ('serviceWorker' in navigator && 'periodicSync' in ServiceWorkerRegistration.prototype) {
-        navigator.serviceWorker.ready
-          .then((registration) => {
-            const delay = this.GetDelayUntilNext8AM() - 30000; // 30 seconds before 8:00 AM
-            setTimeout(() => {
-              registration.periodicSync
-                .register({
-                  tag: 'daily-reminder',
-                  minInterval: 24 * 60 * 60 * 1000, // 24 hours
-                })
-                .then(() => console.log('Periodic sync registered successfully'))
-                .catch((error) => console.error('Periodic sync registration failed:', error));
-            }, delay);
           })
-          .catch((registrationError) => {
-            console.error('SW ready failed: ', registrationError);
+          .catch(function (error) {
+            console.error('Error deregistering service workers:', error);
           });
+      } else {
+        console.log('Service workers are not supported in this browser.');
       }
     },
 
-    GetDelayUntilNext8AM() {
-      const now = new Date();
-      const next8AM = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 8, 0, 0, 0);
-
-      if (now.getTime() >= next8AM.getTime()) {
-        next8AM.setDate(next8AM.getDate() + 1);
-      }
-      return next8AM.getTime() - now.getTime();
-    },
-
-    EnableDailyReminders() {
-      return new Promise((resolve, reject) => {
-        if (Notification.permission === 'granted') {
-          resolve(true);
-        } else {
-          Notification.requestPermission()
-            .then((permission) => {
-              if (permission === 'granted') {
-                this.HandleServiceWorkerRegistration();
-                resolve(true);
-              } else {
-                resolve(false);
-              }
-            })
-            .catch((e) => {
-              reject(e);
-            });
-        }
-      });
-    },
-
-    HandleVersionAvailable() {
-      note('HandleVersionAvailable() called');
-    },
     //#endregion
   },
 
   mounted() {
     this.LoadPage();
-    if (Notification.permission === 'default') {
-      this.HandleServiceWorkerRegistration();
-    }
+    this.DeregisterServiceWorkers();
     window.addEventListener('keydown', this.HandleKeyDownEvent);
     window.addEventListener('pointermove', this.HandlePointerMoveEvent);
     window.addEventListener('visibilitychange', this.HandlePageVisibilityChange);

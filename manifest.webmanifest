@@ -12,9 +12,6 @@
   "background_color": "#00060f",
   "orientation": "portrait-primary",
   "publisher": "Big Tent Games",
-  "background_sync": {
-    "service_worker": "/service-worker.js"
-  },
   "icons": [
     {
       "src": "images/icon120.png",
