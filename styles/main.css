@@ -96,11 +96,11 @@ body {
   font-size: 1.3em;
   line-height: 1.3em;
   color: hsl(var(--appForegroundHSL));
+  background-color: hsl(var(--appBackgroundDarkestHSL));
   background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 50%), var(--textureHue), var(--texture2);
   background-repeat: no-repeat, no-repeat, repeat;
   background-position: top center;
   background-size: cover, cover, var(--textureSize);
-  background: hsl(var(--appBackgroundDarkestHSL));
 }
 
 app {
