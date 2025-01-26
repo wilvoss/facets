@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.42',
+    appDataVersion: '2.1.43',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -229,7 +229,7 @@ var app = new Vue({
 
       this.tempUserWantsDailyReminder = !this.tempUserWantsDailyReminder;
 
-      if (this.tempUserWantsDailyReminder) {
+      if (this.tempUserWantsDailyReminder && !this.getUserAcceptedNotificationsPermission) {
         let confirmed = await this.EnableDailyReminders();
         if (confirmed) {
           this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder = true;
