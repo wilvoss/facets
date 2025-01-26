@@ -26,6 +26,13 @@ self.addEventListener('sync', (event) => {
   }
 });
 
+// Periodic Sync event
+self.addEventListener('periodicsync', (event) => {
+  if (event.tag === 'daily-reminder') {
+    event.waitUntil(showDailyReminder());
+  }
+});
+
 // Helper function to calculate delay until next 8:00 am
 function getDelayUntilNext8AM() {
   const now = new Date();
@@ -34,7 +41,7 @@ function getDelayUntilNext8AM() {
   if (now.getTime() >= next8AM.getTime()) {
     next8AM.setDate(next8AM.getDate() + 1);
   }
-
+  console.log(next8AM.getTime() - now.getTime());
   return next8AM.getTime() - now.getTime();
 }
 
@@ -58,15 +65,32 @@ function showDailyReminder() {
         .then(() => console.log('Notification displayed successfully'))
         .catch((error) => console.error('Failed to display notification:', error));
 
-      const delay = getDelayUntilNext8AM();
+      const delay = getDelayUntilNext8AM() + 10000;
       setTimeout(() => {
-        self.registration.sync
-          .register('daily-reminder')
-          .then(() => console.log('Sync event registered for the next notification'))
-          .catch((error) => console.error('Sync registration failed:', error));
-      }, delay + 86400000); // Add 24 hours (86400000 milliseconds) to the delay
+        return self.registration.periodicSync
+          .register({
+            tag: 'daily-reminder',
+            minInterval: 24 * 60 * 60 * 1000,
+          })
+          .then(() => console.log('Periodic sync registered for 24 hours'))
+          .catch((error) => console.error('Periodic sync registration failed:', error));
+      }, delay);
     } else {
       console.log('Daily reminder notification not shown: User preference is disabled or no clients');
     }
   });
 }
+
+// Initial Periodic Sync Registration
+navigator.serviceWorker.ready.then((registration) => {
+  const delay = getDelayUntilNext8AM() - 30000; // 30 seconds before 8:00 AM
+  setTimeout(() => {
+    registration.periodicSync
+      .register({
+        tag: 'daily-reminder',
+        minInterval: 24 * 60 * 60 * 1000, // 24 hours
+      })
+      .then(() => console.log('Periodic sync registered successfully'))
+      .catch((error) => console.error('Periodic sync registration failed:', error));
+  }, delay);
+});
