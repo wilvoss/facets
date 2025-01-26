@@ -1,7 +1,7 @@
 // Install event
 self.addEventListener('install', (event) => {
-  console.log('Service Worker installed');
   self.skipWaiting();
+  console.log('Service Worker installed');
 });
 
 // Activate event
@@ -46,7 +46,6 @@ function showDailyReminder() {
 
   self.clients.matchAll().then((clients) => {
     if (clients.length > 0 && userWantsDailyReminder) {
-      const client = clients[0];
       const options = {
         body: "Today's Daily Facets puzzle is ready!",
         icon: '/images/icon192.png',
@@ -59,10 +58,9 @@ function showDailyReminder() {
         .then(() => console.log('Notification displayed successfully'))
         .catch((error) => console.error('Failed to display notification:', error));
 
-      // Schedule the next notification
       const delay = getDelayUntilNext8AM();
       setTimeout(() => {
-        registration.sync
+        self.registration.sync
           .register('daily-reminder')
           .then(() => console.log('Sync event registered for the next notification'))
           .catch((error) => console.error('Sync registration failed:', error));
@@ -72,14 +70,3 @@ function showDailyReminder() {
     }
   });
 }
-
-// Register the initial sync event from the client-side code
-navigator.serviceWorker.ready.then((registration) => {
-  const delay = getDelayUntilNext8AM();
-  setTimeout(() => {
-    registration.sync
-      .register('daily-reminder')
-      .then(() => console.log('Sync event registered for the first time'))
-      .catch((error) => console.error('Sync registration failed:', error));
-  }, delay);
-});

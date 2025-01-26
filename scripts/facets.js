@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.33',
+    appDataVersion: '2.1.34',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -2255,6 +2255,7 @@ Can you do better?
         }
       });
     },
+
     HandleVersionAvailable() {
       note('HandleVersionAvailable() called');
     },
