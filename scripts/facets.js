@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.34',
+    appDataVersion: '2.1.35',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -362,8 +362,8 @@ var app = new Vue({
       try {
         let dataArrays = await Promise.all(fetchPromises);
         allWords = [].concat(...dataArrays);
-      } catch (error) {
-        error(error);
+      } catch (e) {
+        error(e);
       }
 
       return allWords;
@@ -388,8 +388,8 @@ var app = new Vue({
       try {
         let dataArrays = await Promise.all(fetchPromises);
         allWords = [].concat(...dataArrays);
-      } catch (error) {
-        error(error);
+      } catch (e) {
+        error(e);
       }
 
       return allWords;
@@ -450,8 +450,8 @@ var app = new Vue({
             }
             return response.json();
           })
-          .catch((error) => {
-            error(error);
+          .catch((e) => {
+            error(e);
           })
           .finally(() => {
             this.GetDailyGameStats();
@@ -696,8 +696,8 @@ var app = new Vue({
         const payload = await response.text();
         this.SetAIHints(JSON.parse(payload).result);
         this.FillParkingLot();
-      } catch (error) {
-        error(error);
+      } catch (e) {
+        error(e);
         if (UseDebug && this.userSettingsUseExtraCard) {
           payload = JSON.stringify({ result: ['1', '2', '3', '4'] });
           this.SetAIHints(JSON.parse(payload).result);
@@ -813,8 +813,8 @@ var app = new Vue({
             .then((payload) => {
               this.appDataGlobalCreatedGames = JSON.parse(payload);
             })
-            .catch((error) => {
-              error(error);
+            .catch((e) => {
+              error(e);
             })
             .finally(() => {
               this.appStateIsGettingLast10Games = false;
@@ -863,8 +863,8 @@ var app = new Vue({
               });
               this.GetDailyGameStats();
             })
-            .catch((error) => {
-              error(error);
+            .catch((e) => {
+              error(e);
             })
             .finally(() => {
               this.appStateIsGettingDailyGames = false;
@@ -906,8 +906,8 @@ var app = new Vue({
               }
             });
           })
-          .catch((error) => {
-            error(error);
+          .catch((e) => {
+            error(e);
           })
           .finally(() => {
             this.GetUsersStats();
@@ -951,8 +951,8 @@ var app = new Vue({
             }
           });
         })
-        .catch((error) => {
-          error(error);
+        .catch((e) => {
+          error(e);
         })
         .finally(() => {
           this.appStateIsGettingUserStats = false;
@@ -1580,8 +1580,8 @@ Can you do better?
               this.appDataMessage = 'Message copied to the clipboard.';
               this.appStateShowNotification = true;
             })
-            .catch((err) => {
-              error(err);
+            .catch((e) => {
+              error(e);
               this.CopyToClipboardViaExecCommand(_text);
             });
         } else {
@@ -1593,8 +1593,8 @@ Can you do better?
               this.appDataMessage = 'Message copied to the clipboard.';
               this.appStateShowNotification = true;
             })
-            .catch((err) => {
-              error(err);
+            .catch((e) => {
+              error(e);
               this.CopyToClipboardViaExecCommand(_text);
             });
         }
@@ -1631,9 +1631,9 @@ Can you do better?
             .then((result) => {
               note('Message shared via navigator.share()');
             })
-            .catch((err) => {
+            .catch((e) => {
               this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
-              error('Failed to share via navigator.share(): ', err);
+              error('Failed to share via navigator.share(): ', e);
             });
         } else {
           // fall back to clipboard
@@ -1678,8 +1678,8 @@ Can you do better?
             this.appDataShareURL = location.origin + '/game/?' + shortUrlParam;
             this.ShareText(text, this.appDataShareURL);
           })
-          .catch((error) => {
-            error(error);
+          .catch((e) => {
+            error(e);
             if (!UseDebug) {
               this.appStateShareError = true;
             }
@@ -2156,9 +2156,9 @@ Can you do better?
       return new Promise((resolve, reject) => {
         fn()
           .then(resolve)
-          .catch((error) => {
+          .catch((e) => {
             if (retriesLeft === 1) {
-              reject(error);
+              reject(e);
             } else {
               setTimeout(() => {
                 this.Retry(fn, retriesLeft - 1, interval * 2).then(resolve, reject);
@@ -2210,13 +2210,13 @@ Can you do better?
                       .then(() => {
                         log('Daily reminder sync registered');
                       })
-                      .catch((error) => {
-                        log('Sync registration failed:', error);
+                      .catch((e) => {
+                        log(e);
                       });
                   }
                 })
-                .catch((error) => {
-                  log('Service Worker registration failed:', error);
+                .catch((e) => {
+                  log(e);
                 });
             }
           });
@@ -2249,8 +2249,8 @@ Can you do better?
                 resolve(false);
               }
             })
-            .catch((error) => {
-              reject(error);
+            .catch((e) => {
+              reject(e);
             });
         }
       });
