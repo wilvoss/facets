@@ -1610,10 +1610,11 @@ gamelinks gamelink {
 
 gamelinks gamelink stats {
   display: flex;
+  overflow: hidden;
   padding: 6px calc(0.5 * var(--defaultGap)) 6px;
   border: 1px solid hsla(var(--appBackgroundHSL), 0.5);
   color: hsl(var(--appBackgroundLightestHSL));
-  gap: var(--defaultGap);
+  gap: calc(2 * var(--defaultGap));
   background: hsla(var(--appBackgroundHSL), 0.4);
   margin-bottom: calc(0.5 * var(--defaultGap));
   border-radius: var(--borderRadius);
@@ -1626,6 +1627,18 @@ gamelinks gamelink.done stats {
   color: hsla(var(--appBackgroundLightestHSL), 0.8);
   background-color: hsla(var(--appBackgroundHSL), 0.2);
   border-color: hsla(var(--appBackgroundHSL), 0.5);
+}
+
+gamelinks gamelink small.statlabel {
+  display: flex;
+  color: hsla(var(--appBackgroundLightestHSL), 1);
+  flex-direction: row;
+  gap: 4px;
+  letter-spacing: 1px;
+}
+
+gamelinks gamelink small.statlabel icon {
+  background: hsla(var(--appBackgroundLightestHSL), 1);
 }
 
 gamelinks gamelink.done stats stat small {
@@ -1645,6 +1658,7 @@ gamelinks gamelink stats stat small {
 
 gamelinks gamelink stats stat value {
   font-size: 1em;
+  font-weight: 800;
 }
 
 gamelinks p {
