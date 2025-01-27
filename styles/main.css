@@ -1633,7 +1633,8 @@ gamelinks gamelink small.statlabel {
   display: flex;
   color: hsla(var(--appBackgroundLightestHSL), 1);
   flex-direction: row;
-  gap: 4px;
+  align-items: center;
+  gap: 5px;
   letter-spacing: 1px;
 }
 
