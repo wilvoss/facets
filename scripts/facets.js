@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.61',
+    appDataVersion: '2.1.62',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -1355,6 +1355,7 @@ var app = new Vue({
         this.appDataPlayerCurrent.name = name;
       } else {
         this.appStateIsModalShowing = true;
+        this.ToggleShowTutorial(null);
         this.appStateShowIntro = true;
         setTimeout(() => {
           document.getElementById('nameInput').focus();
@@ -1519,18 +1520,18 @@ var app = new Vue({
       note('ShareWin() called');
       if (_game.solved) {
         let date = _game && this.getTodaysDaily === _game ? `Today's` : `The ${_game.date}`;
-        let text = `I solved ${date} Daily in ${_game.guesses} tries! 😀
+        let text = `I solved ${date} Daily Facet in ${_game.guesses} tries! 😀
 Can you do better?
 
 <https://facets.bigtentgames.com>`;
         this.ConstructAndSetShareURLForCurrentGame();
         if (_game.guesses === 1) {
-          text = `🥳 I solved ${date} Daily in 1 try! Can you?
+          text = `🥳 I solved ${date} Daily Facet in 1 try! Can you?
 
 <https://facets.bigtentgames.com>`;
         }
         if (_game.quit) {
-          text = `😱 I gave up on ${date} Daily! Can you solve it?
+          text = `😱 I gave up on ${date} Daily Facet! Can you solve it?
 
 <https://facets.bigtentgames.com>`;
         }
@@ -1743,7 +1744,7 @@ Can you do better?
       levelMessage = useLowerCase ? levelMessage.charAt(0).toLowerCase() + levelMessage.slice(1) : levelMessage;
       let message = pretext + LevelEmoji[count][getRandomInt(0, LevelEmoji[count].length)] + ' ' + name + levelMessage;
       if (count === 4 && this.getCurrentDaily && this.getCurrentDaily.quit) {
-        message = `AI is hard! We're working hard to make these Daily Games better to play.`;
+        message = `AI is hard! We're working hard to make these Daily Facets better to play.`;
       }
       announce(message);
       return message;
@@ -2176,8 +2177,8 @@ Can you do better?
     //#endregion
   },
 
-  mounted() {
-    this.LoadPage();
+  async mounted() {
+    await this.LoadPage();
     this.DeregisterServiceWorkers();
     window.addEventListener('keydown', this.HandleKeyDownEvent);
     window.addEventListener('pointermove', this.HandlePointerMoveEvent);
@@ -2250,9 +2251,9 @@ Can you do better?
       } else {
         if (this.getCurrentDaily) {
           let today = new Date();
-          text = `<name>The Daily – ${this.getCurrentDaily.date.split(',')[0]}</name><subtitle>Puzzle category – "${this.currentGameGuessingWordSet.name}"</subtitle>`;
+          text = `<name>The Daily Facet – ${this.getCurrentDaily.date.split(',')[0]}</name><subtitle>Puzzle category – "${this.currentGameGuessingWordSet.name}"</subtitle>`;
           if (this.getCurrentDaily.key === this.getTodaysDaily.key) {
-            text = `The Daily – Today<subtitle>Puzzle category –  "${this.currentGameGuessingWordSet.name}"</subtitle>`;
+            text = `The Daily Facet – Today<subtitle>Puzzle category –  "${this.currentGameGuessingWordSet.name}"</subtitle>`;
           }
         } else {
           text = `You are guessing ${name} "${this.currentGameGuessingWordSet.name}" puzzle!`;
