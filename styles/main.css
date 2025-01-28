@@ -1635,7 +1635,7 @@ gamelinks gamelink small.statlabel {
   flex-direction: row;
   align-items: center;
   gap: 5px;
-  letter-spacing: 1px;
+  /* letter-spacing: 1px; */
 }
 
 gamelinks gamelink small.statlabel icon {
