@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.60',
+    appDataVersion: '2.1.61',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -1002,7 +1002,7 @@ var app = new Vue({
       return foundGame;
     },
 
-    HandleOldGameClick(e, _game, _showsol = false) {
+    async HandleOldGameClick(e, _game, _showsol = false) {
       note('HandleOldGameClick() called');
       if (e !== null) {
         e.preventDefault();
@@ -1046,7 +1046,7 @@ var app = new Vue({
       if (this.appStateShowGlobalCreated) {
         this.ToggleShowGlobalCreated(e);
       }
-      this.LoadPage();
+      await this.LoadPage();
       this.appStateShowNotification = true;
       this.RotateTray(-4);
     },
@@ -1074,20 +1074,18 @@ var app = new Vue({
       }
     },
 
-    HandleSolvedPuzzleButtonClick(e, _game) {
+    async HandleSolvedPuzzleButtonClick(e, _game) {
       note('HandleSolvedPuzzleButtonClick() called');
       e.stopPropagation();
       e.preventDefault();
 
       this.appStateSolving = true;
-      this.HandleOldGameClick(e, _game, true);
+      await this.HandleOldGameClick(e, _game, true);
       this.appStateShowNotification = false;
-      setTimeout(() => {
-        this.SolvePuzzleCurrent();
-        this.appStateSolving = false;
-        this.appStateShowNotification = false;
-        history.pushState(null, null, window.location.origin + window.location.pathname);
-      }, 150);
+      this.SolvePuzzleCurrent();
+      this.appStateSolving = false;
+      this.appStateShowNotification = false;
+      history.pushState(null, null, window.location.origin + window.location.pathname);
     },
 
     SolvePuzzleCurrent() {
@@ -2101,7 +2099,7 @@ Can you do better?
         if (boardPieces.length >= 40) {
           document.title = 'Facets!';
           this.ToggleShowMeta(null);
-          this.RestoreGame(boardPieces);
+          await this.RestoreGame(boardPieces);
         } else if (!this.appStateIsGuessing) {
           if (this.getIsAIGenerating) {
             this.currentGameGuessingCardCount = 4;
