@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.66',
+    appDataVersion: '2.1.67',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -938,15 +938,13 @@ var app = new Vue({
         })
         .then((payload) => {
           let userStats = JSON.parse(payload);
-          for (const game of this.appDataDailyGames) {
-            Vue.set(game, 'guesses', 0);
-            Vue.set(game, 'quit', false);
-          }
           userStats.forEach((stat) => {
             for (const game of this.appDataDailyGames) {
               if (stat.key === game.key) {
                 Vue.set(game, 'guesses', stat.guesses);
-                Vue.set(game, 'quit', stat.quit);
+                if (stat.quit !== null && stat.quit !== undefined) {
+                  Vue.set(game, 'quit', stat.quit);
+                }
                 Vue.set(game, 'solved', true);
               }
             }
