@@ -83,6 +83,7 @@ html {
   overflow: hidden;
   width: 100%;
   height: 100%;
+  background-color: hsl(var(--appBackgroundDarkestHSL));
   min-height: 100%;
 }
 
@@ -123,6 +124,37 @@ preload {
   opacity: 0;
   pointer-events: none;
   user-select: none;
+}
+
+splash {
+  display: flex;
+  position: fixed;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  background-color: hsl(var(--appBackgroundDarkestHSL));
+  background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 50%), var(--textureHue), var(--texture2);
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-position: top center;
+  background-size: cover, cover, var(--textureSize);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: var(--defaultGap);
+  transition: var(--longTransition) ease-out all;
+  pointer-events: all;
+  top: 0px;
+  left: 0px;
+}
+
+splash.hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+splash h2 {
+  margin: 0 0 var(--defaultGap) 0;
+  padding: 0px;
 }
 
 p {

@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.62',
+    appDataVersion: '2.1.63',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -1336,7 +1336,6 @@ var app = new Vue({
       note('GetUserSettings() called');
       let id = localStorage.getItem('userID');
       if (id !== undefined && id !== null) {
-        id = JSON.parse(id);
         this.appDataPlayerCurrent.id = id;
       } else {
         this.appDataPlayerCurrent.id = getRandomInt(10000000, 100000000);
@@ -1523,17 +1522,17 @@ var app = new Vue({
         let text = `I solved ${date} Daily Facet in ${_game.guesses} tries! 😀
 Can you do better?
 
-<https://facets.bigtentgames.com>`;
+<https://facets.bigtentgames.com/open>`;
         this.ConstructAndSetShareURLForCurrentGame();
         if (_game.guesses === 1) {
           text = `🥳 I solved ${date} Daily Facet in 1 try! Can you?
 
-<https://facets.bigtentgames.com>`;
+<https://facets.bigtentgames.com/open>`;
         }
         if (_game.quit) {
           text = `😱 I gave up on ${date} Daily Facet! Can you solve it?
 
-<https://facets.bigtentgames.com>`;
+<https://facets.bigtentgames.com/open>`;
         }
         this.ShareText(text, '');
         history.pushState(null, null, window.location.origin + window.location.pathname);
@@ -2094,7 +2093,6 @@ Can you do better?
       this.GetLast10GlobalCreatedGames();
       this.appDataTransitionLong = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
       this.appDataTransitionShort = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
-      this.appStatePageHasLoaded = true;
       let boardPieces = this.GetBoardFromURL();
       try {
         if (boardPieces.length >= 40) {
@@ -2123,6 +2121,7 @@ Can you do better?
         boardPieces = [];
         this.NewGame(null, '😕 - Something went wrong.', false);
       }
+      this.appStatePageHasLoaded = true;
 
       this.appStateUsePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
     },
