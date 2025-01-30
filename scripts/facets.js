@@ -10,7 +10,7 @@ var app = new Vue({
   el: '#app',
   data: {
     //#region APP DATA
-    appDataVersion: '2.1.64',
+    appDataVersion: '2.1.65',
     appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
     appDataCards: [],
     appDataCardsParked: [],
@@ -1336,6 +1336,7 @@ var app = new Vue({
       note('GetUserSettings() called');
       let id = localStorage.getItem('userID');
       if (id !== undefined && id !== null) {
+        id = JSON.parse(id);
         this.appDataPlayerCurrent.id = id;
       } else {
         this.appDataPlayerCurrent.id = getRandomInt(10000000, 100000000);
