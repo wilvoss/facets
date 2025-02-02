@@ -47,7 +47,11 @@ async function HandleOnLoadEvent(_e) {
       return response.text();
     })
     .then((searchParams) => {
-      location.href = location.origin + '/?' + searchParams;
+      if (searchParams.indexOf('&board=') === -1) {
+        HandleError(true);
+      } else {
+        location.href = location.origin + '/?' + searchParams;
+      }
     })
     .catch((error) => {
       HandleError(true);
