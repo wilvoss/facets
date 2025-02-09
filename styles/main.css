@@ -1082,7 +1082,7 @@ tray diamond {
   height: 100%;
   background-image: url(../images/diamond.svg);
   background-repeat: no-repeat;
-  background-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize));
+  background-size: cover;
   pointer-events: none;
   mask-repeat: no-repeat;
   -webkit-mask-repeat: no-repeat;
@@ -1092,8 +1092,8 @@ diamond.back {
   opacity: 0.8;
   mask-image: url(../images/diamond-back.svg);
   -webkit-mask-image: url(../images/diamond-back.svg);
-  mask-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize));
-  -webkit-mask-size: calc(3 * var(--cardSize)) calc(3 * var(--cardSize));
+  mask-size: cover;
+  -webkit-mask-size: cover;
   background: hsl(var(--trayGuessingBackgroundHSL));
 }
 
