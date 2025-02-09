@@ -2012,6 +2012,7 @@ modal.disabled {
 }
 
 modal section,
+modal section hidden,
 modal confirmation {
   display: flex;
   flex-direction: column;
@@ -2020,7 +2021,8 @@ modal confirmation {
   gap: calc(1 * var(--defaultGap));
 }
 
-modal section {
+modal section,
+modal section hidden {
   width: 100%;
   gap: calc(0.5 * var(--defaultGap));
   margin-bottom: 160px;

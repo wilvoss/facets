@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.1.73',
+      appDataVersion: '2.1.74',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -104,6 +104,7 @@ var app = new Vue({
       userSettingsUseWordSetThemes: true,
       userSettingsUserWantsDailyReminder: false,
       userSettingsShowAllCards: false,
+      appStateShowCreateOOBE: false,
       userSettingsStreaks: [],
       vsUseFocus: true,
       userSettingsLanguage: 'en-us',
@@ -143,6 +144,7 @@ var app = new Vue({
         e.preventDefault();
       }
       this.appStateShowTutorial = !this.appStateShowTutorial;
+      this.appStateShowCreateOOBE = false;
     },
 
     ToggleUseLightTheme(_value) {
@@ -1054,6 +1056,15 @@ var app = new Vue({
     HandleGoButtonClick(event) {
       note('HandleGoButtonClick() called');
       this.SubmitSettings(event);
+      if (localStorage.getItem('userHasSeenFirstTimeCreatingTutorial') === null) {
+        // setTimeout(() => {
+        this.ToggleShowTutorial();
+        this.appStateShowCreateOOBE = true;
+        // }, 1000);
+      } else {
+        this.appStateShowCreateOOBE = false;
+      }
+      localStorage.setItem('userHasSeenFirstTimeCreatingTutorial', true);
       this.appStateShowCatChooser = false;
     },
 
@@ -1668,7 +1679,9 @@ Can you do better?
       }
     },
 
-    ReportPuzzle(_game) {
+    ReportPuzzle(e, _game) {
+      e.preventDefault();
+      e.stopPropagation();
       note('ReportPuzzle() called');
       location.href = 'mailto:bigtentgames@icloud.com?subject=Facets Puzzle Reported&body=Puzzle ID# ' + _game.key + '%0D%0A This puzzle contains offensive language.%0D%0A' + _game.hints;
     },
