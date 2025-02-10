@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.1.78',
+      appDataVersion: '2.1.79',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -66,6 +66,7 @@ var app = new Vue({
       appStateShowConfirmation: false,
       appStateShowGlobalCreated: false,
       appStateShowDailyGames: false,
+      appStateDailyCongrats: false,
       appStateShowInfo: false,
       appStateShowIntro: false,
       appStateShowOOBE: false,

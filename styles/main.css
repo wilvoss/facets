@@ -1640,16 +1640,32 @@ gamelinks gamelink {
   -webkit-tap-highlight-color: transparent;
 }
 
+.boxed {
+  padding: calc(0.5 * var(--defaultGap));
+  border: 1px solid hsla(var(--traySolvedBackgroundHSL), 1);
+  text-align: center;
+  align-items: center;
+  background: hsla(var(--traySolvedBackgroundHSL), 0.3);
+  border-radius: var(--borderRadius);
+  flex: 1;
+}
+
+/* 
+message .boxed {
+  border-color: hsla(var(--appBackgroundLightestHSL), 0.5);
+  background: hsla(var(--appBackgroundHSL), 0.5);
+} */
+
 stats {
   display: flex;
   overflow: hidden;
   width: 100%;
-  padding: 6px calc(0.5 * var(--defaultGap)) 6px;
+  padding: 10px calc(0.5 * var(--defaultGap)) 6px;
   font-size: 24px;
   color: hsl(var(--messageColorHSL));
   justify-content: center;
-  gap: calc(2 * var(--defaultGap));
-  margin-bottom: calc(2 * var(--defaultGap));
+  gap: calc(0.5 * var(--defaultGap));
+  margin-bottom: calc(1 * var(--defaultGap));
   /* max-height: 32px; */
   border-radius: var(--borderRadius);
   user-select: none;
@@ -1657,36 +1673,56 @@ stats {
   cursor: pointer;
 }
 
-/* stats {
-  border: 1px solid hsla(var(--messageColorHSL), 0.2);
-  background: hsla(var(--messageColorHSL), 0.1);
-  max-width: calc(100% - var(--defaultGap));
-} */
-
 stats stat {
   display: flex;
   padding: 0;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   gap: 4px;
+}
+
+message stats {
+  margin: calc(0.5 * var(--defaultGap)) 0;
+  max-width: calc(100% - var(--defaultGap));
+}
+
+message stats stat small {
+  font-size: 0.6em;
+  color: hsla(var(--traySolvedBackgroundHSL));
+}
+
+.portrait message stats {
+  flex-direction: column;
+  gap: var(--defaultGap);
 }
 
 stats stat small {
   display: block;
-  color: hsla(var(--messageColorHSL), 0.8);
+  padding: 0;
+  color: hsla(var(--traySolvedBackgroundHSL), 1);
   white-space: nowrap;
+  max-width: 100%;
+  margin-bottom: 0px;
 }
 
 stats stat value {
+  font-family: 'Theme';
   font-size: 1em;
-  font-weight: 800;
+  line-height: 1em;
   text-align: center;
 }
 
+stats stat value {
+  color: hsl(var(--appForegroundHSL));
+}
+
 gamelinks gamelink stats {
-  border: 1px solid hsla(var(--appBackgroundHSL), 0.5);
+  border: 1px solid hsla(var(--appBackgroundHSL), 1);
   font-size: 16px;
   color: hsl(var(--appBackgroundLightestHSL));
   justify-content: start;
+  gap: calc(2 * var(--defaultGap));
   background: hsla(var(--highlightColorHSL), 0.1);
   background: hsla(var(--appBackgroundHSL), 0.4);
   margin-bottom: calc(0.5 * var(--defaultGap));
@@ -1694,6 +1730,8 @@ gamelinks gamelink stats {
 }
 
 gamelinks gamelink stats stat {
+  text-align: left;
+  align-items: start;
   gap: 0px;
 }
 
@@ -1710,7 +1748,7 @@ small.statlabel {
   display: block;
   font-size: 0.8em;
   text-align: center;
-  color: hsla(var(--messageColorHSL), 1);
+  color: hsla(var(--traySolvedBackgroundHSL), 1);
   gap: 5px;
   margin-bottom: 2px;
   max-width: 100%;
