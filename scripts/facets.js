@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.1.75',
+      appDataVersion: '2.1.76',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -1319,7 +1319,9 @@ var app = new Vue({
         this.ToggleUseSimplifedTheme(this.tempUserSettingsUsesSimplifiedTheme);
         this.ToggleShowAllCards(this.tempUserSettingsShowAllCards);
         this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
-        this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
+        if (this.appDataPlayerCurrent.role === 'creator') {
+          this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
+        }
         this.SetWordSetTheme(this.currentGameGuessingWordSet);
 
         localStorage.setItem('userID', this.appDataPlayerCurrent.id);
