@@ -1640,58 +1640,83 @@ gamelinks gamelink {
   -webkit-tap-highlight-color: transparent;
 }
 
-gamelinks gamelink stats {
+stats {
   display: flex;
   overflow: hidden;
+  width: 100%;
   padding: 6px calc(0.5 * var(--defaultGap)) 6px;
-  border: 1px solid hsla(var(--appBackgroundHSL), 0.5);
-  color: hsl(var(--appBackgroundLightestHSL));
+  font-size: 16px;
+  color: hsl(var(--messageColorHSL));
   gap: calc(2 * var(--defaultGap));
-  background: hsla(var(--appBackgroundHSL), 0.4);
-  margin-bottom: calc(0.5 * var(--defaultGap));
+  margin-bottom: calc(2 * var(--defaultGap));
+  max-height: 32px;
   border-radius: var(--borderRadius);
   user-select: none;
   -webkit-user-select: none;
   cursor: pointer;
 }
 
-gamelinks gamelink.done stats {
-  color: hsla(var(--appBackgroundLightestHSL), 0.8);
-  background-color: hsla(var(--appBackgroundHSL), 0.2);
-  border-color: hsla(var(--appBackgroundHSL), 0.5);
+stats {
+  border: 1px solid hsla(var(--messageColorHSL), 0.2);
+  background: hsla(var(--messageColorHSL), 0.1);
+  max-width: calc(100% - var(--defaultGap));
 }
 
-gamelinks gamelink small.statlabel {
+stats stat {
   display: flex;
-  color: hsla(var(--appBackgroundLightestHSL), 1);
-  flex-direction: row;
-  align-items: center;
-  gap: 5px;
-  /* letter-spacing: 1px; */
-}
-
-gamelinks gamelink small.statlabel icon {
-  background: hsla(var(--appBackgroundLightestHSL), 1);
-}
-
-gamelinks gamelink.done stats stat small {
-  color: hsla(var(--appBackgroundLightestHSL), 0.8);
-}
-
-gamelinks gamelink stats stat {
-  display: flex;
+  padding: 0;
   flex-direction: column;
-  gap: 3px;
 }
 
-gamelinks gamelink stats stat small {
-  color: hsl(var(--appBackgroundLightestHSL));
+stats stat small {
+  display: block;
+  color: hsla(var(--messageColorHSL), 0.8);
   white-space: nowrap;
 }
 
-gamelinks gamelink stats stat value {
+stats stat value {
   font-size: 1em;
   font-weight: 800;
+}
+
+gamelinks gamelink stats {
+  border: 1px solid hsla(var(--appBackgroundHSL), 0.5);
+  color: hsl(var(--appBackgroundLightestHSL));
+  justify-content: start;
+  background: hsla(var(--highlightColorHSL), 0.1);
+  background: hsla(var(--appBackgroundHSL), 0.4);
+  margin-bottom: calc(0.5 * var(--defaultGap));
+  max-width: calc(100% - var(--defaultGap));
+}
+
+gamelinks gamelink stats stat value {
+  color: hsl(var(--appBackgroundLightestHSL));
+}
+
+gamelinks gamelink stats stat value {
+  color: hsl(var(--appBackgroundLightestHSL));
+}
+
+small.statlabel {
+  display: block;
+  font-size: 0.8em;
+  text-align: center;
+  color: hsla(var(--messageColorHSL), 1);
+  gap: 5px;
+  margin-bottom: 2px;
+  max-width: 100%;
+}
+
+small.statlabel icon {
+  background: hsla(var(--appBackgroundLightestHSL), 1);
+}
+
+gamelinks gamelink small.statlabel {
+  color: hsla(var(--appBackgroundLightestHSL), 1);
+}
+
+gamelinks gamelink stats stat small {
+  color: hsla(var(--appBackgroundLightestHSL), 0.8);
 }
 
 gamelinks p {
@@ -1793,9 +1818,12 @@ gamelinks gamelink:hover p button.inline icon {
 }
 
 modal gamelinks small {
-  font-size: 0.8em;
   text-align: left;
   margin-bottom: 2px;
+}
+
+modal gamelinks a small {
+  font-size: 0.8em;
 }
 
 modal small,

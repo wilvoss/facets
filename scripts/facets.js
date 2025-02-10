@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.1.76',
+      appDataVersion: '2.1.77',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -34,6 +34,7 @@ var app = new Vue({
       appDataPlayerCurrent: new PlayerObject({}),
       appDataPlayerCreator: new PlayerObject({}),
       appDataPlayerSender: new PlayerObject({}),
+      appDataPlayerStats: { g1: 0, g2: 0, beyond2: 0, quit: 0, total: 0 },
       appDataShareURL: '',
       appDataTimeoutCardRotation: null,
       appDataTimeoutTrayRotation: null,
@@ -953,6 +954,20 @@ var app = new Vue({
               }
             }
           });
+          this.appDataPlayerStats = { g1: 0, g2: 0, beyond2: 0, quit: 0, total: 0 };
+          for (let x = 0; x < userStats.length; x++) {
+            const stat = userStats[x];
+            if (stat.quit !== null && stat.quit !== undefined) {
+              this.appDataPlayerStats.quit++;
+            } else if (stat.guesses === 1) {
+              this.appDataPlayerStats.g1++;
+            } else if (stat.guesses === 2) {
+              this.appDataPlayerStats.g2++;
+            } else {
+              this.appDataPlayerStats.beyond2++;
+            }
+            this.appDataPlayerStats.total++;
+          }
         })
         .catch((e) => {
           error(e);
