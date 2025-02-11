@@ -1641,12 +1641,12 @@ gamelinks gamelink {
 }
 
 .boxed {
-  padding: calc(0.5 * var(--defaultGap));
-  border: 1px solid hsla(var(--appBackgroundLighterHSL), 1);
+  padding: calc(0.75 * var(--defaultGap)) calc(0.5 * var(--defaultGap));
+  border: 1px solid hsla(var(--traySolvedBackgroundHSL), 0.4);
   text-align: center;
   color: hsl(var(--appForegroundHSL));
   align-items: center;
-  background: hsla(var(--appBackgroundLighterHSL), 1);
+  background: hsla(var(--traySolvedBackgroundHSL), 0.15);
   border-radius: var(--borderRadius);
   flex: 1;
 }
@@ -1656,8 +1656,7 @@ stats stat.boxed value {
 }
 
 stats stat.boxed small {
-  color: hsl(var(--appForegroundHSL));
-  opacity: 0.9;
+  color: hsl(var(--traySolvedBackgroundHSL));
 }
 
 stats {
