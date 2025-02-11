@@ -1642,19 +1642,23 @@ gamelinks gamelink {
 
 .boxed {
   padding: calc(0.5 * var(--defaultGap));
-  border: 1px solid hsla(var(--traySolvedBackgroundHSL), 1);
+  border: 1px solid hsla(var(--appBackgroundLighterHSL), 1);
   text-align: center;
+  color: hsl(var(--appForegroundHSL));
   align-items: center;
-  background: hsla(var(--traySolvedBackgroundHSL), 0.3);
+  background: hsla(var(--appBackgroundLighterHSL), 1);
   border-radius: var(--borderRadius);
   flex: 1;
 }
 
-/* 
-message .boxed {
-  border-color: hsla(var(--appBackgroundLightestHSL), 0.5);
-  background: hsla(var(--appBackgroundHSL), 0.5);
-} */
+stats stat.boxed value {
+  color: hsl(var(--appForegroundHSL));
+}
+
+stats stat.boxed small {
+  color: hsl(var(--appForegroundHSL));
+  opacity: 0.9;
+}
 
 stats {
   display: flex;
@@ -1666,7 +1670,6 @@ stats {
   justify-content: center;
   gap: calc(0.5 * var(--defaultGap));
   margin-bottom: calc(1 * var(--defaultGap));
-  /* max-height: 32px; */
   border-radius: var(--borderRadius);
   user-select: none;
   -webkit-user-select: none;
@@ -1689,7 +1692,7 @@ message stats {
 
 message stats stat small {
   font-size: 0.6em;
-  color: hsla(var(--traySolvedBackgroundHSL));
+  color: hsla(var(--messageColorHSL));
 }
 
 .portrait message stats {
@@ -1700,7 +1703,7 @@ message stats stat small {
 stats stat small {
   display: block;
   padding: 0;
-  color: hsla(var(--traySolvedBackgroundHSL), 1);
+  color: hsla(var(--messageColorHSL), 1);
   white-space: nowrap;
   max-width: 100%;
   margin-bottom: 0px;
@@ -1748,7 +1751,7 @@ small.statlabel {
   display: block;
   font-size: 0.8em;
   text-align: center;
-  color: hsla(var(--traySolvedBackgroundHSL), 1);
+  color: hsla(var(--messageColorHSL), 1);
   gap: 5px;
   margin-bottom: 2px;
   max-width: 100%;
