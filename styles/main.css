@@ -851,7 +851,12 @@ notification message {
   max-width: calc(2.5 * var(--cardSize));
   border-radius: var(--borderRadius);
   pointer-events: none;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25);
+  /* box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25); */
+}
+
+notification message.highlighted {
+  box-shadow: 0px 0px 4px hsl(var(--messageColorHSL)), inset 0px 0px 4px hsl(var(--highlightColorHSL)), 0px 0px 15px hsl(var(--messageColorHSL)), inset 0px 0px 20px hsl(var(--messageColorHSL));
+  border-color: hsl(var(--highlightColorHSL));
 }
 
 notification message name {
@@ -1636,7 +1641,6 @@ gamelinks gamelink {
   padding: calc(0.66 * var(--defaultGap)) 0;
   flex-direction: column;
   gap: calc(0.33 * var(--defaultGap));
-  cursor: pointer;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -1649,6 +1653,18 @@ gamelinks gamelink {
   background: hsla(var(--traySolvedBackgroundHSL), 0.15);
   border-radius: var(--borderRadius);
   flex: 1;
+  /* box-shadow: 0px 0px 4px hsla(var(--traySolvedBackgroundHSL), 0.4), inset 0px 0px 4px hsla(var(--traySolvedBackgroundHSL), 0.4), 0px 0px 15px hsla(var(--traySolvedBackgroundHSL), 0.4); */
+}
+
+.boxed.highlighted {
+  box-shadow: 0px 0px 4px hsl(var(--traySolvedBackgroundHSL)), inset 0px 0px 4px hsl(var(--traySolvedBackgroundHSL)), 0px 0px 15px hsl(var(--traySolvedBackgroundHSL));
+  border-color: hsl(var(--traySolvedBackgroundHSL));
+}
+
+.boxed.highlighted.quit {
+  background-color: hsla(var(--trayReviewingBackgroundHSL), 0.2);
+  box-shadow: 0px 0px 4px hsl(var(--trayReviewingBackgroundHSL)), inset 0px 0px 4px hsl(var(--trayReviewingBackgroundHSL)), 0px 0px 15px hsl(var(--trayReviewingBackgroundHSL));
+  border-color: hsl(var(--trayReviewingBackgroundHSL));
 }
 
 stats stat.boxed value {
@@ -1661,7 +1677,7 @@ stats stat.boxed small {
 
 stats {
   display: flex;
-  overflow: hidden;
+  /* overflow: hidden; */
   width: 100%;
   padding: 10px calc(0.5 * var(--defaultGap)) 6px;
   font-size: 24px;
@@ -1672,7 +1688,7 @@ stats {
   border-radius: var(--borderRadius);
   user-select: none;
   -webkit-user-select: none;
-  cursor: pointer;
+  cursor: default;
 }
 
 stats stat {
@@ -1682,21 +1698,6 @@ stats stat {
   justify-content: center;
   align-items: center;
   gap: 4px;
-}
-
-message stats {
-  margin: calc(0.5 * var(--defaultGap)) 0;
-  max-width: calc(100% - var(--defaultGap));
-}
-
-message stats stat small {
-  font-size: 0.6em;
-  color: hsla(var(--messageColorHSL));
-}
-
-.portrait message stats {
-  flex-direction: column;
-  gap: var(--defaultGap);
 }
 
 stats stat small {
@@ -1719,16 +1720,49 @@ stats stat value {
   color: hsl(var(--appForegroundHSL));
 }
 
-gamelinks gamelink stats {
+gamelinks gamelink stats,
+message stats {
+  overflow: auto;
   border: 1px solid hsla(var(--appBackgroundHSL), 1);
   font-size: 16px;
   color: hsl(var(--appBackgroundLightestHSL));
   justify-content: start;
-  gap: calc(2 * var(--defaultGap));
+  gap: calc(1.5 * var(--defaultGap));
   background: hsla(var(--highlightColorHSL), 0.1);
   background: hsla(var(--appBackgroundHSL), 0.4);
   margin-bottom: calc(0.5 * var(--defaultGap));
   max-width: calc(100% - var(--defaultGap));
+}
+
+message stats {
+  margin: 0px;
+  justify-content: space-between;
+  max-width: calc(100% - var(--defaultGap));
+}
+
+message stats stat value,
+message stats stat small {
+  color: hsla(var(--appBackgroundLightestHSL));
+}
+
+message small.statlabel {
+  font-size: 14px;
+  color: hsla(var(--appBackgroundLightestHSL));
+  margin-top: var(--defaultGap);
+  margin-bottom: calc(0.5 * var(--defaultGap));
+}
+
+.portrait message stats {
+  /* flex-direction: column; */
+  gap: var(--defaultGap);
+}
+
+stats::-webkit-scrollbar {
+  display: none;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  touch-action: auto;
+  scroll-behavior: smooth;
 }
 
 gamelinks gamelink stats stat {

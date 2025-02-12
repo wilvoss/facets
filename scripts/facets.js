@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.1.83',
+      appDataVersion: '2.1.84',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -1775,7 +1775,8 @@ Can you do better?
       levelMessage = useLowerCase ? levelMessage.charAt(0).toLowerCase() + levelMessage.slice(1) : levelMessage;
       let message = pretext + LevelEmoji[count][getRandomInt(0, LevelEmoji[count].length)] + ' ' + name + levelMessage;
       if (count === 4 && this.getCurrentDaily && this.getCurrentDaily.quit) {
-        message = `AI is hard! We're working hard to make these Daily Facets better to play.`;
+        message = `AI is hard! 
+We're working hard to make these Daily Facets better to play.`;
       }
       announce(message);
       return message;
@@ -2264,21 +2265,26 @@ Can you do better?
     },
     getPlayerMessage: function () {
       clearTimeout(this.appDataTimeoutNotification);
-      let time = 2000;
+      let time = 2200;
       let pronoun = this.currentGameGuessingWordSet.startsWithVowel ? 'an' : 'a';
       let name = this.appStateForceAutoCheck ? pronoun : this.appDataPlayerCreator.name + "'s ";
       let text = '';
       if (this.appDataMessage !== '') {
         text = this.appDataMessage;
+        if (this.getCurrentDaily && this.getCurrentDaily.solved) {
+          time = 20000;
+        }
       } else if (!this.appStateIsGuessing && this.appDataPlayerCurrent.id !== -1) {
         text = `You are creating a new "${this.currentGameGuessingWordSet.name}" puzzle!`;
         time = 1700;
       } else if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id !== -1 && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
         text = `${this.appDataPlayerCurrent.name}, this is your own puzzle!`;
+        time = 1700;
       } else if (this.currentGameReviewIsFinal && this.appDataPlayerCurrent.id !== -1) {
         text = `${this.appDataPlayerCurrent.name}, here's the solution.`;
       } else if (this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id && this.appDataPlayerCurrent.id !== -1) {
         text = `You are reviewing ${this.appDataPlayerSender.name}'s guess!`;
+        time = 1700;
       } else {
         if (this.getCurrentDaily) {
           let today = new Date();
@@ -2290,10 +2296,11 @@ Can you do better?
           text = `You are guessing ${name} "${this.currentGameGuessingWordSet.name}" puzzle!`;
         }
       }
-      this.appDataTimeoutNotification = setTimeout(() => {
-        this.appStateShowNotification = false;
-      }, time);
-
+      if (time !== 20000) {
+        this.appDataTimeoutNotification = setTimeout(() => {
+          this.appStateShowNotification = false;
+        }, time);
+      }
       return text;
     },
     getEnabledWordSets: function () {

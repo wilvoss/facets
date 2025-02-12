@@ -52,6 +52,11 @@ modal controls button.secondary {
   background: hsla(var(--messageColorHSL), 1);
 }
 
+.boxed.highlighted {
+  border: 1px solid hsla(var(--messageColorHSL), 1);
+  box-shadow: none;
+}
+
 stats stat.boxed value {
   color: hsl(var(--appBackgroundDarkestHSL));
 }
