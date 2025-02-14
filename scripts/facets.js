@@ -904,12 +904,17 @@ var app = new Vue({
             this.appDataDailyGamesStats = JSON.parse(payload);
             this.appDataDailyGames.forEach((game) => {
               game.showStats = false;
-              game.stats = { avg: 0, guesscounts: { beyond2: 0 } };
               for (const stat of this.appDataDailyGamesStats) {
                 if (stat.hasOwnProperty(game.key)) {
                   game.stats = stat[game.key];
                   break;
                 }
+              }
+              if (game.stats.avg === undefined || game.stats.avg === null) {
+                game.stats.avg = 0;
+              }
+              if (game.stats.guesscounts.beyond2 === undefined || game.stats.guesscounts.beyond2 === null) {
+                game.stats.guesscounts.beyond2 = 0;
               }
             });
           })
