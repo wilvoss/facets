@@ -1682,7 +1682,7 @@ stats {
   padding: 10px calc(0.5 * var(--defaultGap)) 6px;
   font-size: 24px;
   color: hsl(var(--messageColorHSL));
-  justify-content: center;
+  justify-content: space-around;
   gap: calc(0.5 * var(--defaultGap));
   margin-bottom: calc(1 * var(--defaultGap));
   border-radius: var(--borderRadius);
@@ -1726,7 +1726,7 @@ message stats {
   border: 1px solid hsla(var(--appBackgroundHSL), 1);
   font-size: 16px;
   color: hsl(var(--appBackgroundLightestHSL));
-  justify-content: start;
+  justify-content: space-around;
   gap: calc(1.5 * var(--defaultGap));
   background: hsla(var(--highlightColorHSL), 0.1);
   background: hsla(var(--appBackgroundHSL), 0.4);
@@ -1768,7 +1768,7 @@ stats::-webkit-scrollbar {
 gamelinks gamelink stats stat {
   text-align: left;
   align-items: start;
-  gap: 0px;
+  gap: 2px;
 }
 
 gamelinks gamelink stats stat value {
