@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.1.89',
+      appDataVersion: '2.1.90',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -904,13 +904,14 @@ var app = new Vue({
             this.appDataDailyGamesStats = JSON.parse(payload);
             this.appDataDailyGames.forEach((game) => {
               game.showStats = false;
+              game.stats = { guesscounts: { beyond2: 0 } };
               for (const stat of this.appDataDailyGamesStats) {
                 if (stat.hasOwnProperty(game.key)) {
                   game.stats = stat[game.key];
                   break;
                 }
               }
-              if (game.stats.avg === undefined || game.stats.avg === null) {
+              if ((game.stats && game.stats.avg === undefined) || game.stats.avg === null) {
                 game.stats.avg = 0;
               }
               if (game.stats.guesscounts.beyond2 === undefined || game.stats.guesscounts.beyond2 === null) {
