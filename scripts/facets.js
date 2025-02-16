@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.1.90',
+      appDataVersion: '2.1.91',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -682,6 +682,13 @@ var app = new Vue({
         const element = wordElements[index];
         words.push(element.innerHTML);
       }
+      console.log(`
+Given these words: "${words.join(', ')}", find a clue that clearly connects each pair of words in the following word-pairs:
+
+- ${words[0]} and ${words[4]}
+- ${words[5]} and ${words[13]}
+- ${words[11]} and ${words[3]}
+- ${words[14]} and ${words[10]}`);
       words = words.join(',');
 
       const encodedWords = encodeURIComponent(words);
