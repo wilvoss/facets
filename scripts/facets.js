@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.1.92',
+      appDataVersion: '2.1.93',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -895,7 +895,7 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
     },
 
     async GetDailyGameStats() {
-      if (!this.appStateIsGettingDailyGameStats && !this.userSettingsHideStats) {
+      if (!this.appStateIsGettingDailyGameStats) {
         note('GetDailyGameStats() called');
         this.appStateIsGettingDailyGameStats = true;
         var requestUrl = 'https://old-frog-73f3.bigtentgames.workers.dev/';
@@ -944,60 +944,58 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
     },
 
     async GetUsersStats() {
-      if (!this.userSettingsHideStats) {
-        note('GetUsersStats() called');
-        this.appStateIsGettingUserStats = true;
-        var requestUrl = 'https://calm-glitter-d861.bigtentgames.workers.dev/' + this.appDataPlayerCurrent.id;
-        await fetch(requestUrl, {
-          method: 'GET',
-          headers: {
-            Host: window.location.hostname,
-            Origin: window.location.origin,
-            'Access-Control-Request-Method': 'GET',
-            'Access-Control-Request-Headers': 'Content-Type',
-          },
+      note('GetUsersStats() called');
+      this.appStateIsGettingUserStats = true;
+      var requestUrl = 'https://calm-glitter-d861.bigtentgames.workers.dev/' + this.appDataPlayerCurrent.id;
+      await fetch(requestUrl, {
+        method: 'GET',
+        headers: {
+          Host: window.location.hostname,
+          Origin: window.location.origin,
+          'Access-Control-Request-Method': 'GET',
+          'Access-Control-Request-Headers': 'Content-Type',
+        },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            error(response.status);
+          }
+          return response.text();
         })
-          .then((response) => {
-            if (!response.ok) {
-              error(response.status);
-            }
-            return response.text();
-          })
-          .then((payload) => {
-            let userStats = JSON.parse(payload);
-            userStats.forEach((stat) => {
-              for (const game of this.appDataDailyGames) {
-                if (stat.key === game.key) {
-                  Vue.set(game, 'guesses', stat.guesses);
-                  if (stat.quit !== null && stat.quit !== undefined) {
-                    Vue.set(game, 'quit', stat.quit);
-                  }
-                  Vue.set(game, 'solved', true);
+        .then((payload) => {
+          let userStats = JSON.parse(payload);
+          userStats.forEach((stat) => {
+            for (const game of this.appDataDailyGames) {
+              if (stat.key === game.key) {
+                Vue.set(game, 'guesses', stat.guesses);
+                if (stat.quit !== null && stat.quit !== undefined) {
+                  Vue.set(game, 'quit', stat.quit);
                 }
+                Vue.set(game, 'solved', true);
               }
-            });
-            this.appDataPlayerStats = { g1: 0, g2: 0, beyond2: 0, quit: 0, total: 0 };
-            for (let x = 0; x < userStats.length; x++) {
-              const stat = userStats[x];
-              if (stat.quit !== null && stat.quit !== undefined) {
-                this.appDataPlayerStats.quit++;
-              } else if (stat.guesses === 1) {
-                this.appDataPlayerStats.g1++;
-              } else if (stat.guesses === 2) {
-                this.appDataPlayerStats.g2++;
-              } else {
-                this.appDataPlayerStats.beyond2++;
-              }
-              this.appDataPlayerStats.total++;
             }
-          })
-          .catch((e) => {
-            error(e);
-          })
-          .finally(() => {
-            this.appStateIsGettingUserStats = false;
           });
-      }
+          this.appDataPlayerStats = { g1: 0, g2: 0, beyond2: 0, quit: 0, total: 0 };
+          for (let x = 0; x < userStats.length; x++) {
+            const stat = userStats[x];
+            if (stat.quit !== null && stat.quit !== undefined) {
+              this.appDataPlayerStats.quit++;
+            } else if (stat.guesses === 1) {
+              this.appDataPlayerStats.g1++;
+            } else if (stat.guesses === 2) {
+              this.appDataPlayerStats.g2++;
+            } else {
+              this.appDataPlayerStats.beyond2++;
+            }
+            this.appDataPlayerStats.total++;
+          }
+        })
+        .catch((e) => {
+          error(e);
+        })
+        .finally(() => {
+          this.appStateIsGettingUserStats = false;
+        });
     },
     //#endregion
 
