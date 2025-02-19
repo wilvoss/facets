@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.1.91',
+      appDataVersion: '2.1.92',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -100,6 +100,7 @@ var app = new Vue({
 
       //#region USER SETTINGS
       userSettingsUseExtraCard: false,
+      userSettingsHideStats: false,
       userSettingsUsesLightTheme: false,
       userSettingsUsesSimplifiedTheme: false,
       userSettingsUseMultiColoredGems: true,
@@ -123,6 +124,7 @@ var app = new Vue({
       tempUserSettingsShowAllCards: false,
       tempUseWordSetThemes: true,
       tempUserWantsDailyReminder: false,
+      tempUserSettingsHideStats: false,
       tempWordSetName: '',
       tempUsePortraitLayout: false,
       tempUseExtraCard: false,
@@ -249,6 +251,11 @@ var app = new Vue({
     ToggleTempUseLightTheme() {
       note('ToggleTempUseLightTheme() called');
       this.tempUserSettingsUsesLightTheme = !this.tempUserSettingsUsesLightTheme;
+    },
+
+    ToggleTempHideStats() {
+      note('ToggleTempHideStats() called');
+      this.tempUserSettingsHideStats = !this.tempUserSettingsHideStats;
     },
 
     ToggleTempUseSimplifiedTheme() {
@@ -842,7 +849,7 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
         note('GetDailyGames() called');
         if (this.vsShowDaily && window.location.href !== window.location.origin + '/generate.html?generated=true') {
           this.appStateIsGettingDailyGames = true;
-          this.appStateIsGettingUserStats = true;
+          this.appStateIsGettingUserStats = !this.userSettingsHideStats;
           this.appDataDailyGames = [];
           var requestUrl = 'https://lucky-bread-acb4.bigtentgames.workers.dev/';
           await fetch(requestUrl, {
@@ -888,7 +895,7 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
     },
 
     async GetDailyGameStats() {
-      if (!this.appStateIsGettingDailyGameStats) {
+      if (!this.appStateIsGettingDailyGameStats && !this.userSettingsHideStats) {
         note('GetDailyGameStats() called');
         this.appStateIsGettingDailyGameStats = true;
         var requestUrl = 'https://old-frog-73f3.bigtentgames.workers.dev/';
@@ -937,58 +944,60 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
     },
 
     async GetUsersStats() {
-      note('GetUsersStats() called');
-      this.appStateIsGettingUserStats = true;
-      var requestUrl = 'https://calm-glitter-d861.bigtentgames.workers.dev/' + this.appDataPlayerCurrent.id;
-      await fetch(requestUrl, {
-        method: 'GET',
-        headers: {
-          Host: window.location.hostname,
-          Origin: window.location.origin,
-          'Access-Control-Request-Method': 'GET',
-          'Access-Control-Request-Headers': 'Content-Type',
-        },
-      })
-        .then((response) => {
-          if (!response.ok) {
-            error(response.status);
-          }
-          return response.text();
+      if (!this.userSettingsHideStats) {
+        note('GetUsersStats() called');
+        this.appStateIsGettingUserStats = true;
+        var requestUrl = 'https://calm-glitter-d861.bigtentgames.workers.dev/' + this.appDataPlayerCurrent.id;
+        await fetch(requestUrl, {
+          method: 'GET',
+          headers: {
+            Host: window.location.hostname,
+            Origin: window.location.origin,
+            'Access-Control-Request-Method': 'GET',
+            'Access-Control-Request-Headers': 'Content-Type',
+          },
         })
-        .then((payload) => {
-          let userStats = JSON.parse(payload);
-          userStats.forEach((stat) => {
-            for (const game of this.appDataDailyGames) {
-              if (stat.key === game.key) {
-                Vue.set(game, 'guesses', stat.guesses);
-                if (stat.quit !== null && stat.quit !== undefined) {
-                  Vue.set(game, 'quit', stat.quit);
+          .then((response) => {
+            if (!response.ok) {
+              error(response.status);
+            }
+            return response.text();
+          })
+          .then((payload) => {
+            let userStats = JSON.parse(payload);
+            userStats.forEach((stat) => {
+              for (const game of this.appDataDailyGames) {
+                if (stat.key === game.key) {
+                  Vue.set(game, 'guesses', stat.guesses);
+                  if (stat.quit !== null && stat.quit !== undefined) {
+                    Vue.set(game, 'quit', stat.quit);
+                  }
+                  Vue.set(game, 'solved', true);
                 }
-                Vue.set(game, 'solved', true);
               }
+            });
+            this.appDataPlayerStats = { g1: 0, g2: 0, beyond2: 0, quit: 0, total: 0 };
+            for (let x = 0; x < userStats.length; x++) {
+              const stat = userStats[x];
+              if (stat.quit !== null && stat.quit !== undefined) {
+                this.appDataPlayerStats.quit++;
+              } else if (stat.guesses === 1) {
+                this.appDataPlayerStats.g1++;
+              } else if (stat.guesses === 2) {
+                this.appDataPlayerStats.g2++;
+              } else {
+                this.appDataPlayerStats.beyond2++;
+              }
+              this.appDataPlayerStats.total++;
             }
+          })
+          .catch((e) => {
+            error(e);
+          })
+          .finally(() => {
+            this.appStateIsGettingUserStats = false;
           });
-          this.appDataPlayerStats = { g1: 0, g2: 0, beyond2: 0, quit: 0, total: 0 };
-          for (let x = 0; x < userStats.length; x++) {
-            const stat = userStats[x];
-            if (stat.quit !== null && stat.quit !== undefined) {
-              this.appDataPlayerStats.quit++;
-            } else if (stat.guesses === 1) {
-              this.appDataPlayerStats.g1++;
-            } else if (stat.guesses === 2) {
-              this.appDataPlayerStats.g2++;
-            } else {
-              this.appDataPlayerStats.beyond2++;
-            }
-            this.appDataPlayerStats.total++;
-          }
-        })
-        .catch((e) => {
-          error(e);
-        })
-        .finally(() => {
-          this.appStateIsGettingUserStats = false;
-        });
+      }
     },
     //#endregion
 
@@ -1304,6 +1313,7 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
       this.tempUserSettingsLanguage = this.userSettingsLanguage;
       this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
       this.tempUseExtraCard = this.userSettingsUseExtraCard;
+      this.tempUserSettingsHideStats = this.userSettingsHideStats;
       this.tempUserSettingsUsesSimplifiedTheme = this.userSettingsUsesSimplifiedTheme;
       this.tempUserSettingsShowAllCards = this.userSettingsShowAllCards;
     },
@@ -1344,6 +1354,7 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
         this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
         this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder;
         this.userSettingsUseExtraCard = this.tempUseExtraCard;
+        this.userSettingsHideStats = this.tempUserSettingsHideStats;
         this.ToggleUseLightTheme(this.tempUserSettingsUsesLightTheme);
         this.ToggleUseSimplifedTheme(this.tempUserSettingsUsesSimplifiedTheme);
         this.ToggleShowAllCards(this.tempUserSettingsShowAllCards);
@@ -1362,6 +1373,7 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
         localStorage.setItem('userSettingsShowAllCards', this.userSettingsShowAllCards);
         localStorage.setItem('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
         localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
+        localStorage.setItem('userSettingsHideStats', this.userSettingsHideStats);
         localStorage.setItem('wordSet', this.currentGameWordSet.id);
 
         if (userChangedID) {
@@ -1444,6 +1456,12 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
       if (userSettingsUseExtraCard !== undefined && userSettingsUseExtraCard !== null) {
         this.userSettingsUseExtraCard = JSON.parse(userSettingsUseExtraCard);
         this.tempUseExtraCard = this.userSettingsUseExtraCard;
+      }
+
+      let userSettingsHideStats = localStorage.getItem('userSettingsHideStats');
+      if (userSettingsHideStats !== undefined && userSettingsHideStats !== null) {
+        this.userSettingsHideStats = JSON.parse(userSettingsHideStats);
+        this.tempUserSettingsHideStats = this.userSettingsHideStats;
       }
 
       let userSettingsUsesLightTheme = localStorage.getItem('userSettingsUsesLightTheme');
