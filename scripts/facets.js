@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.1.96',
+      appDataVersion: '2.1.97',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -888,12 +888,12 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
                   }
                 }
               });
-              this.GetDailyGameStats();
             })
             .catch((e) => {
               error(e);
             })
             .finally(() => {
+              this.GetDailyGameStats();
               this.appStateIsGettingDailyGames = false;
             });
         }
@@ -1226,6 +1226,8 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
 
     HandleBodyPointerUp(e, _card) {
       this.appStateShareError = false;
+      clearTimeout(this.appDataTimeoutCardRotation);
+
       if (!this.appStateIsModalShowing) {
         this.appStateIsDragging = false;
         this.appDataDraggedCard = this.appDataEmptyCard;
@@ -2307,7 +2309,7 @@ We're working hard to make these Daily Facets better to play.`;
       if (this.appDataMessage !== '') {
         text = this.appDataMessage;
         if (this.getCurrentDaily && this.getCurrentDaily.solved) {
-          time = 20000;
+          time = 10000;
         }
       } else if (!this.appStateIsGuessing && this.appDataPlayerCurrent.id !== -1) {
         text = `You are creating a new "${this.currentGameGuessingWordSet.name}" puzzle!`;
