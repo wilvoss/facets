@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.1.97',
+      appDataVersion: '2.1.98',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -856,7 +856,7 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
         if (this.vsShowDaily && window.location.href !== window.location.origin + '/generate.html?generated=true') {
           this.appStateIsGettingDailyGames = true;
           this.appStateIsGettingUserStats = !this.userSettingsHideStats;
-          this.appDataDailyGames = [];
+          incomingGames = [];
           var requestUrl = 'https://lucky-bread-acb4.bigtentgames.workers.dev/';
           await fetch(requestUrl, {
             method: 'GET',
@@ -874,10 +874,10 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
               return response.text();
             })
             .then((payload) => {
-              this.appDataDailyGames = JSON.parse(payload);
+              incomingGames = JSON.parse(payload);
               let today = new Date();
 
-              this.appDataDailyGames.forEach((daily) => {
+              incomingGames.forEach((daily) => {
                 let previous = this.GetUserStartedGame(daily);
                 daily.guesses = 0;
                 if (previous) {
@@ -888,6 +888,7 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
                   }
                 }
               });
+              this.appDataDailyGames = incomingGames;
             })
             .catch((e) => {
               error(e);
@@ -1964,6 +1965,7 @@ We're working hard to make these Daily Facets better to play.`;
 
     RotateTray(_inc, _useTimeout = true) {
       note('RotateTray() called');
+
       if (!this.appStateTrayIsRotating) {
         this.appDataMessage = '';
         this.appStateTrayIsRotating = true;
