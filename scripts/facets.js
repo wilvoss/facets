@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.1.94',
+      appDataVersion: '2.1.95',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -726,7 +726,7 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
 
     SetAIHints(_array) {
       note('SetAIHints() called');
-      let isExplained = _array.clue1 !== undefined && _array[0].clue1 !== null;
+      let isExplained = !Array.isArray(_array);
       // this.useExtraCard = isExplained;
       // this.tempUseExtraCard = isExplained;
       // this.userSettingsUseExtraCard = isExplained;
