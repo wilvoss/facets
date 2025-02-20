@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.1.93',
+      appDataVersion: '2.1.94',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -47,6 +47,7 @@ var app = new Vue({
       appDataNumberOfNewDailies: 1,
       appDataDailyGamesStats: [],
       appDataInc: 0,
+      appDataAIResult: null,
       //#endregion
 
       //#region STATE MANAGEMENT
@@ -719,20 +720,28 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
         this.FillParkingLot();
       } catch (e) {
         error(e);
-        if (UseDebug && this.userSettingsUseExtraCard) {
-          payload = JSON.stringify({ result: ['1', '2', '3', '4'] });
-          this.SetAIHints(JSON.parse(payload).result);
-          this.FillParkingLot();
-        }
       }
       this.ToggleShowMeta(null);
     },
 
     SetAIHints(_array) {
       note('SetAIHints() called');
-      for (let index = 0; index < this.appDataHints.length; index++) {
-        const element = this.appDataHints[index];
-        element.value = _array[index];
+      let isExplained = _array.clue1 !== undefined && _array[0].clue1 !== null;
+      // this.useExtraCard = isExplained;
+      // this.tempUseExtraCard = isExplained;
+      // this.userSettingsUseExtraCard = isExplained;
+      // localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
+      if (isExplained) {
+        this.appDataAIResult = _array;
+        this.appDataHints[0].value = _array.clue1[0];
+        this.appDataHints[1].value = _array.clue2[0];
+        this.appDataHints[2].value = _array.clue3[0];
+        this.appDataHints[3].value = _array.clue4[0];
+      } else {
+        for (let index = 0; index < this.appDataHints.length; index++) {
+          const element = this.appDataHints[index];
+          element.value = _array[index];
+        }
       }
     },
 

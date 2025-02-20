@@ -1710,8 +1710,8 @@ stats stat small {
 }
 
 stats stat value {
-  font-family: 'Theme';
-  font-size: 1em;
+  font-size: 1.25em;
+  font-weight: bold;
   line-height: 1em;
   text-align: center;
 }
