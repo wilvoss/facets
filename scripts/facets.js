@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.1.98',
+      appDataVersion: '2.1.99',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -888,13 +888,13 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
                   }
                 }
               });
+              this.GetDailyGameStats();
               this.appDataDailyGames = incomingGames;
             })
             .catch((e) => {
               error(e);
             })
             .finally(() => {
-              this.GetDailyGameStats();
               this.appStateIsGettingDailyGames = false;
             });
         }
