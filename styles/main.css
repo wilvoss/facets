@@ -536,9 +536,28 @@ icon.download {
 }
 
 icon.bmc {
-  transform: translateY(-1px);
   mask-image: url(../images/icon-bmc.svg);
   -webkit-mask-image: url(../images/icon-bmc.svg);
+}
+
+icon.like {
+  mask-image: url(../images/icon-like.svg);
+  -webkit-mask-image: url(../images/icon-like.svg);
+}
+
+icon.meeples {
+  mask-image: url(../images/icon-meeples.svg);
+  -webkit-mask-image: url(../images/icon-meeples.svg);
+}
+
+icon.credits {
+  mask-image: url(../images/icon-credits.svg);
+  -webkit-mask-image: url(../images/icon-credits.svg);
+}
+
+icon.discord {
+  mask-image: url(../images/logo-discord.svg);
+  -webkit-mask-image: url(../images/logo-discord.svg);
 }
 
 icon.feedback {
@@ -721,6 +740,7 @@ button.small {
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  gap: 2px;
   max-width: calc(2 * var(--cardSize));
   letter-spacing: 0px;
   cursor: pointer;
@@ -811,6 +831,7 @@ notification p {
 
 notification.meta {
   z-index: 300;
+  overflow: auto;
   background-color: hsl(var(--appBackgroundDarkestHSL));
   background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 50%), var(--textureHue), var(--texture2);
   background-repeat: no-repeat, no-repeat, repeat;
@@ -1810,7 +1831,7 @@ gamelinks p {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  gap: var(--defaultGap);
+  /* gap: var(--defaultGap); */
   cursor: pointer;
 }
 
@@ -1819,6 +1840,7 @@ gamelinks clues {
   flex-direction: row;
   align-items: center;
   gap: calc(0.25 * var(--defaultGap));
+  mask-image: linear-gradient(90deg, red 0px, red calc(100% - 40px), transparent calc(100% - 5px));
 }
 
 gamelinks p a,
