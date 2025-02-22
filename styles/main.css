@@ -40,6 +40,7 @@
   --messageColorHSL: 34, 100%, 70%;
   --highlightColorHSL: 50, 100%, 70%;
   --alertHSL: 0, 100%, 45%;
+  --alertTextHSL: 0, 100%, 65%;
   --trayBackgroundHSL: var(--hueMain), 100%, 50%;
   --trayCreatingBackgroundHSL: var(--hueCreating), 100%, 50%;
   --trayGuessingBackgroundHSL: var(--hueGuessing), 100%, 40%;
@@ -286,6 +287,23 @@ button.small {
 .wallpaper button.small.highlightText,
 button.small.highlightText {
   color: hsl(var(--messageColorHSL));
+}
+
+beta {
+  display: inline-block;
+  color: hsl(var(--alertTextHSL));
+  margin-right: 4px;
+}
+
+beta a,
+beta a:visited,
+beta a:focus {
+  text-decoration: underline;
+  color: hsl(var(--alertTextHSL));
+}
+
+beta::before {
+  content: '⚠️';
 }
 
 header {
