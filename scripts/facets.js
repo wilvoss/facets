@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.07',
+      appDataVersion: '2.2.08',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -429,6 +429,7 @@ var app = new Vue({
 
     async UpdateDailyGameFromStartedGameData(_gamestarted) {
       note('UpdateDailyGameFromStartedGameData() called');
+      this.ResetTrayAfterRotation();
       let foundGame = this.appDataDailyGames.find((game) => {
         return game.key === _gamestarted.key;
       });
