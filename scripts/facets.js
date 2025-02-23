@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.03',
+      appDataVersion: '2.2.04',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -484,6 +484,8 @@ var app = new Vue({
         });
         let actualSol = this.currentGameSolutionActual.split(':');
         let currentSol = this.GetCurrentSolutionParamString().split(':');
+        highlight(`actualSol = ${actualSol}`);
+        highlight(`currentSol = ${currentSol}`);
 
         let mappedSol = [];
 
@@ -496,6 +498,8 @@ var app = new Vue({
           }
         }
         this.currentGameSolutionGuessing = mappedSol.join(':');
+        highlight(`currentGameSolutionActual = ${this.currentGameSolutionActual}`);
+        highlight(`currentGameSolutionGuessing = ${this.currentGameSolutionGuessing}`);
 
         if (this.currentGameSolutionActual === this.currentGameSolutionGuessing) {
           this.RotateTray(8);
@@ -1384,6 +1388,7 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
         localStorage.setItem('wordSet', this.currentGameWordSet.id);
 
         if (userChangedID) {
+          localStorage.removeItem('dailyGames');
           await this.GetDailyGameStats();
           window.location.reload();
         }
