@@ -303,7 +303,7 @@ beta a:focus {
 }
 
 beta::before {
-  content: '⚠️';
+  content: '';
 }
 
 header {
