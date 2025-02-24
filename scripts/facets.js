@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.09',
+      appDataVersion: '2.2.10',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -859,8 +859,9 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
     },
 
     async GetDailyGames() {
-      if (!this.appStateIsGettingDailyGames) {
-        note('GetDailyGames() called');
+      note('GetDailyGames() called');
+      if (!this.appStateIsGettingDailyGames && !this.getTodaysDaily) {
+        note('fetching daily games');
         if (this.vsShowDaily && window.location.href !== window.location.origin + '/generate.html?generated=true') {
           this.appStateIsGettingDailyGames = true;
           this.appStateIsGettingUserStats = !this.userSettingsHideStats;
@@ -883,7 +884,6 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
             })
             .then((payload) => {
               incomingGames = JSON.parse(payload);
-              let today = new Date();
 
               incomingGames.forEach((daily) => {
                 let previous = this.GetUserStartedGame(daily);
@@ -906,6 +906,10 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
               this.appStateIsGettingDailyGames = false;
             });
         }
+      } else {
+        this.appStateIsGettingDailyGames = false;
+        this.appStateIsGettingUserStats = !this.userSettingsHideStats;
+        this.GetDailyGameStats();
       }
     },
 
