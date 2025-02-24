@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.08',
+      appDataVersion: '2.2.09',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -442,6 +442,7 @@ var app = new Vue({
       if (foundGame.solved) {
         await this.SendGameStatsToServer(foundGame);
       }
+      this.RotateTray(8);
     },
 
     async SendGameStatsToServer(_stats) {
