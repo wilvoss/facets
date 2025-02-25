@@ -20,7 +20,7 @@ class WordSetObject {
   }
 }
 
-let Nouns = new WordSetObject({ id: '1', name: 'Nouns', data: ['./data/nouns.json?2.2.06'], textureImage: '../images/wallpapers/nouns.jpg', enabled: false });
+let Nouns = new WordSetObject({ id: '1', name: 'Nouns', data: ['./data/nouns.json?2.2.12'], textureImage: '../images/wallpapers/nouns.jpg', enabled: false });
 let Verbs = new WordSetObject({ id: '2', name: 'Verbs', data: ['./data/verbs.json?2.2.06'], textureImage: '../images/wallpapers/verbs.jpg', enabled: false });
 let Winter = new WordSetObject({ id: '3', name: 'Winter', data: ['./data/winter.json?2.2.06'], enabled: false });
 let Spring = new WordSetObject({ id: '4', name: 'Spring', data: ['./data/spring.json?2.2.06'], enabled: false });
