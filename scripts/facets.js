@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.11',
+      appDataVersion: '2.2.13',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -412,7 +412,9 @@ var app = new Vue({
 
     UpdateGameGuessesCount(_game, _solved = false) {
       note('UpdateGameGuessesCount() called');
-      let startedGame = this.GetUserStartedGame(_game);
+
+      let startedGame = this.GetUserStartedGame(_game) ?? _game;
+
       if (startedGame && !startedGame.solved) {
         startedGame.solved = _solved;
         if (!this.getCurrentDaily.quit) {
