@@ -1571,37 +1571,10 @@ card.rotating {
 }
 
 .multicolor.guessing cards spot.wrong card {
-  background-image: radial-gradient(circle closest-side, hsla(var(--trayReviewingBackgroundHSL), 60%), hsla(var(--trayReviewingBackgroundHSL), 0%));
-  animation: exclude 2s linear 0s infinite;
-  -webkit-animation: exclude 2s linear 0s infinite;
-}
-
-@keyframes exclude {
-  4%, 12%, 20% {
-    transform: translateX(-3px);
-  }
-
-  8%, 16%, 24% {
-    transform: translateX(3px);
-  }
-
-  28% {
-    transform: translateX(0px);
-  }
-}
-
-@-webkit-keyframes exclude {
-  4%, 12%, 20% {
-    transform: translateX(-3px);
-  }
-
-  8%, 16%, 24% {
-    transform: translateX(3px);
-  }
-
-  28% {
-    transform: translateX(0px);
-  }
+  background-image: url(../images/icon-quit.svg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 30px;
 }
 
 hints {
