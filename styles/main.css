@@ -1571,9 +1571,9 @@ card.rotating {
 }
 
 .multicolor.guessing cards spot.wrong card {
+  background-image: radial-gradient(circle closest-side, hsla(var(--trayReviewingBackgroundHSL), 60%), hsla(var(--trayReviewingBackgroundHSL), 0%));
   animation: exclude 2s linear 0s infinite;
   -webkit-animation: exclude 2s linear 0s infinite;
-  background: radial-gradient(circle closest-side, hsla(var(--trayReviewingBackgroundHSL), 60%), hsla(var(--trayReviewingBackgroundHSL), 0%));
 }
 
 @keyframes exclude {
