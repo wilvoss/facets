@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.19',
+      appDataVersion: '2.2.20',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -107,7 +107,7 @@ var app = new Vue({
       userSettingsUseMultiColoredGems: true,
       userSettingsUseWordSetThemes: true,
       userSettingsUserWantsDailyReminder: false,
-      userSettingsShowAllCards: false,
+      userSettingsShowAllCards: true,
       appStateShowCreateOOBE: false,
       userSettingsStreaks: [],
       vsUseFocus: true,
@@ -122,7 +122,7 @@ var app = new Vue({
       tempUseMultiColoredGems: true,
       tempUserSettingsUsesLightTheme: false,
       tempUserSettingsUsesSimplifiedTheme: false,
-      tempUserSettingsShowAllCards: false,
+      tempUserSettingsShowAllCards: true,
       tempUseWordSetThemes: true,
       tempUserWantsDailyReminder: false,
       tempUserSettingsHideStats: false,
