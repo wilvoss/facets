@@ -1570,6 +1570,40 @@ card.rotating {
   transition: var(--mediumTransition) ease-in-out all;
 }
 
+.multicolor.guessing cards spot.wrong card {
+  animation: exclude 2s linear 0s infinite;
+  -webkit-animation: exclude 2s linear 0s infinite;
+  background: radial-gradient(circle closest-side, hsla(var(--trayReviewingBackgroundHSL), 20%), hsla(var(--trayReviewingBackgroundHSL), 0%));
+}
+
+@keyframes exclude {
+  4%, 12%, 20% {
+    transform: translateX(-3px);
+  }
+
+  8%, 16%, 24% {
+    transform: translateX(3px);
+  }
+
+  28% {
+    transform: translateX(0px);
+  }
+}
+
+@-webkit-keyframes exclude {
+  4%, 12%, 20% {
+    transform: translateX(-3px);
+  }
+
+  8%, 16%, 24% {
+    transform: translateX(3px);
+  }
+
+  28% {
+    transform: translateX(0px);
+  }
+}
+
 hints {
   position: absolute;
   z-index: -1;

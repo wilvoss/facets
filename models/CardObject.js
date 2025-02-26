@@ -12,6 +12,7 @@ class CardObject {
     this.isInTray = spec.isInTray === undefined ? false : spec.isInTray;
     this.isExtra = spec.isExtra === undefined ? false : spec.isExtra;
     this.isRotating = spec.isRotating === undefined ? false : spec.isRotating;
+    this.wrongGuesses = spec.wrongGuesses ?? { s0: [], s1: [], s2: [], s3: [] };
     this.justDropped = spec.justDropped === undefined ? false : spec.justDropped;
   }
 }

@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.14',
+      appDataVersion: '2.2.16',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -488,11 +488,17 @@ var app = new Vue({
         this.appDataHints.forEach((hint) => {
           hintValues.push(hint.value);
         });
+
+        this.appDataCards.forEach((card) => {
+          card.failedCheckAlready = false;
+        });
+
+        this.appDataCardsParked.forEach((card) => {
+          card.failedCheckAlready = false;
+        });
+
         let actualSol = this.currentGameSolutionActual.split(':');
         let currentSol = this.GetCurrentSolutionParamString().split(':');
-        highlight(`actualSol = ${actualSol}`);
-        highlight(`currentSol = ${currentSol}`);
-
         let mappedSol = [];
 
         for (let i = 0; i < actualSol.length; i += 3) {
@@ -504,9 +510,6 @@ var app = new Vue({
           }
         }
         this.currentGameSolutionGuessing = mappedSol.join(':');
-        highlight(`currentGameSolutionActual = ${this.currentGameSolutionActual}`);
-        highlight(`currentGameSolutionGuessing = ${this.currentGameSolutionGuessing}`);
-
         if (this.currentGameSolutionActual === this.currentGameSolutionGuessing) {
           this.RotateTray(8);
           window.history.pushState({}, document.title, window.location.pathname);
@@ -518,18 +521,30 @@ var app = new Vue({
 
         if (mappedSol[1] !== actualSol[1]) {
           let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[1])));
+          if (!card.wrongGuesses.s0.includes(mappedSol[1])) {
+            card.wrongGuesses.s0.push(mappedSol[1]);
+          }
           this.SwapCards(card, this.getFirstAvailableParkingSpot);
         }
         if (mappedSol[2] !== actualSol[2]) {
           let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[2])));
+          if (!card.wrongGuesses.s1.includes(mappedSol[2])) {
+            card.wrongGuesses.s1.push(mappedSol[2]);
+          }
           this.SwapCards(card, this.getFirstAvailableParkingSpot);
         }
         if (mappedSol[10] !== actualSol[10]) {
           let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[10])));
+          if (!card.wrongGuesses.s2.includes(mappedSol[10])) {
+            card.wrongGuesses.s2.push(mappedSol[10]);
+          }
           this.SwapCards(card, this.getFirstAvailableParkingSpot);
         }
         if (mappedSol[11] !== actualSol[11]) {
           let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[11])));
+          if (!card.wrongGuesses.s3.includes(mappedSol[11])) {
+            card.wrongGuesses.s3.push(mappedSol[11]);
+          }
           this.SwapCards(card, this.getFirstAvailableParkingSpot);
         }
         this.appDataMessage = this.GetMessageBasedOnTrayCount(true, '');
@@ -538,10 +553,61 @@ var app = new Vue({
         this.appDataTimeoutNotification = setTimeout(() => {
           this.appStateShowNotification = false;
         }, 1700);
-
+        this.CheckIfAnyCardsGuesssAlreadyTried();
         this.ScrollParking(null, 'beginning');
 
         return false;
+      }
+    },
+
+    CheckIfAnyCardsGuesssAlreadyTried() {
+      let actualSol = this.currentGameSolutionActual.split(':');
+      let currentSol = this.GetCurrentSolutionParamString().split(':');
+      if (currentSol.length === 12) {
+        note('CheckIfAnyCardsGuesssAlreadyTried() called');
+        let mappedSol = [];
+
+        for (let i = 0; i < actualSol.length; i += 3) {
+          for (let j = 0; j < currentSol.length; j += 3) {
+            if (actualSol[i] === currentSol[j]) {
+              mappedSol.push(currentSol[j], currentSol[j + 1], currentSol[j + 2]);
+              break;
+            }
+          }
+        }
+
+        this.appDataCards.forEach((card) => {
+          card.failedCheckAlready = false;
+        });
+
+        this.appDataCardsParked.forEach((card) => {
+          card.failedCheckAlready = false;
+        });
+
+        if (mappedSol[1] !== '-1' && mappedSol[1] !== actualSol[1]) {
+          let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[1])));
+          if (card.wrongGuesses.s0.includes(mappedSol[1])) {
+            card.failedCheckAlready = card.wrongGuesses.s0.includes(mappedSol[1]);
+          }
+        }
+        if (mappedSol[2] !== '-1' && mappedSol[2] !== actualSol[2]) {
+          let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[2])));
+          if (card.wrongGuesses.s1.includes(mappedSol[2])) {
+            card.failedCheckAlready = card.wrongGuesses.s1.includes(mappedSol[2]);
+          }
+        }
+        if (mappedSol[10] !== '-1' && mappedSol[10] !== actualSol[10]) {
+          let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[10])));
+          if (card.wrongGuesses.s2.includes(mappedSol[10])) {
+            card.failedCheckAlready = card.wrongGuesses.s2.includes(mappedSol[10]);
+          }
+        }
+        if (mappedSol[11] !== '-1' && mappedSol[11] !== actualSol[11]) {
+          let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[11])));
+          if (card.wrongGuesses.s3.includes(mappedSol[11])) {
+            card.failedCheckAlready = card.wrongGuesses.s3.includes(mappedSol[11]);
+          }
+        }
       }
     },
 
@@ -771,23 +837,21 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
       this.appDataHints.forEach((hint) => {
         hint.value = hint.value.trim();
       });
-      if (this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
-        params.push(this.appDataHints[0].value);
-        params.push(this.appDataCards[0].words[0].id);
-        params.push(this.appDataCards[1].words[0].id);
+      params.push(this.appDataHints[0].value);
+      params.push(this.appDataCards[0].words.length === 4 ? this.appDataCards[0].words[0].id : -1);
+      params.push(this.appDataCards[1].words.length === 4 ? this.appDataCards[1].words[0].id : -1);
 
-        params.push(this.appDataHints[1].value);
-        params.push(this.appDataCards[1].words[1].id);
-        params.push(this.appDataCards[3].words[1].id);
+      params.push(this.appDataHints[1].value);
+      params.push(this.appDataCards[1].words.length === 4 ? this.appDataCards[1].words[1].id : -1);
+      params.push(this.appDataCards[3].words.length === 4 ? this.appDataCards[3].words[1].id : -1);
 
-        params.push(this.appDataHints[2].value);
-        params.push(this.appDataCards[2].words[3].id);
-        params.push(this.appDataCards[0].words[3].id);
+      params.push(this.appDataHints[2].value);
+      params.push(this.appDataCards[2].words.length === 4 ? this.appDataCards[2].words[3].id : -1);
+      params.push(this.appDataCards[0].words.length === 4 ? this.appDataCards[0].words[3].id : -1);
 
-        params.push(this.appDataHints[3].value);
-        params.push(this.appDataCards[3].words[2].id);
-        params.push(this.appDataCards[2].words[2].id);
-      }
+      params.push(this.appDataHints[3].value);
+      params.push(this.appDataCards[3].words.length === 4 ? this.appDataCards[3].words[2].id : -1);
+      params.push(this.appDataCards[2].words.length === 4 ? this.appDataCards[2].words[2].id : -1);
       let param = params.join(':');
       return param;
     },
@@ -1243,7 +1307,6 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
 
     HandleBodyPointerUp(e, _card) {
       this.appStateShareError = false;
-      clearTimeout(this.appDataTimeoutCardRotation);
 
       if (!this.appStateIsModalShowing) {
         this.appStateIsDragging = false;
@@ -1287,6 +1350,7 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
       if (this.appDataDraggedCard.words.length > 0) {
         this.SwapCards(_card, this.appDataDraggedCard);
       }
+      this.CheckIfAnyCardsGuesssAlreadyTried();
     },
 
     ScrollParking(e, _direction) {
@@ -1864,11 +1928,13 @@ We're working hard to make these Daily Facets better to play.`;
       _card1.rotation = temp2.rotation;
       _card1.isSelected = false;
       _card1.justDropped = true;
+      _card1.wrongGuesses = temp2.wrongGuesses;
 
       _card2.words = temp1.words;
       _card2.rotation = temp1.rotation;
       _card2.isSelected = false;
       _card2.justDropped = true;
+      _card2.wrongGuesses = temp1.wrongGuesses;
 
       setTimeout(() => {
         this.appDataCards.concat(this.appDataCardsParked).forEach((card) => {
@@ -1957,6 +2023,7 @@ We're working hard to make these Daily Facets better to play.`;
       });
       if (this.appStateIsGuessing && _contructURL) {
         this.ConstructAndSetShareURLForCurrentGame();
+        this.CheckIfAnyCardsGuesssAlreadyTried();
       }
     },
 
@@ -2084,6 +2151,7 @@ We're working hard to make these Daily Facets better to play.`;
         }
 
         this.ConstructAndSetShareURLForCurrentGame();
+        this.CheckIfAnyCardsGuesssAlreadyTried();
       }
       this.appStateTrayRotation = 0;
     },
