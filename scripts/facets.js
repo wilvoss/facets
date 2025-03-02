@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.21',
+      appDataVersion: '2.2.22',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -2270,8 +2270,10 @@ We're working hard to make these Daily Facets better to play.`;
               this.GetAISolution();
             }, 2000);
           }
-          this.NewGame(null, '', false);
-          this.ToggleShowMeta(null);
+          if (this.appDataCards.length === 0 && this.appDataCardsParked.length === 0) {
+            this.NewGame(null, '', false);
+            this.ToggleShowMeta(null);
+          }
         }
       } catch (e) {
         error(e.message);
