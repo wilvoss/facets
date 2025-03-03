@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.23',
+      appDataVersion: '2.2.24',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -1267,9 +1267,11 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
       note('HandleYesNo() called');
       switch (_target) {
         case 'quit':
-          this.getCurrentDaily.quit = true;
-          this.SolvePuzzleCurrent();
-          break;
+          if (_value) {
+            this.getCurrentDaily.quit = true;
+            this.SolvePuzzleCurrent();
+            break;
+          }
         case 'correct':
           this.ShareBoard(_value);
           break;
