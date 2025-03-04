@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.26',
+      appDataVersion: '2.2.27',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -767,12 +767,14 @@ var app = new Vue({
         words.push(element.innerHTML);
       }
       console.log(`
-Given these words: "${words.join(', ')}", find a clue that clearly connects each pair of words in the following word-pairs:
+words = ${words.join(', ')}
 
-- ${words[0]} and ${words[4]}
-- ${words[5]} and ${words[13]}
-- ${words[11]} and ${words[3]}
-- ${words[14]} and ${words[10]}`);
+It's your job to come up with single word clues that describe the following 4 word combinations taken from the original "words" array:
+
+${words[0]} ${words[4]}
+${words[5]} ${words[13]}
+${words[11]} ${words[3]}
+${words[14]} ${words[10]}`);
       words = words.join(',');
 
       const encodedWords = encodeURIComponent(words);
