@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.25',
+      appDataVersion: '2.2.26',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -1963,6 +1963,10 @@ We're working hard to make these Daily Facets better to play.`;
     },
 
     ToggleCardSelection(_card) {
+      if (this.appStateIsGuessing && this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
+        return;
+      }
+
       note('ToggleCardSelection() called');
 
       if (this.getSelectedCard && this.getSelectedCard !== _card) {
