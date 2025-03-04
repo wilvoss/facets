@@ -11,7 +11,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.24',
+      appDataVersion: '2.2.25',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -1324,6 +1324,9 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
     },
 
     HandleCardPointerDown(e, _card) {
+      if (this.appStateIsGuessing && this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
+        return;
+      }
       if (e !== null) {
         e.preventDefault();
         e.stopPropagation();
@@ -1339,6 +1342,9 @@ Given these words: "${words.join(', ')}", find a clue that clearly connects each
     },
 
     HandleCardPointerUp(e, _card) {
+      if (this.appStateIsGuessing && this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
+        return;
+      }
       e.preventDefault();
       e.stopPropagation();
       this.appDataMessage = '';
