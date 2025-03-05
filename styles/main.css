@@ -1570,7 +1570,8 @@ card.rotating {
   transition: var(--mediumTransition) ease-in-out all;
 }
 
-.multicolor.guessing cards spot.wrong card {
+.multicolor.guessing cards spot.wrong card,
+.guessing cards spot.wrong card {
   background-image: url(../images/icon-quit.svg);
   background-repeat: no-repeat;
   background-position: center center;
