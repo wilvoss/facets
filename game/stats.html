@@ -142,6 +142,11 @@
           max-width: 400px;
         }
 
+        message {
+          font-size: .8em;
+          margin-bottom: calc(.5 * var(--defaultGap));
+        }
+
         key {
           font-size: .6em;
         }
@@ -167,7 +172,7 @@
           <key>{{ kv.key }}</key>
         </stat>
       </stats>
-      <a v-if="!isFetching" style="margin-bottom: 40px" href="/">Create a new game!</a>
+      <a v-if="!isFetching" style="margin-bottom: 40px" href="/">Open Facets</a>
     </app>
     <script src="../helpers/console-enhancer.js" type="text/javascript"></script>
     <script src="../models/LanguageObject.min.js" type="text/javascript"></script>
