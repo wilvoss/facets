@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.30',
+      appDataVersion: '2.2.31',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -564,7 +564,7 @@ var app = new Vue({
     CheckIfAnyCardsGuesssAlreadyTried() {
       let actualSol = this.currentGameSolutionActual.split(':');
       let currentSol = this.GetCurrentSolutionParamString().split(':');
-      if (currentSol.length === 12) {
+      if (currentSol.length === 12 && this.appDataPlayerCurrent.role !== 'creator') {
         note('CheckIfAnyCardsGuesssAlreadyTried() called');
         let mappedSol = [];
 
