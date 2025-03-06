@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.29',
+      appDataVersion: '2.2.30',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -1492,7 +1492,7 @@ ${words[14]} ${words[10]}`);
         id = JSON.parse(id);
         this.appDataPlayerCurrent.id = id;
       } else {
-        this.appDataPlayerCurrent.id = getRandomInt(10000000, 100000000);
+        this.appDataPlayerCurrent.id = getRandomInt(10000000, 100000000000);
         localStorage.setItem('userID', this.appDataPlayerCurrent.id);
         this.appStateShowOOBE = window.location.search !== '';
       }
