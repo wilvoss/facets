@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.34',
+      appDataVersion: '2.2.35',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -929,7 +929,7 @@ ${words[14]} ${words[10]}`);
 
     async GetDailyGames() {
       note('GetDailyGames() called');
-      if (!this.appStateIsGettingDailyGames && !this.getTodaysDaily) {
+      if (!this.appStateIsGettingDailyGames && !this.GetTodaysDaily()) {
         note('fetching daily games');
         if (this.vsShowDaily && window.location.href !== window.location.origin + '/generate.html?generated=true') {
           this.appStateIsGettingDailyGames = true;
@@ -2221,6 +2221,14 @@ We're working hard to make these Daily Facets better to play.`;
       }
       return boardPieces;
     },
+
+    GetTodaysDaily() {
+      let today = new Date();
+      let daily = this.getDailyGamesWithWordSetNames.find((daily) => {
+        return daily.key === this.GetDateFormatted(today);
+      });
+      return daily;
+    },
     //#endregion
 
     //#region INITIALIZATION
@@ -2525,11 +2533,7 @@ We're working hard to make these Daily Facets better to play.`;
       return this.GetDateFormatted(today);
     },
     getTodaysDaily: function () {
-      let today = new Date();
-      let daily = this.getDailyGamesWithWordSetNames.find((daily) => {
-        return daily.key === this.GetDateFormatted(today);
-      });
-      return daily;
+      return this.GetTodaysDaily();
     },
     getCurrentDaily: function () {
       let daily = this.getDailyGamesWithWordSetNames.find((daily) => {
