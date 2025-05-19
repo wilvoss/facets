@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.37',
+      appDataVersion: '2.2.38',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -1625,8 +1625,10 @@ ${words[14]} ${words[10]}`);
           case '?':
           case '&':
           case '=':
+            note('HandleKeyDownEvent() called');
             e.preventDefault();
             e.stopPropagation();
+            break;
           case 'Escape':
             this.appStateShowOOBE = false;
             if (this.appStateShowSettings) {
