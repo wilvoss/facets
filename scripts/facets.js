@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.40',
+      appDataVersion: '2.2.41',
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -1681,17 +1681,17 @@ ${words[14]} ${words[10]}`);
         let text = `I solved ${date} Daily Facet in ${_game.guesses} tries! 😀
 Can you do better?
 
-<https://facets.bigtentgames.com/open>`;
+<https://facets.bigtentgames.com>`;
         this.ConstructAndSetShareURLForCurrentGame();
         if (_game.guesses === 1) {
           text = `🥳 I solved ${date} Daily Facet in 1 try! Can you?
 
-<https://facets.bigtentgames.com/open>`;
+<https://facets.bigtentgames.com>`;
         }
         if (_game.quit) {
           text = `😱 I gave up on ${date} Daily Facet! Can you solve it?
 
-<https://facets.bigtentgames.com/open>`;
+<https://facets.bigtentgames.com>`;
         }
         this.ShareText(text, '');
         history.pushState(null, null, window.location.origin + window.location.pathname);
