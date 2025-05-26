@@ -50,6 +50,7 @@
   --simpleCardForegroundHSL: 0, 100%, 100%;
   --statBackground: hsla(var(--appBackgroundLighterHSL), 0.25);
   --statBorder: hsla(var(--appBackgroundLighterHSL), 0.7);
+  --transitionEase: ease-in-out;
   --longTransition: 400ms;
   --mediumTransition: 250ms;
   --shortTransition: 150ms;
@@ -111,6 +112,7 @@ app {
   height: 100%;
   flex-direction: column;
   justify-content: center;
+  align-items: center;
   gap: var(--defaultGap);
   min-height: 620px;
   transition: var(--mediumTransition) ease-in-out background-color;
@@ -651,9 +653,6 @@ icon.spinner.show {
   animation: 700ms ease-in-out 0s 0.5 blink;
   animation-iteration-count: infinite;
   animation-direction: alternate;
-  --webikit-animation: 700ms ease-in-out 0s 0.5 blink;
-  --webikit-animation-iteration-count: infinite;
-  --webikit-animation-direction: alternate;
 }
 
 @keyframes blink {
@@ -663,6 +662,107 @@ icon.spinner.show {
 
   100% {
     opacity: 1;
+  }
+}
+
+tray.pointout hints.pointout hint {
+  animation: 400ms ease-in-out 0s 0.3 blink;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+tray spot.pointout rotators button icon {
+  animation: 400ms ease-in-out 0s 0.3 blink;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  background: hsl(var(--linkColorLightHSL));
+}
+
+parking spot.pointout {
+  animation: pointout 2s var(--transitionEase) 0s infinite;
+}
+
+parking spot.pointout:nth-of-type(1) {
+  animation: pointout 2s var(--transitionEase) 0s infinite;
+}
+
+parking spot.pointout:nth-of-type(2) {
+  animation: pointout 2s var(--transitionEase) 0.5s infinite;
+}
+
+parking spot.pointout:nth-of-type(3) {
+  animation: pointout 2s var(--transitionEase) 1s infinite;
+}
+
+parking spot.pointout:nth-of-type(4) {
+  animation: pointout 2s var(--transitionEase) 1.5s infinite;
+}
+
+@keyframes pointout {
+  5% {
+    transform: rotate(3deg);
+  }
+
+  10% {
+    transform: translateY(-3px) rotate(0deg);
+  }
+
+  15% {
+    transform: rotate(-3deg);
+  }
+
+  20% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(3deg);
+  }
+
+  30% {
+    transform: translateY(-3px) rotate(0deg);
+  }
+
+  35% {
+    transform: rotate(-3deg);
+  }
+
+  40%, 100% {
+    transform: rotate(0deg);
+  }
+}
+
+@-webkit-keyframes pointout {
+  5% {
+    transform: rotate(3deg);
+  }
+
+  10% {
+    transform: translateY(-3px) rotate(0deg);
+  }
+
+  15% {
+    transform: rotate(-3deg);
+  }
+
+  20% {
+    transform: rotate(0deg);
+  }
+
+  25% {
+    transform: rotate(3deg);
+  }
+
+  30% {
+    transform: translateY(-3px) rotate(0deg);
+  }
+
+  35% {
+    transform: rotate(-3deg);
+  }
+
+  40%, 100% {
+    transform: rotate(0deg);
   }
 }
 
@@ -910,6 +1010,62 @@ notification message {
   border-radius: var(--borderRadius);
   pointer-events: none;
   /* box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25); */
+}
+
+pointer {
+  display: flex;
+  position: absolute;
+  z-index: 199;
+  padding: calc(0.5 * var(--defaultGap)) calc(0.75 * var(--defaultGap));
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: hsl(var(--appBackgroundHSL));
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-right: var(--defaultGap);
+  gap: calc(0.5 * var(--defaultGap));
+  max-width: calc(2 * var(--cardSize) - 2 * var(--defaultGap));
+  background: hsl(var(--messageColorHSL));
+  border-radius: 8px;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+pointer.inplay {
+  transition: var(--mediumTransition) ease-in-out all;
+}
+
+pointer p {
+  width: 100%;
+  font-size: 16px;
+  text-align: left;
+  text-wrap: wrap;
+}
+
+pointer p.controls {
+  font-size: 13px;
+  text-align: right;
+}
+
+pointer a,
+pointer a:hover,
+pointer a:focus,
+pointer a:visited,
+pointer a:active {
+  display: inline-block;
+  font-style: italic;
+  color: hsl(var(--appBackgroundHSL));
+  opacity: 0.7;
+}
+
+pointer a:hover {
+  opacity: 1;
+}
+
+pointer.hidden {
+  opacity: 0;
+  pointer-events: none;
 }
 
 notification message.highlighted {

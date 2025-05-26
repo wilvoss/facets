@@ -12,7 +12,8 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.45',
+      appDataVersion: '2.2.46',
+      appDataGuessingFirstRunItems: ['Drag cards to any spot on the green gem.', "Tap any card's corners to rotate it.", "The words on the gem are your friend's clues for how the cards should be placed.", "Sometimes there isn't a perfect solution, so just do your best!"],
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -72,6 +73,9 @@ var app = new Vue({
       appStateShowInfo: false,
       appStateShowIntro: false,
       appStateShowOOBE: false,
+      appStateShowGuessingFirstRun: false,
+      appStatePointoutLocation: { x: -40000, y: 0 },
+      appStateFirstRunGuessingIndex: -1,
       appStateShowStats: false,
       appStateShowSettings: false,
       appStateShowTutorial: false,
@@ -732,6 +736,8 @@ var app = new Vue({
         this.appDataPlayerCurrent.role = this.appDataPlayerCreator.id === this.appDataPlayerCurrent.id && this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id ? 'reviewer' : 'guesser';
       }
       this.appStateIsGuessing = true;
+      this.appDataGuessingFirstRunItems[2] = this.getIsAIGenerated ? "The words on the gem are our AI's clues for how the cards should be placed." : "The words on the gem are your friend's clues for how the cards should be placed.";
+
       if (corruptData) {
         this.NewGame(null, '😕 - Something went wrong.');
       }
@@ -1316,6 +1322,10 @@ ${words[14]} ${words[10]}`);
       } else {
         this.appDataDraggedCard.isSelected = false;
       }
+
+      if (this.appStateFirstRunGuessingIndex === this.appDataGuessingFirstRunItems.length - 1) {
+        this.appStateFirstRunGuessingIndex = this.appDataGuessingFirstRunItems.length;
+      }
     },
 
     HandleBodyPointerDown(e) {
@@ -1355,6 +1365,9 @@ ${words[14]} ${words[10]}`);
         return;
       }
 
+      if (this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length) {
+        this.appStateFirstRunGuessingIndex++;
+      }
       if (this.appDataDraggedCard.words.length > 0) {
         this.SwapCards(_card, this.appDataDraggedCard);
       }
@@ -1484,6 +1497,14 @@ ${words[14]} ${words[10]}`);
 
     GetUserSettings() {
       note('GetUserSettings() called');
+      let appStateFirstRunGuessingIndex = localStorage.getItem('appStateFirstRunGuessingIndex');
+
+      if (appStateFirstRunGuessingIndex) {
+        this.appStateFirstRunGuessingIndex = parseInt(appStateFirstRunGuessingIndex);
+      } else if (this.appStateIsGuessing) {
+        this.appStateFirstRunGuessingIndex++;
+      }
+
       let id = localStorage.getItem('userID');
       if (id !== undefined && id !== null) {
         id = JSON.parse(id);
@@ -1505,7 +1526,7 @@ ${words[14]} ${words[10]}`);
         this.appDataPlayerCurrent.name = name;
       } else {
         this.appStateIsModalShowing = true;
-        this.ToggleShowTutorial(null);
+        // this.ToggleShowTutorial(null); // Uncomment this line to show the tutorial on first run
         this.appStateShowIntro = true;
         setTimeout(() => {
           document.getElementById('nameInput').focus();
@@ -1594,13 +1615,13 @@ ${words[14]} ${words[10]}`);
             if (!this.appStateShowSettings && !this.appStateShowTutorial && !this.appStateShowIntro && !this.appStateShowInfo && !this.appStateShowConfirmation && !this.appStateIsGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
               this.FillParkingLot();
             }
-            if (this.appStateShowSettings) {
+            if (this.appStateShowIntro) {
+              this.HandleIntroButtonClick(null);
+            } else if (this.appStateShowSettings) {
               this.SubmitSettings(e);
             } else if (this.appStateShowTutorial) {
               this.appStateShowOOBE = false;
               this.ToggleShowTutorial(null);
-            } else if (this.appStateShowIntro) {
-              this.HandleIntroButtonClick(null);
             } else if (this.appStateShowConfirmation) {
               this.HandleYesNo(this.appDataConfirmationObject.target, true);
             } else if (this.appStateShowInfo) {
@@ -1666,6 +1687,26 @@ ${words[14]} ${words[10]}`);
       } else {
         this.NewGame(null);
       }
+    },
+
+    GetPointerTargetLocation() {
+      note('GetPointerTargetLocation() called');
+      const pointer = document.getElementsByTagName('pointer')[0];
+      let left = 0;
+      let top = 0;
+      if (pointer) {
+        const pointerRect = pointer.getBoundingClientRect();
+        const padding = 10;
+        const target = document.getElementsByClassName('pointout')[0];
+
+        if (target) {
+          const targetRect = target.getBoundingClientRect();
+          top = targetRect.top + window.scrollY - pointerRect.height - padding - 10;
+          top = top < 20 ? 20 : top;
+          left = targetRect.left + window.scrollX;
+        }
+      }
+      return { x: left, y: top };
     },
     //#endregion
 
@@ -2005,6 +2046,9 @@ We're working hard to make these Daily Facets better to play.`;
       note('RotateCard() called');
       e.preventDefault();
       e.stopPropagation();
+      if (this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length) {
+        this.appStateFirstRunGuessingIndex++;
+      }
       this.appDataTransitionShort = parseInt(getComputedStyle(document.body).getPropertyValue('--mediumTransition').replace('ms', ''));
       if (this.appStateIsGuessing && (!this.vsUseFocus || (this.vsUseFocus && e.target.parentElement.parentElement.id !== 'parking'))) {
         this.appDataMessage = '';
@@ -2368,8 +2412,25 @@ We're working hard to make these Daily Facets better to play.`;
   },
 
   watch: {
-    userSettingsLanguage: function (newLang, oldLang) {
+    userSettingsLanguage: function () {
       this.LoadTranslatedWords();
+    },
+    appStateFirstRunGuessingIndex: function (newIndex) {
+      localStorage.setItem('appStateFirstRunGuessingIndex', newIndex);
+
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          this.appStatePointoutLocation = this.GetPointerTargetLocation();
+        });
+      }, 100);
+    },
+    getIsAIGenerated: function () {
+      this.appDataGuessingFirstRunItems[2] = this.getIsAIGenerated ? "The words on the gem are our AI's clues for how the cards should be placed." : "The words on the gem are your friend's clues for how the cards should be placed.";
+    },
+    appStateIsGuessing: function () {
+      if (this.appStateIsGuessing && this.appStateFirstRunGuessingIndex === -1) {
+        this.appStateFirstRunGuessingIndex++;
+      }
     },
   },
 
@@ -2628,6 +2689,15 @@ We're working hard to make these Daily Facets better to play.`;
     },
     isPWAOnHomeScreen: function () {
       return window.matchMedia('(display-mode: standalone)').matches;
+    },
+    isGuessingFirstRunShowing: function () {
+      if (this.getFullCardsInTray.length !== 0 && this.appStateFirstRunGuessingIndex === 0) {
+        return false;
+      }
+      return this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.appStateIsGuessing;
+    },
+    pointoutLocation: function () {
+      return this.GetPointerTargetLocation();
     },
     //#endregion
   },
