@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.48',
+      appDataVersion: '2.2.49',
       appDataGuessingFirstRunItems: ['Drag cards to any spot on the green gem.', "Tap any card's corners to rotate it.", "The words on the gem are your friend's clues for how the cards should be placed.", "Sometimes there isn't a perfect solution, so just do your best!"],
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
@@ -1508,7 +1508,7 @@ ${words[14]} ${words[10]}`);
         id = JSON.parse(id);
         this.appDataPlayerCurrent.id = id;
       } else {
-        this.appDataPlayerCurrent.id = getRandomInt(10000000, 100000000000);
+        this.appDataPlayerCurrent.id = getRandomInt(10000000, 1000000000000000);
         localStorage.setItem('userID', this.appDataPlayerCurrent.id);
         this.appStateShowOOBE = window.location.search !== '';
       }
