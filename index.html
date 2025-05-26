@@ -22,7 +22,7 @@
       content="Facets, Facets!, Big Tent Games, Games, Casual game, Puzzle game, Word game, Boardgame, Wil Voss" />
     <meta name="description" content="Facets: A Puzzle Game of Words and Wits!" />
 
-    <link rel="manifest" href="manifest.webmanifest?2.2.47" />
+    <link rel="manifest" href="manifest.webmanifest?2.2.48" />
 
     <link rel="apple-touch-icon" sizes="120x120" href="images/icon180.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="images/icon180.png" />
@@ -32,9 +32,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="128x128" href="favicon.png" />
 
-    <link rel="stylesheet" href="styles/normalize.css?2.2.47" media="screen" />
-    <link rel="stylesheet" href="styles/main.css?2.2.47" media="screen" />
-    <link rel="stylesheet" href="styles/checkbox.min.css?2.2.47" media="screen" />
+    <link rel="stylesheet" href="styles/normalize.css?2.2.48" media="screen" />
+    <link rel="stylesheet" href="styles/main.css?2.2.48" media="screen" />
+    <link rel="stylesheet" href="styles/checkbox.min.css?2.2.48" media="screen" />
   </head>
 
   <body>
@@ -151,6 +151,9 @@
           <a
             @click="appStateFirstRunGuessingIndex = appDataGuessingFirstRunItems.length">{{appStateFirstRunGuessingIndex < appDataGuessingFirstRunItems.length-1 ? 'Stop showing tips' : 'OKAY'}}</a>
         </p>
+        <arrow v-if="appStateFirstRunGuessingIndex < appDataGuessingFirstRunItems.length - 1"
+          :style="{marginLeft: appStatePointoutArrowLocation.x + 'px', marginTop: appStatePointoutArrowLocation.y + 'px'}">
+        </arrow>
       </pointer>
       <modal v-if="appStateShowTutorial" class="tutorial">
         <section>
@@ -331,11 +334,6 @@
             matches
             on all your browsers. Write this ID down before changing it.</small>
           <h3>Appearance</h3>
-          <checkbox :class="{on: tempUserSettingsHideStats}" @click="ToggleTempHideStats()">
-            Hide stats
-            <toggle></toggle>
-          </checkbox>
-          <small>Enable this if you don't want to see statistics associated with the Daily Facet.</small>
           <checkbox :class="{on: tempUserSettingsUsesLightTheme}" @click="ToggleTempUseLightTheme()">
             Light theme
             <toggle></toggle>
@@ -346,18 +344,17 @@
             <toggle></toggle>
           </checkbox>
           <small>Enable this to display category related backgrounds.</small>
-          <checkbox v-if="appStateUsePortraitLayout" :class="{on: tempUserSettingsShowAllCards}"
-            @click="ToggleTempShowAllCards()">
-            Shrink to fit
-            <toggle></toggle>
-          </checkbox>
-          <small v-if="appStateUsePortraitLayout">Enable this if you want to shrink all cards to fit on the screen.
-          </small>
+
           <checkbox :class="{on: tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseSimplifiedTheme()">
             Simple visuals
             <toggle></toggle>
           </checkbox>
           <small>Enable this if you want remove the gem theme entirely. </small>
+          <checkbox :class="{on: tempUserSettingsHideStats}" @click="ToggleTempHideStats()">
+            Hide stats
+            <toggle></toggle>
+          </checkbox>
+          <small>Enable this if you don't want to see statistics associated with the Daily Facet.</small>
           <checkbox
             :class="{disabled: tempUserSettingsUsesSimplifiedTheme, on: !tempUseMultiColoredGems && !tempUserSettingsUsesSimplifiedTheme}"
             @click="ToggleTempUseMultiColoredGems()">
@@ -366,7 +363,14 @@
           </checkbox>
           <small :class="{disabled: tempUserSettingsUsesSimplifiedTheme}">Enable this if you want the gem to remain
             green when you are creating, guessing, or reviewing.</small>
-          <checkbox v-if="isNotificationSupported && isSyncSupported && appStateUseNotifications"
+          <checkbox v-if="appStateUsePortraitLayout" :class="{on: tempUserSettingsShowAllCards}"
+            @click="ToggleTempShowAllCards()">
+            Shrink to fit
+            <toggle></toggle>
+          </checkbox>
+          <small v-if="appStateUsePortraitLayout">Enable this if you want to shrink all cards to fit on the screen.
+          </small>
+          <!-- <checkbox v-if="isNotificationSupported && isSyncSupported && appStateUseNotifications"
             :class="{on: tempUserWantsDailyReminder, disabled: Notification.permission === 'denied'}"
             @click="ToggleTempUserWantsDailyReminder()">
             Notifications
@@ -396,11 +400,11 @@
               <li>Find Facets in the list, and make sure notifications are enabled.</li>
             </ul>
             Once you have updated your device settings, restart Facets, and then enable notifications here.
-          </instructions>
+          </instructions> -->
           <leftright style="margin-top: calc(2 * var(--defaultGap))">
-            <a class="padded" @click="window.location.reload()">Refresh Facets</a>
+            <a class="padded" @click="window.location.reload()">Version {{appDataVersion}}</a>
           </leftright>
-          <small>App version {{appDataVersion}}, hit this button to ensure you have the latest version.</small>
+          <small>Tap this to be sure that you have the latest version.</small>
         </section>
         <controls>
           <button class="secondary" @click="CancelSettings(event)">Cancel</button>
@@ -622,9 +626,8 @@
           </card>
         </ghost>
         <parking v-if="!appStateUsePortraitLayout">
-          <spot :id="'pspot' + index" v-for="(card, index) in appDataCardsParked"
-            v-if="index < (currentGameGuessingCardCount / 2)"
-            :class="{empty: card.words.length === 0, selected: card.isSelected, pointout: getFullCardsInTray.length === 0 && card.words.length !== 0 && appStateFirstRunGuessingIndex === 0 && !appStateIsDragging}">
+          <spot v-for="(card, index) in appDataCardsParked" v-if="index < (currentGameGuessingCardCount / 2)"
+            :class="{empty: card.words.length === 0, selected: card.isSelected, pointout: index === 0 && getFullCardsInTray.length === 0 && card.words.length !== 0 && appStateFirstRunGuessingIndex === 0 && !appStateIsDragging}">
             <rotators>
               <button aria-label="Rotate Tray Clockwise" class="clockwise" @pointerdown="RotateCard(event, card, 1)">
                 <icon class="rotate"></icon>
@@ -653,7 +656,7 @@
           </spot>
         </parking>
         <tray id="tray"
-          :class="{rotating: appStateTrayIsRotating, pointout: (appStateFirstRunGuessingIndex === 2 || appStateFirstRunGuessingIndex === 3) && isGuessingFirstRunShowing}"
+          :class="{rotating: appStateTrayIsRotating, pointout: (appStateFirstRunGuessingIndex === 2) && isGuessingFirstRunShowing}"
           :style=" {rotate: appStateTrayRotation * 90 + 'deg' }">
           <diamond class="back"></diamond>
           <diamond></diamond>
@@ -668,11 +671,10 @@
             </hint>
           </hints>
           <cards :class="{disabled: appStateIsModalShowing}">
-            <spot v-for="(card, index) in appDataCards" :id="'spot' + index" v-if="!card.isExtra"
+            <spot v-for="(card, index) in appDataCards" v-if="!card.isExtra"
               :class="{wrong: card.failedCheckAlready && !card.isRotating, empty: card.words.length === 0, selected: card.isSelected, pointout:  appStateIsGuessing && !appStateIsDragging && getFullCardsInTray.length === 1 && appStateFirstRunGuessingIndex === 1 && card.words.length > 0}">
               <rotators v-if="appStateIsGuessing && currentGameSolutionGuessing !== currentGameSolutionActual">
-                <button :id="'rotator-' + index + '-0'" aria-label="Rotate Tray Clockwise" class="clockwise"
-                  @click="RotateCard(event, card, 1)">
+                <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateCard(event, card, 1)">
                   <icon class="rotate"></icon>
                 </button>
                 <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise"
@@ -682,7 +684,8 @@
               </rotators>
               <card @click="HandleCardClick(event, card)" @pointerup="HandleCardPointerUp(event, card)"
                 @pointerdown="HandleCardPointerDown(event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}"
-                :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
+                :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped, pointout: appStateFirstRunGuessingIndex === 3 &&
+                  isGuessingFirstRunShowing && index === 2}">
                 <words>
                   <word v-for="(word, windex) in card.words" :id="'word' + windex">{{word.value}}</word>
                 </words>
@@ -737,8 +740,7 @@
           <icon class="chevronleft large"></icon>
         </button>
         <parking id="parking">
-          <spot :id="'pspot' + index" v-for="(card, index) in appDataCardsParked"
-            v-if="index < currentGameGuessingCardCount"
+          <spot v-for="(card, index) in appDataCardsParked" v-if="index < currentGameGuessingCardCount"
             :class="{empty: card.words.length === 0, selected: card.isSelected, pointout: getFullCardsInTray.length === 0 && appStateIsGuessing && !appStateIsDragging && appStateFirstRunGuessingIndex === 0 && card.words.length !== 0}">
             <rotators v-if="!userSettingsShowAllCards">
               <button aria-label="Rotate Tray Clockwise" class="clockwise" @pointerdown="RotateCard(event, card, 1)">
@@ -773,15 +775,15 @@
         </button>
       </wrapper>
     </app>
-    <script src="helpers/console-enhancer.js?2.2.47" type="text/javascript"></script>
-    <script src="models/LanguageObject.min.js?2.2.47" type="text/javascript"></script>
-    <script src="models/ProgressMessageObject.min.js?2.2.47" type="text/javascript"></script>
-    <script src="models/WordSetObject.min.js?2.2.47" type="text/javascript"></script>
-    <script src="models/WordObject.min.js?2.2.47" type="text/javascript"></script>
-    <script src="models/CardObject.min.js?2.2.47" type="text/javascript"></script>
-    <script src="models/PlayerObject.min.js?2.2.47" type="text/javascript"></script>
+    <script src="helpers/console-enhancer.js?2.2.48" type="text/javascript"></script>
+    <script src="models/LanguageObject.min.js?2.2.48" type="text/javascript"></script>
+    <script src="models/ProgressMessageObject.min.js?2.2.48" type="text/javascript"></script>
+    <script src="models/WordSetObject.min.js?2.2.48" type="text/javascript"></script>
+    <script src="models/WordObject.min.js?2.2.48" type="text/javascript"></script>
+    <script src="models/CardObject.min.js?2.2.48" type="text/javascript"></script>
+    <script src="models/PlayerObject.min.js?2.2.48" type="text/javascript"></script>
     <script src="helpers/vue.min.js" type="text/javascript"></script>
-    <script src="scripts/facets.js?2.2.47" type="text/javascript"></script>
+    <script src="scripts/facets.js?2.2.48" type="text/javascript"></script>
   </body>
 
 </html>
