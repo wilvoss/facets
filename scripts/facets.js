@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.49',
+      appDataVersion: '2.2.50',
       appDataGuessingFirstRunItems: ['Drag cards to any spot on the green gem.', "Tap any card's corners to rotate it.", "The words on the gem are your friend's clues for how the cards should be placed.", "Sometimes there isn't a perfect solution, so just do your best!"],
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
@@ -1386,10 +1386,12 @@ ${words[14]} ${words[10]}`);
         this.appDataParkingScrollLeft = 0;
       }
 
-      parking.scrollTo({
-        left: this.appDataParkingScrollLeft,
-        behavior: 'smooth',
-      });
+      if (parking) {
+        parking.scrollTo({
+          left: this.appDataParkingScrollLeft,
+          behavior: 'smooth',
+        });
+      }
 
       setTimeout(() => {
         this.appParkingRightButtonDisabled = parking.scrollWidth - parking.clientWidth <= parking.scrollLeft;
