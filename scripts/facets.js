@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.46',
+      appDataVersion: '2.2.47',
       appDataGuessingFirstRunItems: ['Drag cards to any spot on the green gem.', "Tap any card's corners to rotate it.", "The words on the gem are your friend's clues for how the cards should be placed.", "Sometimes there isn't a perfect solution, so just do your best!"],
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
@@ -2694,7 +2694,7 @@ We're working hard to make these Daily Facets better to play.`;
       if (this.getFullCardsInTray.length !== 0 && this.appStateFirstRunGuessingIndex === 0) {
         return false;
       }
-      return this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.appStateIsGuessing;
+      return this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.appStateIsGuessing && this.appDataPlayerCurrent.role !== 'reviewer' && this.appDataPlayerCurrent.role !== 'creator';
     },
     pointoutLocation: function () {
       return this.GetPointerTargetLocation();
