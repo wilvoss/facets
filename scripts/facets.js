@@ -12,8 +12,15 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.50',
-      appDataGuessingFirstRunItems: ['Drag cards to any spot on the green gem.', "Tap any card's corners to rotate it.", "The words on the gem are your friend's clues for how the cards should be placed.", "Sometimes there isn't a perfect solution, so just do your best!"],
+      appDataVersion: '2.2.51',
+      appDataGuessingFirstRunItems: [
+        ['Drag cards to any spot on the green gem.'],
+        ["Tap any card's corners to rotate it."],
+        ["The big words on the gem are your friend's clues for how the cards should be placed. ", "The big words on the gem are the puzzle creator's clues for how the cards should be placed."],
+        ['Tap the big arrows to rotate the entire gem.'],
+        ['"Send" it back to your friend when you think you\'ve solved it!', 'Tap "Guess" when you think you\'ve solved it. Mistaken cards will be removed.'],
+      ],
+      appDataCreatorFirstRunItems: [['Type clues on each side that connect the associated words.']],
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -73,10 +80,10 @@ var app = new Vue({
       appStateShowInfo: false,
       appStateShowIntro: false,
       appStateShowOOBE: false,
-      appStateShowGuessingFirstRun: false,
-      appStatePointoutLocation: { x: -40000, y: 0 },
+      appStatePointoutLocation: { left: -40000 + 'px', top: 0 + 'px' },
       appStatePointoutArrowLocation: { x: 0, y: 0 },
       appStateFirstRunGuessingIndex: -1,
+      appStateFirstRunCreatingIndex: -1,
       appStateShowStats: false,
       appStateShowSettings: false,
       appStateShowTutorial: false,
@@ -310,6 +317,24 @@ var app = new Vue({
         this.tempWordSets.push(new WordSetObject(set));
       });
       this.tempName = this.appDataPlayerCurrent.name;
+    },
+
+    AdvanceFirstRunIndexes() {
+      note('AdvanceFirstRunIndexes() called');
+      switch (this.appDataPlayerCurrent.role) {
+        case 'guesser':
+          if (this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length) {
+            setTimeout(() => {
+              this.appStateFirstRunGuessingIndex++;
+            }, 240);
+          }
+          break;
+        case 'creator':
+          if (this.appStateFirstRunCreatingIndex < this.appDataCreatorFirstRunItems.length) {
+            this.appStateFirstRunCreatingIndex++;
+          }
+          break;
+      }
     },
     //#endregion
 
@@ -737,7 +762,6 @@ var app = new Vue({
         this.appDataPlayerCurrent.role = this.appDataPlayerCreator.id === this.appDataPlayerCurrent.id && this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id ? 'reviewer' : 'guesser';
       }
       this.appStateIsGuessing = true;
-      this.appDataGuessingFirstRunItems[2] = this.getIsAIGenerated ? "The words on the gem are our AI's clues for how the cards should be placed." : "The words on the gem are your friend's clues for how the cards should be placed.";
 
       if (corruptData) {
         this.NewGame(null, '😕 - Something went wrong.');
@@ -1319,10 +1343,15 @@ ${words[14]} ${words[10]}`);
       } else {
         this.appDataDraggedCard.isSelected = false;
       }
-      if (this.appStateFirstRunGuessingIndex === this.appDataGuessingFirstRunItems.length - 1) {
-        this.appStateFirstRunGuessingIndex = this.appDataGuessingFirstRunItems.length;
-      } else if (this.appStateFirstRunGuessingIndex === this.appDataGuessingFirstRunItems.length - 2) {
-        this.appStateFirstRunGuessingIndex++;
+
+      switch (this.appDataPlayerCurrent.role) {
+        case 'guesser':
+          if (this.appStateFirstRunGuessingIndex > this.appDataGuessingFirstRunItems.length - 4) {
+            this.AdvanceFirstRunIndexes();
+          }
+          break;
+        case 'creator':
+          break;
       }
     },
 
@@ -1363,9 +1392,8 @@ ${words[14]} ${words[10]}`);
         return;
       }
 
-      if (this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length) {
-        this.appStateFirstRunGuessingIndex++;
-      }
+      this.AdvanceFirstRunIndexes();
+
       if (this.appDataDraggedCard.words.length > 0) {
         this.SwapCards(_card, this.appDataDraggedCard);
       }
@@ -1501,9 +1529,9 @@ ${words[14]} ${words[10]}`);
 
       if (appStateFirstRunGuessingIndex) {
         this.appStateFirstRunGuessingIndex = parseInt(appStateFirstRunGuessingIndex);
-      } else if (this.appStateIsGuessing) {
-        this.appStateFirstRunGuessingIndex++;
       }
+
+      this.AdvanceFirstRunIndexes();
 
       let id = localStorage.getItem('userID');
       if (id !== undefined && id !== null) {
@@ -1692,11 +1720,13 @@ ${words[14]} ${words[10]}`);
     UpdatePointerTargetLocation() {
       note('UpdatePointerTargetLocation() called');
       const pointer = document.getElementsByTagName('pointer')[0];
-      let left = 0;
+      let left = 20;
       let top = 0;
+      let pointDown = true;
 
-      let aleft = 0;
-      let atop = 0;
+      let arrowLeft = 0;
+      let arrowTop = 0;
+      let arrowRotate = 180;
 
       if (pointer) {
         const pointerRect = pointer.getBoundingClientRect();
@@ -1706,16 +1736,32 @@ ${words[14]} ${words[10]}`);
         if (target) {
           const targetRect = target.getBoundingClientRect();
           top = targetRect.top + window.scrollY - pointerRect.height - padding - 10;
-          top = top < 20 ? 20 : top;
-          left = targetRect.left + window.scrollX - padding - 10;
+          pointDown = top >= 20;
+          arrowRotate = !pointDown ? 0 : arrowRotate;
+          top = !pointDown ? targetRect.top + targetRect.height + 10 : top;
 
-          atop = pointerRect.height;
-          aleft = targetRect.width / 2;
+          if (!this.appStateUsePortraitLayout) {
+            left = targetRect.left + window.scrollX;
+          }
+          arrowTop = pointDown ? top + pointerRect.height + 2 : top - 14;
+          arrowLeft = pointDown ? targetRect.left + targetRect.width / 2 - 18 : targetRect.left + targetRect.width / 2;
+          // if (this.appStateUsePortraitLayout) {
+          //   arrowLeft = pointDown ? targetRect.left - 2 * left + targetRect.width / 2 : targetRect.left + targetRect.width / 2;
+          // } else {
+          // }
+
+          if (left > window.innerWidth - pointerRect.width + 20) {
+            // arrowLeft = pointerRect.width - targetRect.width / 2;
+            left = 'unset';
+          } else {
+            left = left + 'px';
+          }
+          top = top + 'px';
         }
       }
 
-      this.appStatePointoutArrowLocation = { x: aleft, y: atop };
-      this.appStatePointoutLocation = { x: left, y: top };
+      this.appStatePointoutLocation = { left: left, top: top };
+      this.appStatePointoutArrowLocation = { x: arrowLeft, y: arrowTop, rotate: arrowRotate };
     },
 
     //#endregion
@@ -2056,9 +2102,9 @@ We're working hard to make these Daily Facets better to play.`;
       note('RotateCard() called');
       e.preventDefault();
       e.stopPropagation();
-      if (this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length) {
-        this.appStateFirstRunGuessingIndex++;
-      }
+
+      this.AdvanceFirstRunIndexes();
+
       this.appDataTransitionShort = parseInt(getComputedStyle(document.body).getPropertyValue('--mediumTransition').replace('ms', ''));
       if (this.appStateIsGuessing && (!this.vsUseFocus || (this.vsUseFocus && e.target.parentElement.parentElement.id !== 'parking'))) {
         this.appDataMessage = '';
@@ -2705,6 +2751,22 @@ We're working hard to make these Daily Facets better to play.`;
         return false;
       }
       return this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.appStateIsGuessing && this.appDataPlayerCurrent.role !== 'reviewer' && this.appDataPlayerCurrent.role !== 'creator';
+    },
+    pointerText: function () {
+      let text = '';
+      let finalIndex = this.getIsAIGenerated || this.appDataPlayerCreator.id === 0 ? 1 : 0;
+      switch (this.appDataPlayerCurrent.role) {
+        case 'guesser':
+          if (this.appDataGuessingFirstRunItems[this.appStateFirstRunGuessingIndex]) {
+            finalIndex = this.appDataGuessingFirstRunItems[this.appStateFirstRunGuessingIndex].length === 1 ? 0 : finalIndex;
+            text = this.appDataGuessingFirstRunItems[this.appStateFirstRunGuessingIndex][finalIndex];
+          }
+          break;
+
+        case 'creator':
+          break;
+      }
+      return text;
     },
     //#endregion
   },
