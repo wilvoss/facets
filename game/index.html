@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html itemtype="https://schema.org/VideoGame" lang="en">
+
   <head>
     <meta charset="utf-8" />
     <meta content="x-content-type-options=nosniff" />
@@ -9,10 +10,12 @@
     <meta name="mobile-web-app-capable" content="no" />
     <meta name="apple-touch-fullscreen" content="no" />
     <meta name="apple-mobile-web-app-capable" content="no" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, minimum-scale=1, maximum-scale=5, user-scalable=yes" />
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, minimum-scale=1, maximum-scale=5, user-scalable=yes" />
     <meta name="theme-color" id="themeColor" content="rgb(0, 9, 15)" />
 
-    <meta name="keywords" content="Facets, Facets!, Big Tent Games, Games, Causual game, Puzzle game, Word game, Boardgame, Wil Voss" />
+    <meta name="keywords"
+      content="online game, casual game, puzzle game, word game, word association, puzzle, social game" />
     <meta name="description" content="Facets: A Puzzle Game of Words and Wits!" />
 
     <link rel="apple-touch-icon" sizes="120x120" href="../images/icon180.png" />
@@ -29,6 +32,7 @@
       body {
         line-height: 150%;
       }
+
       section {
         margin-top: 40px;
       }
@@ -42,6 +46,7 @@
         margin-top: 0;
         font-size: 2.2em;
       }
+
       modal message {
         background: none;
         justify-content: center;
@@ -54,6 +59,7 @@
         pointer-events: all;
         padding-bottom: 140px;
       }
+
       modal controls.hide,
       message.hide,
       message.hide,
@@ -65,6 +71,7 @@
       message span {
         display: contents;
       }
+
       a.padded {
         display: inline-block;
         font-size: 0.9em;
@@ -100,10 +107,13 @@
         <header>
           <icon class="logo"></icon>
 
-          <h2><small style="max-width: 100%; font-size: 50%; padding-top: var(--defaultGap)"> Facets - A Puzzle Game of Words and Wits!</small></h2>
+          <h2><small style="max-width: 100%; font-size: 50%; padding-top: var(--defaultGap)"> Facets - A Puzzle Game of
+              Words and Wits!</small></h2>
         </header>
         <message id="message" class="hide"></message>
-        <message id="loading" class="inline loading">Loading<icon class="spinner show" style="position: relative"></icon></message>
+        <message id="loading" class="inline loading">Loading<icon class="spinner show" style="position: relative">
+          </icon>
+        </message>
         <button id="refresh" class="hide" onclick="location.reload()">Refresh</button>
         <button id="okay" class="hide" onclick="location.href='/'">Create Puzzle</button>
       </section>
@@ -111,4 +121,5 @@
 
     <script src="../scripts/fetch-game.js" type="text/javascript"></script>
   </body>
+
 </html>
