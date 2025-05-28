@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.57',
+      appDataVersion: '2.2.58',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Drag cards to any spot on the green gem.'],
@@ -358,7 +358,7 @@ var app = new Vue({
     },
 
     ResetFirstRun() {
-      this.appStateFirstRunCreatingIndex = !this.isPlayerGuessing ? 0 : -1;
+      this.appStateFirstRunCreatingIndex = 0;
       this.appStateFirstRunGuessingIndex = 0;
       localStorage.removeItem('appStateFirstRunCreatingIndex');
       localStorage.removeItem('appStateFirstRunGuessingIndex');
