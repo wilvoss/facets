@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.53',
+      appDataVersion: '2.2.54',
       appDataGuessingFirstRunItems: [
         ['Drag cards to any spot on the green gem.'],
         ["Tap any card's corners to rotate it."],
@@ -2800,7 +2800,10 @@ We're working hard to make these Daily Facets better to play.`;
     pointerText: function () {
       let text = '';
       let finalIndex = this.getIsAIGenerated || this.appDataPlayerCreator.id === 0 ? 1 : 0;
-      this.appDataGuessingFirstRunItems[2] = this.getIsAIGenerated ? "The big words are our AI's way of telling you which cards should be placed where." : "The big words are a puzzle creator's way of telling you which cards should be placed where.";
+
+      if (this.getIsAIGenerated) {
+        this.appDataGuessingFirstRunItems[2][1] = "The big words are our AI's way of telling you which cards should be placed where.";
+      }
 
       switch (this.appDataPlayerCurrent.role) {
         case 'guesser':
