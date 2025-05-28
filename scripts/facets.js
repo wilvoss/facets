@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.65',
+      appDataVersion: '2.2.66',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Drag cards to any spot on the green gem.'],
@@ -351,7 +351,7 @@ var app = new Vue({
             setTimeout(() => {
               this.appStateFirstRunCreatingIndex++;
               requestAnimationFrame(() => {
-                document.body.focus();
+                document.getElementById('hint0').blur();
               });
             }, 240);
           }
