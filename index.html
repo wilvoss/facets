@@ -128,28 +128,35 @@
             Create your own
             <icon class="empty"></icon>
           </button>
-          <button class="small" @click="ToggleShowGlobalCreated(event)">Player puzzles</button>
-          <leftright>
-            <button class="small" @click="ToggleShowTutorial(event)">How To</button>
-            <button class="small" @click="ShowSettings(event)">Settings</button>
-          </leftright>
-          <leftright>
-            <button class="small" @click="ToggleShowInfo(event)">Credits</button>
-            <button class="small highlightText" @click="window.open('https://www.buymeacoffee.com/wilvoss', '_blank')">
-              <icon class="bmc small highlightBackground"></icon>
-              Donate!
-            </button>
-          </leftright>
+          <!-- <button class="small" @click="ToggleShowGlobalCreated(event)">Player puzzles</button> -->
+          <button class="small" @click="ToggleShowTutorial(event)">How to play</button>
+          <!-- <leftright> -->
+          <button class="small" @click="ShowSettings(event)">Settings</button>
+          <button class="small" style="position: absolute; bottom: 10px; right: 0px; width: auto; border: none"
+            @click="ToggleShowInfo(event)">
+            <icon class="meeples"></icon>
+          </button>
+          <!-- </leftright> -->
+          <!-- <leftright> -->
+          <button class="small highlightText" @click="window.open('https://www.buymeacoffee.com/wilvoss', '_blank')">
+            <icon class="bmc small highlightBackground"></icon>
+            Buy me a coffee!
+          </button>
+          <!-- </leftright> -->
         </subtitle>
       </notification>
       <pointer :class="{hidden: showPointer, inplay: pointerInPlay}"
         :style="{left: appStatePointerLocation.left + 'px', top: appStatePointerLocation.top + 'px'}">
         <p class="pointer-text" v-html="pointerText"></p>
         <p class="controls">
-          <a v-if="isPlayerGuessing"
-            @click="appStateFirstRunGuessingIndex = appDataGuessingFirstRunItems.length; appStateFirstRunCreatingIndex = appDataCreatorFirstRunItems.length">{{appStateFirstRunGuessingIndex < appDataGuessingFirstRunItems.length - 1 ? 'Stop showing tips' : 'OKAY'}}</a>
-          <a v-if="isPlayerCreating"
-            @click="appStateFirstRunGuessingIndex = appDataGuessingFirstRunItems.length; appStateFirstRunCreatingIndex = appDataCreatorFirstRunItems.length">{{appStateFirstRunCreatingIndex < appDataCreatorFirstRunItems.length - 1 ? 'Stop showing tips' : 'OKAY'}}</a>
+          <a v-if="isPlayerGuessing && appStateFirstRunGuessingIndex < appDataGuessingFirstRunItems.length - 1"
+            @click="appStateFirstRunGuessingIndex = appDataGuessingFirstRunItems.length; appStateFirstRunCreatingIndex = appDataCreatorFirstRunItems.length">Stop
+            showing tips</a>
+          <a v-if="isPlayerCreating && appStateFirstRunCreatingIndex < appDataCreatorFirstRunItems.length - 1"
+            @click="appStateFirstRunGuessingIndex = appDataGuessingFirstRunItems.length; appStateFirstRunCreatingIndex = appDataCreatorFirstRunItems.length">Stop
+            showing tips</a>
+          <a class="right"
+            v-if="isPlayerCreating || (isPlayerGuessing && appStateFirstRunGuessingIndex !== 0)">{{tipSubmitText}}</a>
         </p>
       </pointer>
       <arrow
@@ -158,7 +165,7 @@
       </arrow>
       <modal v-if="appStateShowTutorial" class="tutorial">
         <section>
-          <h2>How To </h2>
+          <h2>How to play</h2>
           <p v-if="!appStateShowCreateOOBE && isPlayerCreating">A Facets puzzle consists of 4
             different <span class="highlightText">clues</span> that connect 4 different
             <span class="highlightText">word-pairs</span>.
@@ -226,7 +233,7 @@
               Wits </small>
           </h2>
           <message>Welcome!</message>
-          <small style="text-align: center; color: hsl(var(--appForegroundHSL))">What's your game
+          <small style="text-align: center; color: hsl(var(--appForegroundHSL))">What's your player
             name?</small>
           <input autocomplete="off" style="text-align: center" spellcheck="false" maxlength="14" id="nameInput"
             placeholder="_ _ _ _ _ _" v-model="tempName" />
@@ -238,7 +245,7 @@
           </checkbox>
 
           <legal>By continuing to use this game, you agree to our <a href="https://bigtentgames.com/#privacy"
-              target="_blank">Privacy Policy</a>, which explains how we collect and use game names and temporary IDs
+              target="_blank">Privacy Policy</a>, which explains how we collect and use player names and temporary IDs
             necessary for game functionality.</legal>
         </section>
         <controls><button @click="HandleIntroButtonClick(event)">Next</button></controls>
@@ -315,7 +322,7 @@
           <h2>Settings</h2>
           <h3>Profile</h3>
           <leftright>
-            <p>Game name</p>
+            <p>Player name</p>
             <callout>
               <input autocomplete="off" spellcheck="false" maxlength="14" placeholder="_ _ _ _ _ _"
                 onpointerup="this.select()" v-model="tempName" />
@@ -604,9 +611,9 @@
             Today's Facet!</button>
         </header>
         <controls :class="{disabled: getActionButtonState, pointoutparent: (appStateFirstRunGuessingIndex === 4 &&
-          isGuessingFirstRunShowing) || (appStateFirstRunCreatingIndex === 2 && isPlayerCreating)}">
+          isGuessingFirstRunShowing) || (appStateFirstRunCreatingIndex === 3 && isPlayerCreating)}">
           <button id="shareButton" class="inline" :class="{pointout: (appStateFirstRunGuessingIndex === 4 &&
-            isPlayerGuessing) || (appStateFirstRunCreatingIndex === 2 && isPlayerCreating)}"
+            isPlayerGuessing) || (appStateFirstRunCreatingIndex === 3 && isPlayerCreating)}"
             @click="HandleSubmitButtonPress()">
             <icon :class="{show: appStateIsGettingTinyURL}" class="spinner"></icon>
             <span v-if="!appStateIsGettingTinyURL" v-html="getSubmitButtonText"></span>
@@ -620,7 +627,7 @@
           </button>
           <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise" @click="RotateTray(-1)">
             <icon :class="{pointout: appStateFirstRunGuessingIndex === 3 &&
-              isPlayerGuessing || appStateFirstRunCreatingIndex === 1 && isPlayerCreating}" class="rotate"></icon>
+              isPlayerGuessing || appStateFirstRunCreatingIndex === 2 && isPlayerCreating}" class="rotate"></icon>
           </button>
         </rotators>
         <input autocomplete="off"
@@ -669,12 +676,12 @@
         <tray id="tray" :class="{rotating: appStateTrayIsRotating}"
           :style=" {rotate: appStateTrayRotation * 90 + 'deg' }">
           <diamond class="back"></diamond>
-          <diamond :class="{pointout: (appStateFirstRunCreatingIndex === 0 && isPlayerCreating) || (appStateFirstRunGuessingIndex === 2 &&
-            isGuessingFirstRunShowing)}"></diamond>
+          <diamond :class="{pointout: (appStateFirstRunCreatingIndex === 1 && isPlayerCreating) || (appStateFirstRunGuessingIndex === 2 &&
+            isGuessingFirstRunShowing) || (isPlayerCreating && appStateFirstRunCreatingIndex === 4)}"></diamond>
           <hints>
             <hint @pointerdown=" RotateTrayBasedOnInputFocus(index)" :id="'h' + index"
               v-for="(hint, index) in appDataHints" :key="index"
-              :class="{pointout: (appStateFirstRunCreatingIndex === 0 && isPlayerCreating) || (appStateFirstRunGuessingIndex === 2 && isPlayerGuessing)}">
+              :class="{pointout: (appStateFirstRunCreatingIndex === 1 && isPlayerCreating) || (appStateFirstRunGuessingIndex === 2 && isPlayerGuessing)}">
               <input autocomplete="off" autocapitalize="off" autocomplete="off" spellcheck="false" :id="'hint' + index"
                 type="text" title="Please only use alphanumeric characters." pattern="[A-Za-z0-9]*"
                 :disabled="appStateIsGuessing || index > 0" v-model="hint.value" maxlength="14" type="text"

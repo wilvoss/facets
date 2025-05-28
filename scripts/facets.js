@@ -29,9 +29,12 @@ var app = new Vue({
       ],
       // prettier-ignore
       appDataCreatorFirstRunItems: [
-        ['Type clues on each side that connect the facing words (e.g. word1 and word2).'],
-        ['Tap the big arrows to rotate the entire gem.'],
-        ['When you think that all 4 of your clues makes sense, share it with your friends!']
+        ['Right now, you are creating a word association puzzle to challenge your friends.'],
+        ['Type a one-word clue here that connects the words "word1" and "word2."'],
+        ['To fill in the other clues, tap the large arrows to rotate the gem.'],
+        ['When you think that all 4 of your clues make sense, send it to your friends.'],
+        ['They\'ll get a scrambled version and will have to put the cards back based on your clues!'],
+        ['Eventually, your friends will send their guesses back to you which you can review.'],
       ],
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
@@ -346,11 +349,9 @@ var app = new Vue({
           if (this.isPlayerCreating && this.appStateFirstRunCreatingIndex < this.appDataCreatorFirstRunItems.length && this.isUserFocusedOnGame) {
             setTimeout(() => {
               this.appStateFirstRunCreatingIndex++;
-              if (this.appStateFirstRunCreatingIndex >= this.appDataCreatorFirstRunItems.length) {
-                requestAnimationFrame(() => {
-                  document.getElementById('hint0').focus();
-                });
-              }
+              requestAnimationFrame(() => {
+                document.getElementById('hint0').focus();
+              });
             }, 240);
           }
           break;
@@ -359,8 +360,8 @@ var app = new Vue({
 
     ResetFirstRun() {
       this.appStateFirstRunCreatingIndex = 0;
+      this.appStateFirstRunGuessingIndex = this.isPlayerGuessing && this.getFullCardsInTray.length === 4 ? 1 : 0;
 
-      this.appStateFirstRunGuessingIndex = this.getFullCardsInTray.length > 0 ? 1 : 0;
       localStorage.removeItem('appStateFirstRunCreatingIndex');
       localStorage.removeItem('appStateFirstRunGuessingIndex');
       location.reload();
@@ -1369,12 +1370,12 @@ ${words[14]} ${words[10]}`);
 
       switch (this.appDataPlayerCurrent.role) {
         case 'guesser':
-          if (this.appStateFirstRunGuessingIndex > this.appDataGuessingFirstRunItems.length - 4) {
+          if (this.appStateFirstRunGuessingIndex > 0) {
             this.AdvanceFirstRunIndexes();
           }
           break;
         case 'creator':
-          if (this.appStateFirstRunCreatingIndex > this.appDataCreatorFirstRunItems.length - 4) {
+          if (this.appStateFirstRunCreatingIndex > -1) {
             this.AdvanceFirstRunIndexes();
           }
           break;
@@ -1795,10 +1796,9 @@ ${words[14]} ${words[10]}`);
               arrowLeft = left + pointerRect.width - 44;
             }
           }
-
-          // if (arrowLeft > left + pointerRect.width - 18 - 4) {
-          //   arrowLeft = arrowLeft - 18;
-          // }
+        } else {
+          left = window.innerWidth / 2 - pointerRect.width / 2;
+          top = window.innerHeight / 2 - pointerRect.height / 2 - 40;
         }
       }
 
@@ -2144,8 +2144,6 @@ We're working hard to make these Daily Facets better to play.`;
       note('RotateCard() called');
       e.preventDefault();
       e.stopPropagation();
-
-      this.AdvanceFirstRunIndexes();
 
       this.appDataTransitionShort = parseInt(getComputedStyle(document.body).getPropertyValue('--mediumTransition').replace('ms', ''));
       if (this.appStateIsGuessing && (!this.vsUseFocus || (this.vsUseFocus && e.target.parentElement.parentElement.id !== 'parking'))) {
@@ -2852,6 +2850,13 @@ We're working hard to make these Daily Facets better to play.`;
           }
 
           break;
+      }
+      return text;
+    },
+    tipSubmitText: function () {
+      let text = 'Next';
+      if ((this.isPlayerGuessing && this.appStateFirstRunGuessingIndex === this.appDataGuessingFirstRunItems.length - 1) || (this.isPlayerCreating && this.appStateFirstRunCreatingIndex === this.appDataCreatorFirstRunItems.length - 1)) {
+        text = 'Okay';
       }
       return text;
     },

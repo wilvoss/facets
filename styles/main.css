@@ -1026,7 +1026,7 @@ pointer {
   position: absolute;
   z-index: 199;
   width: 100%;
-  height: 90px;
+  min-height: 100px;
   /* border: 2px solid hsl(var(--messageColorHSL)); */
   font-family: Arial, sans-serif;
   font-size: 14px;
@@ -1040,7 +1040,7 @@ pointer {
   background: hsl(var(--messageColorHSL));
   border-radius: 8px;
   white-space: nowrap;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
   transition: 0s ease-in-out none;
 }
 
@@ -1053,23 +1053,32 @@ pointer p {
 }
 
 pointer p.controls {
+  display: flex;
   padding: calc(0.5 * var(--defaultGap)) calc(0.75 * var(--defaultGap));
   font-size: 13px;
   text-align: right;
+  justify-content: space-between;
 }
 
-pointer a,
-pointer a:hover,
-pointer a:focus,
-pointer a:visited,
-pointer a:active {
+pointer p.controls a,
+pointer p.controls a:hover,
+pointer p.controls a:focus,
+pointer p.controls a:visited,
+pointer p.controls a:active {
   display: inline-block;
+  width: 100%;
   font-style: italic;
+  text-align: left;
   color: hsl(var(--appBackgroundDarkestHSL));
   opacity: 0.7;
 }
 
-pointer a:hover {
+pointer p.controls a.right {
+  text-align: right;
+  text-transform: uppercase;
+}
+
+pointer p.controls a:hover {
   opacity: 1;
 }
 
@@ -1115,7 +1124,8 @@ arrow.inplay {
 }
 
 pointer.hidden,
-arrow.hidden {
+arrow.hidden,
+a.hidden {
   opacity: 0;
   pointer-events: none;
 }
