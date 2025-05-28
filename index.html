@@ -22,7 +22,7 @@
       content="Facets, Facets!, Big Tent Games, Games, Casual game, Puzzle game, Word game, Boardgame, Wil Voss" />
     <meta name="description" content="Facets: A Puzzle Game of Words and Wits!" />
 
-    <link rel="manifest" href="manifest.webmanifest?2.2.56" />
+    <link rel="manifest" href="manifest.webmanifest?2.2.57" />
 
     <link rel="apple-touch-icon" sizes="120x120" href="images/icon180.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="images/icon180.png" />
@@ -32,9 +32,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="128x128" href="favicon.png" />
 
-    <link rel="stylesheet" href="styles/normalize.css?2.2.56" media="screen" />
-    <link rel="stylesheet" href="styles/main.css?2.2.56" media="screen" />
-    <link rel="stylesheet" href="styles/checkbox.min.css?2.2.56" media="screen" />
+    <link rel="stylesheet" href="styles/normalize.css?2.2.57" media="screen" />
+    <link rel="stylesheet" href="styles/main.css?2.2.57" media="screen" />
+    <link rel="stylesheet" href="styles/checkbox.min.css?2.2.57" media="screen" />
   </head>
 
   <body>
@@ -154,7 +154,7 @@
       </pointer>
       <arrow
         :class="{hidden: showPointer, inplay: (appStateFirstRunGuessingIndex > 0 && appStateFirstRunGuessingIndex < appDataGuessingFirstRunItems.length && isPlayerGuessing) || (appStateFirstRunCreatingIndex > 0 && appStateFirstRunCreatingIndex < appDataCreatorFirstRunItems.length && isPlayerCreating)}"
-        :style="{left: appStatePointerArrowLocation.x + 'px', top: appStatePointerArrowLocation.y + 'px', rotate: appStatePointerArrowLocation.rotate + 'deg'}">
+        :style="{left: appStatePointerArrowLocation.x + 'px', top: appStatePointerArrowLocation.y + 'px', transform: 'translate(-10px, 2px) rotate(' +  appStatePointerArrowLocation.rotate + 'deg)'}">
       </arrow>
       <modal v-if="appStateShowTutorial" class="tutorial">
         <section>
@@ -600,7 +600,7 @@
             <count v-if="getCurrentDaily && !getCurrentDaily.solved"> Daily </count>
           </span>
           <button @click="HandleOldGameClick(event, getTodaysDaily)" class="dailycta"
-            :class="{show: !appStateShowNotification && vsShowDaily && getDailyIsFreshToday && appStateShowMeta}">Solve
+            :class="{show: !appStateShowNotification && vsShowDaily && getDailyIsFreshToday && appStateShowMeta, blink: appStateFirstRunGuessingIndex === -1}">Solve
             Today's Facet!</button>
         </header>
         <controls :class="{disabled: getActionButtonState, pointoutparent: (appStateFirstRunGuessingIndex === 4 &&
@@ -785,15 +785,15 @@
         </button>
       </wrapper>
     </app>
-    <script src="helpers/console-enhancer.js?2.2.56" type="text/javascript"></script>
-    <script src="models/LanguageObject.min.js?2.2.56" type="text/javascript"></script>
-    <script src="models/ProgressMessageObject.min.js?2.2.56" type="text/javascript"></script>
-    <script src="models/WordSetObject.min.js?2.2.56" type="text/javascript"></script>
-    <script src="models/WordObject.min.js?2.2.56" type="text/javascript"></script>
-    <script src="models/CardObject.min.js?2.2.56" type="text/javascript"></script>
-    <script src="models/PlayerObject.min.js?2.2.56" type="text/javascript"></script>
+    <script src="helpers/console-enhancer.js?2.2.57" type="text/javascript"></script>
+    <script src="models/LanguageObject.min.js?2.2.57" type="text/javascript"></script>
+    <script src="models/ProgressMessageObject.min.js?2.2.57" type="text/javascript"></script>
+    <script src="models/WordSetObject.min.js?2.2.57" type="text/javascript"></script>
+    <script src="models/WordObject.min.js?2.2.57" type="text/javascript"></script>
+    <script src="models/CardObject.min.js?2.2.57" type="text/javascript"></script>
+    <script src="models/PlayerObject.min.js?2.2.57" type="text/javascript"></script>
     <script src="helpers/vue.min.js" type="text/javascript"></script>
-    <script src="scripts/facets.js?2.2.56" type="text/javascript"></script>
+    <script src="scripts/facets.js?2.2.57" type="text/javascript"></script>
   </body>
 
 </html>

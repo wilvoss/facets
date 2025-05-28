@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.56',
+      appDataVersion: '2.2.57',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Drag cards to any spot on the green gem.'],
@@ -1761,7 +1761,7 @@ ${words[14]} ${words[10]}`);
 
       let arrowLeft = -40000;
       let arrowTop = -40000;
-      let arrowRotate = 180;
+      let arrowRotate = 0;
 
       if (pointer) {
         const pointerRect = pointer.getBoundingClientRect();
@@ -1772,11 +1772,11 @@ ${words[14]} ${words[10]}`);
           const targetRect = target.getBoundingClientRect();
           top = targetRect.top + window.scrollY - pointerRect.height - padding - 10;
           pointDown = top >= 20;
-          arrowRotate = !pointDown ? 0 : arrowRotate;
+          arrowRotate = !pointDown ? 180 : arrowRotate;
           top = !pointDown ? targetRect.top + targetRect.height + 10 : top;
           left = targetRect.left + window.scrollX;
 
-          arrowTop = pointDown ? top + pointerRect.height + 1 : top - 13;
+          arrowTop = pointDown ? top + pointerRect.height + 1 : top - 10;
           arrowLeft = pointDown ? targetRect.left - 1 + targetRect.width / 2 - 18 : targetRect.left + targetRect.width / 2;
 
           if (left > window.innerWidth - pointerRect.width + 20) {
@@ -1785,6 +1785,19 @@ ${words[14]} ${words[10]}`);
             left = left;
           }
           top = top;
+          if (pointDown) {
+            if (arrowLeft > left + pointerRect.width - 44) {
+              arrowLeft = left + pointerRect.width - 36;
+            }
+          } else {
+            if (arrowLeft > left + pointerRect.width - 44) {
+              arrowLeft = left + pointerRect.width - 44;
+            }
+          }
+
+          // if (arrowLeft > left + pointerRect.width - 18 - 4) {
+          //   arrowLeft = arrowLeft - 18;
+          // }
         }
       }
 

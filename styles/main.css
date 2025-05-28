@@ -1027,7 +1027,7 @@ pointer {
   z-index: 199;
   width: 100%;
   height: 90px;
-  border: 2px solid hsl(var(--messageColorHSL));
+  /* border: 2px solid hsl(var(--messageColorHSL)); */
   font-family: Arial, sans-serif;
   font-size: 14px;
   color: hsl(var(--appBackgroundDarkestHSL));
@@ -1038,7 +1038,7 @@ pointer {
   max-width: calc(2 * var(--cardSize) + 0.5 * var(--defaultGap));
   margin-right: var(--defaultGap);
   background: hsl(var(--messageColorHSL));
-  /* border-radius: 8px; */
+  border-radius: 8px;
   white-space: nowrap;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   transition: 0s ease-in-out none;
@@ -1084,6 +1084,7 @@ arrow {
   width: 18px;
   height: 12px;
   transform: translate(-10px, 2px);
+  transform-origin: 50% 50%;
   background: hsl(var(--messageColorHSL));
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
   rotate: 180deg;
