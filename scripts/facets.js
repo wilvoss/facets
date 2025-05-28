@@ -12,14 +12,14 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.62',
+      appDataVersion: '2.2.64',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Drag cards to any spot on the green gem.'],
         ["Tap any card's corners to rotate it."],
         [
-          "The big words are your friend's way of telling you which cards should be placed where.",
-          "The big words are a puzzle creator's way of telling you which cards should be placed where."
+          "Place and rotate cards based on these larger outer clues.",
+          "Place and rotate cards based on these larger outer clues."
         ],
         ['Tap the big arrows to rotate the entire gem.'],
         [
@@ -30,11 +30,12 @@ var app = new Vue({
       // prettier-ignore
       appDataCreatorFirstRunItems: [
         ['Right now, you are creating a word association puzzle to challenge your friends.'],
-        ['Type a one-word clue here that connects the words "word1" and "word2."'],
-        ['To fill in the other clues, tap the large arrows to rotate the gem.'],
+        ['There are four cards on the gem, each with their own four words.'],
+        ['To start, type a clue here that connects the words below it: "word1" and "word2."'],
+        ['Continue filling in the other clues. Tap the large arrows to rotate the gem.'],
         ['When you think that all 4 of your clues make sense, send it to your friends.'],
-        ['They\'ll get a scrambled version and will have to put the cards back based on your clues!'],
-        ['Eventually, your friends will send their guesses back to you which you can review.'],
+        ['Once sent, the cards will be mixed up and placed outside of the gem!'],
+        ['Eventually, your friends will send their guesses back to you for review.'],
       ],
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
@@ -2817,8 +2818,11 @@ We're working hard to make these Daily Facets better to play.`;
     isPlayerGuessing: function () {
       return this.appDataPlayerCurrent.role === 'guesser';
     },
+    isPlayerReviewing: function () {
+      return this.appDataPlayerCurrent.role === 'reviewer';
+    },
     showPointer: function () {
-      return !this.isUserFocusedOnGame || (this.isPlayerCreating && this.appStateFirstRunCreatingIndex >= this.appDataCreatorFirstRunItems.length) || (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex >= this.appDataGuessingFirstRunItems.length);
+      return !this.isUserFocusedOnGame || this.isPlayerReviewing || (this.isPlayerCreating && this.appStateFirstRunCreatingIndex >= this.appDataCreatorFirstRunItems.length) || (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex >= this.appDataGuessingFirstRunItems.length);
     },
     pointerInPlay: function () {
       return (this.appStateFirstRunGuessingIndex > 0 && this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.isPlayerGuessing) || (this.appStateFirstRunCreatingIndex > 0 && this.appStateFirstRunCreatingIndex < this.appDataCreatorFirstRunItems.length && this.isPlayerCreating);
@@ -2826,10 +2830,6 @@ We're working hard to make these Daily Facets better to play.`;
     pointerText: function () {
       let text = '';
       let finalIndex = this.getIsAIGenerated || this.appDataPlayerCreator.id === 0 ? 1 : 0;
-
-      if (this.getIsAIGenerated) {
-        this.appDataGuessingFirstRunItems[2][1] = "The big words are our AI's way of telling you which cards should be placed where.";
-      }
 
       switch (this.appDataPlayerCurrent.role) {
         case 'guesser':

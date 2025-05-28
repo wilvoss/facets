@@ -670,10 +670,16 @@ icon.spinner.show {
 }
 
 hint.pointout,
-button#shareButton.pointout {
+button#shareButton.pointout,
+spot.pointout {
   animation: 400ms ease-in-out 0s 0.3 blink;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+}
+
+tray spot.pointout {
+  background: hsla(var(--appBackgroundDarkestHSL), 0.2);
+  outline: 1px solid hsl(var(--messageColorHSL));
 }
 
 button#shareButton.pointout span {
@@ -1300,6 +1306,10 @@ app.portrait {
   align-items: center;
 }
 
+/* wrapper.mobile {
+  height: calc(var(--cardSize) + 2 * var(--defaultGap));
+} */
+
 wrapper.columns {
   flex-direction: column;
   justify-content: start;
@@ -1308,6 +1318,7 @@ wrapper.columns {
 
 wrapper.mobile {
   padding-bottom: calc(2 * var(--defaultGap));
+  /* max-height: calc(0.45 * var(--cardSize) + var(--defaultGap)); */
 }
 
 wrapper message {
@@ -1317,6 +1328,7 @@ wrapper message {
 
 .portrait wrapper.mobile.extra {
   scale: 0.85;
+  max-height: calc(0.85 * var(--cardSize) + var(--defaultGap));
 }
 
 [v-cloak] {
@@ -2637,13 +2649,16 @@ app.dragging,
   }
 
   app.portrait {
+    /* justify-content: start; */
     padding: 0px;
   }
 
   wrapper:first-of-type {
     gap: 0px;
     justify-content: space-between;
+    align-items: start;
     padding: calc(0.5 * var(--defaultGap)) 0px;
+    padding-bottom: 72px;
   }
 
   wrapper:first-of-type controls button.small {
@@ -2838,8 +2853,7 @@ app.dragging,
   .portrait wrapper.mobile parking {
     display: flex;
     scale: 0.45;
-    transform-origin-y: 100%;
-    -webkit-transform-origin-y: 100%;
+    transform-origin-y: center top;
   }
 
   wrapper.mobile.extra,
