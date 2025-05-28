@@ -669,7 +669,7 @@ icon.spinner.show {
   opacity: 1;
 }
 
-tray.pointout hints.pointout hint,
+hint.pointout,
 button#shareButton.pointout {
   animation: 400ms ease-in-out 0s 0.3 blink;
   animation-iteration-count: infinite;
@@ -1038,7 +1038,7 @@ pointer {
   max-width: calc(2 * var(--cardSize) + 0.5 * var(--defaultGap));
   margin-right: var(--defaultGap);
   background: hsl(var(--messageColorHSL));
-  border-radius: 8px;
+  /* border-radius: 8px; */
   white-space: nowrap;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   transition: 0s ease-in-out none;
@@ -1109,7 +1109,7 @@ arrow.top {
 }
 
 arrow.inplay {
-  transition-property: margin, rotate;
+  transition-property: margin, rotate, opacity;
   transition: var(--mediumTransition) ease-in-out;
 }
 

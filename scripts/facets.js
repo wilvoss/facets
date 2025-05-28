@@ -12,15 +12,15 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.51',
+      appDataVersion: '2.2.52',
       appDataGuessingFirstRunItems: [
         ['Drag cards to any spot on the green gem.'],
         ["Tap any card's corners to rotate it."],
-        ["The big words on the gem are your friend's clues for how the cards should be placed. ", "The big words on the gem are the puzzle creator's clues for how the cards should be placed."],
+        ["The big words are your friend's way of telling you which cards should be placed where.", "The big words are a puzzle creator's way of telling you which cards should be placed where."],
         ['Tap the big arrows to rotate the entire gem.'],
-        ['"Send" it back to your friend when you think you\'ve solved it!', 'Tap "Guess" when you think you\'ve solved it. Mistaken cards will be removed.'],
+        ['"Send" it back to your friend when you think you have the right cards in the right positions!', 'Tap "Guess" when you think you have the right cards in the right positions!'],
       ],
-      appDataCreatorFirstRunItems: [['Type clues on each side that connect the associated words.']],
+      appDataCreatorFirstRunItems: [['Type clues on each side that connect the facing words.'], ['Tap the big arrows to rotate the entire gem.'], ['When you think your clues makes sense, share the puzzle with your friends!']],
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -80,8 +80,8 @@ var app = new Vue({
       appStateShowInfo: false,
       appStateShowIntro: false,
       appStateShowOOBE: false,
-      appStatePointoutLocation: { left: -40000 + 'px', top: 0 + 'px' },
-      appStatePointoutArrowLocation: { x: 0, y: 0 },
+      appStatePointerLocation: { left: -40000, top: -40000 },
+      appStatePointerArrowLocation: { x: -40000, y: -40000 },
       appStateFirstRunGuessingIndex: -1,
       appStateFirstRunCreatingIndex: -1,
       appStateShowStats: false,
@@ -321,20 +321,36 @@ var app = new Vue({
 
     AdvanceFirstRunIndexes() {
       note('AdvanceFirstRunIndexes() called');
+      highlight(this.appDataPlayerCurrent.role);
       switch (this.appDataPlayerCurrent.role) {
         case 'guesser':
-          if (this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length) {
+          if (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.isUserFocusedOnGame) {
             setTimeout(() => {
               this.appStateFirstRunGuessingIndex++;
             }, 240);
           }
           break;
         case 'creator':
-          if (this.appStateFirstRunCreatingIndex < this.appDataCreatorFirstRunItems.length) {
-            this.appStateFirstRunCreatingIndex++;
+          if (this.isPlayerCreating && this.appStateFirstRunCreatingIndex < this.appDataCreatorFirstRunItems.length && this.isUserFocusedOnGame) {
+            setTimeout(() => {
+              this.appStateFirstRunCreatingIndex++;
+              if (this.appStateFirstRunCreatingIndex >= this.appDataCreatorFirstRunItems.length) {
+                requestAnimationFrame(() => {
+                  document.getElementById('hint0').focus();
+                });
+              }
+            }, 240);
           }
           break;
       }
+    },
+
+    ResetFirstRun() {
+      this.appStateFirstRunCreatingIndex = !this.isPlayerGuessing ? 0 : -1;
+      this.appStateFirstRunGuessingIndex = 0;
+      localStorage.removeItem('appStateFirstRunCreatingIndex');
+      localStorage.removeItem('appStateFirstRunGuessingIndex');
+      location.reload();
     },
     //#endregion
 
@@ -1210,14 +1226,8 @@ ${words[14]} ${words[10]}`);
     HandleGoButtonClick(event) {
       note('HandleGoButtonClick() called');
       this.SubmitSettings(event);
-      if (localStorage.getItem('userHasSeenFirstTimeCreatingTutorial') === null) {
-        // setTimeout(() => {
-        this.ToggleShowTutorial();
-        this.appStateShowCreateOOBE = true;
-        // }, 1000);
-      } else {
-        this.appStateShowCreateOOBE = false;
-      }
+
+      this.appStateShowCreateOOBE = false;
       localStorage.setItem('userHasSeenFirstTimeCreatingTutorial', true);
       this.appStateShowCatChooser = false;
     },
@@ -1351,6 +1361,9 @@ ${words[14]} ${words[10]}`);
           }
           break;
         case 'creator':
+          if (this.appStateFirstRunCreatingIndex > this.appDataCreatorFirstRunItems.length - 4) {
+            this.AdvanceFirstRunIndexes();
+          }
           break;
       }
     },
@@ -1526,9 +1539,17 @@ ${words[14]} ${words[10]}`);
     GetUserSettings() {
       note('GetUserSettings() called');
       let appStateFirstRunGuessingIndex = localStorage.getItem('appStateFirstRunGuessingIndex');
-
       if (appStateFirstRunGuessingIndex) {
         this.appStateFirstRunGuessingIndex = parseInt(appStateFirstRunGuessingIndex);
+      } else {
+        this.appStateFirstRunGuessingIndex = -1;
+      }
+
+      let appStateFirstRunCreatingIndex = localStorage.getItem('appStateFirstRunCreatingIndex');
+      if (appStateFirstRunCreatingIndex) {
+        this.appStateFirstRunCreatingIndex = parseInt(appStateFirstRunCreatingIndex);
+      } else {
+        this.appStateFirstRunCreatingIndex = !this.isPlayerGuessing ? 0 : -1;
       }
 
       this.AdvanceFirstRunIndexes();
@@ -1640,6 +1661,9 @@ ${words[14]} ${words[10]}`);
           case 'Enter':
             note('HandleKeyDownEvent() called');
             e.preventDefault();
+            if (this.isPlayerCreating) {
+              this.AdvanceFirstRunIndexes();
+            }
             if (!this.appStateShowSettings && !this.appStateShowTutorial && !this.appStateShowIntro && !this.appStateShowInfo && !this.appStateShowConfirmation && !this.appStateIsGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
               this.FillParkingLot();
             }
@@ -1720,12 +1744,12 @@ ${words[14]} ${words[10]}`);
     UpdatePointerTargetLocation() {
       note('UpdatePointerTargetLocation() called');
       const pointer = document.getElementsByTagName('pointer')[0];
-      let left = 20;
-      let top = 0;
+      let left = -40000;
+      let top = -40000;
       let pointDown = true;
 
-      let arrowLeft = 0;
-      let arrowTop = 0;
+      let arrowLeft = -40000;
+      let arrowTop = -40000;
       let arrowRotate = 180;
 
       if (pointer) {
@@ -1739,29 +1763,22 @@ ${words[14]} ${words[10]}`);
           pointDown = top >= 20;
           arrowRotate = !pointDown ? 0 : arrowRotate;
           top = !pointDown ? targetRect.top + targetRect.height + 10 : top;
+          left = targetRect.left + window.scrollX;
 
-          if (!this.appStateUsePortraitLayout) {
-            left = targetRect.left + window.scrollX;
-          }
-          arrowTop = pointDown ? top + pointerRect.height + 2 : top - 14;
-          arrowLeft = pointDown ? targetRect.left + targetRect.width / 2 - 18 : targetRect.left + targetRect.width / 2;
-          // if (this.appStateUsePortraitLayout) {
-          //   arrowLeft = pointDown ? targetRect.left - 2 * left + targetRect.width / 2 : targetRect.left + targetRect.width / 2;
-          // } else {
-          // }
+          arrowTop = pointDown ? top + pointerRect.height + 1 : top - 13;
+          arrowLeft = pointDown ? targetRect.left - 1 + targetRect.width / 2 - 18 : targetRect.left + targetRect.width / 2;
 
           if (left > window.innerWidth - pointerRect.width + 20) {
-            // arrowLeft = pointerRect.width - targetRect.width / 2;
-            left = 'unset';
+            left = window.innerWidth - pointerRect.width - 20;
           } else {
-            left = left + 'px';
+            left = left;
           }
-          top = top + 'px';
+          top = top;
         }
       }
 
-      this.appStatePointoutLocation = { left: left, top: top };
-      this.appStatePointoutArrowLocation = { x: arrowLeft, y: arrowTop, rotate: arrowRotate };
+      this.appStatePointerLocation = { left: left, top: top };
+      this.appStatePointerArrowLocation = { x: arrowLeft, y: arrowTop, rotate: arrowRotate };
     },
 
     //#endregion
@@ -2351,6 +2368,9 @@ We're working hard to make these Daily Facets better to play.`;
       this.appStateTrayIsRotating = false;
       this.appStateForceAutoCheck = false;
       this.appStateShowMeta = false;
+      // this.appStatePointerLocation = { x: -40000, y: -40000 };
+      // this.appStatePointerArrowLocation = { x: -40000, y: -40000 };
+
       this.SetWordSetTheme(this.currentGameWordSet);
       this.appDataShareURL = '';
       history.pushState(null, null, window.location.origin + window.location.pathname);
@@ -2362,6 +2382,7 @@ We're working hard to make these Daily Facets better to play.`;
       if (_rotate) {
         this.RotateTray(-4);
       }
+      this.UpdatePointerTargetLocation();
     },
 
     async LoadPage() {
@@ -2473,6 +2494,15 @@ We're working hard to make these Daily Facets better to play.`;
     },
     appStateFirstRunGuessingIndex: function (newIndex) {
       localStorage.setItem('appStateFirstRunGuessingIndex', newIndex);
+
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          this.UpdatePointerTargetLocation();
+        });
+      }, 100);
+    },
+    appStateFirstRunCreatingIndex: function (newIndex) {
+      localStorage.setItem('appStateFirstRunCreatingIndex', newIndex);
 
       setTimeout(() => {
         requestAnimationFrame(() => {
@@ -2752,6 +2782,21 @@ We're working hard to make these Daily Facets better to play.`;
       }
       return this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.appStateIsGuessing && this.appDataPlayerCurrent.role !== 'reviewer' && this.appDataPlayerCurrent.role !== 'creator';
     },
+    isUserFocusedOnGame: function () {
+      return !this.appStateShowNotification && !this.appStateIsModalShowing && !this.appStateShowMeta && !this.appStateShowTutorial && !this.appStateShowConfirmation && !this.appStateShowIntro && !this.appStateShowInfo && !this.appStateShowCatChooser && !this.appStateShowSettings && !this.appStateShowGlobalCreated && !this.appStateShowDailyGames;
+    },
+    isPlayerCreating: function () {
+      return this.appDataPlayerCurrent.role === 'creator';
+    },
+    isPlayerGuessing: function () {
+      return this.appDataPlayerCurrent.role === 'guesser';
+    },
+    showPointer: function () {
+      return !this.isUserFocusedOnGame || (this.isPlayerCreating && this.appStateFirstRunCreatingIndex >= this.appDataCreatorFirstRunItems.length) || (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex >= this.appDataGuessingFirstRunItems.length);
+    },
+    pointerInPlay: function () {
+      return (this.appStateFirstRunGuessingIndex > 0 && this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.isPlayerGuessing) || (this.appStateFirstRunCreatingIndex > 0 && this.appStateFirstRunCreatingIndex < this.appDataCreatorFirstRunItems.length && this.isPlayerCreating);
+    },
     pointerText: function () {
       let text = '';
       let finalIndex = this.getIsAIGenerated || this.appDataPlayerCreator.id === 0 ? 1 : 0;
@@ -2764,6 +2809,12 @@ We're working hard to make these Daily Facets better to play.`;
           break;
 
         case 'creator':
+          if (this.appDataCreatorFirstRunItems[this.appStateFirstRunCreatingIndex]) {
+            finalIndex = this.appDataCreatorFirstRunItems[this.appStateFirstRunCreatingIndex].length === 1 ? 0 : finalIndex;
+            text = this.appDataCreatorFirstRunItems[this.appStateFirstRunCreatingIndex][finalIndex];
+            text = text.replace('facing words.', 'facing words (i.e. ' + this.appDataCards[0].words[0].value + ' and ' + this.appDataCards[1].words[0].value + ').');
+          }
+
           break;
       }
       return text;
