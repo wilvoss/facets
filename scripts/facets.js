@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.67',
+      appDataVersion: '2.2.68',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Drag cards to any spot on the green gem.'],
@@ -340,7 +340,7 @@ var app = new Vue({
       highlight(this.appDataPlayerCurrent.role);
       switch (this.appDataPlayerCurrent.role) {
         case 'guesser':
-          if (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.isUserFocusedOnGame) {
+          if (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.isUserFocusedOnGame && !this.isSolved) {
             setTimeout(() => {
               this.appStateFirstRunGuessingIndex++;
             }, 240);
@@ -2820,16 +2820,19 @@ We're working hard to make these Daily Facets better to play.`;
       return this.appDataPlayerCurrent.role === 'creator';
     },
     isPlayerGuessing: function () {
-      return this.appDataPlayerCurrent.role === 'guesser';
+      return this.appDataPlayerCurrent.role === 'guesser' && !this.isSolved;
     },
     isPlayerReviewing: function () {
       return this.appDataPlayerCurrent.role === 'reviewer';
     },
-    showPointer: function () {
-      return !this.isUserFocusedOnGame || this.isPlayerReviewing || (this.isPlayerCreating && this.appStateFirstRunCreatingIndex >= this.appDataCreatorFirstRunItems.length) || (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex >= this.appDataGuessingFirstRunItems.length);
+    hidePointer: function () {
+      return !this.isUserFocusedOnGame || this.isPlayerReviewing || (this.isPlayerCreating && this.appStateFirstRunCreatingIndex >= this.appDataCreatorFirstRunItems.length) || (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex >= this.appDataGuessingFirstRunItems.length) || (!this.isPlayerCreating && this.isSolved);
     },
     pointerInPlay: function () {
       return (this.appStateFirstRunGuessingIndex > 0 && this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.isPlayerGuessing) || (this.appStateFirstRunCreatingIndex > 0 && this.appStateFirstRunCreatingIndex < this.appDataCreatorFirstRunItems.length && this.isPlayerCreating);
+    },
+    isSolved: function () {
+      return this.currentGameSolutionGuessing === this.currentGameSolutionActual;
     },
     pointerText: function () {
       let text = '';
