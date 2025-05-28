@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.54',
+      appDataVersion: '2.2.55',
       appDataGuessingFirstRunItems: [
         ['Drag cards to any spot on the green gem.'],
         ["Tap any card's corners to rotate it."],
@@ -2382,7 +2382,6 @@ We're working hard to make these Daily Facets better to play.`;
       if (_rotate) {
         this.RotateTray(-4);
       }
-      this.UpdatePointerTargetLocation();
     },
 
     async LoadPage() {
@@ -2424,7 +2423,6 @@ We're working hard to make these Daily Facets better to play.`;
         this.NewGame(null, '😕 - Something went wrong.', false);
       }
       this.appStatePageHasLoaded = true;
-
       this.appStateUsePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
     },
     //#endregion
@@ -2517,6 +2515,11 @@ We're working hard to make these Daily Facets better to play.`;
       if (this.appStateIsGuessing && this.appStateFirstRunGuessingIndex === -1) {
         this.appStateFirstRunGuessingIndex++;
       }
+    },
+    pointerText: function () {
+      requestAnimationFrame(() => {
+        this.UpdatePointerTargetLocation();
+      });
     },
   },
 
@@ -2817,7 +2820,9 @@ We're working hard to make these Daily Facets better to play.`;
           if (this.appDataCreatorFirstRunItems[this.appStateFirstRunCreatingIndex]) {
             finalIndex = this.appDataCreatorFirstRunItems[this.appStateFirstRunCreatingIndex].length === 1 ? 0 : finalIndex;
             text = this.appDataCreatorFirstRunItems[this.appStateFirstRunCreatingIndex][finalIndex];
-            text = text.replace('facing words.', 'facing words (i.e. ' + this.appDataCards[0].words[0].value + ' and ' + this.appDataCards[1].words[0].value + ').');
+            if (this.appDataCards.length > 0) {
+              text = text.replace('facing words.', 'facing words (i.e. ' + this.appDataCards[0].words[0].value + ' and ' + this.appDataCards[1].words[0].value + ').');
+            }
           }
 
           break;
