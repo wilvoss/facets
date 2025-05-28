@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.59',
+      appDataVersion: '2.2.60',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Drag cards to any spot on the green gem.'],
@@ -359,7 +359,8 @@ var app = new Vue({
 
     ResetFirstRun() {
       this.appStateFirstRunCreatingIndex = 0;
-      this.appStateFirstRunGuessingIndex = 0;
+
+      this.appStateFirstRunGuessingIndex = this.getFullCardsInTray.length > 0 ? 1 : 0;
       localStorage.removeItem('appStateFirstRunCreatingIndex');
       localStorage.removeItem('appStateFirstRunGuessingIndex');
       location.reload();
@@ -1777,7 +1778,7 @@ ${words[14]} ${words[10]}`);
           left = targetRect.left + window.scrollX;
 
           arrowTop = pointDown ? top + pointerRect.height + 1 : top - 10;
-          arrowLeft = pointDown ? targetRect.left - 1 + targetRect.width / 2 - 18 : targetRect.left + targetRect.width / 2;
+          arrowLeft = pointDown ? targetRect.left - 1 + targetRect.width / 2 - 18 : targetRect.left + targetRect.width / 2 - 19;
 
           if (left > window.innerWidth - pointerRect.width + 20) {
             left = window.innerWidth - pointerRect.width - 20;
