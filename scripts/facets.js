@@ -12,15 +12,27 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.55',
+      appDataVersion: '2.2.56',
+      // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Drag cards to any spot on the green gem.'],
         ["Tap any card's corners to rotate it."],
-        ["The big words are your friend's way of telling you which cards should be placed where.", "The big words are a puzzle creator's way of telling you which cards should be placed where."],
+        [
+          "The big words are your friend's way of telling you which cards should be placed where.",
+          "The big words are a puzzle creator's way of telling you which cards should be placed where."
+        ],
         ['Tap the big arrows to rotate the entire gem.'],
-        ['"Send" it back to your friend when you think you have the right cards in the right positions!', 'Tap "Guess" when you think you have the right cards in the right positions!'],
+        [
+          '"Send" it back to your friend when you think you have the right cards in the right positions!',
+          'Tap "Guess" when you think you have the right cards in the right positions!'
+        ],
       ],
-      appDataCreatorFirstRunItems: [['Type clues on each side that connect the facing words.'], ['Tap the big arrows to rotate the entire gem.'], ['When you think your clues makes sense, share the puzzle with your friends!']],
+      // prettier-ignore
+      appDataCreatorFirstRunItems: [
+        ['Type clues on each side that connect the facing words (e.g. word1 and word2).'],
+        ['Tap the big arrows to rotate the entire gem.'],
+        ['When you think that all 4 of your clues makes sense, share it with your friends!']
+      ],
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
       appDataCardsParked: [],
@@ -1405,9 +1417,8 @@ ${words[14]} ${words[10]}`);
         return;
       }
 
-      this.AdvanceFirstRunIndexes();
-
       if (this.appDataDraggedCard.words.length > 0) {
+        this.AdvanceFirstRunIndexes();
         this.SwapCards(_card, this.appDataDraggedCard);
       }
       this.CheckIfAnyCardsGuesssAlreadyTried();
@@ -2821,7 +2832,8 @@ We're working hard to make these Daily Facets better to play.`;
             finalIndex = this.appDataCreatorFirstRunItems[this.appStateFirstRunCreatingIndex].length === 1 ? 0 : finalIndex;
             text = this.appDataCreatorFirstRunItems[this.appStateFirstRunCreatingIndex][finalIndex];
             if (this.appDataCards.length > 0) {
-              text = text.replace('facing words.', 'facing words (i.e. ' + this.appDataCards[0].words[0].value + ' and ' + this.appDataCards[1].words[0].value + ').');
+              text = text.replace('word1', this.appDataCards[0].words[0].value);
+              text = text.replace('word2', this.appDataCards[1].words[0].value);
             }
           }
 
