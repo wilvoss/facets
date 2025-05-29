@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.76',
+      appDataVersion: '2.2.77',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
@@ -81,6 +81,7 @@ var app = new Vue({
 
       //#region STATE MANAGEMENT
       appStateForceAutoCheck: false,
+      appStateAutoAdvanceTips: true,
       appStateIsDragging: false,
       appStateIsGettingTinyURL: false,
       appStateIsGettingLast10Games: false,
@@ -370,6 +371,35 @@ var app = new Vue({
             if (this.isPlayerReviewing && this.appStateFirstRunReviewingIndex < this.appDataReviewingFirstRunItems.length) {
               setTimeout(() => {
                 this.appStateFirstRunReviewingIndex++;
+              }, 240);
+            }
+            break;
+        }
+      }
+    },
+
+    RetreatFirstRunIndexes() {
+      note('RetreatFirstRunIndexes()');
+      if (this.isUserFocusedOnGame) {
+        switch (this.appDataPlayerCurrent.role) {
+          case 'guesser':
+            if (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex > 0 && !this.isSolved) {
+              setTimeout(() => {
+                this.appStateFirstRunGuessingIndex--;
+              }, 240);
+            }
+            break;
+          case 'creator':
+            if (this.isPlayerCreating && this.appStateFirstRunCreatingIndex > 0) {
+              setTimeout(() => {
+                this.appStateFirstRunCreatingIndex--;
+              }, 240);
+            }
+            break;
+          case 'reviewer':
+            if (this.isPlayerReviewing && this.appStateFirstRunReviewingIndex > 0) {
+              setTimeout(() => {
+                this.appStateFirstRunReviewingIndex--;
               }, 240);
             }
             break;
@@ -1398,6 +1428,18 @@ ${words[14]} ${words[10]}`);
       this.appDataGhostY = e.clientY;
     },
 
+    HandlePreviousTipButtonPointerUp(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.RetreatFirstRunIndexes();
+    },
+
+    HandleAdvanceTipButtonPointerUp(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      this.AdvanceFirstRunIndexes();
+    },
+
     HandleBodyPointerUp(e, _card) {
       this.appStateShareError = false;
 
@@ -1408,22 +1450,24 @@ ${words[14]} ${words[10]}`);
         this.appDataDraggedCard.isSelected = false;
       }
 
-      switch (this.appDataPlayerCurrent.role) {
-        case 'guesser':
-          if (this.appStateFirstRunGuessingIndex > -1) {
-            this.AdvanceFirstRunIndexes();
-          }
-          break;
-        case 'creator':
-          if (this.appStateFirstRunCreatingIndex > -1) {
-            this.AdvanceFirstRunIndexes();
-          }
-          break;
-        case 'reviewer':
-          if (this.appStateFirstRunReviewingIndex > -1) {
-            this.AdvanceFirstRunIndexes();
-          }
-          break;
+      if (this.appStateAutoAdvanceTips) {
+        switch (this.appDataPlayerCurrent.role) {
+          case 'guesser':
+            if (this.appStateFirstRunGuessingIndex > -1) {
+              this.AdvanceFirstRunIndexes();
+            }
+            break;
+          case 'creator':
+            if (this.appStateFirstRunCreatingIndex > -1) {
+              this.AdvanceFirstRunIndexes();
+            }
+            break;
+          case 'reviewer':
+            if (this.appStateFirstRunReviewingIndex > -1) {
+              this.AdvanceFirstRunIndexes();
+            }
+            break;
+        }
       }
     },
 
@@ -1464,7 +1508,6 @@ ${words[14]} ${words[10]}`);
         return;
       }
 
-      this.AdvanceFirstRunIndexes();
       if (this.appDataDraggedCard.words.length > 0) {
         this.SwapCards(_card, this.appDataDraggedCard);
       }
@@ -1726,7 +1769,7 @@ ${words[14]} ${words[10]}`);
           case 'Enter':
             note('HandleKeyDownEvent()');
             e.preventDefault();
-            if (this.isPlayerCreating) {
+            if (this.appStateAutoAdvanceTips) {
               this.AdvanceFirstRunIndexes();
             }
             if (!this.appStateShowSettings && !this.appStateShowTutorial && !this.appStateShowIntro && !this.appStateShowInfo && !this.appStateShowConfirmation && !this.appStateIsGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {

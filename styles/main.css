@@ -1094,15 +1094,18 @@ pointer p.controls {
   justify-content: space-between;
 }
 
+pointer p.controls a {
+  display: inline-block;
+  width: 100%;
+  font-style: italic;
+  text-align: left;
+}
+
 pointer p.controls a,
 pointer p.controls a:hover,
 pointer p.controls a:focus,
 pointer p.controls a:visited,
 pointer p.controls a:active {
-  display: inline-block;
-  width: 100%;
-  font-style: italic;
-  text-align: left;
   color: hsl(var(--appBackgroundDarkestHSL));
   opacity: 0.7;
 }
@@ -1114,6 +1117,17 @@ pointer p.controls a.right {
 
 pointer p.controls a:hover {
   opacity: 1;
+}
+
+pointer p.controls seekers {
+  display: flex;
+  width: 100%;
+  justify-content: end;
+  gap: calc(0.5 * var(--defaultGap));
+}
+
+pointer p.controls seekers a {
+  width: auto;
 }
 
 pointer.inplay {
@@ -2059,7 +2073,7 @@ stats stat value {
 gamelinks gamelink stats,
 message stats {
   overflow: auto;
-  border: 1px solid hsla(var(--appBackgroundHSL), 1);
+  border: 1px solid hsla(var(--appBackgroundHSL), 0.5);
   font-size: 16px;
   color: hsl(var(--appBackgroundLightestHSL));
   justify-content: space-around;
@@ -2981,6 +2995,35 @@ app.dragging,
 @media screen and (max-height: 620px) {
   app {
     gap: 0px;
+  }
+
+  h2 {
+    margin-bottom: var(--defaultGap);
+  }
+
+  gamelink {
+    margin: 4px 0px;
+    gap: 2px;
+  }
+
+  modal section {
+    gap: 2px;
+  }
+
+  modal stats,
+  gamelinks gamelink stats,
+  stats.boxed {
+    padding: 4px calc(0.5 * var(--defaultGap)) 2px;
+    margin-top: 0px;
+    margin-bottom: 4px;
+    border: none;
+  }
+
+  .boxed {
+    margin-top: 4px;
+    border: none;
+    padding: 4px;
+    gap: 1px;
   }
 
   wrapper:first-of-type {
