@@ -892,7 +892,7 @@ subtitle {
 button.small {
   display: flex;
   padding: calc(0.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
-  border: 1px solid hsla(var(--appBackgroundHSL), 1);
+  /* border: 1px solid hsla(var(--appBackgroundHSL), 1); */
   line-height: 140%;
   text-transform: unset;
   color: hsl(var(--appForegroundHSL));
@@ -904,7 +904,7 @@ button.small {
   max-width: calc(2 * var(--cardSize));
   letter-spacing: 0px;
   cursor: pointer;
-  background: hsla(var(--appBackgroundDarkHSL), 0.6);
+  /* background: hsla(var(--appBackgroundDarkHSL), 0.6); */
   border-radius: calc(1 * var(--borderRadius));
   -webkit-tap-highlight-color: transparent;
   transition: var(--mediumTransition) ease-in-out;
@@ -1250,6 +1250,11 @@ modal message {
 modal section message {
   color: hsl(var(--messageColorHSL));
   margin-top: 0;
+}
+
+modal section message greeting {
+  font-size: 0.8em;
+  color: hsl(var(--appForegroundHSL));
 }
 
 modal credit {

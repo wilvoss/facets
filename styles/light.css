@@ -11,7 +11,7 @@
   --appBackgroundLighterHSL: var(--hueTheme), 40%, 71%;
   --appBackgroundHSL: var(--hueTheme), 100%, 83%;
   --appBackgroundDarkHSL: var(--hueTheme), 100%, 92%;
-  --appBackgroundDarkestHSL: var(--hueTheme), 100%, 97%;
+  --appBackgroundDarkestHSL: var(--hueTheme), 100%, 98%;
   --appForegroundHSL: var(--hueTheme), 100%, 06%;
   --appForegroundDiminishedHSL: var(--hueTheme), 0%, 35%;
   --linkColorLightHSL: var(--hueHighlight), 79%, 35%;
@@ -66,10 +66,9 @@ stats stat.boxed small {
 }
 
 button.small {
-  background: hsla(var(--appBackgroundDarkestHSL), 0.7);
+  /* background: hsla(var(--appBackgroundDarkestHSL), 0.7); */
 }
 
-button.small,
 leftright,
 checkbox {
   border: 1px solid hsla(var(--appBackgroundLighterHSL), 1);
@@ -108,7 +107,7 @@ notification {
 }
 
 notification.meta {
-  background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkHSL), 0) 200px), var(--textureHue), var(--texture2);
+  background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0.5) 200px), var(--textureHue), var(--texture2);
 }
 
 notification message {
