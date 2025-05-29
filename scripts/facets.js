@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.70',
+      appDataVersion: '2.2.71',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Drag cards to any spot on the green gem.'],
@@ -93,6 +93,7 @@ var app = new Vue({
       appStateIsModalShowing: false,
       appStateIsNewVersionAvailable: false,
       appStatePageHasLoaded: false,
+      appStateUserHasCreatedAGame: false,
       appStateShowCatChooser: false,
       appStateShowConfirmation: false,
       appStateShowGlobalCreated: false,
@@ -385,7 +386,8 @@ var app = new Vue({
       localStorage.removeItem('appStateFirstRunCreatingIndex');
       localStorage.removeItem('appStateFirstRunReviewingIndex');
       localStorage.removeItem('appStateFirstRunGuessingIndex');
-      location.reload();
+      this.appStateShowSettings = false;
+      // location.reload();
     },
     //#endregion
 
@@ -1275,6 +1277,7 @@ ${words[14]} ${words[10]}`);
       note('HandleNewGameClick() called');
       this.GetCategoryNames();
       this.appStateShowCatChooser = true;
+      this.appStateUserHasCreatedAGame = true;
     },
 
     HandleGameLinkClick(e, game) {
@@ -2481,6 +2484,7 @@ We're working hard to make these Daily Facets better to play.`;
         error(e.message);
         boardPieces = [];
         this.NewGame(null, '😕 - Something went wrong.', false);
+        this.ToggleShowMeta(null);
       }
       this.appStatePageHasLoaded = true;
       this.appStateUsePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
@@ -2910,6 +2914,15 @@ We're working hard to make these Daily Facets better to play.`;
         text = 'Okay';
       }
       return text;
+    },
+    resumeText: function () {
+      if (this.isPlayerCreating) {
+        return 'Continue Creating';
+      } else if (this.isPlayerGuessing) {
+        return 'Resume Guessing';
+      } else if (this.isPlayerReviewing) {
+        return 'Resume Reviewing';
+      }
     },
     //#endregion
   },

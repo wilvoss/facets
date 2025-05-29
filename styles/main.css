@@ -95,7 +95,7 @@ body {
   width: 100%;
   height: 100%;
   margin: 0px 0px;
-  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
+  font-family: var(--wordFont);
   font-size: 1.3em;
   line-height: 1.3em;
   color: hsl(var(--appForegroundHSL));
@@ -231,6 +231,10 @@ button {
   transition: var(--mediumTransition) ease-in-out;
   user-select: none;
   -webkit-user-select: none;
+}
+
+button.resume {
+  font-family: var(--wordFont);
 }
 
 button badge {
