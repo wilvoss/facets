@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.74',
+      appDataVersion: '2.2.75',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Drag cards to any spot on the green gem.'],
@@ -344,36 +344,37 @@ var app = new Vue({
 
     AdvanceFirstRunIndexes() {
       note('AdvanceFirstRunIndexes()');
-
-      switch (this.appDataPlayerCurrent.role) {
-        case 'guesser':
-          if (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.isUserFocusedOnGame && !this.isSolved) {
-            setTimeout(() => {
-              this.appStateFirstRunGuessingIndex++;
-            }, 240);
-          }
-          break;
-        case 'creator':
-          if (this.isPlayerCreating && this.appStateFirstRunCreatingIndex < this.appDataCreatorFirstRunItems.length && this.isUserFocusedOnGame) {
-            setTimeout(() => {
-              this.appStateFirstRunCreatingIndex++;
-              requestAnimationFrame(() => {
-                if (this.isPlayerCreating && this.appStateFirstRunCreatingIndex === 3) {
-                  document.getElementById('hint0').select();
-                } else {
-                  document.getElementById('hint0').blur();
-                }
-              });
-            }, 240);
-          }
-          break;
-        case 'reviewer':
-          if (this.isPlayerReviewing && this.appStateFirstRunReviewingIndex < this.appDataReviewingFirstRunItems.length && this.isUserFocusedOnGame) {
-            setTimeout(() => {
-              this.appStateFirstRunReviewingIndex++;
-            }, 240);
-          }
-          break;
+      if (this.isUserFocusedOnGame) {
+        switch (this.appDataPlayerCurrent.role) {
+          case 'guesser':
+            if (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && !this.isSolved) {
+              setTimeout(() => {
+                this.appStateFirstRunGuessingIndex++;
+              }, 240);
+            }
+            break;
+          case 'creator':
+            if (this.isPlayerCreating && this.appStateFirstRunCreatingIndex < this.appDataCreatorFirstRunItems.length) {
+              setTimeout(() => {
+                this.appStateFirstRunCreatingIndex++;
+                requestAnimationFrame(() => {
+                  if (this.isPlayerCreating && this.appStateFirstRunCreatingIndex === 3) {
+                    document.getElementById('hint0').select();
+                  } else {
+                    document.getElementById('hint0').blur();
+                  }
+                });
+              }, 240);
+            }
+            break;
+          case 'reviewer':
+            if (this.isPlayerReviewing && this.appStateFirstRunReviewingIndex < this.appDataReviewingFirstRunItems.length) {
+              setTimeout(() => {
+                this.appStateFirstRunReviewingIndex++;
+              }, 240);
+            }
+            break;
+        }
       }
     },
 
@@ -2566,31 +2567,35 @@ We're working hard to make these Daily Facets better to play.`;
       this.LoadTranslatedWords();
     },
     appStateFirstRunGuessingIndex: function (newIndex) {
-      localStorage.setItem('appStateFirstRunGuessingIndex', newIndex);
-
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          this.UpdatePointerTargetLocation();
-        });
-      }, 100);
+      if (newIndex <= this.appDataGuessingFirstRunItems.length) {
+        localStorage.setItem('appStateFirstRunGuessingIndex', newIndex);
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            this.UpdatePointerTargetLocation();
+          });
+        }, 100);
+      }
     },
     appStateFirstRunReviewingIndex: function (newIndex) {
-      localStorage.setItem('appStateFirstRunReviewingIndex', newIndex);
-
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          this.UpdatePointerTargetLocation();
-        });
-      }, 100);
+      if (newIndex <= this.appDataReviewingFirstRunItems.length) {
+        localStorage.setItem('appStateFirstRunReviewingIndex', newIndex);
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            this.UpdatePointerTargetLocation();
+          });
+        }, 100);
+      }
     },
     appStateFirstRunCreatingIndex: function (newIndex) {
-      localStorage.setItem('appStateFirstRunCreatingIndex', newIndex);
+      if (newIndex <= this.appDataCreatorFirstRunItems.length) {
+        localStorage.setItem('appStateFirstRunCreatingIndex', newIndex);
 
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          this.UpdatePointerTargetLocation();
-        });
-      }, 100);
+        setTimeout(() => {
+          requestAnimationFrame(() => {
+            this.UpdatePointerTargetLocation();
+          });
+        }, 100);
+      }
     },
     getIsAIGenerated: function () {
       return this.GetIsAIGenerated();
