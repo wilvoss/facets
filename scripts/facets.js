@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.69',
+      appDataVersion: '2.2.70',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Drag cards to any spot on the green gem.'],
@@ -32,9 +32,15 @@ var app = new Vue({
         ['There are four cards on the gem, each with their own four words.'],
         ['To start, type a clue here that connects the words below it: "word1" and "word2."'],
         ['Continue filling in the other clues. Tap the large arrows to rotate the gem.'],
-        ['When you think that all 4 of your clues make sense, send it to your friends.'],
-        ['Once sent, the cards will be mixed up and placed outside of the gem!'],
+        ['When you think that all 4 of your clues make sense, send it to your friends!'],
+        ['Once sent, the cards will be mixed up and placed inside these spots.'],
         ['Eventually, your friends will send their guesses back to you for review.'],
+      ],
+      // prettier-ignore
+      appDataReviewingFirstRunItems: [
+        ['Excellent! Your friend sent a guess for you to review. Here\'s what you do.'],
+        ['Drag any card that is incorrect out of the gem into these empty spots.'],
+        ['Then send them a response so they know how they did. That\'s it!'],
       ],
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
@@ -99,6 +105,7 @@ var app = new Vue({
       appStatePointerArrowLocation: { x: -40000, y: -40000 },
       appStateFirstRunGuessingIndex: -1,
       appStateFirstRunCreatingIndex: -1,
+      appStateFirstRunReviewingIndex: -1,
       appStateShowStats: false,
       appStateShowSettings: false,
       appStateShowTutorial: false,
@@ -337,6 +344,7 @@ var app = new Vue({
     AdvanceFirstRunIndexes() {
       note('AdvanceFirstRunIndexes() called');
       highlight(this.appDataPlayerCurrent.role);
+
       switch (this.appDataPlayerCurrent.role) {
         case 'guesser':
           if (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.isUserFocusedOnGame && !this.isSolved) {
@@ -359,14 +367,23 @@ var app = new Vue({
             }, 240);
           }
           break;
+        case 'reviewer':
+          if (this.isPlayerReviewing && this.appStateFirstRunReviewingIndex < this.appDataReviewingFirstRunItems.length && this.isUserFocusedOnGame) {
+            setTimeout(() => {
+              this.appStateFirstRunReviewingIndex++;
+            }, 240);
+          }
+          break;
       }
     },
 
     ResetFirstRun() {
       this.appStateFirstRunCreatingIndex = 0;
+      this.appStateFirstRunReviewingIndex = 0;
       this.appStateFirstRunGuessingIndex = this.isPlayerGuessing && this.getFullCardsInTray.length === 4 ? 1 : 0;
 
       localStorage.removeItem('appStateFirstRunCreatingIndex');
+      localStorage.removeItem('appStateFirstRunReviewingIndex');
       localStorage.removeItem('appStateFirstRunGuessingIndex');
       location.reload();
     },
@@ -794,6 +811,10 @@ var app = new Vue({
         this.SetWordSetTheme(this.currentGameGuessingWordSet);
         this.documentCssRoot.style.setProperty('--wordScale', this.currentGameGuessingWordSet.scale);
         this.appDataPlayerCurrent.role = this.appDataPlayerCreator.id === this.appDataPlayerCurrent.id && this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id ? 'reviewer' : 'guesser';
+
+        if (this.isPlayerReviewing) {
+          this.appDataReviewingFirstRunItems[0][0] = this.appDataReviewingFirstRunItems[0][0].replace('friend ', 'friend, ' + this.appDataPlayerSender.name + ', ');
+        }
       }
       this.appStateIsGuessing = true;
 
@@ -1383,6 +1404,11 @@ ${words[14]} ${words[10]}`);
             this.AdvanceFirstRunIndexes();
           }
           break;
+        case 'reviewer':
+          if (this.appStateFirstRunReviewingIndex > -1) {
+            this.AdvanceFirstRunIndexes();
+          }
+          break;
       }
     },
 
@@ -1567,6 +1593,13 @@ ${words[14]} ${words[10]}`);
         this.appStateFirstRunCreatingIndex = parseInt(appStateFirstRunCreatingIndex);
       } else {
         this.appStateFirstRunCreatingIndex = !this.isPlayerGuessing ? 0 : -1;
+      }
+
+      let appStateFirstRunReviewingIndex = localStorage.getItem('appStateFirstRunReviewingIndex');
+      if (appStateFirstRunReviewingIndex) {
+        this.appStateFirstRunReviewingIndex = parseInt(appStateFirstRunReviewingIndex);
+      } else {
+        this.appStateFirstRunReviewingIndex = !this.isPlayerReviewing ? 0 : -1;
       }
 
       this.AdvanceFirstRunIndexes();
@@ -2526,6 +2559,15 @@ We're working hard to make these Daily Facets better to play.`;
         });
       }, 100);
     },
+    appStateFirstRunReviewingIndex: function (newIndex) {
+      localStorage.setItem('appStateFirstRunReviewingIndex', newIndex);
+
+      setTimeout(() => {
+        requestAnimationFrame(() => {
+          this.UpdatePointerTargetLocation();
+        });
+      }, 100);
+    },
     appStateFirstRunCreatingIndex: function (newIndex) {
       localStorage.setItem('appStateFirstRunCreatingIndex', newIndex);
 
@@ -2806,12 +2848,6 @@ We're working hard to make these Daily Facets better to play.`;
     isPWAOnHomeScreen: function () {
       return window.matchMedia('(display-mode: standalone)').matches;
     },
-    isGuessingFirstRunShowing: function () {
-      if (this.getFullCardsInTray.length !== 0 && this.appStateFirstRunGuessingIndex === 0) {
-        return false;
-      }
-      return this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.appStateIsGuessing && this.appDataPlayerCurrent.role !== 'reviewer' && this.appDataPlayerCurrent.role !== 'creator';
-    },
     isUserFocusedOnGame: function () {
       return !this.appStateShowNotification && !this.appStateIsModalShowing && !this.appStateShowMeta && !this.appStateShowTutorial && !this.appStateShowConfirmation && !this.appStateShowIntro && !this.appStateShowInfo && !this.appStateShowCatChooser && !this.appStateShowSettings && !this.appStateShowGlobalCreated && !this.appStateShowDailyGames;
     },
@@ -2825,10 +2861,15 @@ We're working hard to make these Daily Facets better to play.`;
       return this.appDataPlayerCurrent.role === 'reviewer';
     },
     hidePointer: function () {
-      return !this.isUserFocusedOnGame || this.isPlayerReviewing || (this.isPlayerCreating && this.appStateFirstRunCreatingIndex >= this.appDataCreatorFirstRunItems.length) || (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex >= this.appDataGuessingFirstRunItems.length) || (!this.isPlayerCreating && this.isSolved);
+      // prettier-ignore
+      return !this.isUserFocusedOnGame ||
+        (this.isPlayerReviewing && this.appStateFirstRunReviewingIndex >= this.appDataReviewingFirstRunItems.length) ||
+        (this.isPlayerCreating && this.appStateFirstRunCreatingIndex >= this.appDataCreatorFirstRunItems.length) ||
+        (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex >= this.appDataGuessingFirstRunItems.length) ||
+        (!this.isPlayerCreating && !this.isPlayerReviewing && this.isSolved);
     },
     pointerInPlay: function () {
-      return (this.appStateFirstRunGuessingIndex > 0 && this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.isPlayerGuessing) || (this.appStateFirstRunCreatingIndex > 0 && this.appStateFirstRunCreatingIndex < this.appDataCreatorFirstRunItems.length && this.isPlayerCreating);
+      return (this.appStateFirstRunGuessingIndex > 0 && this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.isPlayerGuessing) || (this.appStateFirstRunCreatingIndex > 0 && this.appStateFirstRunCreatingIndex < this.appDataCreatorFirstRunItems.length && this.isPlayerCreating) || (this.appStateFirstRunReviewingIndex > 0 && this.appStateFirstRunReviewingIndex < this.appDataReviewingFirstRunItems.length && this.isPlayerReviewing);
     },
     isSolved: function () {
       return this.currentGameSolutionGuessing === this.currentGameSolutionActual;
@@ -2844,7 +2885,6 @@ We're working hard to make these Daily Facets better to play.`;
             text = this.appDataGuessingFirstRunItems[this.appStateFirstRunGuessingIndex][finalIndex];
           }
           break;
-
         case 'creator':
           if (this.appDataCreatorFirstRunItems[this.appStateFirstRunCreatingIndex]) {
             finalIndex = this.appDataCreatorFirstRunItems[this.appStateFirstRunCreatingIndex].length === 1 ? 0 : finalIndex;
@@ -2854,14 +2894,19 @@ We're working hard to make these Daily Facets better to play.`;
               text = text.replace('word2', this.appDataCards[1].words[0].value);
             }
           }
-
+          break;
+        case 'reviewer':
+          if (this.appDataReviewingFirstRunItems[this.appStateFirstRunReviewingIndex]) {
+            finalIndex = this.appDataReviewingFirstRunItems[this.appStateFirstRunReviewingIndex].length === 1 ? 0 : finalIndex;
+            text = this.appDataReviewingFirstRunItems[this.appStateFirstRunReviewingIndex][finalIndex];
+          }
           break;
       }
       return text;
     },
     tipSubmitText: function () {
       let text = 'Next';
-      if ((this.isPlayerGuessing && this.appStateFirstRunGuessingIndex === this.appDataGuessingFirstRunItems.length - 1) || (this.isPlayerCreating && this.appStateFirstRunCreatingIndex === this.appDataCreatorFirstRunItems.length - 1)) {
+      if ((this.isPlayerGuessing && this.appStateFirstRunGuessingIndex === this.appDataGuessingFirstRunItems.length - 1) || (this.isPlayerCreating && this.appStateFirstRunCreatingIndex === this.appDataCreatorFirstRunItems.length - 1) || (this.isPlayerReviewing && this.appStateFirstRunReviewingIndex === this.appDataReviewingFirstRunItems.length - 1)) {
         text = 'Okay';
       }
       return text;

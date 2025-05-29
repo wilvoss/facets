@@ -22,7 +22,7 @@
       content="online game, casual game, puzzle game, word game, word association, puzzle, social game" />
     <meta name="description" content="Facets: A Puzzle Game of Words and Wits!" />
 
-    <link rel="manifest" href="manifest.webmanifest?2.2.69" />
+    <link rel="manifest" href="manifest.webmanifest?2.2.70" />
 
     <link rel="apple-touch-icon" sizes="120x120" href="images/icon180.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="images/icon180.png" />
@@ -32,9 +32,9 @@
     <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
     <link rel="icon" type="image/png" sizes="128x128" href="favicon.png" />
 
-    <link rel="stylesheet" href="styles/normalize.css?2.2.69" media="screen" />
-    <link rel="stylesheet" href="styles/main.css?2.2.69" media="screen" />
-    <link rel="stylesheet" href="styles/checkbox.min.css?2.2.69" media="screen" />
+    <link rel="stylesheet" href="styles/normalize.css?2.2.70" media="screen" />
+    <link rel="stylesheet" href="styles/main.css?2.2.70" media="screen" />
+    <link rel="stylesheet" href="styles/checkbox.min.css?2.2.70" media="screen" />
   </head>
 
   <body>
@@ -148,18 +148,15 @@
         :style="{left: appStatePointerLocation.left + 'px', top: appStatePointerLocation.top + 'px'}">
         <p class="pointer-text" v-html="pointerText"></p>
         <p class="controls">
-          <a v-if="isPlayerGuessing && appStateFirstRunGuessingIndex < appDataGuessingFirstRunItems.length - 1"
+          <a v-if="(isPlayerGuessing && appStateFirstRunGuessingIndex < appDataGuessingFirstRunItems.length - 1) || (isPlayerCreating && appStateFirstRunCreatingIndex < appDataCreatorFirstRunItems.length - 1) || (isPlayerReviewing && appStateFirstRunReviewingIndex < appDataReviewingFirstRunItems.length - 1)"
             @click="appStateFirstRunGuessingIndex = appDataGuessingFirstRunItems.length; appStateFirstRunCreatingIndex = appDataCreatorFirstRunItems.length">Stop
             showing tips</a>
-          <a v-if="isPlayerCreating && appStateFirstRunCreatingIndex < appDataCreatorFirstRunItems.length - 1"
-            @click="appStateFirstRunGuessingIndex = appDataGuessingFirstRunItems.length; appStateFirstRunCreatingIndex = appDataCreatorFirstRunItems.length">Stop
-            showing tips</a>
+
           <a class="right"
-            v-if="isPlayerCreating || (isPlayerGuessing && appStateFirstRunGuessingIndex !== 0)">{{tipSubmitText}}</a>
+            v-if="isPlayerCreating || isPlayerReviewing || (isPlayerGuessing && appStateFirstRunGuessingIndex !== 0)">{{tipSubmitText}}</a>
         </p>
       </pointer>
-      <arrow
-        :class="{hidden: hidePointer, inplay: (appStateFirstRunGuessingIndex > 0 && appStateFirstRunGuessingIndex < appDataGuessingFirstRunItems.length && isPlayerGuessing) || (appStateFirstRunCreatingIndex > 0 && appStateFirstRunCreatingIndex < appDataCreatorFirstRunItems.length && isPlayerCreating)}"
+      <arrow :class="{hidden: hidePointer, inplay: pointerInPlay}"
         :style="{left: appStatePointerArrowLocation.x + 'px', top: appStatePointerArrowLocation.y + 'px', transform: 'translate(-10px, 2px) rotate(' +  appStatePointerArrowLocation.rotate + 'deg)'}">
       </arrow>
       <modal v-if="appStateShowTutorial" class="tutorial">
@@ -610,8 +607,9 @@
             Today's Facet!</button>
         </header>
         <controls :class="{disabled: getActionButtonState, pointoutparent: (appStateFirstRunGuessingIndex === 4 &&
-          isGuessingFirstRunShowing) || (appStateFirstRunCreatingIndex === 4 && isPlayerCreating)}">
-          <button id="shareButton" class="inline" :class="{pointout: (appStateFirstRunGuessingIndex === 4 &&
+          isPlayerGuessing) || (appStateFirstRunCreatingIndex === 4 && isPlayerCreating)}">
+          <button id="shareButton" class="inline" :class="{pointout: (appStateFirstRunReviewingIndex === 2 &&
+            isPlayerReviewing) || (appStateFirstRunGuessingIndex === 4 &&
             isPlayerGuessing) || (appStateFirstRunCreatingIndex === 4 && isPlayerCreating)}"
             @click="HandleSubmitButtonPress()">
             <icon :class="{show: appStateIsGettingTinyURL}" class="spinner"></icon>
@@ -645,7 +643,7 @@
         <parking v-if="!appStateUsePortraitLayout"
           :class="{pointout: (isPlayerCreating && appStateFirstRunCreatingIndex === 5)}">
           <spot v-for="(card, index) in appDataCardsParked" v-if="index < (currentGameGuessingCardCount / 2)"
-            :class="{empty: card.words.length === 0, selected: card.isSelected, pointout: index === 0 && card.words.length !== 0 && appStateFirstRunGuessingIndex === 0 && !appStateIsDragging}">
+            :class="{empty: card.words.length === 0, selected: card.isSelected, pointout: index === 0 && ((card.words.length !== 0 && isPlayerGuessing && appStateFirstRunGuessingIndex === 0  && !appStateIsDragging) || (isPlayerReviewing && appStateFirstRunReviewingIndex === 1))}">
             <rotators>
               <button aria-label="Rotate Tray Clockwise" class="clockwise" @pointerdown="RotateCard(event, card, 1)">
                 <icon class="rotate"></icon>
@@ -676,7 +674,7 @@
         <tray id="tray" :class="{rotating: appStateTrayIsRotating}"
           :style=" {rotate: appStateTrayRotation * 90 + 'deg' }">
           <diamond class="back"></diamond>
-          <diamond :class="{pointout: (appStateFirstRunCreatingIndex === 2 && isPlayerCreating) || (appStateFirstRunGuessingIndex === 2 &&
+          <diamond :class="{pointout: (appStateFirstRunReviewingIndex === 0 && isPlayerReviewing) ||(appStateFirstRunCreatingIndex === 2 && isPlayerCreating) || (appStateFirstRunGuessingIndex === 2 &&
             isPlayerGuessing)}"></diamond>
           <hints>
             <hint @pointerdown=" RotateTrayBasedOnInputFocus(index)" :id="'h' + index"
@@ -758,7 +756,7 @@
         </button>
         <parking id="parking">
           <spot v-for="(card, index) in appDataCardsParked" v-if="index < currentGameGuessingCardCount"
-            :class="{empty: card.words.length === 0, selected: card.isSelected, pointout: (appStateIsGuessing && !appStateIsDragging && appStateFirstRunGuessingIndex === 0 && card.words.length !== 0) || (isPlayerCreating && appStateFirstRunCreatingIndex === 5)}">
+            :class="{empty: card.words.length === 0, selected: card.isSelected, pointout: (appStateIsGuessing && !appStateIsDragging && appStateFirstRunGuessingIndex === 0 && card.words.length !== 0) || (isPlayerCreating && appStateFirstRunCreatingIndex === 5) || (isPlayerReviewing && appStateFirstRunReviewingIndex === 1)}">
             <rotators v-if="!userSettingsShowAllCards">
               <button aria-label="Rotate Tray Clockwise" class="clockwise" @pointerdown="RotateCard(event, card, 1)">
                 <icon class="rotate"></icon>
@@ -792,15 +790,15 @@
         </button>
       </wrapper>
     </app>
-    <script src="helpers/console-enhancer.js?2.2.69" type="text/javascript"></script>
-    <script src="models/LanguageObject.min.js?2.2.69" type="text/javascript"></script>
-    <script src="models/ProgressMessageObject.min.js?2.2.69" type="text/javascript"></script>
-    <script src="models/WordSetObject.min.js?2.2.69" type="text/javascript"></script>
-    <script src="models/WordObject.min.js?2.2.69" type="text/javascript"></script>
-    <script src="models/CardObject.min.js?2.2.69" type="text/javascript"></script>
-    <script src="models/PlayerObject.min.js?2.2.69" type="text/javascript"></script>
+    <script src="helpers/console-enhancer.js?2.2.70" type="text/javascript"></script>
+    <script src="models/LanguageObject.min.js?2.2.70" type="text/javascript"></script>
+    <script src="models/ProgressMessageObject.min.js?2.2.70" type="text/javascript"></script>
+    <script src="models/WordSetObject.min.js?2.2.70" type="text/javascript"></script>
+    <script src="models/WordObject.min.js?2.2.70" type="text/javascript"></script>
+    <script src="models/CardObject.min.js?2.2.70" type="text/javascript"></script>
+    <script src="models/PlayerObject.min.js?2.2.70" type="text/javascript"></script>
     <script src="helpers/vue.min.js" type="text/javascript"></script>
-    <script src="scripts/facets.js?2.2.69" type="text/javascript"></script>
+    <script src="scripts/facets.js?2.2.70" type="text/javascript"></script>
   </body>
 
 </html>

@@ -677,6 +677,10 @@ spot.pointout {
   animation-direction: alternate;
 }
 
+spot.pointout.empty {
+  animation: none;
+}
+
 tray spot.pointout {
   background: hsla(var(--appBackgroundDarkestHSL), 0.2);
   outline: 1px solid hsl(var(--messageColorHSL));
@@ -1713,9 +1717,12 @@ parking spot.empty {
 
 .multicolor.creating parking spot.empty,
 .multicolor.guessing parking spot.empty,
-.multicolor.guessing.reviewing parking spot.empty,
 .multicolor.guessing.solved parking spot.empty {
   opacity: 0.5;
+}
+
+.multicolor.guessing.reviewing parking spot.empty {
+  opacity: 1;
 }
 
 spot.empty card {
