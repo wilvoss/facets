@@ -12,35 +12,34 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.75',
+      appDataVersion: '2.2.76',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
-        ['Drag cards to any spot on the green gem.'],
-        ["Tap any card's corners to rotate it."],
-        [
-          "Place and rotate cards to create word-pairs that match these larger outer clues."
-        ],
-        ['Tap the big arrows to rotate the entire gem.'],
+        ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
+        [ "The goal is to place 4 cards on the gem to form word-pairs that connect to these clues."],
+        ['Drag cards to any spot on the gem.'],
+        ["Tap the corners of any card in the tray to rotate."],
+        ['Keep placing cards. You can tap the big arrows to rotate the entire gem. '],
         [
           '"Send" it back to your friend when you think you have the right cards in the right positions!',
-          'Tap "Guess" when you think you have the right cards in the right positions!'
+          'Tap "Guess" when you think you have the right cards in the right spots!'
         ],
       ],
       // prettier-ignore
       appDataCreatorFirstRunItems: [
         ['Right now, you are creating a word association puzzle to challenge your friends.'],
         ['There are four cards on the gem, each with their own four words.'],
-        ['To start, type a clue here that connects the words below it: "word1" and "word2."'],
-        ['Continue filling in the other clues. Tap the large arrows to rotate the gem.'],
-        ['When you think that all 4 of your clues make sense, send it to your friends!'],
-        ['Once sent, the cards will be mixed up and placed inside these spots.'],
-        ['Eventually, your friends will send their guesses back to you for review.'],
+        ['To start, type a 1-word clue here that connects the word-pair <i>word1</i> and <i>word2</i>.'],
+        ['Tap the large arrows to fill in the other clues.'],
+        ['When you\'re ready, tap this to scramble the puzzle and share it with your friends!'],
+        ['You\'ll then see what your friends see: the cards on the gem randomly moved to these spots.'],
+        ['Your friends will then try to recreate this puzzle based on your clues.'],
       ],
       // prettier-ignore
       appDataReviewingFirstRunItems: [
-        ['Excellent! Your friend sent a guess for you to review. Here\'s what you do.'],
-        ['Drag any card that is incorrect out of the gem into these empty spots.'],
-        ['Then send them a response so they know how they did. That\'s it!'],
+        ['Excellent! Your friend sent you a guess for this puzzle that you created.'],
+        ['If any card is in the wrong spot, drag it out of the gem into any empty spot.'],
+        ['Then, send them a response to let them know how they did.'],
       ],
       appDataActionButtonTexts: { send: 'Send', guess: 'Guess', reply: 'Reply', copy: 'Copy', respond: 'Respond', create: 'Create', share: 'Share', quit: 'Give up' },
       appDataCards: [],
@@ -824,8 +823,11 @@ var app = new Vue({
         this.documentCssRoot.style.setProperty('--wordScale', this.currentGameGuessingWordSet.scale);
         this.appDataPlayerCurrent.role = this.appDataPlayerCreator.id === this.appDataPlayerCurrent.id && this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id ? 'reviewer' : 'guesser';
 
-        if (this.isPlayerReviewing) {
-          this.appDataReviewingFirstRunItems[0][0] = this.appDataReviewingFirstRunItems[0][0].replace('friend ', 'friend, ' + this.appDataPlayerSender.name + ', ');
+        if (this.isPlayerReviewing && this.appDataPlayerSender.name !== 'Player') {
+          this.appDataReviewingFirstRunItems[0][0] = this.appDataReviewingFirstRunItems[0][0].replace('Your friend ', this.appDataPlayerSender.name + ' ');
+        }
+        if (this.isPlayerGuessing && (this.appDataPlayerSender.name !== 'Player' || this.getIsAIGenerated)) {
+          this.appDataGuessingFirstRunItems[0][0] = this.appDataGuessingFirstRunItems[0][0].replace('Your friend ', this.appDataPlayerSender.name + ' ');
         }
       }
       this.appStateIsGuessing = true;
@@ -1408,7 +1410,7 @@ ${words[14]} ${words[10]}`);
 
       switch (this.appDataPlayerCurrent.role) {
         case 'guesser':
-          if (this.appStateFirstRunGuessingIndex > 0) {
+          if (this.appStateFirstRunGuessingIndex > -1) {
             this.AdvanceFirstRunIndexes();
           }
           break;
@@ -1462,10 +1464,8 @@ ${words[14]} ${words[10]}`);
         return;
       }
 
+      this.AdvanceFirstRunIndexes();
       if (this.appDataDraggedCard.words.length > 0) {
-        if (_destination === 'tray') {
-          this.AdvanceFirstRunIndexes();
-        }
         this.SwapCards(_card, this.appDataDraggedCard);
       }
       this.CheckIfAnyCardsGuesssAlreadyTried();
@@ -1788,8 +1788,12 @@ ${words[14]} ${words[10]}`);
               this.appStateShowMeta = true;
             }
             break;
+
           default:
         }
+      }
+      if (e.ctrlKey && e.key === 'r') {
+        this.ResetFirstRun();
       }
     },
 
@@ -2874,7 +2878,7 @@ We're working hard to make these Daily Facets better to play.`;
       return this.appDataPlayerCurrent.role === 'creator';
     },
     isPlayerGuessing: function () {
-      return this.appDataPlayerCurrent.role === 'guesser' && !this.isSolved;
+      return this.appDataPlayerCurrent.role === 'guesser';
     },
     isPlayerReviewing: function () {
       return this.appDataPlayerCurrent.role === 'reviewer';
@@ -2944,6 +2948,9 @@ We're working hard to make these Daily Facets better to play.`;
     },
     tempIDisInvalid() {
       return this.tempID.toString().length < 8 || this.tempID.toString().indexOf('0') === 0;
+    },
+    tooSmall() {
+      return window.innerHeight < 570;
     },
     //#endregion
   },

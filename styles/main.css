@@ -674,18 +674,32 @@ icon.spinner.show {
 }
 
 hint.pointout,
+.pointoutparent button icon,
 button#shareButton.pointout,
-spot.pointout {
+spot.pointout,
+spot.pointadjacent,
+input.pointout {
   animation: 400ms ease-in-out 0s 0.3 blink;
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
 
-spot.pointout.empty {
-  animation: none;
+.multicolor.creating hints hint input.pointout,
+.multicolor.creating hints hint input.pointout::placeholder {
+  font-size: 1.125em;
+  color: hsl(var(--messageColorHSL));
+  padding-bottom: 66px;
 }
 
-tray spot.pointout {
+word.pointout {
+  color: hsl(var(--messageColorHSL));
+  animation: 400ms ease-in-out 0s 0.3 blink;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+tray spot.pointout,
+tray spot.pointadjacent {
   background: hsla(var(--appBackgroundDarkestHSL), 0.2);
   outline: 1px solid hsl(var(--messageColorHSL));
 }
@@ -1060,7 +1074,7 @@ pointer {
   background: hsl(var(--messageColorHSL));
   border-radius: 8px;
   white-space: nowrap;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
   transition: 0s ease-in-out none;
 }
 
@@ -1336,7 +1350,10 @@ wrapper.columns {
 }
 
 wrapper.mobile {
+  transform-origin: center bottom;
   padding-bottom: calc(2 * var(--defaultGap));
+  -webkit-transform-origin: center bottom;
+  margin-bottom: var(--defaultGap);
   /* max-height: calc(0.45 * var(--cardSize) + var(--defaultGap)); */
 }
 
@@ -1638,9 +1655,14 @@ parking {
   right: 0;
 }
 
+wrapper.mobile {
+  pointer-events: none;
+}
+
 wrapper.mobile parking {
   display: flex;
   width: 100%;
+  pointer-events: all;
 }
 
 .mobile parking {
@@ -2622,6 +2644,10 @@ app.dragging,
 }
 
 @media screen and (max-height: 844px) {
+  app.portrait {
+    align-items: start;
+  }
+
   controls {
     padding-top: 0;
     padding-bottom: 0;
@@ -2642,6 +2668,18 @@ app.dragging,
     overflow: hidden;
     text-wrap: nowrap;
     text-overflow: ellipsis;
+  }
+
+  .portrait wrapper.mobile parking {
+    transform-origin: center center;
+    -webkit-transform-origin: center center;
+  }
+}
+
+@media screen and (max-height: 719px) {
+  .portrait wrapper.mobile parking {
+    transform-origin: center center;
+    -webkit-transform-origin: center center;
   }
 }
 
@@ -2875,14 +2913,15 @@ app.dragging,
   .portrait wrapper.mobile parking {
     display: flex;
     scale: 0.45;
-    transform-origin-y: center top;
+    /* transform-origin: center bottom; */
+    /* -webkit-transform-origin: center bottom; */
   }
 
   wrapper.mobile.extra,
   .portrait wrapper.mobile.extra {
     scale: 0.825;
-    transform-origin-y: 100%;
-    -webkit-transform-origin-y: 100%;
+    /* transform-origin: center bottom; */
+    /* -webkit-transform-origin: center bottom; */
   }
 
   wrapper.mobile parking,
@@ -2901,6 +2940,12 @@ app.dragging,
   }
 }
 
+@media screen and (max-width: 375px) {
+  pointer {
+    max-width: calc(100% - 4 * var(--defaultGap));
+  }
+}
+
 @media screen and (max-height: 670px) {
   wrapper.subtitle {
     display: none;
@@ -2908,6 +2953,28 @@ app.dragging,
 
   wrapper controls {
     padding-bottom: 0px;
+  }
+
+  wrapper.mobile parking,
+  .portrait wrapper.mobile parking {
+    display: flex;
+    scale: 0.45;
+    transform-origin: center center;
+    -webkit-transform-origin: center center;
+  }
+
+  wrapper.mobile.extra,
+  .portrait wrapper.mobile.extra {
+    scale: 0.825;
+    transform-origin: center center;
+    -webkit-transform-origin: center center;
+  }
+}
+
+@media screen and (max-height: 669px) {
+  .portrait wrapper.mobile parking {
+    transform-origin: center top;
+    -webkit-transform-origin: center top;
   }
 }
 
@@ -2931,5 +2998,11 @@ app.dragging,
   .portrait wrapper.mobile {
     transform: translateY(30px);
     position: absolute;
+  }
+
+  .portrait wrapper.mobile parking {
+    transform-origin: center bottom;
+    -webkit-transform-origin: center bottom;
+    margin-bottom: var(--defaultGap);
   }
 }
