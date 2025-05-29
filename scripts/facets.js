@@ -12,14 +12,13 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.68',
+      appDataVersion: '2.2.69',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Drag cards to any spot on the green gem.'],
         ["Tap any card's corners to rotate it."],
         [
-          "Place and rotate cards based on these larger outer clues.",
-          "Place and rotate cards based on these larger outer clues."
+          "Place and rotate cards to create word-pairs that match these larger outer clues."
         ],
         ['Tap the big arrows to rotate the entire gem.'],
         [

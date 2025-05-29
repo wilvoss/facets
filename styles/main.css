@@ -902,6 +902,12 @@ button.small {
   transition: var(--mediumTransition) ease-in-out;
 }
 
+button.small.isolated {
+  position: absolute;
+  width: auto;
+  border: none;
+}
+
 button.small.main {
   font-family: 'Theme';
   color: hsl(var(--linkColorLightHSL));
