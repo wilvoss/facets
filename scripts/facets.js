@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.81',
+      appDataVersion: '2.2.82',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
@@ -1350,14 +1350,16 @@ ${words[14]} ${words[10]}`);
     },
 
     ClearTrayOfCards() {
-      for (let i = 0; i < this.appDataCards.length; i++) {
-        const trayCard = this.appDataCards[i];
-        if (trayCard.words.length !== 0) {
-          let parkedCard = this.appDataCardsParked.find((card) => {
-            return card.words.length === 0;
-          });
+      if (this.isPlayerGuessing) {
+        for (let i = 0; i < this.appDataCards.length; i++) {
+          const trayCard = this.appDataCards[i];
+          if (trayCard.words.length !== 0) {
+            let parkedCard = this.appDataCardsParked.find((card) => {
+              return card.words.length === 0;
+            });
 
-          this.SwapCards(trayCard, parkedCard);
+            this.SwapCards(trayCard, parkedCard);
+          }
         }
       }
     },
