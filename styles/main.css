@@ -764,7 +764,8 @@ parking spot.pointout {
     transform: rotate(-3deg);
   }
 
-  40%, 100% {
+  40%,
+  100% {
     transform: rotate(0deg);
   }
 }
@@ -798,7 +799,8 @@ parking spot.pointout {
     transform: rotate(-3deg);
   }
 
-  40%, 100% {
+  40%,
+  100% {
     transform: rotate(0deg);
   }
 }
@@ -1673,7 +1675,8 @@ wrapper.mobile {
   pointer-events: none;
 }
 
-wrapper.mobile parking {
+wrapper.mobile parking,
+wrapper.mobile button {
   display: flex;
   width: 100%;
   pointer-events: all;
