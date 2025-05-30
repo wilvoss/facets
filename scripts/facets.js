@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.80',
+      appDataVersion: '2.2.81',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
@@ -409,6 +409,8 @@ var app = new Vue({
 
     ResetFirstRun() {
       note('ResetFirstRun()');
+
+      this.ClearTrayOfCards();
       this.appStateFirstRunCreatingIndex = 0;
       this.appStateFirstRunReviewingIndex = 0;
       this.appStateFirstRunGuessingIndex = this.isPlayerGuessing && this.getFullCardsInTray.length === 4 ? 1 : 0;
@@ -1347,6 +1349,19 @@ ${words[14]} ${words[10]}`);
       history.pushState(null, null, window.location.origin + window.location.pathname);
     },
 
+    ClearTrayOfCards() {
+      for (let i = 0; i < this.appDataCards.length; i++) {
+        const trayCard = this.appDataCards[i];
+        if (trayCard.words.length !== 0) {
+          let parkedCard = this.appDataCardsParked.find((card) => {
+            return card.words.length === 0;
+          });
+
+          this.SwapCards(trayCard, parkedCard);
+        }
+      }
+    },
+
     SolvePuzzleCurrent() {
       note('SolvePuzzleCurrent()');
       let solArray = this.currentGameSolutionActual.split(':');
@@ -1358,16 +1373,7 @@ ${words[14]} ${words[10]}`);
 
       let anchorIDs = [parseInt(solArray[1]), parseInt(solArray[4]), parseInt(solArray[7]), parseInt(solArray[10])];
 
-      for (let i = 0; i < this.appDataCards.length; i++) {
-        const trayCard = this.appDataCards[i];
-        if (trayCard.words.length !== 0) {
-          let parkedCard = this.appDataCardsParked.find((card) => {
-            return card.words.length === 0;
-          });
-
-          this.SwapCards(trayCard, parkedCard);
-        }
-      }
+      this.ClearTrayOfCards();
 
       for (let i = 0; i < this.appDataCards.length; i++) {
         const trayCard = this.appDataCards[i];
@@ -1522,6 +1528,11 @@ ${words[14]} ${words[10]}`);
       if (this.appDataDraggedCard.words.length > 0) {
         this.SwapCards(_card, this.appDataDraggedCard);
       }
+
+      if (_destination === 'tray') {
+        this.AdvanceFirstRunIndexes();
+      }
+
       this.CheckIfAnyCardsGuesssAlreadyTried();
     },
 
