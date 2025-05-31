@@ -1090,13 +1090,14 @@ pointer p {
 
 pointer p.controls {
   display: flex;
-  padding: calc(0.5 * var(--defaultGap)) calc(0.75 * var(--defaultGap));
+  padding: 0 calc(0.75 * var(--defaultGap));
   font-size: 13px;
   text-align: right;
   justify-content: space-between;
 }
 
 pointer p.controls a {
+  padding: calc(0.5 * var(--defaultGap)) 0;
   display: inline-block;
   width: 100%;
   font-style: italic;
