@@ -120,7 +120,7 @@ header button.small {
 }
 
 tray diamond {
-  background-image: url(../images/diamond-light.svg);
+  background-image: url(../images/diamond-light.svg), url(../images/diamond-light.svg);
 }
 
 cards card,
