@@ -63,7 +63,6 @@ wrapper.mobile {
     display: none;
     -ms-overflow-style: none;
     scrollbar-width: none;
-    /* touch-action: auto; */
     scroll-behavior: smooth;
   }
 
@@ -77,6 +76,10 @@ wrapper.mobile {
   .portrait wrapper.mobile parking spot rotators {
     width: calc(var(--scale) * var(--cardSize));
     height: calc(var(--scale) * var(--cardSize));
+  }
+
+  .portrait wrapper.mobile parking spot rotators {
+    display: flex;
   }
 
   .portrait wrapper.mobile parking spot rotators:last-of-type {

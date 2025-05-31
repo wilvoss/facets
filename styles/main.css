@@ -910,7 +910,6 @@ subtitle {
 button.small {
   display: flex;
   padding: calc(0.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
-  /* border: 1px solid hsla(var(--appBackgroundHSL), 1); */
   line-height: 140%;
   text-transform: unset;
   color: hsl(var(--appForegroundHSL));
@@ -922,7 +921,6 @@ button.small {
   max-width: calc(2 * var(--cardSize));
   letter-spacing: 0px;
   cursor: pointer;
-  /* background: hsla(var(--appBackgroundDarkHSL), 0.6); */
   border-radius: calc(1 * var(--borderRadius));
   -webkit-tap-highlight-color: transparent;
   transition: var(--mediumTransition) ease-in-out;
@@ -1056,7 +1054,6 @@ notification message {
   max-width: calc(2.5 * var(--cardSize));
   border-radius: var(--borderRadius);
   pointer-events: none;
-  /* box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25); */
 }
 
 pointer {
@@ -1065,7 +1062,6 @@ pointer {
   z-index: 199;
   width: 100%;
   min-height: 100px;
-  /* border: 2px solid hsl(var(--messageColorHSL)); */
   font-family: Arial, sans-serif;
   font-size: 14px;
   color: hsl(var(--appBackgroundDarkestHSL));
@@ -1113,7 +1109,6 @@ pointer p.controls a:visited,
 pointer p.controls a:active {
   color: hsl(0, 20%, 40%);
   mix-blend-mode: luminosity;
-  /* opacity: 0.7; */
 }
 
 pointer p.controls a.right {
@@ -1359,10 +1354,6 @@ app.portrait {
   align-items: center;
 }
 
-/* wrapper.mobile {
-  height: calc(var(--cardSize) + 2 * var(--defaultGap));
-} */
-
 wrapper.columns {
   flex-direction: column;
   justify-content: start;
@@ -1373,8 +1364,6 @@ wrapper.mobile {
   transform-origin: center bottom;
   padding-bottom: calc(2 * var(--defaultGap));
   -webkit-transform-origin: center bottom;
-  margin-bottom: var(--defaultGap);
-  /* max-height: calc(0.45 * var(--cardSize) + var(--defaultGap)); */
 }
 
 wrapper message {
@@ -1694,6 +1683,10 @@ wrapper.mobile button {
   align-items: center;
 }
 
+.portrait .mobile parking spot rotators {
+  display: none;
+}
+
 .portrait .mobile parking spot rotators button {
   width: calc(0.2 * var(--cardSize));
   height: calc(0.2 * var(--cardSize));
@@ -2010,7 +2003,6 @@ gamelinks gamelink {
   background: hsla(var(--traySolvedBackgroundHSL), 0.15);
   border-radius: var(--borderRadius);
   flex: 1;
-  /* box-shadow: 0px 0px 4px hsla(var(--traySolvedBackgroundHSL), 0.4), inset 0px 0px 4px hsla(var(--traySolvedBackgroundHSL), 0.4), 0px 0px 15px hsla(var(--traySolvedBackgroundHSL), 0.4); */
 }
 
 .boxed.highlighted {
@@ -2034,7 +2026,7 @@ stats stat.boxed small {
 
 stats {
   display: flex;
-  /* overflow: hidden; */
+  overflow: hidden;
   width: 100%;
   padding: 10px calc(0.5 * var(--defaultGap)) 6px;
   font-size: 24px;
@@ -2110,7 +2102,6 @@ message small.statlabel {
 }
 
 .portrait message stats {
-  /* flex-direction: column; */
   gap: var(--defaultGap);
 }
 
@@ -2167,7 +2158,6 @@ gamelinks p {
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  /* gap: var(--defaultGap); */
   cursor: pointer;
 }
 
@@ -2730,7 +2720,6 @@ app.dragging,
   }
 
   app.portrait {
-    /* justify-content: start; */
     padding: 0px;
   }
 
@@ -2933,15 +2922,11 @@ app.dragging,
   .portrait wrapper.mobile parking {
     display: flex;
     scale: 0.45;
-    /* transform-origin: center bottom; */
-    /* -webkit-transform-origin: center bottom; */
   }
 
   wrapper.mobile.extra,
   .portrait wrapper.mobile.extra {
     scale: 0.825;
-    /* transform-origin: center bottom; */
-    /* -webkit-transform-origin: center bottom; */
   }
 
   wrapper.mobile parking,
@@ -2988,13 +2973,6 @@ app.dragging,
     scale: 0.825;
     transform-origin: center center;
     -webkit-transform-origin: center center;
-  }
-}
-
-@media screen and (max-height: 669px) {
-  .portrait wrapper.mobile parking {
-    transform-origin: center top;
-    -webkit-transform-origin: center top;
   }
 }
 
@@ -3045,7 +3023,6 @@ app.dragging,
   }
 
   .portrait wrapper.mobile {
-    transform: translateY(30px);
     position: absolute;
   }
 
