@@ -678,7 +678,7 @@ hint.pointout,
 button#shareButton.pointout,
 spot.pointout,
 spot.pointadjacent,
-input.pointout {
+hints hint.pointoutparent {
   animation: 400ms ease-in-out 0s 0.3 blink;
   animation-iteration-count: infinite;
   animation-direction: alternate;

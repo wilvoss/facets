@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.83',
+      appDataVersion: '2.2.84',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
@@ -81,6 +81,7 @@ var app = new Vue({
 
       //#region STATE MANAGEMENT
       appStateForceAutoCheck: false,
+      debounceTimeout: null,
       appStateAutoAdvanceTips: true,
       appStateIsDragging: false,
       appStateIsGettingTinyURL: false,
@@ -343,18 +344,21 @@ var app = new Vue({
     },
 
     AdvanceFirstRunIndexes() {
-      note('AdvanceFirstRunIndexes()');
-      if (this.isUserFocusedOnGame) {
+      if (this.isUserFocusedOnGame && !this.appStateTipIsAnimating) {
+        note('AdvanceFirstRunIndexes()');
         switch (this.appDataPlayerCurrent.role) {
           case 'guesser':
             if (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && !this.isSolved) {
+              this.appStateTipIsAnimating = true;
               setTimeout(() => {
                 this.appStateFirstRunGuessingIndex++;
+                this.appStateTipIsAnimating = false;
               }, 240);
             }
             break;
           case 'creator':
             if (this.isPlayerCreating && this.appStateFirstRunCreatingIndex < this.appDataCreatorFirstRunItems.length) {
+              this.appStateTipIsAnimating = true;
               setTimeout(() => {
                 this.appStateFirstRunCreatingIndex++;
                 requestAnimationFrame(() => {
@@ -363,14 +367,17 @@ var app = new Vue({
                   } else {
                     document.getElementById('hint0').blur();
                   }
+                  this.appStateTipIsAnimating = false;
                 });
               }, 240);
             }
             break;
           case 'reviewer':
             if (this.isPlayerReviewing && this.appStateFirstRunReviewingIndex < this.appDataReviewingFirstRunItems.length) {
+              this.appStateTipIsAnimating = true;
               setTimeout(() => {
                 this.appStateFirstRunReviewingIndex++;
+                this.appStateTipIsAnimating = false;
               }, 240);
             }
             break;
@@ -379,26 +386,32 @@ var app = new Vue({
     },
 
     RetreatFirstRunIndexes() {
-      note('RetreatFirstRunIndexes()');
-      if (this.isUserFocusedOnGame) {
+      if (this.isUserFocusedOnGame && !this.appStateTipIsAnimating) {
+        note('RetreatFirstRunIndexes()');
         switch (this.appDataPlayerCurrent.role) {
           case 'guesser':
             if (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex > 0 && !this.isSolved) {
+              this.appStateTipIsAnimating = true;
               setTimeout(() => {
+                this.appStateTipIsAnimating = false;
                 this.appStateFirstRunGuessingIndex--;
               }, 240);
             }
             break;
           case 'creator':
             if (this.isPlayerCreating && this.appStateFirstRunCreatingIndex > 0) {
+              this.appStateTipIsAnimating = true;
               setTimeout(() => {
+                this.appStateTipIsAnimating = false;
                 this.appStateFirstRunCreatingIndex--;
               }, 240);
             }
             break;
           case 'reviewer':
             if (this.isPlayerReviewing && this.appStateFirstRunReviewingIndex > 0) {
+              this.appStateTipIsAnimating = true;
               setTimeout(() => {
+                this.appStateTipIsAnimating = false;
                 this.appStateFirstRunReviewingIndex--;
               }, 240);
             }
@@ -1468,26 +1481,6 @@ ${words[14]} ${words[10]}`);
       } else {
         this.appDataDraggedCard.isSelected = false;
       }
-
-      if (this.appStateAutoAdvanceTips) {
-        switch (this.appDataPlayerCurrent.role) {
-          case 'guesser':
-            if (this.appStateFirstRunGuessingIndex > -1) {
-              this.AdvanceFirstRunIndexes();
-            }
-            break;
-          case 'creator':
-            if (this.appStateFirstRunCreatingIndex > -1) {
-              this.AdvanceFirstRunIndexes();
-            }
-            break;
-          case 'reviewer':
-            if (this.appStateFirstRunReviewingIndex > -1) {
-              this.AdvanceFirstRunIndexes();
-            }
-            break;
-        }
-      }
     },
 
     HandleBodyPointerDown(e) {
@@ -1529,10 +1522,6 @@ ${words[14]} ${words[10]}`);
 
       if (this.appDataDraggedCard.words.length > 0) {
         this.SwapCards(_card, this.appDataDraggedCard);
-      }
-
-      if (_destination === 'tray') {
-        this.AdvanceFirstRunIndexes();
       }
 
       this.CheckIfAnyCardsGuesssAlreadyTried();
