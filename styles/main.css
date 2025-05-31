@@ -2739,7 +2739,6 @@ app.dragging,
     justify-content: space-between;
     align-items: start;
     padding: calc(0.5 * var(--defaultGap)) 0px;
-    padding-bottom: 72px;
   }
 
   wrapper:first-of-type controls button.small {
