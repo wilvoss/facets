@@ -102,7 +102,7 @@ body {
   background-color: hsl(var(--appBackgroundDarkestHSL));
   background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 50%), var(--textureHue), var(--texture2);
   background-repeat: no-repeat, no-repeat, repeat;
-  background-position: top center;
+  background-position: center center;
   background-size: cover, cover, var(--textureSize);
 }
 
@@ -138,7 +138,7 @@ splash {
   background-color: hsl(var(--appBackgroundDarkestHSL));
   background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 50%), var(--textureHue), var(--texture2);
   background-repeat: no-repeat, no-repeat, repeat;
-  background-position: top center;
+  background-position: center center;
   background-size: cover, cover, var(--textureSize);
   flex-direction: column;
   justify-content: center;
@@ -1017,7 +1017,7 @@ notification.meta {
   background-color: hsl(var(--appBackgroundDarkestHSL));
   background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 50%), var(--textureHue), var(--texture2);
   background-repeat: no-repeat, no-repeat, repeat;
-  background-position: top center;
+  background-position: center center;
   background-size: cover, cover, var(--textureSize);
   justify-content: center;
   transition: none;
