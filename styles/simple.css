@@ -176,3 +176,9 @@ parking spot rotators button icon {
 .multicolor.solved.guessing parking spot rotators button icon {
   background: hsla(var(--hueMain), 100%, 0%, 0);
 }
+
+.multicolor.creating hints hint input.pointout,
+.multicolor.creating hints hint input.pointout::placeholder {
+  font-size: 1.1em;
+  margin-top: 2px;
+}
