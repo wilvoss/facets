@@ -17,6 +17,7 @@
   --linkColorLightHSL: var(--hueHighlight), 79%, 35%;
   --linkColorDarkHSL: var(--hueHighlight), 69%, 35%;
   --messageColorHSL: var(--hueCreating), 100%, 40%;
+  --tipColorHSL: 324, 100%, 38%;
   --highlightColorHSL: 50, 100%, 30%;
   --trayBackgroundHSL: var(--hueMain), 100%, 50%;
   --trayCreatingBackgroundHSL: var(--hueCreating), 100%, 50%;
@@ -94,7 +95,38 @@ select {
 }
 
 pointer {
+  background: hsl(var(--tipColorHSL));
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+pointer p.controls a,
+pointer p.controls a:hover,
+pointer p.controls a:focus,
+pointer p.controls a:visited,
+pointer p.controls a:active {
+  color: hsl(0, 50%, 80%);
+}
+
+pointer p.controls a:hover {
+  color: hsl(0, 70%, 90%);
+}
+
+arrow {
+  background: hsl(var(--tipColorHSL));
+}
+
+.multicolor.creating hints hint input.pointout,
+.multicolor.creating hints hint input.pointout::placeholder {
+  color: hsl(var(--tipColorHSL));
+}
+
+word.pointout {
+  color: hsl(var(--tipColorHSL));
+}
+
+tray spot.pointout,
+tray spot.pointadjacent {
+  outline: 1px solid hsl(var(--tipColorHSL));
 }
 
 message {

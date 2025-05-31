@@ -38,6 +38,7 @@
   --linkColorLightHSL: var(--hueHighlight), 79%, 55%;
   --linkColorDarkHSL: var(--hueHighlight), 69%, 45%;
   --messageColorHSL: 34, 100%, 70%;
+  --tipColorHSL: 34, 100%, 70%;
   --highlightColorHSL: 50, 100%, 70%;
   --alertHSL: 0, 100%, 45%;
   --alertTextHSL: 0, 100%, 65%;
@@ -674,7 +675,7 @@ icon.spinner.show {
 }
 
 hint.pointout,
-.pointoutparent button icon,
+rotators.pointoutparent button icon,
 button#shareButton.pointout,
 spot.pointout,
 spot.pointadjacent,
@@ -686,13 +687,14 @@ hints hint.pointoutparent {
 
 .multicolor.creating hints hint input.pointout,
 .multicolor.creating hints hint input.pointout::placeholder {
-  font-size: 1.125em;
-  color: hsl(var(--messageColorHSL));
+  font-size: 1.13em;
+  margin-top: -2px;
+  color: hsl(var(--tipColorHSL));
   padding-bottom: 66px;
 }
 
 word.pointout {
-  color: hsl(var(--messageColorHSL));
+  color: hsl(var(--tipColorHSL));
   animation: 400ms ease-in-out 0s 0.3 blink;
   animation-iteration-count: infinite;
   animation-direction: alternate;
@@ -701,7 +703,7 @@ word.pointout {
 tray spot.pointout,
 tray spot.pointadjacent {
   background: hsla(var(--appBackgroundDarkestHSL), 0.2);
-  outline: 1px solid hsl(var(--messageColorHSL));
+  outline: 1px solid hsl(var(--tipColorHSL));
 }
 
 button#shareButton.pointout span {
@@ -1073,7 +1075,7 @@ pointer {
   right: 0px;
   max-width: calc(2 * var(--cardSize) + 0.5 * var(--defaultGap));
   margin-right: var(--defaultGap);
-  background: hsl(var(--messageColorHSL));
+  background: hsl(var(--tipColorHSL));
   border-radius: 8px;
   white-space: nowrap;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
@@ -1109,8 +1111,9 @@ pointer p.controls a:hover,
 pointer p.controls a:focus,
 pointer p.controls a:visited,
 pointer p.controls a:active {
-  color: hsl(var(--appBackgroundDarkestHSL));
-  opacity: 0.7;
+  color: hsl(0, 20%, 40%);
+  mix-blend-mode: luminosity;
+  /* opacity: 0.7; */
 }
 
 pointer p.controls a.right {
@@ -1119,7 +1122,7 @@ pointer p.controls a.right {
 }
 
 pointer p.controls a:hover {
-  opacity: 1;
+  color: hsl(0, 10%, 30%);
 }
 
 pointer p.controls seekers {
@@ -1145,7 +1148,7 @@ arrow {
   height: 12px;
   transform: translate(-10px, 2px);
   transform-origin: 50% 50%;
-  background: hsl(var(--messageColorHSL));
+  background: hsl(var(--tipColorHSL));
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
   rotate: 180deg;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
