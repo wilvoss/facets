@@ -36,7 +36,7 @@
 }
 
 body {
-  background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkHSL), 0) 200px), var(--textureHue), var(--texture2);
+  background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0.5) 200px), var(--textureHue), var(--texture2);
 }
 
 modal controls button {
