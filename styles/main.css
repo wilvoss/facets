@@ -1084,6 +1084,7 @@ pointer p {
   font-size: 16px;
   text-align: left;
   text-wrap: wrap;
+  mix-blend-mode: luminosity;
 }
 
 pointer p.controls {
