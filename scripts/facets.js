@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.93',
+      appDataVersion: '2.2.94',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
@@ -1848,7 +1848,7 @@ ${words[14]} ${words[10]}`);
           default:
         }
       }
-      if (e.ctrlKey && e.key === 'r') {
+      if (e.ctrlKey && e.key === 'r' && !e.metaKey) {
         this.ResetFirstRun();
       }
     },

@@ -2202,7 +2202,7 @@ gamelinks p button.inline {
   z-index: 100;
   width: calc(3 * var(--defaultGap) - 5px);
   height: calc(2.5 * var(--defaultGap) - 5px);
-  padding: 0 10px;
+  padding: 0 0 0 20px;
   font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
   font-size: 0.5em;
   text-transform: uppercase;
