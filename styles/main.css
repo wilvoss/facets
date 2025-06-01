@@ -1068,14 +1068,14 @@ pointer {
   flex-direction: column;
   justify-content: space-between;
   align-items: left;
-  right: 0px;
   max-width: calc(2 * var(--cardSize) + 0.5 * var(--defaultGap));
   margin-right: var(--defaultGap);
   background: hsl(var(--tipColorHSL));
   border-radius: 8px;
   white-space: nowrap;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
-  transition: 0s ease-in-out none;
+  transition-property: left, top;
+  transition: var(--mediumTransition) ease-in-out;
 }
 
 pointer p {
@@ -1131,11 +1131,6 @@ pointer p.controls seekers a {
   width: auto;
 }
 
-pointer.inplay {
-  transition-property: left, top;
-  transition: var(--mediumTransition) ease-in-out;
-}
-
 arrow {
   position: absolute;
   z-index: 199;
@@ -1147,7 +1142,8 @@ arrow {
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
   rotate: 180deg;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  transition: 0s ease-in-out none;
+  transition-property: margin, rotate, opacity;
+  transition: var(--mediumTransition) ease-in-out;
 }
 
 arrow::before {
@@ -1165,11 +1161,6 @@ arrow::before {
 arrow.top {
   transform: translate(10px, -14px);
   rotate: 0deg;
-}
-
-arrow.inplay {
-  transition-property: margin, rotate, opacity;
-  transition: var(--mediumTransition) ease-in-out;
 }
 
 pointer.hidden,

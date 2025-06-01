@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.94',
+      appDataVersion: '2.2.95',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
@@ -103,8 +103,8 @@ var app = new Vue({
       appStateShowInfo: false,
       appStateShowIntro: false,
       appStateShowOOBE: false,
-      appStatePointerLocation: { left: -40000, top: -40000 },
-      appStatePointerArrowLocation: { x: -40000, y: -40000 },
+      appStatePointerLocation: { left: 'unset', top: 'unset' },
+      appStatePointerArrowLocation: { x: 'unset', y: 'unset', arrowRotate: 0 },
       appStateFirstRunGuessingIndex: -1,
       appStateFirstRunCreatingIndex: -1,
       appStateFirstRunReviewingIndex: -1,
@@ -1869,12 +1869,12 @@ ${words[14]} ${words[10]}`);
     UpdatePointerTargetLocation() {
       note('UpdatePointerTargetLocation()');
       const pointer = document.getElementsByTagName('pointer')[0];
-      let left = -40000;
-      let top = -40000;
+      let left = 'unset';
+      let top = 'unset';
       let pointDown = true;
 
-      let arrowLeft = -40000;
-      let arrowTop = -40000;
+      let arrowLeft = 'unset';
+      let arrowTop = 'unset';
       let arrowRotate = 0;
 
       if (pointer) {
