@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.2.96',
+      appDataVersion: '2.2.97',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
@@ -104,7 +104,7 @@ var app = new Vue({
       appStateShowIntro: false,
       appStateShowOOBE: false,
       appStatePointerLocation: { left: -40000, top: -40000 },
-      appStatePointerArrowLocation: { x: -40000,, y: -40000,, arrowRotate: 0 },
+      appStatePointerArrowLocation: { x: -40000, y: -40000, arrowRotate: 0 },
       appStateFirstRunGuessingIndex: -1,
       appStateFirstRunCreatingIndex: -1,
       appStateFirstRunReviewingIndex: -1,
