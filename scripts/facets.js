@@ -5,14 +5,14 @@ Vue.config.devtools = false;
 Vue.config.silent = true;
 
 // prettier-ignore
-Vue.config.ignoredElements = ['app', 'splash', 'preload', 'notification', 'message', 'icon', 'subtitle', 'badge', 'modal', 'controls', 'hider', 'confirmation', 'checkbox', 'toggle', 'legal', 'credit', 'version', 'categories', 'category', 'leftright', 'small', 'callout', 'instructions', 'gamelinks', 'gamelink', 'stats', 'stat', 'value', 'flogo', 'count', 'rotators', 'ghost', 'card', 'words', 'word', 'parking', 'spot', 'tray', 'diamond', 'hints', 'hint', 'cards', 'cta', 'dot', 'clues'];
+Vue.config.ignoredElements = ['app', 'pointer', 'arrow', 'splash', 'preload', 'notification', 'message', 'icon', 'subtitle', 'badge', 'modal', 'controls', 'confirmation', 'checkbox', 'toggle', 'legal', 'credit', 'version', 'categories', 'category', 'leftright', 'small', 'callout', 'instructions', 'gamelinks', 'gamelink', 'stats', 'stat', 'value', 'flogo', 'count', 'rotators', 'ghost', 'card', 'words', 'word', 'parking', 'spot', 'tray', 'diamond', 'hints', 'hint', 'cards', 'cta', 'dot', 'clues'];
 
 var app = new Vue({
   el: '#app',
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.3.00',
+      appDataVersion: '2.3.01',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
@@ -431,7 +431,7 @@ var app = new Vue({
       localStorage.removeItem('appStateFirstRunCreatingIndex');
       localStorage.removeItem('appStateFirstRunReviewingIndex');
       localStorage.removeItem('appStateFirstRunGuessingIndex');
-      location.reload();
+      // location.reload();
     },
 
     EndAllFirstRunTips() {
@@ -2557,8 +2557,9 @@ We're working hard to make these Daily Facets better to play.`;
         boardPieces = [];
         this.NewGame(null, '😕 - Something went wrong.', false);
         this.ToggleShowMeta(null);
+      } finally {
+        this.appStatePageHasLoaded = true;
       }
-      this.appStatePageHasLoaded = true;
       this.appStateUsePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
     },
     //#endregion
