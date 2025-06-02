@@ -688,8 +688,8 @@ hints hint.pointoutparent {
 .multicolor.creating hints hint input.pointout,
 .multicolor.creating hints hint input.pointout::placeholder {
   font-size: 1.13em;
-  margin-top: -2px;
   color: hsl(var(--tipColorHSL));
+  margin-top: -2px;
   padding-bottom: 66px;
 }
 
@@ -766,8 +766,7 @@ parking spot.pointout {
     transform: rotate(-3deg);
   }
 
-  40%,
-  100% {
+  40%, 100% {
     transform: rotate(0deg);
   }
 }
@@ -801,8 +800,7 @@ parking spot.pointout {
     transform: rotate(-3deg);
   }
 
-  40%,
-  100% {
+  40%, 100% {
     transform: rotate(0deg);
   }
 }
@@ -1061,20 +1059,20 @@ pointer {
   position: absolute;
   z-index: 199;
   width: 100%;
-  min-height: 100px;
   font-family: Arial, sans-serif;
   font-size: 14px;
   color: hsl(var(--appBackgroundDarkestHSL));
+  transition-property: left, top;
   flex-direction: column;
   justify-content: space-between;
   align-items: left;
+  min-height: 100px;
   max-width: calc(2 * var(--cardSize) + 0.5 * var(--defaultGap));
   margin-right: var(--defaultGap);
   background: hsl(var(--tipColorHSL));
   border-radius: 8px;
   white-space: nowrap;
   box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
-  transition-property: left, top;
   transition: var(--mediumTransition) ease-in-out;
 }
 
@@ -1096,9 +1094,9 @@ pointer p.controls {
 }
 
 pointer p.controls a {
-  padding: calc(0.5 * var(--defaultGap)) 0;
   display: inline-block;
   width: 100%;
+  padding: calc(0.5 * var(--defaultGap)) 0;
   font-style: italic;
   text-align: left;
 }
@@ -1139,11 +1137,11 @@ arrow {
   height: 12px;
   transform: translate(-10px, 2px);
   transform-origin: 50% 50%;
+  transition-property: margin, rotate, opacity;
   background: hsl(var(--tipColorHSL));
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
   rotate: 180deg;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  transition-property: margin, rotate, opacity;
   transition: var(--mediumTransition) ease-in-out;
 }
 
