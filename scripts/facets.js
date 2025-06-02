@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.3.07',
+      appDataVersion: '2.3.08',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
@@ -435,9 +435,11 @@ var app = new Vue({
     },
 
     EndAllFirstRunTips() {
-      this.appStateFirstRunGuessingIndex = this.appDataGuessingFirstRunItems.length;
-      this.appStateFirstRunCreatingIndex = this.appDataCreatorFirstRunItems.length;
-      this.appStateFirstRunReviewingIndex = this.appDataReviewingFirstRunItems.length;
+      if (this.isUserFocusedOnGame && !this.appStateTipIsAnimating) {
+        this.appStateFirstRunGuessingIndex = this.appDataGuessingFirstRunItems.length;
+        this.appStateFirstRunCreatingIndex = this.appDataCreatorFirstRunItems.length;
+        this.appStateFirstRunReviewingIndex = this.appDataReviewingFirstRunItems.length;
+      }
     },
 
     ReloadApp() {
