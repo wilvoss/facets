@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.3.16',
+      appDataVersion: '2.3.17',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
@@ -21,7 +21,7 @@ var app = new Vue({
         ["Tap the corners of any card in the tray to rotate."],
         ['Keep placing cards. You can tap the big arrows to rotate the entire gem. '],
         [
-          '"Send" it back to your friend when you think you have the right cards in the right positions!',
+          'In order to know if you\'ve solved it, you have to "Send" it back to your friend!',
           'Tap "Guess" when you think you have the right cards in the right spots!'
         ],
       ],
