@@ -12,11 +12,11 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.3.17',
+      appDataVersion: '2.3.18',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
-        [ "The goal is to place 4 cards on the gem to form word-pairs that connect to these clues."],
+        [ "The goal is to place 4 cards on the gem to form word-pairs on the outer edge that connect to these clues."],
         ['Drag cards to any spot on the gem.'],
         ["Tap the corners of any card in the tray to rotate."],
         ['Keep placing cards. You can tap the big arrows to rotate the entire gem. '],
