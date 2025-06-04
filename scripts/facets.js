@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.3.18',
+      appDataVersion: '2.3.19',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
@@ -3003,6 +3003,9 @@ We're working hard to make these Daily Facets better to play.`;
       } else if (this.isPlayerReviewing) {
         return 'Resume Reviewing';
       }
+    },
+    tipsHaveBeenIncremented: function () {
+      return this.appStateFirstRunGuessingIndex > 0 || this.appStateFirstRunCreatingIndex > 0 || this.appStateFirstRunReviewingIndex > 0;
     },
     currentYear: function () {
       return new Date().getFullYear();
