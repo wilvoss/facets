@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.3.19',
+      appDataVersion: '2.3.20',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
@@ -1234,6 +1234,7 @@ ${words[14]} ${words[10]}`);
     //#region HANDLERS
     HandleSubmitButtonPress() {
       note('HandleSubmitButtonPress()');
+      gtag('event', 'conversion', { send_to: 'AW-17112522048/YHIbCLem-9EaEMC68d8_', role: this.appDataPlayerCurrent.role, id: this.appDataPlayerCurrent.id, isdaily: this.appDataPlayerCreator.id === 0 });
       if (this.appDataPlayerCurrent.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
         this.appStateIsModalShowing = true;
         this.appDataConfirmationObject = { message: `Did ${this.appDataPlayerSender.name} have the right answer?`, target: 'correct' };
