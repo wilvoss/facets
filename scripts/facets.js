@@ -12,7 +12,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.3.20',
+      appDataVersion: '2.3.21',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
@@ -2974,7 +2974,7 @@ We're working hard to make these Daily Facets better to play.`;
           if (this.appDataCreatorFirstRunItems[this.appStateFirstRunCreatingIndex]) {
             finalIndex = this.appDataCreatorFirstRunItems[this.appStateFirstRunCreatingIndex].length === 1 ? 0 : finalIndex;
             text = this.appDataCreatorFirstRunItems[this.appStateFirstRunCreatingIndex][finalIndex];
-            if (this.appDataCards.length > 0) {
+            if (this.appDataCards.length > 0 && this.appDataCards[0].words.length > 0 && this.appDataCards[1].words.length > 0) {
               text = text.replace('word1', this.appDataCards[0].words[0].value);
               text = text.replace('word2', this.appDataCards[1].words[0].value);
             }
