@@ -45,9 +45,9 @@
 
   <body>
     <app id="app" v-cloak
-      :class="{ai: getIsAIGenerated, multicolor: userSettingsUseMultiColoredGems, solved: appStateIsGuessing &&  currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, dragging: appStateIsDragging, guessing: appStateIsGuessing, simple: userSettingsUsesSimplifiedTheme, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}"
+      :class="{ai: isAIGenerated, multicolor: userSettingsUseMultiColoredGems, solved: appStateIsGuessing &&  currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, dragging: appStateIsDragging, guessing: appStateIsGuessing, simple: userSettingsUsesSimplifiedTheme, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: appDataPlayerCurrent.role === 'creator'}"
       @pointerdown="HandleBodyPointerDown(event)"
-      @pointerup="HandleBodyPointerUp(event, appStateIsDragging ? appDataDraggedCard : getSelectedCard)">
+      @pointerup="HandleBodyPointerUp(event, appStateIsDragging ? appDataDraggedCard : selectedCard)">
       <preload v-if="appStatePageHasLoaded">
         <img width="0px" height="0px" alt="preload image that can't be seen"
           :style="{backgroundImage: 'url(./images/tut-4' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg)'}" />
@@ -56,7 +56,7 @@
         <img width="0px" height="0px" alt="preload image that can't be seen"
           :style="{backgroundImage: 'url(./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg)'}" />
 
-        <img v-for="wordset in getEnabledWordSets" width="0px" height="0px" alt="preload image that can't be seen"
+        <img v-for="wordset in enabledWordSets" width="0px" height="0px" alt="preload image that can't be seen"
           :style="{backgroundImage: 'url('+ wordset.textureImage + ')'}" />
       </preload>
       <link rel="stylesheet"
@@ -69,7 +69,7 @@
         v-if="appStateUsePortraitLayout && !userSettingsShowAllCards && appDataPlayerCurrent.role !== 'creator'"
         href="styles/focus.css" media="screen" />
       <notification @click="appStateShowNotification = false" :class="{show: appStateShowNotification}">
-        <message :title="getPlayerMessage" v-html="getPlayerMessage"></message>
+        <message :title="playerMessage" v-html="playerMessage"></message>
       </notification>
       <notification v-if="appStateShowMeta" class="meta show">
         <header>
@@ -85,7 +85,7 @@
           </button>
           <button v-if="vsShowDaily" class="inline small" @click="ToggleShowDailyGames(event)">
             The Daily
-            <badge v-if="vsShowDaily && getDailyIsFreshToday">{{appDataNumberOfNewDailies}}</badge>
+            <badge v-if="vsShowDaily && dailyIsFreshToday">{{appDataNumberOfNewDailies}}</badge>
           </button>
           <button class="inline small" @click="ToggleShowGlobalCreated(event)">Player Puzzles</button>
           <button class="inline small" @click="ToggleShowTutorial(event)">How To Play</button>
@@ -145,13 +145,13 @@
           </hider>
 
           <h3>Guessing</h3>
-          <hider v-if="!getIsAIGenerated && !appStateForceAutoCheck">
+          <hider v-if="!isAIGenerated && !appStateForceAutoCheck">
             <p>When your friend created this word puzzle, they were given word-pairs that they had to "connect" by
               coming up with a clue that works for both words in each word-pair.</p>
             <p class="greenText">It's your job to figure out what word-pairs they were given based on the clues they
               came up with.</p>
           </hider>
-          <hider v-if="getIsAIGenerated">
+          <hider v-if="isAIGenerated">
             <p>Right now, you are attempting to solve a word puzzle that our AI created. It was given word-pairs that it
               had to "connect" by coming up with a clue that works for both words in each word-pair.</p>
             <p class="greenText">It's your job to figure out what word-pairs it was given based on the clues it came up
@@ -167,9 +167,9 @@
           <p>Drag cards onto the tray and rotate them until you think you've solved the puzzle!</p>
           <p>Anatomy of a solved puzzle:</p>
           <img :src="'./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
-          <p v-if="!getIsAIGenerated && !appStateForceAutoCheck">Click the <cta>{{appDataActionButtonTexts.check}}</cta>
+          <p v-if="!isAIGenerated && !appStateForceAutoCheck">Click the <cta>{{appDataActionButtonTexts.check}}</cta>
             button to send your guess back to whoever sent it to you.</p>
-          <p v-if="getIsAIGenerated || appStateForceAutoCheck">Click the <cta>{{appDataActionButtonTexts.guess}}</cta>
+          <p v-if="isAIGenerated || appStateForceAutoCheck">Click the <cta>{{appDataActionButtonTexts.guess}}</cta>
             button to automatically check your guess.</p>
 
           <hider v-if="appStateIsGuessing">
@@ -259,13 +259,13 @@
           <h3 style="padding-top: 0px">Category</h3>
           <categories>
             <category :class="{on: set.name === tempWordSetName }" @click="tempWordSetName = set.name"
-              :class="{on: tempWordSetName === set.name}" v-for="set in getEnabledTempWordSet">{{set.name}}</category>
+              :class="{on: tempWordSetName === set.name}" v-for="set in enabledTempWordSet">{{set.name}}</category>
           </categories>
           <h3>Language</h3>
           <leftright>
             <p>Selected</p>
             <select v-model="tempUserSettingsLanguage">
-              <option v-for="option in getEnabledTempLanguages" :key="option.tag" :value="option.tag">{{ option.name }}
+              <option v-for="option in enabledTempLanguages" :key="option.tag" :value="option.tag">{{ option.name }}
               </option>
               <option disabled>More coming!</option>
             </select>
@@ -343,7 +343,7 @@
           <icon v-show="appStateIsGettingLast10Games" style="position: relative" class="spinner show"></icon>
 
           <message style="padding: calc(2 * var(--defaultGap)) 0"
-            v-if="!appStateIsGettingLast10Games && getCreatedGamesWithWordSetNames.length === 0">
+            v-if="!appStateIsGettingLast10Games && createdGamesWithWordSetNames.length === 0">
             <p>😢</p>
             <p>There are no recent puzzles to display.</p>
             <button style="margin-top: 20px; border: 1px solid hsla(var(--linkColorDarkHSL), 0.75)"
@@ -351,7 +351,7 @@
           </message>
 
           <gamelinks>
-            <gamelink v-for="game in getCreatedGamesWithWordSetNames" @click="HandleOldGameClick(event, game)">
+            <gamelink v-for="game in createdGamesWithWordSetNames" @click="HandleOldGameClick(event, game)">
               <p>
                 <a href=""><small>{{game.name}}
                     {{game.useExtraCard === "true" ? '(5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a>
@@ -373,13 +373,13 @@
           <h2>The Daily</h2>
           <p>Play any of the AI-generated Daily puzzles listed below.</p>
           <message style="padding: calc(2 * var(--defaultGap)) 0"
-            v-if="!appStateIsGettingDailyGames && getDailyGamesWithWordSetNames.length === 0">
+            v-if="!appStateIsGettingDailyGames && dailyGamesWithWordSetNames.length === 0">
             <p>😢</p>
             <p>Check back tomorrow!</p>
           </message>
           <h3>Past 10 days</h3>
           <gamelinks>
-            <gamelink :class="{done: game.solved}" v-for="(game, index) in getDailyGamesWithWordSetNames"
+            <gamelink :class="{done: game.solved}" v-for="(game, index) in dailyGamesWithWordSetNames"
               @click="HandleOldGameClick(event, game)">
               <p>
                 <a>
@@ -438,34 +438,35 @@
         <controls>
           <button class="inline small" @click="ToggleShowMeta(event)">
             {{appStateUsePortraitLayout ? 'Menu': 'Home'}}
-            <badge v-if="vsShowDaily && getDailyIsFreshToday">{{appDataNumberOfNewDailies}}</badge>
+            <badge v-if="vsShowDaily && dailyIsFreshToday">{{appDataNumberOfNewDailies}}</badge>
           </button>
         </controls>
         <header :disabled="appStateShowNotification">
           <span>
-            {{getCurrentDaily && vsShowDaily ? getCurrentDaily.key === getTodaysKey ? 'Today\'s' : getCurrentDaily.date.split(',')[0] : ''}}
+            {{currentDaily && vsShowDaily ? currentDaily.key === todaysKey ? 'Today\'s' : currentDaily.date.split(',')[0] : ''}}
           </span>
           <flogo></flogo>
-          <icon v-if="getCurrentDaily && !getCurrentDaily.solved" :class="getCorrectCalIconClass" class="large"
+          <icon v-if="currentDaily && !currentDaily.solved" :class="correctCalIconClass" class="large"
             @click="ToggleShowDailyGames(event)"></icon>
-          <icon v-if="getCurrentDaily && getCurrentDaily.solved && !getCurrentDaily.quit" class="check large"
+          <icon v-if="currentDaily && currentDaily.solved && !currentDaily.quit" class="check large"
             @click="ToggleShowDailyGames(event)"></icon>
-          <icon v-if="getCurrentDaily && getCurrentDaily.solved && getCurrentDaily.quit"
-            style="background: hsl(var(--alertHSL))" class="nope large" @click="ToggleShowDailyGames(event)"></icon>
-          <icon v-if="!getCurrentDaily" class="logo" @click="appStateShowNotification = true"></icon>
+          <icon v-if="currentDaily && currentDaily.solved && currentDaily.quit" style="background: hsl(var(--alertHSL))"
+            class="nope large" @click="ToggleShowDailyGames(event)"></icon>
+          <icon v-if="!currentDaily" class="logo" @click="appStateShowNotification = true"></icon>
           <span>
-            <count v-if="getCurrentDaily && getCurrentDaily.solved"> in {{getCurrentDaily.guesses}}
-              {{getCurrentDaily.guesses !== 1 ? 'tries' : 'try'}} </count>
-            <count v-if="getCurrentDaily && !getCurrentDaily.solved"> Daily </count>
+            <count v-if="currentDaily && currentDaily.solved"> in {{currentDaily.guesses}}
+              {{currentDaily.guesses !== 1 ? 'tries' : 'try'}}
+            </count>
+            <count v-if="currentDaily && !currentDaily.solved"> Daily </count>
           </span>
-          <button @click="HandleOldGameClick(event, getTodaysDaily)" class="small inline"
-            :class="{show: !appStateShowNotification && vsShowDaily && getDailyIsFreshToday && appStateShowMeta}">Play
+          <button @click="HandleOldGameClick(event, todaysDaily)" class="small inline"
+            :class="{show: !appStateShowNotification && vsShowDaily && dailyIsFreshToday && appStateShowMeta}">Play
             Today's Daily!</button>
         </header>
-        <controls :class="{disabled: getActionButtonState}">
+        <controls :class="{disabled: actionButtonState}">
           <button id="shareButton" class="inline" @click="HandleSubmitButtonPress()">
             <icon :class="{show: appStateIsGettingTinyURL}" class="spinner"></icon>
-            <span v-if="!appStateIsGettingTinyURL" v-html="getSubmitButtonText"></span>
+            <span v-if="!appStateIsGettingTinyURL" v-html="submitButtonText"></span>
           </button>
         </controls>
       </wrapper>

@@ -1,3 +1,4 @@
+import { saveData, getData, removeData, clearStore } from '../helpers/db-helper.js';
 /// <reference path="../models/WordObject.js" />
 /// <reference path="../models/CardObject.js" />
 
@@ -12,7 +13,7 @@ var app = new Vue({
   data() {
     return {
       //#region APP DATA
-      appDataVersion: '2.3.21',
+      appDataVersion: '2.3.22',
       // prettier-ignore
       appDataGuessingFirstRunItems: [
         ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
@@ -320,7 +321,7 @@ var app = new Vue({
 
     ShowCategoryPicker() {
       note('ShowCategoryPicker()');
-      this.tempWordSetName = this.getCurrentSelectedTempWordSetName;
+      this.tempWordSetName = this.currentSelectedTempWordSetName;
     },
 
     ShowSettings(e) {
@@ -336,7 +337,7 @@ var app = new Vue({
 
     GetCategoryNames() {
       this.tempWordSets = [];
-      this.tempWordSetName = this.getCurrentSelectedTempWordSetName;
+      this.tempWordSetName = this.currentSelectedTempWordSetName;
       this.appDataWordSets.forEach((set) => {
         this.tempWordSets.push(new WordSetObject(set));
       });
@@ -420,17 +421,17 @@ var app = new Vue({
       }
     },
 
-    ResetFirstRun() {
+    async ResetFirstRun() {
       note('ResetFirstRun()');
 
       this.ClearTrayOfCards();
       this.appStateFirstRunCreatingIndex = 0;
       this.appStateFirstRunReviewingIndex = 0;
-      this.appStateFirstRunGuessingIndex = this.isPlayerGuessing && this.getFullCardsInTray.length === 4 ? 1 : 0;
+      this.appStateFirstRunGuessingIndex = this.isPlayerGuessing && this.fullCardsInTray.length === 4 ? 1 : 0;
 
-      localStorage.removeItem('appStateFirstRunCreatingIndex');
-      localStorage.removeItem('appStateFirstRunReviewingIndex');
-      localStorage.removeItem('appStateFirstRunGuessingIndex');
+      await removeData('appStateFirstRunCreatingIndex');
+      await removeData('appStateFirstRunReviewingIndex');
+      await removeData('appStateFirstRunGuessingIndex');
       // location.reload();
     },
 
@@ -547,20 +548,20 @@ var app = new Vue({
       return allWords;
     },
 
-    UpdateGameGuessesCount(_game, _solved = false) {
+    async UpdateGameGuessesCount(_game, _solved = false) {
       note('UpdateGameGuessesCount()');
 
       let startedGame = this.GetUserStartedGame(_game) ?? _game;
 
       if (startedGame && !startedGame.solved) {
         startedGame.solved = _solved;
-        if (!this.getCurrentDaily.quit) {
+        if (!this.currentDaily.quit) {
           startedGame.guesses++;
         } else {
           startedGame.quit = true;
         }
         if (this.appDataPlayerCurrent.id !== 10000000) {
-          localStorage.setItem('dailyGames', JSON.stringify(this.appDataUserDailyGamesStarted));
+          await saveData('dailyGames', JSON.stringify(this.appDataUserDailyGamesStarted));
         }
       }
       this.UpdateDailyGameFromStartedGameData(startedGame);
@@ -574,7 +575,7 @@ var app = new Vue({
       });
       foundGame.guesses = _gamestarted.guesses;
       foundGame.solved = _gamestarted.solved;
-      if (this.getCurrentDaily.quit) {
+      if (this.currentDaily.quit) {
         foundGame.quit = true;
       }
 
@@ -619,7 +620,7 @@ var app = new Vue({
 
     IsCurrentGuessCorrect() {
       note('IsCurrentGuessCorrect()');
-      if (this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
+      if (this.numberOfCardsThatHaveBeenPlacedOnTray === 4) {
         this.currentGameGuessCount++;
         let hintValues = [];
         this.appDataHints.forEach((hint) => {
@@ -652,8 +653,8 @@ var app = new Vue({
           window.history.pushState({}, document.title, window.location.pathname);
         }
 
-        if (this.getCurrentDaily) {
-          this.UpdateGameGuessesCount(this.getCurrentDaily, this.currentGameSolutionActual === this.currentGameSolutionGuessing);
+        if (this.currentDaily) {
+          this.UpdateGameGuessesCount(this.currentDaily, this.currentGameSolutionActual === this.currentGameSolutionGuessing);
         }
 
         if (mappedSol[1] !== actualSol[1]) {
@@ -661,28 +662,28 @@ var app = new Vue({
           if (!card.wrongGuesses.s0.includes(mappedSol[1])) {
             card.wrongGuesses.s0.push(mappedSol[1]);
           }
-          this.SwapCards(card, this.getFirstAvailableParkingSpot);
+          this.SwapCards(card, this.firstAvailableParkingSpot);
         }
         if (mappedSol[2] !== actualSol[2]) {
           let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[2])));
           if (!card.wrongGuesses.s1.includes(mappedSol[2])) {
             card.wrongGuesses.s1.push(mappedSol[2]);
           }
-          this.SwapCards(card, this.getFirstAvailableParkingSpot);
+          this.SwapCards(card, this.firstAvailableParkingSpot);
         }
         if (mappedSol[10] !== actualSol[10]) {
           let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[10])));
           if (!card.wrongGuesses.s2.includes(mappedSol[10])) {
             card.wrongGuesses.s2.push(mappedSol[10]);
           }
-          this.SwapCards(card, this.getFirstAvailableParkingSpot);
+          this.SwapCards(card, this.firstAvailableParkingSpot);
         }
         if (mappedSol[11] !== actualSol[11]) {
           let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[11])));
           if (!card.wrongGuesses.s3.includes(mappedSol[11])) {
             card.wrongGuesses.s3.push(mappedSol[11]);
           }
-          this.SwapCards(card, this.getFirstAvailableParkingSpot);
+          this.SwapCards(card, this.firstAvailableParkingSpot);
         }
         this.appDataMessage = this.GetMessageBasedOnTrayCount(true, '');
         this.appStateShowNotification = true;
@@ -873,7 +874,7 @@ var app = new Vue({
         if (this.isPlayerReviewing && this.appDataPlayerSender.name !== 'Player') {
           this.appDataReviewingFirstRunItems[0][0] = this.appDataReviewingFirstRunItems[0][0].replace('Your friend ', this.appDataPlayerSender.name + ' ');
         }
-        if (this.isPlayerGuessing && (this.appDataPlayerSender.name !== 'Player' || this.getIsAIGenerated)) {
+        if (this.isPlayerGuessing && (this.appDataPlayerSender.name !== 'Player' || this.isAIGenerated)) {
           this.appDataGuessingFirstRunItems[0][0] = this.appDataGuessingFirstRunItems[0][0].replace('Your friend ', this.appDataPlayerSender.name + ' ');
         }
       }
@@ -1078,7 +1079,7 @@ ${words[14]} ${words[10]}`);
         if (this.vsShowDaily && window.location.href !== window.location.origin + '/generate.html?generated=true') {
           this.appStateIsGettingDailyGames = true;
           this.appStateIsGettingUserStats = !this.userSettingsHideStats;
-          incomingGames = [];
+          let incomingGames = [];
           var requestUrl = 'https://lucky-bread-acb4.bigtentgames.workers.dev/';
           await fetch(requestUrl, {
             method: 'GET',
@@ -1235,7 +1236,7 @@ ${words[14]} ${words[10]}`);
     HandleSubmitButtonPress() {
       note('HandleSubmitButtonPress()');
       gtag('event', 'conversion', { send_to: 'AW-17112522048/YHIbCLem-9EaEMC68d8_', role: this.appDataPlayerCurrent.role, id: this.appDataPlayerCurrent.id, isdaily: this.appDataPlayerCreator.id === 0 });
-      if (this.appDataPlayerCurrent.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4) {
+      if (this.appDataPlayerCurrent.role === 'reviewer' && this.numberOfCardsThatHaveBeenPlacedOnTray === 4) {
         this.appStateIsModalShowing = true;
         this.appDataConfirmationObject = { message: `Did ${this.appDataPlayerSender.name} have the right answer?`, target: 'correct' };
         this.appStateShowConfirmation = true;
@@ -1246,8 +1247,8 @@ ${words[14]} ${words[10]}`);
           } else {
             this.HandleNewGameClick();
           }
-        } else if (this.getCurrentDaily || this.appStateForceAutoCheck) {
-          if (this.getSubmitButtonText === this.appDataActionButtonTexts.quit) {
+        } else if (this.currentDaily || this.appStateForceAutoCheck) {
+          if (this.submitButtonText === this.appDataActionButtonTexts.quit) {
             this.appDataConfirmationObject = { message: 'Give up and see the solution?', target: 'quit' };
             this.appStateShowConfirmation = true;
           } else {
@@ -1284,7 +1285,7 @@ ${words[14]} ${words[10]}`);
       this.currentGameSolutionGuessing = '';
       this.appDataMessage = '';
       stringArray.push('sendingName=Player 1');
-      stringArray.push('&generated=' + encodeURIComponent(this.getIsAIGenerating ? this.getIsAIGenerating : _game.generated));
+      stringArray.push('&generated=' + encodeURIComponent(this.isAIGenerating ? this.isAIGenerating : _game.generated));
       stringArray.push('&key=' + encodeURIComponent(_game.key));
       stringArray.push('&puzzleName=Player 1');
       stringArray.push('&puzzleID=' + encodeURIComponent(_game.puzzleID));
@@ -1301,7 +1302,7 @@ ${words[14]} ${words[10]}`);
           let currentGame = { key: _game.key, guesses: 0, solved: false };
           this.appDataUserDailyGamesStarted.push(currentGame);
           if (this.appDataPlayerCurrent.id !== 10000000) {
-            localStorage.setItem('dailyGames', JSON.stringify(this.appDataUserDailyGamesStarted));
+            await saveData('dailyGames', JSON.stringify(this.appDataUserDailyGamesStarted));
           }
         }
         this.appCurrentDailyGameKey = _game.key;
@@ -1324,12 +1325,12 @@ ${words[14]} ${words[10]}`);
       this.RotateTray(-4);
     },
 
-    HandleGoButtonClick(event) {
+    async HandleGoButtonClick(event) {
       note('HandleGoButtonClick()');
       this.SubmitSettings(event);
 
       this.appStateShowCreateOOBE = false;
-      localStorage.setItem('userHasSeenFirstTimeCreatingTutorial', true);
+      await saveData('userHasSeenFirstTimeCreatingTutorial', true);
       this.appStateShowCatChooser = false;
     },
 
@@ -1423,12 +1424,12 @@ ${words[14]} ${words[10]}`);
       this.IsCurrentGuessCorrect();
     },
 
-    HandleYesNo(_target, _value) {
+    async HandleYesNo(_target, _value) {
       note('HandleYesNo()');
       switch (_target) {
         case 'quit':
           if (_value) {
-            this.getCurrentDaily.quit = true;
+            this.currentDaily.quit = true;
             this.SolvePuzzleCurrent();
             break;
           }
@@ -1447,7 +1448,7 @@ ${words[14]} ${words[10]}`);
               this.tempID = this.appDataPlayerCreator.id;
               this.appDataPlayerCurrent.id = this.appDataPlayerCreator.id;
               this.appDataPlayerCurrent.role = 'reviewer';
-              localStorage.setItem('userID', this.appDataPlayerCurrent.id);
+              await saveData('userID', this.appDataPlayerCurrent.id);
             }
           }
           break;
@@ -1517,7 +1518,7 @@ ${words[14]} ${words[10]}`);
       e.stopPropagation();
       this.appDataMessage = '';
 
-      if (this.getSelectedCard && this.getSelectedCard === _card) {
+      if (this.selectedCard && this.selectedCard === _card) {
         this.appDataDraggedCard = this.appDataEmptyCard;
         this.appStateIsDragging = false;
         return;
@@ -1600,7 +1601,7 @@ ${words[14]} ${words[10]}`);
       if (!this.appStateIsGuessing) {
         this.appDataPlayerCreator.name = this.appDataPlayerCurrent.name;
       }
-      localStorage.setItem('name', this.appDataPlayerCurrent.name);
+      await saveData('name', this.appDataPlayerCurrent.name);
       if (this.appStateShowSettings || this.appStateShowCatChooser) {
         this.userSettingsLanguage = this.tempUserSettingsLanguage;
         let newSelectedWordSet = this.tempWordSets.find((set) => set.name === this.tempWordSetName);
@@ -1630,17 +1631,17 @@ ${words[14]} ${words[10]}`);
         }
         this.SetWordSetTheme(this.currentGameGuessingWordSet);
 
-        localStorage.setItem('userID', this.appDataPlayerCurrent.id);
-        localStorage.setItem('useWordSetThemes', this.userSettingsUseWordSetThemes);
-        localStorage.setItem('userSettingsUserWantsDailyReminder', this.userSettingsUserWantsDailyReminder);
-        localStorage.setItem('userSettingsLanguage', this.userSettingsLanguage);
-        localStorage.setItem('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
-        localStorage.setItem('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
-        localStorage.setItem('userSettingsShowAllCards', this.userSettingsShowAllCards);
-        localStorage.setItem('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
-        localStorage.setItem('useExtraCard', this.userSettingsUseExtraCard);
-        localStorage.setItem('userSettingsHideStats', this.userSettingsHideStats);
-        localStorage.setItem('wordSet', this.currentGameWordSet.id);
+        await saveData('userID', this.appDataPlayerCurrent.id);
+        await saveData('useWordSetThemes', this.userSettingsUseWordSetThemes);
+        await saveData('userSettingsUserWantsDailyReminder', this.userSettingsUserWantsDailyReminder);
+        await saveData('userSettingsLanguage', this.userSettingsLanguage);
+        await saveData('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
+        await saveData('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
+        await saveData('userSettingsShowAllCards', this.userSettingsShowAllCards);
+        await saveData('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
+        await saveData('useExtraCard', this.userSettingsUseExtraCard);
+        await saveData('userSettingsHideStats', this.userSettingsHideStats);
+        await saveData('wordSet', this.currentGameWordSet.id);
 
         if (userChangedID) {
           localStorage.removeItem('dailyGames');
@@ -1653,23 +1654,62 @@ ${words[14]} ${words[10]}`);
       this.appStateShowIntro = false;
     },
 
-    GetUserSettings() {
+    async GetUserSettings() {
       note('GetUserSettings()');
-      let appStateFirstRunGuessingIndex = localStorage.getItem('appStateFirstRunGuessingIndex');
+
+      // **Migration: Move localStorage data to IndexedDB if needed**
+      let userID = localStorage.getItem('userID');
+
+      if (userID !== null) {
+        note('Migrating user settings from localStorage to IndexedDB');
+
+        // prettier-ignore
+        const migrationKeys = [
+          "wordSet",
+          "appStateFirstRunCreatingIndex",
+          "appStateFirstRunGuessingIndex",
+          "appStateFirstRunReviewingIndex",
+          "dailyGames",
+          "name",
+          "useExtraCard",
+          "useMultiColoredGems",
+          "userHasSeenFirstTimeCreatingTutorial",
+          "userID",
+          "userSettingsHideStats",
+          "userSettingsLanguage",
+          "userSettingsShowAllCards",
+          "userSettingsUserWantsDailyReminder",
+          "userSettingsUsesLightTheme",
+          "userSettingsUsesSimplifiedTheme",
+          "useWordSetThemes",
+        ];
+
+        for (const key of migrationKeys) {
+          let value = localStorage.getItem(key);
+          if (value !== null) {
+            await saveData(key, value);
+            localStorage.removeItem(key); // Remove old data
+          }
+        }
+
+        note('Migration complete. LocalStorage data transferred to IndexedDB.');
+      }
+
+      let appStateFirstRunGuessingIndex = await getData('appStateFirstRunGuessingIndex');
       if (appStateFirstRunGuessingIndex) {
         this.appStateFirstRunGuessingIndex = parseInt(appStateFirstRunGuessingIndex);
       } else {
         this.appStateFirstRunGuessingIndex = -1;
       }
 
-      let appStateFirstRunCreatingIndex = localStorage.getItem('appStateFirstRunCreatingIndex');
+      let appStateFirstRunCreatingIndex = await getData('appStateFirstRunCreatingIndex');
       if (appStateFirstRunCreatingIndex) {
         this.appStateFirstRunCreatingIndex = parseInt(appStateFirstRunCreatingIndex);
       } else {
         this.appStateFirstRunCreatingIndex = !this.isPlayerGuessing ? 0 : -1;
       }
 
-      let appStateFirstRunReviewingIndex = localStorage.getItem('appStateFirstRunReviewingIndex');
+      let appStateFirstRunReviewingIndex = await getData('appStateFirstRunReviewingIndex');
       if (appStateFirstRunReviewingIndex) {
         this.appStateFirstRunReviewingIndex = parseInt(appStateFirstRunReviewingIndex);
       } else {
@@ -1678,23 +1718,23 @@ ${words[14]} ${words[10]}`);
 
       this.AdvanceFirstRunIndexes();
 
-      let id = localStorage.getItem('userID');
+      let id = await getData('userID');
       if (id !== undefined && id !== null) {
         id = JSON.parse(id);
         this.appDataPlayerCurrent.id = id;
       } else {
         this.appDataPlayerCurrent.id = getRandomInt(10000000, 1000000000000000);
-        localStorage.setItem('userID', this.appDataPlayerCurrent.id);
+        await saveData('userID', this.appDataPlayerCurrent.id);
         this.appStateShowOOBE = window.location.search !== '';
       }
       this.tempID = parseInt(this.appDataPlayerCurrent.id);
 
-      let dailyGames = localStorage.getItem('dailyGames');
+      let dailyGames = await getData('dailyGames');
       if (dailyGames !== undefined && dailyGames !== null) {
         this.appDataUserDailyGamesStarted = JSON.parse(dailyGames);
       }
 
-      let name = localStorage.getItem('name');
+      let name = await getData('name');
       if (name !== undefined && name !== null) {
         this.appDataPlayerCurrent.name = name;
       } else {
@@ -1709,7 +1749,7 @@ ${words[14]} ${words[10]}`);
       this.appDataWordSets.forEach((m) => {
         m.isSelected = false;
       });
-      let setID = localStorage.getItem('wordSet');
+      let setID = await getData('wordSet');
       if (setID !== undefined && setID !== null && this.appDataWordSets.find((m) => m.id === setID)) {
         this.currentGameWordSet = this.appDataWordSets.find((m) => m.id === setID);
       } else {
@@ -1717,20 +1757,20 @@ ${words[14]} ${words[10]}`);
       }
       this.currentGameWordSet.isSelected = true;
 
-      let language = localStorage.getItem('userSettingsLanguage');
+      let language = await getData('userSettingsLanguage');
       if (language !== undefined && language !== null) {
         this.userSettingsLanguage = language;
         this.tempUserSettingsLanguage = this.userSettingsLanguage;
       }
 
-      let useThemes = localStorage.getItem('useWordSetThemes');
+      let useThemes = await getData('useWordSetThemes');
       if (useThemes !== undefined && useThemes !== null) {
         this.userSettingsUseWordSetThemes = JSON.parse(useThemes);
         this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
         this.SetWordSetTheme(this.currentGameWordSet);
       }
 
-      let userSettingsUserWantsDailyReminder = localStorage.getItem('userSettingsUserWantsDailyReminder');
+      let userSettingsUserWantsDailyReminder = await getData('userSettingsUserWantsDailyReminder');
       if (userSettingsUserWantsDailyReminder !== undefined && userSettingsUserWantsDailyReminder !== null) {
         this.userSettingsUserWantsDailyReminder = JSON.parse(userSettingsUserWantsDailyReminder);
         this.tempUserWantsDailyReminder = this.userSettingsUserWantsDailyReminder;
@@ -1742,37 +1782,37 @@ ${words[14]} ${words[10]}`);
         this.documentCssRoot.style.setProperty('--wordScale', this.currentGameWordSet.scale);
       }
 
-      let userSettingsUseExtraCard = localStorage.getItem('useExtraCard');
+      let userSettingsUseExtraCard = await getData('useExtraCard');
       if (userSettingsUseExtraCard !== undefined && userSettingsUseExtraCard !== null) {
         this.userSettingsUseExtraCard = JSON.parse(userSettingsUseExtraCard);
         this.tempUseExtraCard = this.userSettingsUseExtraCard;
       }
 
-      let userSettingsHideStats = localStorage.getItem('userSettingsHideStats');
+      let userSettingsHideStats = await getData('userSettingsHideStats');
       if (userSettingsHideStats !== undefined && userSettingsHideStats !== null) {
         this.userSettingsHideStats = JSON.parse(userSettingsHideStats);
         this.tempUserSettingsHideStats = this.userSettingsHideStats;
       }
 
-      let userSettingsUsesLightTheme = localStorage.getItem('userSettingsUsesLightTheme');
+      let userSettingsUsesLightTheme = await getData('userSettingsUsesLightTheme');
       if (userSettingsUsesLightTheme !== undefined && userSettingsUsesLightTheme !== null) {
         this.ToggleUseLightTheme(JSON.parse(userSettingsUsesLightTheme));
         this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
       }
 
-      let userSettingsUsesSimplifiedTheme = localStorage.getItem('userSettingsUsesSimplifiedTheme');
+      let userSettingsUsesSimplifiedTheme = await getData('userSettingsUsesSimplifiedTheme');
       if (userSettingsUsesSimplifiedTheme !== undefined && userSettingsUsesSimplifiedTheme !== null) {
         this.ToggleUseSimplifedTheme(JSON.parse(userSettingsUsesSimplifiedTheme));
         this.tempUserSettingsUsesSimplifiedTheme = this.userSettingsUsesSimplifiedTheme;
       }
 
-      let userSettingsShowAllCards = localStorage.getItem('userSettingsShowAllCards');
+      let userSettingsShowAllCards = await getData('userSettingsShowAllCards');
       if (userSettingsShowAllCards !== undefined && userSettingsShowAllCards !== null) {
         this.ToggleShowAllCards(JSON.parse(userSettingsShowAllCards));
         this.tempUserSettingsShowAllCards = this.userSettingsShowAllCards;
       }
 
-      let userSettingsUseMultiColoredGems = localStorage.getItem('useMultiColoredGems');
+      let userSettingsUseMultiColoredGems = await getData('useMultiColoredGems');
       if (userSettingsUseMultiColoredGems !== undefined && userSettingsUseMultiColoredGems !== null) {
         this.userSettingsUseMultiColoredGems = JSON.parse(userSettingsUseMultiColoredGems);
         this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
@@ -1788,7 +1828,7 @@ ${words[14]} ${words[10]}`);
             if (this.appStateAutoAdvanceTips) {
               this.AdvanceFirstRunIndexes();
             }
-            if (!this.appStateShowSettings && !this.appStateShowTutorial && !this.appStateShowIntro && !this.appStateShowInfo && !this.appStateShowConfirmation && !this.appStateIsGuessing && this.getNumberOfHintsThatHaveBeenFilled === 4) {
+            if (!this.appStateShowSettings && !this.appStateShowTutorial && !this.appStateShowIntro && !this.appStateShowInfo && !this.appStateShowConfirmation && !this.appStateIsGuessing && this.numberOfHintsThatHaveBeenFilled === 4) {
               this.FillParkingLot();
             }
             if (this.appStateShowIntro) {
@@ -1924,14 +1964,14 @@ ${words[14]} ${words[10]}`);
     //#endregion
 
     //#region COMMUNICATION
-    ShareWin(e, _game = this.getCurrentDaily) {
+    ShareWin(e, _game = this.currentDaily) {
       if (e !== null) {
         e.stopPropagation();
         e.preventDefault();
       }
       note('ShareWin()');
       if (_game.solved) {
-        let date = _game && this.getTodaysDaily === _game ? `Today's` : `The ${_game.date}`;
+        let date = _game && this.todaysDaily === _game ? `Today's` : `The ${_game.date}`;
         let text = `I solved ${date} Daily Facet in ${_game.guesses} tries! 😀
 Can you do better?
 
@@ -1998,7 +2038,7 @@ Can you do better?
 
     async ShareText(_text, _url) {
       note('ShareText()');
-      if (!this.getIsAIGenerating) {
+      if (!this.isAIGenerating) {
         this.appDataMessage = '';
         note('_text = ' + _text);
         note('_url = ' + _url);
@@ -2031,15 +2071,15 @@ Can you do better?
 
     async ShareBoard(_gotIt = false, _isNew = false) {
       note('ShareBoard()');
-      if (!this.getIsAIGenerating && this.isChromeAndiOSoriPadOS && this.appDataShareURL.indexOf('facets.bigtentgames.com/game/?') !== -1) {
+      if (!this.isAIGenerating && this.isChromeAndiOSoriPadOS && this.appDataShareURL.indexOf('facets.bigtentgames.com/game/?') !== -1) {
         this.CopyTextToClipboard(this.GetShareTextBasedOnContext(_gotIt) + ' <' + this.appDataShareURL + '>');
         note('Shortened URL exists, copying to clipboard');
       } else {
-        let currentGameReviewIsFinal = this.appDataPlayerCurrent.role === 'reviewer' && this.getNumberOfCardsThatHaveBeenPlacedOnTray === 4;
+        let currentGameReviewIsFinal = this.appDataPlayerCurrent.role === 'reviewer' && this.numberOfCardsThatHaveBeenPlacedOnTray === 4;
         let text = this.GetShareTextBasedOnContext(_gotIt);
         this.ConstructAndSetShareURLForCurrentGame(currentGameReviewIsFinal, _isNew);
         this.appStateIsGettingTinyURL = true;
-        var corsflareUrl = this.getIsAIGenerating ? 'https://flat-night-eecc.bigtentgames.workers.dev/' : 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
+        var corsflareUrl = this.isAIGenerating ? 'https://flat-night-eecc.bigtentgames.workers.dev/' : 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
         var requestUrl = corsflareUrl + location.search.substring(1);
 
         note('Fetching short url');
@@ -2112,10 +2152,10 @@ Can you do better?
 
         urlString = encodeURIComponent(urlString);
         urlString += '?sendingName=' + encodeURIComponent(this.appDataPlayerCurrent.name);
-        urlString += '&generated=' + encodeURIComponent(this.getCurrentDaily ? true : this.getIsAIGenerating);
-        if (this.getCurrentDaily) {
-          urlString += '&key=' + encodeURIComponent(this.getCurrentDaily.key);
-          if (this.getCurrentDaily.quit) {
+        urlString += '&generated=' + encodeURIComponent(this.currentDaily ? true : this.isAIGenerating);
+        if (this.currentDaily) {
+          urlString += '&key=' + encodeURIComponent(this.currentDaily.key);
+          if (this.currentDaily.quit) {
             urlString += '&quit=true';
           }
         }
@@ -2140,10 +2180,10 @@ Can you do better?
 
     GetMessageBasedOnTrayCount(_gotIt, _name) {
       note('GetMessageBasedOnTrayCount()');
-      let count = this.getNumberOfCardsThatHaveBeenPlacedOnTray;
+      let count = this.numberOfCardsThatHaveBeenPlacedOnTray;
       let pretext = '';
 
-      if (this.getNumberOfCardsThatHaveBeenPlacedOnTray < 4) {
+      if (this.numberOfCardsThatHaveBeenPlacedOnTray < 4) {
         pretext = count + '/4 ';
       }
 
@@ -2157,7 +2197,7 @@ Can you do better?
       let useLowerCase = usingName && levelMessage.indexOf('I ') !== 0;
       levelMessage = useLowerCase ? levelMessage.charAt(0).toLowerCase() + levelMessage.slice(1) : levelMessage;
       let message = pretext + LevelEmoji[count][getRandomInt(0, LevelEmoji[count].length)] + ' ' + name + levelMessage;
-      if (count === 4 && this.getCurrentDaily && this.getCurrentDaily.quit) {
+      if (count === 4 && this.currentDaily && this.currentDaily.quit) {
         message = `AI is hard! 
 We're working hard to make these Daily Facets better to play.`;
       }
@@ -2225,8 +2265,8 @@ We're working hard to make these Daily Facets better to play.`;
 
       note('ToggleCardSelection()');
 
-      if (this.getSelectedCard && this.getSelectedCard !== _card) {
-        this.SwapCards(this.getSelectedCard, _card);
+      if (this.selectedCard && this.selectedCard !== _card) {
+        this.SwapCards(this.selectedCard, _card);
         return;
       }
 
@@ -2326,7 +2366,7 @@ We're working hard to make these Daily Facets better to play.`;
           clearTimeout(this.appDataTimeoutTrayRotation);
           this.appDataTimeoutTrayRotation = null;
         }
-        if (this.getSelectedCard) this.getSelectedCard.isSelected = false;
+        if (this.selectedCard) this.selectedCard.isSelected = false;
         this.appStateTrayRotation = this.appStateTrayRotation + _inc;
         document.getElementById('parkingInput').focus();
         if (_useTimeout && !this.appStateSolving) {
@@ -2454,7 +2494,7 @@ We're working hard to make these Daily Facets better to play.`;
     },
 
     GetIsAIGenerated() {
-      if (this.getCurrentDaily) {
+      if (this.currentDaily) {
         return true;
       } else if (window.location.search) {
         let urlParams = new URLSearchParams(window.location.search);
@@ -2470,7 +2510,7 @@ We're working hard to make these Daily Facets better to play.`;
         let urlParams = new URLSearchParams(window.location.search);
         UseDebug = urlParams.has('useDebug') ? true : UseDebug;
         let search = decodeURIComponent(window.location.search);
-        params = search.split('?')[1].split('&');
+        // let params = search.split('?')[1].split('&');
         boardPieces = urlParams.has('board') ? urlParams.get('board').split(':') : [];
       }
       return boardPieces;
@@ -2478,7 +2518,7 @@ We're working hard to make these Daily Facets better to play.`;
 
     GetTodaysDaily() {
       let today = new Date();
-      let daily = this.getDailyGamesWithWordSetNames.find((daily) => {
+      let daily = this.dailyGamesWithWordSetNames.find((daily) => {
         return daily.key === this.GetDateFormatted(today);
       });
       return daily;
@@ -2524,7 +2564,7 @@ We're working hard to make these Daily Facets better to play.`;
 
     async LoadPage() {
       note('LoadPage()');
-      this.GetUserSettings();
+      await this.GetUserSettings();
       announce('Player ' + this.appDataPlayerCurrent.id + ' has loaded v' + this.appDataVersion);
       this.GetDailyGames();
       this.GetLast10GlobalCreatedGames();
@@ -2537,11 +2577,11 @@ We're working hard to make these Daily Facets better to play.`;
           this.ToggleShowMeta(null);
           await this.RestoreGame(boardPieces);
         } else if (!this.appStateIsGuessing) {
-          if (this.getIsAIGenerating) {
+          if (this.isAIGenerating) {
             this.currentGameGuessingCardCount = 4;
             this.appDataPlayerCurrent.id = 0;
 
-            this.currentGameWordSet = this.getEnabledWordSets.find((set) => set.id === '100');
+            this.currentGameWordSet = this.enabledWordSets.find((set) => set.id === '100');
             log(this.currentGameWordSet.name);
             this.SelectWordSet(null, this.currentGameWordSet);
             note(this.currentGameWordSet.name);
@@ -2629,12 +2669,12 @@ We're working hard to make these Daily Facets better to play.`;
   },
 
   watch: {
-    userSettingsLanguage: function () {
+    userSettingsLanguage() {
       this.LoadTranslatedWords();
     },
-    appStateFirstRunGuessingIndex: function (newIndex) {
+    appStateFirstRunGuessingIndex: async function (newIndex) {
       if (newIndex <= this.appDataGuessingFirstRunItems.length) {
-        localStorage.setItem('appStateFirstRunGuessingIndex', newIndex);
+        await saveData('appStateFirstRunGuessingIndex', newIndex);
         setTimeout(() => {
           requestAnimationFrame(() => {
             this.UpdatePointerTargetLocation();
@@ -2642,9 +2682,9 @@ We're working hard to make these Daily Facets better to play.`;
         }, 100);
       }
     },
-    appStateFirstRunReviewingIndex: function (newIndex) {
+    appStateFirstRunReviewingIndex: async function (newIndex) {
       if (newIndex <= this.appDataReviewingFirstRunItems.length) {
-        localStorage.setItem('appStateFirstRunReviewingIndex', newIndex);
+        await saveData('appStateFirstRunReviewingIndex', newIndex);
         setTimeout(() => {
           requestAnimationFrame(() => {
             this.UpdatePointerTargetLocation();
@@ -2652,9 +2692,9 @@ We're working hard to make these Daily Facets better to play.`;
         }, 100);
       }
     },
-    appStateFirstRunCreatingIndex: function (newIndex) {
+    appStateFirstRunCreatingIndex: async function (newIndex) {
       if (newIndex <= this.appDataCreatorFirstRunItems.length) {
-        localStorage.setItem('appStateFirstRunCreatingIndex', newIndex);
+        await saveData('appStateFirstRunCreatingIndex', newIndex);
 
         setTimeout(() => {
           requestAnimationFrame(() => {
@@ -2663,15 +2703,15 @@ We're working hard to make these Daily Facets better to play.`;
         }, 100);
       }
     },
-    getIsAIGenerated: function () {
+    isAIGenerated() {
       return this.GetIsAIGenerated();
     },
-    appStateIsGuessing: function () {
+    appStateIsGuessing() {
       if (this.appStateIsGuessing && this.appStateFirstRunGuessingIndex === -1) {
         this.appStateFirstRunGuessingIndex++;
       }
     },
-    pointerText: function () {
+    pointerText() {
       requestAnimationFrame(() => {
         this.UpdatePointerTargetLocation();
       });
@@ -2680,13 +2720,13 @@ We're working hard to make these Daily Facets better to play.`;
 
   computed: {
     //#region COMPUTED
-    getSelectedCard: function () {
+    selectedCard() {
       return this.appDataCards.concat(this.appDataCardsParked).find((card) => card.isSelected === true);
     },
-    getAllPlayerCards: function (_value) {
+    allPlayerCards(_value) {
       return this.appDataCards.concat(this.appDataCardsParked).find((card) => card.id.indexOf(_value === 0));
     },
-    getAllCards: function () {
+    allCards() {
       let newArray = this.appDataCards.concat(this.appDataCardsParked).filter((card) => card.words.length > 0);
 
       newArray.forEach((card) => {
@@ -2695,28 +2735,28 @@ We're working hard to make these Daily Facets better to play.`;
       newArray = newArray.sort((a, b) => a.id - b.id);
       return newArray;
     },
-    getFirstThreeParkedCards: function () {
+    firstThreeParkedCards() {
       return this.appDataCardsParked.splice(0, 3);
     },
-    getFullCardsInTray: function () {
+    fullCardsInTray() {
       return this.appDataCards.filter((card) => card.words.length > 0);
     },
-    getEmptyCardsInTray: function () {
+    emptyCardsInTray() {
       return this.appDataCards.filter((card) => card.words.length === 0);
     },
-    getNumberOfCardsThatHaveBeenPlacedOnTray: function () {
-      return this.appDataCards === undefined ? 0 : this.getFullCardsInTray.length;
+    numberOfCardsThatHaveBeenPlacedOnTray() {
+      return this.appDataCards === undefined ? 0 : this.fullCardsInTray.length;
     },
-    getNumberOfHintsThatHaveBeenFilled: function () {
+    numberOfHintsThatHaveBeenFilled() {
       return this.appDataHints === undefined ? 0 : this.appDataHints.filter((hint) => hint.value != '').length;
     },
-    getUniqueCardId: function (_words) {
+    uniqueCardId(_words) {
       return this.GetUniqueCardId(_words);
     },
-    getFirstAvailableParkingSpot: function () {
+    firstAvailableParkingSpot() {
       return this.appDataCardsParked.find((card) => card.words.length === 0);
     },
-    getPlayerMessage: function () {
+    playerMessage() {
       clearTimeout(this.appDataTimeoutNotification);
       let time = 2200;
       let pronoun = this.currentGameGuessingWordSet.startsWithVowel ? 'an' : 'a';
@@ -2724,7 +2764,7 @@ We're working hard to make these Daily Facets better to play.`;
       let text = '';
       if (this.appDataMessage !== '') {
         text = this.appDataMessage;
-        if (this.getCurrentDaily && this.getCurrentDaily.solved) {
+        if (this.currentDaily && this.currentDaily.solved) {
           time = 10000;
         }
       } else if (!this.appStateIsGuessing && this.appDataPlayerCurrent.id !== -1) {
@@ -2739,10 +2779,10 @@ We're working hard to make these Daily Facets better to play.`;
         text = `You are reviewing ${this.appDataPlayerSender.name}'s guess!`;
         time = 1700;
       } else {
-        if (this.getCurrentDaily) {
+        if (this.currentDaily) {
           let today = new Date();
-          text = `<name>The Daily Facet – ${this.getCurrentDaily.date.split(',')[0]}</name><subtitle>Puzzle category – "${this.currentGameGuessingWordSet.name}"</subtitle>`;
-          if (this.getCurrentDaily.key === this.getTodaysDaily.key) {
+          text = `<name>The Daily Facet – ${this.currentDaily.date.split(',')[0]}</name><subtitle>Puzzle category – "${this.currentGameGuessingWordSet.name}"</subtitle>`;
+          if (this.currentDaily.key === this.todaysDaily.key) {
             text = `The Daily Facet – Today<subtitle>Puzzle category –  "${this.currentGameGuessingWordSet.name}"</subtitle>`;
           }
         } else {
@@ -2756,13 +2796,13 @@ We're working hard to make these Daily Facets better to play.`;
       }
       return text;
     },
-    getEnabledWordSets: function () {
+    enabledWordSets() {
       return this.appDataWordSets.filter((set) => set.enabled);
     },
-    getEnabledTempWordSets: function () {
+    enabledTempWordSets() {
       return this.tempWordSets.filter((set) => set.enabled);
     },
-    getEnabledTempWordSetNames: function () {
+    enabledTempWordSetNames() {
       let names = [];
       this.appDataWordSets.forEach((set) => {
         if (set.enabled) {
@@ -2771,7 +2811,7 @@ We're working hard to make these Daily Facets better to play.`;
       });
       return names.sort((a, b) => a.localeCompare(b, undefined, { sensitivity: 'base' }));
     },
-    getEnabledTempWordSet: function () {
+    enabledTempWordSet() {
       let names = [];
       this.appDataWordSets.forEach((set) => {
         if (set.enabled) {
@@ -2780,7 +2820,7 @@ We're working hard to make these Daily Facets better to play.`;
       });
       return names.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
     },
-    getEnabledTempLanguages: function () {
+    enabledTempLanguages() {
       let names = [];
       this.appDataLanguages.forEach((lang) => {
         if (lang.enabled) {
@@ -2789,10 +2829,10 @@ We're working hard to make these Daily Facets better to play.`;
       });
       return names.sort((a, b) => a.name.localeCompare(b.name, undefined, { sensitivity: 'base' }));
     },
-    getCurrentSelectedTempWordSetName: function () {
+    currentSelectedTempWordSetName() {
       return this.appDataWordSets.find((set) => set.isSelected).name;
     },
-    getSubmitButtonText: function () {
+    submitButtonText() {
       let text = this.appDataActionButtonTexts.send;
       if (this.appStateShareError) {
         return 'Retry';
@@ -2805,7 +2845,7 @@ We're working hard to make these Daily Facets better to play.`;
 
       if (this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id) {
         if (this.appStateForceAutoCheck) {
-          if (this.getCurrentDaily && !this.getCurrentDaily.solved && this.getCurrentDaily.guesses > 1 && this.getNumberOfCardsThatHaveBeenPlacedOnTray !== 4) {
+          if (this.currentDaily && !this.currentDaily.solved && this.currentDaily.guesses > 1 && this.numberOfCardsThatHaveBeenPlacedOnTray !== 4) {
             text = this.appDataActionButtonTexts.quit;
           } else {
             text = this.appDataActionButtonTexts.guess;
@@ -2815,7 +2855,7 @@ We're working hard to make these Daily Facets better to play.`;
           text = this.appDataActionButtonTexts.copy;
         }
         if (this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
-          if (this.getCurrentDaily) {
+          if (this.currentDaily) {
             text = this.appDataActionButtonTexts.share;
           } else {
             text = this.appDataActionButtonTexts.create;
@@ -2825,31 +2865,31 @@ We're working hard to make these Daily Facets better to play.`;
 
       return text;
     },
-    getCreatedGamesWithWordSetNames: function () {
+    createdGamesWithWordSetNames() {
       return this.appDataGlobalCreatedGames.map((game) => {
         const newArray = this.appDataWordSets.find((set) => set.id === game.wordSetID);
         return newArray ? { ...game, name: newArray.name } : game;
       });
     },
-    getTodaysKey: function () {
+    todaysKey() {
       let today = new Date();
 
       return this.GetDateFormatted(today);
     },
-    getTodaysDaily: function () {
+    todaysDaily() {
       return this.GetTodaysDaily();
     },
-    getCurrentDaily: function () {
-      let daily = this.getDailyGamesWithWordSetNames.find((daily) => {
+    currentDaily() {
+      let daily = this.dailyGamesWithWordSetNames.find((daily) => {
         return daily.key === this.appCurrentDailyGameKey;
       });
       return daily ? daily : null;
     },
-    getDailyIsFreshToday: function () {
-      if (this.getTodaysDaily === undefined) {
+    dailyIsFreshToday() {
+      if (this.todaysDaily === undefined) {
         return false;
       }
-      const isFresh = this.getTodaysDaily.guesses === 0 && !this.HasUserStartedGame(this.getTodaysDaily) && !this.appStateIsGettingDailyGames && !this.appStateIsGettingUserStats;
+      const isFresh = this.todaysDaily.guesses === 0 && !this.HasUserStartedGame(this.todaysDaily) && !this.appStateIsGettingDailyGames && !this.appStateIsGettingUserStats;
       if (this.isBadgeSupported) {
         if (isFresh) {
           navigator.setAppBadge();
@@ -2859,7 +2899,7 @@ We're working hard to make these Daily Facets better to play.`;
       }
       return isFresh;
     },
-    getDailyGamesWithWordSetNames: function () {
+    dailyGamesWithWordSetNames() {
       return this.appDataDailyGames.map((game) => {
         game.date = this.GetDateFormatted(this.ConvertToDateFromKey(game.key), true);
         const newArray = this.appDataWordSets.find((set) => set.id === game.wordSetID);
@@ -2869,38 +2909,38 @@ We're working hard to make these Daily Facets better to play.`;
         return game;
       });
     },
-    isChromeAndiOSoriPadOS: function () {
+    isChromeAndiOSoriPadOS() {
       note('isChromeAndiOSoriPadOS()');
       var userAgent = navigator.userAgent || window.opera;
       var isChromeIOS = /CriOS/.test(userAgent) && /iPhone|iPad|iPod/.test(userAgent);
       userAgent = userAgent.toLowerCase();
       return isChromeIOS || (userAgent.includes('firefox') && userAgent.includes('android'));
     },
-    getIsAIGenerating: function () {
+    isAIGenerating() {
       return window.location.href.indexOf(window.location.origin + '/generate.html') !== -1;
     },
-    getIsAIGenerated: function () {
+    isAIGenerated() {
       return this.GetIsAIGenerated();
     },
-    getActionButtonState: function () {
+    actionButtonState() {
       let inactive = false;
-      if (this.getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && this.getCurrentDaily && this.getCurrentDaily.guesses > 1 && !this.getCurrentDaily.quit) {
+      if (this.numberOfCardsThatHaveBeenPlacedOnTray !== 4 && this.currentDaily && this.currentDaily.guesses > 1 && !this.currentDaily.quit) {
         inactive = false;
-      } else if ((this.getNumberOfHintsThatHaveBeenFilled !== 4 && this.appDataPlayerCurrent.role === 'creator') || (this.getNumberOfCardsThatHaveBeenPlacedOnTray !== 4 && this.appDataPlayerCurrent.role !== 'reviewer' && this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id)) {
+      } else if ((this.numberOfHintsThatHaveBeenFilled !== 4 && this.appDataPlayerCurrent.role === 'creator') || (this.numberOfCardsThatHaveBeenPlacedOnTray !== 4 && this.appDataPlayerCurrent.role !== 'reviewer' && this.appDataPlayerCurrent.id !== this.appDataPlayerCreator.id)) {
         inactive = true;
       }
 
       return inactive;
     },
-    getCorrectCalIconClass: function () {
-      let checkDate = this.getCurrentDaily.date;
+    correctCalIconClass() {
+      let checkDate = this.currentDaily.date;
       let day = parseInt(checkDate.split(' ')[1]);
       const today = new Date();
       let num = new Date(today.getFullYear(), today.getMonth() + 1, 0).getDate() / 12;
       let iconIndex = Math.ceil(day / num);
       return `cal${iconIndex}`;
     },
-    getResumeText: function () {
+    resumeText() {
       let text = '';
       switch (this.appDataPlayerCurrent.role) {
         case 'creator':
@@ -2915,37 +2955,37 @@ We're working hard to make these Daily Facets better to play.`;
       }
       return text;
     },
-    isSyncSupported: function () {
+    isSyncSupported() {
       if (UseDebug) {
         return true;
       }
       return 'SyncManager' in window;
     },
-    isNotificationSupported: function () {
+    isNotificationSupported() {
       if (UseDebug) {
         return true;
       }
       return 'Notification' in window;
     },
-    isBadgeSupported: function () {
+    isBadgeSupported() {
       return navigator.setAppBadge !== undefined && navigator.setAppBadge !== null;
     },
-    isPWAOnHomeScreen: function () {
+    isPWAOnHomeScreen() {
       return window.matchMedia('(display-mode: standalone)').matches;
     },
-    isUserFocusedOnGame: function () {
+    isUserFocusedOnGame() {
       return !this.appStateShowNotification && !this.appStateIsModalShowing && !this.appStateShowMeta && !this.appStateShowTutorial && !this.appStateShowConfirmation && !this.appStateShowIntro && !this.appStateShowInfo && !this.appStateShowCatChooser && !this.appStateShowSettings && !this.appStateShowGlobalCreated && !this.appStateShowDailyGames;
     },
-    isPlayerCreating: function () {
+    isPlayerCreating() {
       return this.appDataPlayerCurrent.role === 'creator';
     },
-    isPlayerGuessing: function () {
+    isPlayerGuessing() {
       return this.appDataPlayerCurrent.role === 'guesser';
     },
-    isPlayerReviewing: function () {
+    isPlayerReviewing() {
       return this.appDataPlayerCurrent.role === 'reviewer';
     },
-    hidePointer: function () {
+    hidePointer() {
       // prettier-ignore
       return !this.isUserFocusedOnGame ||
         (this.isPlayerReviewing && this.appStateFirstRunReviewingIndex >= this.appDataReviewingFirstRunItems.length) ||
@@ -2953,15 +2993,15 @@ We're working hard to make these Daily Facets better to play.`;
         (this.isPlayerGuessing && this.appStateFirstRunGuessingIndex >= this.appDataGuessingFirstRunItems.length) ||
         (!this.isPlayerCreating && !this.isPlayerReviewing && this.isSolved);
     },
-    pointerInPlay: function () {
+    pointerInPlay() {
       return (this.appStateFirstRunGuessingIndex > 0 && this.appStateFirstRunGuessingIndex < this.appDataGuessingFirstRunItems.length && this.isPlayerGuessing) || (this.appStateFirstRunCreatingIndex > 0 && this.appStateFirstRunCreatingIndex < this.appDataCreatorFirstRunItems.length && this.isPlayerCreating) || (this.appStateFirstRunReviewingIndex > 0 && this.appStateFirstRunReviewingIndex < this.appDataReviewingFirstRunItems.length && this.isPlayerReviewing);
     },
-    isSolved: function () {
+    isSolved() {
       return this.currentGameSolutionGuessing === this.currentGameSolutionActual;
     },
-    pointerText: function () {
+    pointerText() {
       let text = '';
-      let finalIndex = this.getIsAIGenerated || this.appDataPlayerCreator.id === 0 ? 1 : 0;
+      let finalIndex = this.isAIGenerated || this.appDataPlayerCreator.id === 0 ? 1 : 0;
 
       switch (this.appDataPlayerCurrent.role) {
         case 'guesser':
@@ -2989,14 +3029,14 @@ We're working hard to make these Daily Facets better to play.`;
       }
       return text;
     },
-    tipSubmitText: function () {
+    tipSubmitText() {
       let text = 'Next';
       if ((this.isPlayerGuessing && this.appStateFirstRunGuessingIndex === this.appDataGuessingFirstRunItems.length - 1) || (this.isPlayerCreating && this.appStateFirstRunCreatingIndex === this.appDataCreatorFirstRunItems.length - 1) || (this.isPlayerReviewing && this.appStateFirstRunReviewingIndex === this.appDataReviewingFirstRunItems.length - 1)) {
         text = 'Okay';
       }
       return text;
     },
-    resumeText: function () {
+    resumeText() {
       if (this.isPlayerCreating) {
         return 'Continue Creating';
       } else if (this.isPlayerGuessing) {
@@ -3005,10 +3045,10 @@ We're working hard to make these Daily Facets better to play.`;
         return 'Resume Reviewing';
       }
     },
-    tipsHaveBeenIncremented: function () {
+    tipsHaveBeenIncremented() {
       return this.appStateFirstRunGuessingIndex > 0 || this.appStateFirstRunCreatingIndex > 0 || this.appStateFirstRunReviewingIndex > 0;
     },
-    currentYear: function () {
+    currentYear() {
       return new Date().getFullYear();
     },
     tempIDisInvalid() {
