@@ -1,9 +1,9 @@
-class PlayerObject {
-  constructor(spec) {
-    this.id = spec.id === undefined ? -1 : spec.id;
-    this.cards = spec.cards === undefined ? [] : spec.cards;
-    this.name = spec.name === undefined ? 'Player' : spec.name;
-    this.role = spec.role === undefined ? 'creator' : spec.role;
-    this.playerPosition = spec.playerPosition === undefined ? 0 : spec.playerPosition;
+export class PlayerObject {
+  constructor(spec = {}) {
+    this.id = spec.id ?? -1;
+    this.cards = spec.cards ?? [];
+    this.name = spec.name ?? 'Player';
+    this.role = spec.role ?? 'creator';
+    this.playerPosition = spec.playerPosition ?? 0;
   }
 }

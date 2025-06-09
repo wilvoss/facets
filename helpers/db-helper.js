@@ -19,7 +19,7 @@ const openDB = () => {
 };
 
 // Save a key-value pair (stores value directly)
-export const saveData = async (key, value) => {
+export const SaveData = async (key, value) => {
   const db = await openDB();
   const transaction = db.transaction(STORE_NAME, 'readwrite');
   const store = transaction.objectStore(STORE_NAME);
@@ -29,7 +29,7 @@ export const saveData = async (key, value) => {
 };
 
 // Retrieve a value by key
-export const getData = async (key) => {
+export const GetData = async (key) => {
   const db = await openDB();
   const transaction = db.transaction(STORE_NAME, 'readonly');
   const store = transaction.objectStore(STORE_NAME);
@@ -42,7 +42,7 @@ export const getData = async (key) => {
 };
 
 // Remove a specific key-value pair
-export const removeData = async (key) => {
+export const RemoveData = async (key) => {
   const db = await openDB();
   const transaction = db.transaction(STORE_NAME, 'readwrite');
   const store = transaction.objectStore(STORE_NAME);
@@ -52,7 +52,7 @@ export const removeData = async (key) => {
 };
 
 // Clear all data from the store
-export const clearStore = async () => {
+export const ClearStore = async () => {
   const db = await openDB();
   const transaction = db.transaction(STORE_NAME, 'readwrite');
   const store = transaction.objectStore(STORE_NAME);
