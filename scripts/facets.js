@@ -1,4 +1,4 @@
-const version = '2.3.24';
+const version = '2.3.25';
 
 //#region MODULE HANDLING
 async function loadModels() {
@@ -69,7 +69,7 @@ LoadAllModules().then((modules) => {
     data() {
       return {
         //#region APP DATA
-        appDataVersion: '2.3.24',
+        appDataVersion: '2.3.25',
         appDataGuessingFirstRunItems: modules.firstRunGuessingMessages,
         appDataCreatorFirstRunItems: modules.firstRunCreatingMessages,
         appDataReviewingFirstRunItems: modules.firstRunReviewingMessages,
@@ -1266,9 +1266,6 @@ ${words[14]} ${words[10]}`);
       //#region HANDLERS
       HandleSubmitButtonPress() {
         note('HandleSubmitButtonPress()');
-        if (!this.isAIGenerating) {
-          gtag('event', 'conversion', { send_to: 'AW-17112522048/YHIbCLem-9EaEMC68d8_', role: this.appDataPlayerCurrent.role, id: this.appDataPlayerCurrent.id, isdaily: this.appDataPlayerCreator.id === 0 });
-        }
         if (this.appDataPlayerCurrent.role === 'reviewer' && this.numberOfCardsThatHaveBeenPlacedOnTray === 4) {
           this.appStateIsModalShowing = true;
           this.appDataConfirmationObject = { message: `Did ${this.appDataPlayerSender.name} have the right answer?`, target: 'correct' };
