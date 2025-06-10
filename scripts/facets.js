@@ -1,4 +1,4 @@
-const version = '2.3.25';
+const version = '2.3.26';
 
 //#region MODULE HANDLING
 async function loadModels() {
@@ -69,7 +69,7 @@ LoadAllModules().then((modules) => {
     data() {
       return {
         //#region APP DATA
-        appDataVersion: '2.3.25',
+        appDataVersion: '2.3.26',
         appDataGuessingFirstRunItems: modules.firstRunGuessingMessages,
         appDataCreatorFirstRunItems: modules.firstRunCreatingMessages,
         appDataReviewingFirstRunItems: modules.firstRunReviewingMessages,
@@ -2694,6 +2694,14 @@ We're working hard to make these Daily Facets better to play.`;
       window.addEventListener('visibilitychange', this.HandlePageVisibilityChange);
       window.addEventListener('resize', this.HandleResize);
       window.addEventListener('popstate', this.HandlePopState);
+    },
+
+    beforeDestroy() {
+      window.removeEventListener('keydown', this.HandleKeyDownEvent);
+      window.removeEventListener('pointermove', this.HandlePointerMoveEvent);
+      window.removeEventListener('visibilitychange', this.HandlePageVisibilityChange);
+      window.removeEventListener('resize', this.HandleResize);
+      window.removeEventListener('popstate', this.HandlePopState);
     },
 
     watch: {

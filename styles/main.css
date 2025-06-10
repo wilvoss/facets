@@ -927,6 +927,7 @@ button.small {
 button.small.isolated {
   position: absolute;
   width: auto;
+  padding: 30px;
   border: none;
 }
 
