@@ -1,4 +1,4 @@
-const version = '2.3.26';
+const version = '2.3.27';
 
 //#region MODULE HANDLING
 async function loadModels() {
@@ -69,7 +69,7 @@ LoadAllModules().then((modules) => {
     data() {
       return {
         //#region APP DATA
-        appDataVersion: '2.3.26',
+        appDataVersion: '2.3.27',
         appDataGuessingFirstRunItems: modules.firstRunGuessingMessages,
         appDataCreatorFirstRunItems: modules.firstRunCreatingMessages,
         appDataReviewingFirstRunItems: modules.firstRunReviewingMessages,
@@ -649,7 +649,7 @@ LoadAllModules().then((modules) => {
         }
       },
 
-      IsCurrentGuessCorrect() {
+      async IsCurrentGuessCorrect() {
         note('IsCurrentGuessCorrect()');
         if (this.numberOfCardsThatHaveBeenPlacedOnTray === 4) {
           this.currentGameGuessCount++;
@@ -685,7 +685,7 @@ LoadAllModules().then((modules) => {
           }
 
           if (this.currentDaily) {
-            this.UpdateGameGuessesCount(this.currentDaily, this.currentGameSolutionActual === this.currentGameSolutionGuessing);
+            await this.UpdateGameGuessesCount(this.currentDaily, this.currentGameSolutionActual === this.currentGameSolutionGuessing);
           }
 
           if (mappedSol[1] !== actualSol[1]) {
