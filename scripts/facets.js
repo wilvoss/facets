@@ -1,4 +1,4 @@
-const version = '2.3.28';
+const version = '2.3.29';
 
 //#region MODULE HANDLING
 async function loadModels() {
@@ -69,7 +69,7 @@ LoadAllModules().then((modules) => {
     data() {
       return {
         //#region APP DATA
-        appDataVersion: '2.3.28',
+        appDataVersion: '2.3.29',
         appDataGuessingFirstRunItems: modules.firstRunGuessingMessages,
         appDataCreatorFirstRunItems: modules.firstRunCreatingMessages,
         appDataReviewingFirstRunItems: modules.firstRunReviewingMessages,
@@ -2592,9 +2592,11 @@ We're working hard to make these Daily Facets better to play.`;
 
       async LoadPage() {
         note('LoadPage()');
-        this.$nextTick(async () => {
-          await this.GetUserSettings();
-        });
+        if (!this.isAIGenerating) {
+          this.$nextTick(async () => {
+            await this.GetUserSettings();
+          });
+        }
         announce('Player ' + this.appDataPlayerCurrent.id + ' has loaded v' + this.appDataVersion);
         this.GetDailyGames();
         this.GetLast10GlobalCreatedGames();
