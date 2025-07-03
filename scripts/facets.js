@@ -2590,13 +2590,15 @@ We're working hard to make these Daily Facets better to play.`;
         }
       },
 
+      async OnMount() {
+        this.$nextTick(async () => {
+          await this.GetUserSettings();
+          this.LoadPage();
+        });
+      },
+
       async LoadPage() {
         note('LoadPage()');
-        if (!this.isAIGenerating) {
-          this.$nextTick(async () => {
-            await this.GetUserSettings();
-          });
-        }
         announce('Player ' + this.appDataPlayerCurrent.id + ' has loaded v' + this.appDataVersion);
         this.GetDailyGames();
         this.GetLast10GlobalCreatedGames();
@@ -2691,7 +2693,7 @@ We're working hard to make these Daily Facets better to play.`;
     },
 
     async mounted() {
-      await this.LoadPage();
+      await this.OnMount();
       this.DeregisterServiceWorkers();
       window.addEventListener('keydown', this.HandleKeyDownEvent);
       window.addEventListener('pointermove', this.HandlePointerMoveEvent);
