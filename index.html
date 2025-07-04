@@ -23,19 +23,19 @@
     <meta name="description"
       content="Facets: A free word association puzzle game. Play custom challenges with friends or take on the AI's Daily Puzzle — brain-teasing fun without distractions!" />
 
-    <link rel="manifest" href="manifest.webmanifest?2.3.31" />
+    <link rel="manifest" href="manifest.webmanifest?2.3.32" />
 
     <link rel="apple-touch-icon" sizes="120x120" href="images/icon180.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="images/icon180.png" />
     <link rel="apple-touch-icon" sizes="192x192" href="images/icon192.png" />
     <link rel="apple-touch-icon" sizes="512x512" href="images/icon512-apple-touch.png" />
 
-    <link rel="icon alternate" type="image/png" href="favicon.png">
+    <link rel="icon alternate" type="image/png" href="favicon-alt.png">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
-    <link rel="stylesheet" href="styles/normalize.css?2.3.31" media="screen" />
-    <link rel="stylesheet" href="styles/main.css?2.3.31" media="screen" />
-    <link rel="stylesheet" href="styles/checkbox.min.css?2.3.31" media="screen" />
+    <link rel="stylesheet" href="styles/normalize.css?2.3.32" media="screen" />
+    <link rel="stylesheet" href="styles/main.css?2.3.32" media="screen" />
+    <link rel="stylesheet" href="styles/checkbox.min.css?2.3.32" media="screen" />
   </head>
 
   <body>
@@ -55,12 +55,12 @@
           :style="{backgroundImage: 'url('+ wordset.textureImage + ')'}" />
       </preload>
       <link rel="stylesheet"
-        v-bind:href="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme) ? 'styles/light.css?2.3.31' : ''"
+        v-bind:href="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme) ? 'styles/light.css?2.3.32' : ''"
         media="screen" />
-      <link rel="stylesheet" v-bind:href="loadSimplifiedTheme ? 'styles/simple.min.css?2.3.31' : ''" media="screen" />
-      <link rel="stylesheet" v-bind:href="appStateUseFlower ? 'styles/flower.css?2.3.31' : ''" media="screen" />
+      <link rel="stylesheet" v-bind:href="loadSimplifiedTheme ? 'styles/simple.min.css?2.3.32' : ''" media="screen" />
+      <link rel="stylesheet" v-bind:href="appStateUseFlower ? 'styles/flower.css?2.3.32' : ''" media="screen" />
       <link rel="stylesheet"
-        v-bind:href="appStateUsePortraitLayout && !userSettingsShowAllCards && !tooSmall && !isPlayerCreating ? 'styles/focus.css?2.3.31' : ''"
+        v-bind:href="appStateUsePortraitLayout && !userSettingsShowAllCards && !tooSmall && !isPlayerCreating ? 'styles/focus.css?2.3.32' : ''"
         media="screen" />
       <splash :class="{hide: appStatePageHasLoaded}">
         <icon class="logo giant"></icon>
@@ -785,9 +785,9 @@
         </button>
       </wrapper>
     </app>
-    <script src="helpers/console-enhancer.js?2.3.31" type="text/javascript"></script>
+    <script src="helpers/console-enhancer.js?2.3.32" type="text/javascript"></script>
     <script src="helpers/vue.min.js" type="text/javascript"></script>
-    <script src="scripts/facets.js?2.3.31" type="module"></script>
+    <script src="scripts/facets.js?2.3.32" type="module"></script>
   </body>
 
 </html>
