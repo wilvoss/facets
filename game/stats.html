@@ -33,14 +33,14 @@
       app {
         justify-content: flex-start;
         align-items: center;
-        overflow: auto;
         height: 100%;
+        overflow: auto;
       }
 
       header {
         flex-direction: column;
-        padding: 8px;
         align-items: center;
+        padding: 8px;
       }
 
       header h1,
@@ -56,9 +56,9 @@
       }
 
       subtitle {
-        color: hsla(var(--appForegroundHSL), 1);
         display: flex;
         flex-direction: row;
+        color: hsla(var(--appForegroundHSL), 1);
         line-height: 1.3em;
         text-align: center;
       }
@@ -71,14 +71,15 @@
       stats {
         display: flex;
         flex-direction: row;
-        justify-content: center;
-        align-content: start;
-        align-items: stretch;
-        max-width: 500px;
-        width: calc(100% - 2 * var(--defaultGap));
-        padding: calc(2 * var(--defaultGap)) calc(1 * var(--defaultGap)) 0;
         flex-wrap: wrap;
+        align-content: start;
+        justify-content: center;
+        align-items: stretch;
         gap: calc(0.5 * var(--defaultGap));
+        padding: calc(2 * var(--defaultGap)) calc(1 * var(--defaultGap)) 0;
+        width: calc(100% - 2 * var(--defaultGap));
+        max-width: 500px;
+        overflow: initial;
       }
 
       stats:last-of-type {
@@ -87,17 +88,17 @@
 
       stat {
         display: flex;
+        flex: 1;
         flex-direction: column;
         justify-content: start;
         align-items: stretch;
         gap: 0;
-        flex: 1;
-        max-width: 100%;
-        padding: 20px 8px;
-        background: var(--statBackground);
-        border-radius: var(--borderRadius);
         box-shadow: var(--statShadow);
         border: 1px solid var(--statBorder);
+        border-radius: var(--borderRadius);
+        background: var(--statBackground);
+        padding: 20px 8px;
+        max-width: 100%;
       }
 
       .languages stat:first-of-type {
@@ -107,15 +108,15 @@
       value,
       key {
         display: block;
-        text-align: center;
-        line-height: 1.2em;
         padding: 0 20px;
         min-width: 60px;
+        line-height: 1.2em;
+        text-align: center;
       }
 
       key {
-        font-size: 0.7em;
         color: hsla(var(--traySolvedBackgroundHSL), 1);
+        font-size: 0.7em;
       }
 
       value {
@@ -131,10 +132,10 @@
         display: none;
 
         -ms-overflow-style: none;
+        scroll-behavior: smooth;
         scrollbar-width: none;
 
         touch-action: auto;
-        scroll-behavior: smooth;
       }
 
       @media screen and (max-width: 678px) {
@@ -144,8 +145,8 @@
         }
 
         message {
-          font-size: .8em;
           margin-bottom: calc(.5 * var(--defaultGap));
+          font-size: .8em;
         }
 
         key {
@@ -176,10 +177,8 @@
       <a v-if="!isFetching" style="margin-bottom: 40px" href="/">Open Facets</a>
     </app>
     <script src="../helpers/console-enhancer.js" type="text/javascript"></script>
-    <script src="../models/LanguageObject.min.js" type="text/javascript"></script>
-    <script src="../models/WordSetObject.min.js" type="text/javascript"></script>
     <script src="../helpers/vue.min.js" type="text/javascript"></script>
-    <script src="../scripts/fetch-stats.js" type="text/javascript"></script>
+    <script type="module" src="../scripts/fetch-stats.js" type="text/javascript"></script>
   </body>
 
 </html>

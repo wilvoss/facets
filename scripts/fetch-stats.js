@@ -1,6 +1,4 @@
-/// <reference path="../models/ProgressMessageObject.js" />
-/// <reference path="../models/WordObject.js" />
-/// <reference path="../models/CardObject.js" />
+import { wordSets, allLanguages } from '../constants/wordset.js';
 
 // if (!UseDebug) {
 Vue.config.devtools = false;
@@ -66,20 +64,20 @@ var app = new Vue({
       });
       let languages = [];
       this.rawStats.languagesCount.forEach((language) => {
-        languages.push({ key: AllLanguages.find((item) => item.tag === language.lang).name, value: language.count });
+        languages.push({ key: allLanguages.find((item) => item.tag === language.lang).name, value: language.count });
       });
 
       this.SortByValueThenName(languages, 'key');
 
       result.push({ key: 'Language', value: languages });
-      let wordsets = [];
+      let sets = [];
       this.rawStats.wordsetIDCount.forEach((set) => {
-        wordsets.push({ key: WordSets.find((item) => item.id === set.id).name, value: set.count });
+        sets.push({ key: wordSets.find((item) => item.id === set.id).name, value: set.count });
       });
 
-      this.SortByValueThenName(wordsets, 'key');
+      this.SortByValueThenName(sets, 'key');
 
-      result.push({ key: 'Category', value: wordsets });
+      result.push({ key: 'Category', value: sets });
       return result;
     },
 
