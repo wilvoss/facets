@@ -234,7 +234,8 @@ button {
   -webkit-user-select: none;
 }
 
-button.resume {
+button.resume.small {
+  color: hsl(var(--linkColorLightHSL));
   font-family: var(--wordFont);
 }
 
@@ -907,6 +908,10 @@ subtitle {
   color: hsla(var(--linkColorDarkHSL), 1);
 }
 
+subtitle button {
+  border: 1px solid hsla(var(--appForegroundHSL), .2);
+}
+
 button.small {
   display: flex;
   flex-direction: row;
@@ -928,6 +933,7 @@ button.small {
 
 button.small.isolated {
   position: absolute;
+  box-shadow: none;
   border: none;
   padding: 30px;
   width: auto;
