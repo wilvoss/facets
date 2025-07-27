@@ -1,4 +1,4 @@
-const version = '2.3.34';
+const version = '2.3.35';
 
 //#region MODULE HANDLING
 async function loadModels() {
@@ -69,7 +69,7 @@ LoadAllModules().then((modules) => {
     data() {
       return {
         //#region APP DATA
-        appDataVersion: '2.3.34',
+        appDataVersion: '2.3.35',
         appDataGuessingFirstRunItems: modules.firstRunGuessingMessages,
         appDataCreatorFirstRunItems: modules.firstRunCreatingMessages,
         appDataReviewingFirstRunItems: modules.firstRunReviewingMessages,
@@ -902,11 +902,13 @@ LoadAllModules().then((modules) => {
           this.documentCssRoot.style.setProperty('--wordScale', this.currentGameGuessingWordSet.scale);
           this.appDataPlayerCurrent.role = this.appDataPlayerCreator.id === this.appDataPlayerCurrent.id && this.appDataPlayerCurrent.id !== this.appDataPlayerSender.id ? 'reviewer' : 'guesser';
 
-          if (this.isPlayerReviewing && this.appDataPlayerSender.name !== 'Player') {
+          if (this.isPlayerReviewing && this.appDataPlayerCreator.id !== 0) {
             this.appDataReviewingFirstRunItems[0][0] = this.appDataReviewingFirstRunItems[0][0].replace('Your friend ', this.appDataPlayerSender.name + ' ');
           }
-          if (this.isPlayerGuessing && (this.appDataPlayerSender.name !== 'Player' || this.isAIGenerated)) {
+          if (this.isPlayerGuessing && (this.appDataPlayerCreator.id !== 0 || this.isAIGenerated)) {
             this.appDataGuessingFirstRunItems[0][0] = this.appDataGuessingFirstRunItems[0][0].replace('Your friend ', this.appDataPlayerSender.name + ' ');
+          } else if (this.isPlayerGuessing && this.appDataPlayerCreator.id === 0 && !this.isAIGenerated) {
+            this.appDataGuessingFirstRunItems[0][1] = 'Hi, An anonymous player created this puzzle for their friends to solve. Can you solve it too?';
           }
         }
         this.appStateIsGuessing = true;
@@ -2638,7 +2640,7 @@ We're working hard to make these Daily Facets better to play.`;
         }
         setTimeout(() => {
           this.appStatePageHasLoaded = true;
-        }, 700);
+        }, 400);
         this.appStateUsePortraitLayout = document.body.offsetHeight > document.body.offsetWidth;
       },
       //#endregion

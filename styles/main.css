@@ -1,16 +1,16 @@
 @font-face {
-  font-family: 'Abel';
   src: url('../fonts/Abel-Regular.ttf');
+  font-family: 'Abel';
 }
 
 @font-face {
-  font-family: 'ClueFont';
   src: url('../fonts/NovaFlat-Regular.ttf');
+  font-family: 'ClueFont';
 }
 
 @font-face {
-  font-family: 'Theme';
   src: url('../fonts/Bungee-Regular.ttf');
+  font-family: 'Theme';
 }
 
 @property --hueDaily {
@@ -83,49 +83,49 @@
 }
 
 html {
-  overflow: hidden;
+  background-color: hsl(var(--appBackgroundDarkestHSL));
   width: 100%;
   height: 100%;
-  background-color: hsl(var(--appBackgroundDarkestHSL));
   min-height: 100%;
+  overflow: hidden;
 }
 
 body {
   display: block;
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
   margin: 0px 0px;
-  font-family: var(--wordFont);
-  font-size: 1.3em;
-  line-height: 1.3em;
-  color: hsl(var(--appForegroundHSL));
-  background-color: hsl(var(--appBackgroundDarkestHSL));
   background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 50%), var(--textureHue), var(--texture2);
-  background-repeat: no-repeat, no-repeat, repeat;
   background-position: center center;
   background-size: cover, cover, var(--textureSize);
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-color: hsl(var(--appBackgroundDarkestHSL));
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  color: hsl(var(--appForegroundHSL));
+  font-size: 1.3em;
+  line-height: 1.3em;
+  font-family: var(--wordFont);
 }
 
 app {
   display: flex;
-  overflow: hidden;
-  height: 100%;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: var(--defaultGap);
-  min-height: 620px;
   transition: var(--mediumTransition) ease-in-out background-color;
+  height: 100%;
+  min-height: 620px;
+  overflow: hidden;
 }
 
 preload {
   display: block;
   position: fixed;
-  overflow: hidden;
+  opacity: 0;
   width: 0px;
   height: 0px;
-  opacity: 0;
+  overflow: hidden;
   pointer-events: none;
   user-select: none;
 }
@@ -133,22 +133,22 @@ preload {
 splash {
   display: flex;
   position: fixed;
-  z-index: 1000;
-  width: 100%;
-  height: 100%;
-  background-color: hsl(var(--appBackgroundDarkestHSL));
-  background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 50%), var(--textureHue), var(--texture2);
-  background-repeat: no-repeat, no-repeat, repeat;
-  background-position: center center;
-  background-size: cover, cover, var(--textureSize);
+  top: 0px;
+  left: 0px;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: var(--defaultGap);
+  z-index: 1000;
   transition: var(--longTransition) ease-out all;
+  background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 50%), var(--textureHue), var(--texture2);
+  background-position: center center;
+  background-size: cover, cover, var(--textureSize);
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-color: hsl(var(--appBackgroundDarkestHSL));
+  width: 100%;
+  height: 100%;
   pointer-events: all;
-  top: 0px;
-  left: 0px;
 }
 
 splash.hide {
@@ -172,17 +172,17 @@ h3,
 h4,
 h5 {
   margin: calc(3 * var(--defaultGap)) 0 calc(2 * var(--defaultGap));
-  font-family: 'Theme';
   font-weight: normal;
-  text-align: center;
+  font-family: 'Theme';
   user-select: none;
+  text-align: center;
   -webkit-user-select: none;
 }
 
 h3 {
+  transition: var(--mediumTransition) ease-in-out color;
   margin: var(--defaultGap) 0 0;
   color: hsl(var(--messageColorHSL));
-  transition: var(--mediumTransition) ease-in-out color;
 }
 
 input {
@@ -194,19 +194,19 @@ a:hover,
 a:focus,
 a:visited,
 a:active {
-  text-align: center;
-  text-decoration: none;
   color: hsl(var(--linkColorLightHSL));
   user-select: none;
+  text-align: center;
+  text-decoration: none;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: transparent;
   cursor: pointer;
 }
 
 a.padded {
-  width: calc(90% - 32px);
-  padding: 8px 16px;
   border-radius: var(--borderRadius);
+  padding: 8px 16px;
+  width: calc(90% - 32px);
 }
 
 a.inline {
@@ -219,15 +219,15 @@ section h3 {
 }
 
 button {
-  padding: calc(0.75 * var(--defaultGap)) var(--defaultGap);
-  border: none;
-  font-family: 'Theme';
-  color: hsl(var(--linkColorLightHSL));
   transition-property: color, background-color, opacity, border-color;
   cursor: pointer;
+  outline: none;
+  border: none;
   border-radius: var(--borderRadius);
   background: none;
-  outline: none;
+  padding: calc(0.75 * var(--defaultGap)) var(--defaultGap);
+  color: hsl(var(--linkColorLightHSL));
+  font-family: 'Theme';
   -webkit-tap-highlight-color: transparent;
   transition: var(--mediumTransition) ease-in-out;
   user-select: none;
@@ -240,28 +240,28 @@ button.resume {
 
 button badge {
   display: flex;
-  overflow: hidden;
-  width: 0px;
-  height: 0px;
-  font-size: 0.7em;
-  font-weight: 800;
-  color: hsl(var(--appForegroundHSL));
-  opacity: 0;
   justify-content: center;
   align-items: center;
+  scale: 0;
+  opacity: 0;
+  transition: var(--mediumTransition) ease-in-out all;
+  margin-left: 0px;
   border-radius: 50%;
   background: hsl(var(--alertHSL));
-  margin-left: 0px;
-  transition: var(--mediumTransition) ease-in-out all;
-  scale: 0;
+  width: 0px;
+  height: 0px;
+  overflow: hidden;
+  color: hsl(var(--appForegroundHSL));
+  font-weight: 800;
+  font-size: 0.7em;
 }
 
 button badge.show {
+  scale: 1;
+  opacity: 1;
+  margin-left: calc(0.5 * var(--defaultGap));
   width: 24px;
   height: 24px;
-  opacity: 1;
-  scale: 1;
-  margin-left: calc(0.5 * var(--defaultGap));
 }
 
 button.secondary {
@@ -278,16 +278,16 @@ button.inline {
 
 button.small {
   display: flex;
-  width: auto;
-  padding: var(--defaultGap);
-  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
-  text-align: center;
-  text-transform: uppercase;
-  color: hsla(var(--appForegroundDiminishedHSL), 1);
   opacity: 1;
   cursor: pointer;
   background: none;
+  padding: var(--defaultGap);
+  width: auto;
+  color: hsla(var(--appForegroundDiminishedHSL), 1);
+  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
   letter-spacing: 1px;
+  text-align: center;
+  text-transform: uppercase;
   text-wrap: nowrap;
 }
 
@@ -298,15 +298,15 @@ button.small.highlightText {
 
 beta {
   display: inline-block;
-  color: hsl(var(--alertTextHSL));
   margin-right: 4px;
+  color: hsl(var(--alertTextHSL));
 }
 
 beta a,
 beta a:visited,
 beta a:focus {
-  text-decoration: underline;
   color: hsl(var(--alertTextHSL));
+  text-decoration: underline;
 }
 
 beta::before {
@@ -315,31 +315,31 @@ beta::before {
 
 header {
   display: flex;
-  color: hsl(var(--appForegroundDiminishedHSL));
+  flex: 1;
   justify-content: center;
   align-items: center;
   gap: 1em;
-  white-space: nowrap;
-  flex: 1;
+  color: hsl(var(--appForegroundDiminishedHSL));
   user-select: none;
+  white-space: nowrap;
   -webkit-user-select: none;
   cursor: default;
 }
 
 header icon {
-  pointer-events: all;
   cursor: pointer;
+  pointer-events: all;
 }
 
 notification header icon.logo {
-  pointer-events: none;
   cursor: default;
+  pointer-events: none;
 }
 
 notification header flogo {
+  background-size: contain;
   width: calc(2 * var(--massiveIconSize));
   height: var(--massiveIconSize);
-  background-size: contain;
 }
 
 header icon.check {
@@ -348,10 +348,10 @@ header icon.check {
 
 header span {
   display: flex;
+  flex: 1;
   align-items: center;
   gap: 4px;
   padding-top: 1px;
-  flex: 1;
 }
 
 header span:first-of-type {
@@ -360,17 +360,17 @@ header span:first-of-type {
 
 button.dailycta {
   position: fixed;
-  z-index: 300;
-  height: auto;
-  padding: calc(0.5 * var(--defaultGap)) calc(2 * var(--defaultGap));
-  border: 1px solid hsla(var(--linkColorLightHSL), 1);
-  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
-  color: hsl(var(--appBackgroundDarkestHSL));
-  background-color: hsl(var(--linkColorLightHSL));
-  transform: translate(0px, -60px);
   top: 0px;
-  border-radius: var(--borderRadius);
+  transform: translate(0px, -60px);
+  z-index: 300;
   transition: var(--mediumTransition) ease-in-out all;
+  border: 1px solid hsla(var(--linkColorLightHSL), 1);
+  border-radius: var(--borderRadius);
+  background-color: hsl(var(--linkColorLightHSL));
+  padding: calc(0.5 * var(--defaultGap)) calc(2 * var(--defaultGap));
+  height: auto;
+  color: hsl(var(--appBackgroundDarkestHSL));
+  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
 }
 
 button.dailycta icon {
@@ -388,10 +388,10 @@ header h1 {
 
 icon {
   display: block;
+  mask-size: calc(0.75 * var(--smallIconSize)) calc(0.75 * var(--smallIconSize));
+  background-color: hsl(var(--appForegroundDiminishedHSL));
   width: var(--smallIconSize);
   height: var(--smallIconSize);
-  background-color: hsl(var(--appForegroundDiminishedHSL));
-  mask-size: calc(0.75 * var(--smallIconSize)) calc(0.75 * var(--smallIconSize));
   -webkit-mask-size: calc(0.75 * var(--smallIconSize)) calc(0.75 * var(--smallIconSize));
   mask-repeat: no-repeat;
   -webkit-mask-repeat: no-repeat;
@@ -402,38 +402,38 @@ icon {
 }
 
 icon.tiny {
+  mask-size: calc(1 * var(--tinyIconSize)) calc(1 * var(--tinyIconSize));
   width: var(--tinyIconSize);
   height: var(--tinyIconSize);
-  mask-size: calc(1 * var(--tinyIconSize)) calc(1 * var(--tinyIconSize));
   -webkit-mask-size: calc(1 * var(--tinyIconSize)) calc(1 * var(--tinyIconSize));
 }
 
 icon.extrasmall {
+  mask-size: calc(1 * var(--extraSmallIconSize)) calc(1 * var(--extraSmallIconSize));
   width: var(--extraSmallIconSize);
   height: var(--extraSmallIconSize);
-  mask-size: calc(1 * var(--extraSmallIconSize)) calc(1 * var(--extraSmallIconSize));
   -webkit-mask-size: calc(1 * var(--extraSmallIconSize)) calc(1 * var(--extraSmallIconSize));
 }
 
 icon.medium {
+  mask-size: calc(0.75 * var(--mediumIconSize)) calc(0.75 * var(--mediumIconSize));
   width: var(--mediumIconSize);
   height: var(--mediumIconSize);
-  mask-size: calc(0.75 * var(--mediumIconSize)) calc(0.75 * var(--mediumIconSize));
   -webkit-mask-size: calc(0.75 * var(--mediumIconSize)) calc(0.75 * var(--mediumIconSize));
 }
 
 icon.large {
+  mask-size: calc(0.75 * var(--largeIconSize)) calc(0.75 * var(--largeIconSize));
   width: var(--largeIconSize);
   height: var(--largeIconSize);
-  mask-size: calc(0.75 * var(--largeIconSize)) calc(0.75 * var(--largeIconSize));
   -webkit-mask-size: calc(0.75 * var(--largeIconSize)) calc(0.75 * var(--largeIconSize));
 }
 
 icon.giant,
 icon.logo.giant {
+  mask-size: var(--giantIconSize) var(--giantIconSize);
   width: var(--giantIconSize);
   height: var(--giantIconSize);
-  mask-size: var(--giantIconSize) var(--giantIconSize);
   -webkit-mask-size: var(--giantIconSize) var(--giantIconSize);
 }
 
@@ -442,19 +442,19 @@ icon.empty {
 }
 
 icon.emoji {
+  margin: 0;
+  background-color: none;
+  padding: 0;
   width: auto;
   height: auto;
-  margin: 0;
-  padding: 0;
   line-height: inherit;
-  background-color: none;
 }
 
 icon.logo {
+  mask-size: var(--largeIconSize) var(--largeIconSize);
+  background-color: hsl(var(--appForegroundHSL));
   width: var(--largeIconSize);
   height: var(--largeIconSize);
-  background-color: hsl(var(--appForegroundHSL));
-  mask-size: var(--largeIconSize) var(--largeIconSize);
   -webkit-mask-size: var(--largeIconSize) var(--largeIconSize);
   mask-image: url(../images/logo-facets.svg);
   -webkit-mask-image: url(../images/logo-facets.svg);
@@ -596,24 +596,24 @@ small {
 }
 
 message small {
-  line-height: 100%;
   color: hsl(var(--linkColorLightHSL));
+  line-height: 100%;
 }
 
 message small.messageShare {
   display: inline-block;
-  padding: 0 0 var(--defaultGap);
   margin-top: -18px;
+  padding: 0 0 var(--defaultGap);
 }
 
 message icon.share {
   display: inline-block;
-  overflow: visible;
+  mask-size: calc(0.75 * var(--extraSmallIconSize)) calc(0.75 * var(--extraSmallIconSize));
+  background-color: hsl(var(--linkColorLightHSL));
+  padding: 0;
   width: var(--extraSmallIconSize);
   height: var(--extraSmallIconSize);
-  padding: 0;
-  background-color: hsl(var(--linkColorLightHSL));
-  mask-size: calc(0.75 * var(--extraSmallIconSize)) calc(0.75 * var(--extraSmallIconSize));
+  overflow: visible;
   -webkit-mask-size: calc(0.75 * var(--extraSmallIconSize)) calc(0.75 * var(--extraSmallIconSize));
 }
 
@@ -623,21 +623,21 @@ icon.info {
 }
 
 icon.info.small {
+  mask-size: var(--tiniestIconSize) var(--tiniestIconSize);
+  background-color: hsl(0, 100%, 100%);
+  padding-bottom: 5px;
+  padding-left: 4px;
   width: var(--tiniestIconSize);
   height: var(--tiniestIconSize);
-  background-color: hsl(0, 100%, 100%);
-  padding-left: 4px;
-  padding-bottom: 5px;
-  mask-size: var(--tiniestIconSize) var(--tiniestIconSize);
   -webkit-mask-size: var(--tiniestIconSize) var(--tiniestIconSize);
 }
 
 icon.spinner {
   position: absolute;
   opacity: 0;
+  mask-image: url(../images/icon-spinner.svg);
   animation: spin 1s steps(10, start) infinite;
   transition-delay: 0ms;
-  mask-image: url(../images/icon-spinner.svg);
   -webkit-mask-image: url(../images/icon-spinner.svg);
   -webkit-animation: spin 1s steps(10, start) infinite;
   transition: var(--mediumTransition) linear opacity;
@@ -687,23 +687,23 @@ hints hint.pointoutparent {
 
 .multicolor.creating hints hint input.pointout,
 .multicolor.creating hints hint input.pointout::placeholder {
-  font-size: 1.13em;
-  color: hsl(var(--tipColorHSL));
   margin-top: -2px;
   padding-bottom: 66px;
+  color: hsl(var(--tipColorHSL));
+  font-size: 1.13em;
 }
 
 word.pointout {
-  color: hsl(var(--tipColorHSL));
   animation: 400ms ease-in-out 0s 0.3 blink;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+  color: hsl(var(--tipColorHSL));
 }
 
 tray spot.pointout,
 tray spot.pointadjacent {
-  background: hsla(var(--appBackgroundDarkestHSL), 0.2);
   outline: 1px solid hsl(var(--tipColorHSL));
+  background: hsla(var(--appBackgroundDarkestHSL), 0.2);
 }
 
 button#shareButton.pointout span {
@@ -766,7 +766,8 @@ parking spot.pointout {
     transform: rotate(-3deg);
   }
 
-  40%, 100% {
+  40%,
+  100% {
     transform: rotate(0deg);
   }
 }
@@ -800,7 +801,8 @@ parking spot.pointout {
     transform: rotate(-3deg);
   }
 
-  40%, 100% {
+  40%,
+  100% {
     transform: rotate(0deg);
   }
 }
@@ -862,31 +864,31 @@ icon.settings {
 
 hintcard {
   display: flex;
-  width: 100%;
-  border: none;
-  font-size: 90%;
-  opacity: 0.7;
   justify-content: center;
   align-items: center;
+  opacity: 0.7;
   margin-bottom: var(--defaultGap);
+  border: none;
+  width: 100%;
   pointer-events: none;
+  font-size: 90%;
 }
 
 hintcard card {
   border: none;
-  color: hsl(var(--appForegroundHSL));
   background: none;
+  color: hsl(var(--appForegroundHSL));
 }
 
 header h1 {
-  font-family: 'Theme';
-  font-size: 280%;
+  cursor: default;
   font-weight: normal;
+  font-size: 280%;
   line-height: 84%;
+  font-family: 'Theme';
+  letter-spacing: 1px;
   text-align: center;
   text-transform: uppercase;
-  cursor: default;
-  letter-spacing: 1px;
 }
 
 icon.logo {
@@ -896,46 +898,46 @@ icon.logo {
 
 subtitle {
   display: flex;
-  width: 100%;
-  color: hsla(var(--linkColorDarkHSL), 1);
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: calc(0.25 * var(--defaultGap));
   padding-bottom: var(--defaultGap);
+  width: 100%;
+  color: hsla(var(--linkColorDarkHSL), 1);
 }
 
 button.small {
   display: flex;
-  padding: calc(0.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
-  line-height: 140%;
-  text-transform: unset;
-  color: hsl(var(--appForegroundHSL));
-  transition-property: background-color, border-color, opacity;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   gap: 2px;
-  max-width: calc(2 * var(--cardSize));
-  letter-spacing: 0px;
+  transition-property: background-color, border-color, opacity;
   cursor: pointer;
   border-radius: calc(1 * var(--borderRadius));
+  padding: calc(0.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
+  max-width: calc(2 * var(--cardSize));
+  color: hsl(var(--appForegroundHSL));
+  line-height: 140%;
+  letter-spacing: 0px;
+  text-transform: unset;
   -webkit-tap-highlight-color: transparent;
   transition: var(--mediumTransition) ease-in-out;
 }
 
 button.small.isolated {
   position: absolute;
-  width: auto;
-  padding: 30px;
   border: none;
+  padding: 30px;
+  width: auto;
 }
 
 button.small.main {
-  font-family: 'Theme';
-  color: hsl(var(--linkColorLightHSL));
   padding-top: calc(0.75 * var(--defaultGap));
   padding-bottom: calc(0.7 * var(--defaultGap));
+  color: hsl(var(--linkColorLightHSL));
+  font-family: 'Theme';
 }
 
 button.small.strong {
@@ -947,9 +949,9 @@ button.small.disabled {
 }
 
 button.small.strong.disabled {
-  color: hsl(var(--appForegroundHSL));
-  background-color: hsl(var(--appBackgroundHSL));
   opacity: 0.4;
+  background-color: hsl(var(--appBackgroundHSL));
+  color: hsl(var(--appForegroundHSL));
 }
 
 notification button.inline,
@@ -961,26 +963,26 @@ notification.meta leftright {
 notification {
   display: flex;
   position: fixed;
-  z-index: 200;
-  width: calc(100% - 2 * var(--defaultGap));
-  height: calc(100% - 2 * var(--defaultGap));
-  padding: var(--defaultGap);
-  opacity: 0;
+  top: 0;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  top: 0;
   gap: calc(2 * var(--defaultGap));
-  background: hsla(var(--appBackgroundDarkestHSL), 0.4);
+  opacity: 0;
+  z-index: 200;
   backdrop-filter: blur(10px);
   transition: var(--mediumTransition) ease-in-out opacity;
+  background: hsla(var(--appBackgroundDarkestHSL), 0.4);
+  padding: var(--defaultGap);
+  width: calc(100% - 2 * var(--defaultGap));
+  height: calc(100% - 2 * var(--defaultGap));
   pointer-events: none;
 }
 
 notification header {
+  flex: unset;
   flex-direction: column;
   gap: 0px;
-  flex: unset;
 }
 
 notification header h2 {
@@ -1001,9 +1003,9 @@ notification h2,
 notification p {
   margin: 10px 0 0 0;
   padding: 0;
+  color: hsl(var(--appForegroundHSL));
   line-height: 1.4em;
   text-align: center;
-  color: hsl(var(--appForegroundHSL));
 }
 
 notification p {
@@ -1011,16 +1013,16 @@ notification p {
 }
 
 notification.meta {
+  justify-content: center;
+  gap: calc(0.75 * var(--defaultGap));
   z-index: 300;
-  overflow: auto;
-  background-color: hsl(var(--appBackgroundDarkestHSL));
+  transition: none;
   background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 50%), var(--textureHue), var(--texture2);
-  background-repeat: no-repeat, no-repeat, repeat;
   background-position: center center;
   background-size: cover, cover, var(--textureSize);
-  justify-content: center;
-  transition: none;
-  gap: calc(0.75 * var(--defaultGap));
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-color: hsl(var(--appBackgroundDarkestHSL));
+  overflow: auto;
 }
 
 notification.meta p {
@@ -1028,11 +1030,11 @@ notification.meta p {
 }
 
 notification.meta leftright {
-  padding: 0;
+  gap: calc(0.25 * var(--defaultGap));
   border: none;
   background: none;
+  padding: 0;
   max-width: calc(2 * var(--cardSize));
-  gap: calc(0.25 * var(--defaultGap));
 }
 
 notification.show {
@@ -1041,63 +1043,63 @@ notification.show {
 }
 
 notification message {
-  width: calc(100% - 2 * var(--defaultGap));
+  gap: calc(0.25 * var(--defaultGap));
   margin: var(--defaultGap);
-  padding: calc(1.5 * var(--defaultGap)) var(--defaultGap);
   border: 1px solid hsl(var(--messageColorHSL));
+  border-radius: var(--borderRadius);
+  background: black;
+  padding: calc(1.5 * var(--defaultGap)) var(--defaultGap);
+  width: calc(100% - 2 * var(--defaultGap));
+  max-width: calc(2.5 * var(--cardSize));
+  pointer-events: none;
+  color: hsl(var(--appForegroundHSL));
   font-size: 1.1em;
   line-height: 1.5em;
-  color: hsl(var(--appForegroundHSL));
-  gap: calc(0.25 * var(--defaultGap));
-  background: black;
-  max-width: calc(2.5 * var(--cardSize));
-  border-radius: var(--borderRadius);
-  pointer-events: none;
 }
 
 pointer {
   display: flex;
   position: absolute;
-  z-index: 199;
-  width: 100%;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  color: hsl(var(--appBackgroundDarkestHSL));
-  transition-property: left, top;
   flex-direction: column;
   justify-content: space-between;
   align-items: left;
-  min-height: 100px;
-  max-width: calc(2 * var(--cardSize) + 0.5 * var(--defaultGap));
-  margin-right: var(--defaultGap);
-  background: hsl(var(--tipColorHSL));
-  border-radius: 8px;
-  white-space: nowrap;
-  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+  z-index: 199;
   transition: var(--mediumTransition) ease-in-out;
+  transition-property: left, top;
+  margin-right: var(--defaultGap);
+  box-shadow: 0 10px 10px rgba(0, 0, 0, 0.5);
+  border-radius: 8px;
+  background: hsl(var(--tipColorHSL));
+  width: 100%;
+  max-width: calc(2 * var(--cardSize) + 0.5 * var(--defaultGap));
+  min-height: 100px;
+  color: hsl(var(--appBackgroundDarkestHSL));
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  white-space: nowrap;
 }
 
 pointer p {
-  width: calc(100% - 2 * 0.75 * var(--defaultGap));
+  mix-blend-mode: luminosity;
   padding: calc(0.5 * var(--defaultGap)) calc(0.75 * var(--defaultGap)) 0;
+  width: calc(100% - 2 * 0.75 * var(--defaultGap));
   font-size: 16px;
   text-align: left;
   text-wrap: wrap;
-  mix-blend-mode: luminosity;
 }
 
 pointer p.controls {
   display: flex;
+  justify-content: space-between;
   padding: 0 calc(0.75 * var(--defaultGap));
   font-size: 13px;
   text-align: right;
-  justify-content: space-between;
 }
 
 pointer p.controls a {
   display: inline-block;
-  width: 100%;
   padding: calc(0.5 * var(--defaultGap)) 0;
+  width: 100%;
   font-style: italic;
   text-align: left;
 }
@@ -1107,8 +1109,8 @@ pointer p.controls a:hover,
 pointer p.controls a:focus,
 pointer p.controls a:visited,
 pointer p.controls a:active {
-  color: hsl(0, 20%, 40%);
   mix-blend-mode: luminosity;
+  color: hsl(0, 20%, 40%);
 }
 
 pointer p.controls a.right {
@@ -1122,9 +1124,9 @@ pointer p.controls a:hover {
 
 pointer p.controls seekers {
   display: flex;
-  width: 100%;
   justify-content: end;
   gap: calc(0.5 * var(--defaultGap));
+  width: 100%;
 }
 
 pointer p.controls seekers a {
@@ -1133,29 +1135,29 @@ pointer p.controls seekers a {
 
 arrow {
   position: absolute;
-  z-index: 199;
-  width: 18px;
-  height: 12px;
   transform: translate(-10px, 2px);
   transform-origin: 50% 50%;
-  transition-property: margin, rotate, opacity;
-  background: hsl(var(--tipColorHSL));
-  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
   rotate: 180deg;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  z-index: 199;
+  clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
   transition: var(--mediumTransition) ease-in-out;
+  transition-property: margin, rotate, opacity;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  background: hsl(var(--tipColorHSL));
+  width: 18px;
+  height: 12px;
 }
 
 arrow::before {
   display: none;
   position: absolute;
+  transform: translate(2px, 4px);
   z-index: -1;
+  clip-path: inherit;
+  background: hsl(var(--appBackgroundHSL));
   width: calc(100% - 4px);
   height: calc(100% - 4px);
-  transform: translate(2px, 4px);
   content: '';
-  background: hsl(var(--appBackgroundHSL));
-  clip-path: inherit;
 }
 
 arrow.top {
@@ -1186,20 +1188,20 @@ notification message name icon {
 
 notification message subtitle {
   display: block;
+  padding-bottom: 0;
+  color: hsl(var(--appForegroundDiminishedHSL));
   font-size: 0.8em;
   text-transform: capitalize;
-  color: hsl(var(--appForegroundDiminishedHSL));
-  padding-bottom: 0;
 }
 
 message {
   display: flex;
-  width: 100%;
-  text-align: center;
   flex-direction: column;
   border-color: hsl(var(--messageColorHSL));
-  text-shadow: 0px -1px 2px black;
+  width: 100%;
   user-select: none;
+  text-align: center;
+  text-shadow: 0px -1px 2px black;
   -webkit-user-select: none;
 }
 
@@ -1215,14 +1217,14 @@ message span {
   display: inline;
 }
 
-h2 + h3:first-of-type {
+h2+h3:first-of-type {
   margin-top: 0px;
   padding-top: 0px;
 }
 
 p {
-  width: 100%;
   margin: 0;
+  width: 100%;
   line-height: 140%;
 }
 
@@ -1252,8 +1254,8 @@ p {
 
 cta {
   display: inline-block;
-  font-family: 'Theme';
   color: hsl(var(--linkColorLightHSL));
+  font-family: 'Theme';
 }
 
 .redText {
@@ -1262,19 +1264,19 @@ cta {
 
 modal message {
   margin-top: calc(1 * var(--defaultGap));
-  padding-top: var(--defaultGap);
   margin-bottom: calc(0.5 * var(--defaultGap));
+  padding-top: var(--defaultGap);
   padding-bottom: calc(0.5 * var(--defaultGap));
 }
 
 modal section message {
-  color: hsl(var(--messageColorHSL));
   margin-top: 0;
+  color: hsl(var(--messageColorHSL));
 }
 
 modal section message greeting {
-  font-size: 0.8em;
   color: hsl(var(--appForegroundHSL));
+  font-size: 0.8em;
 }
 
 modal credit {
@@ -1287,41 +1289,41 @@ message.clickable {
 
 wrapper {
   display: flex;
-  width: 100%;
-  margin: 0 auto;
-  padding: 0;
   flex-direction: row;
   justify-content: center;
   align-items: start;
-  max-width: 1124px;
   gap: var(--defaultGap);
+  margin: 0 auto;
+  padding: 0;
+  width: 100%;
+  max-width: 1124px;
 }
 
 wrapper:first-of-type {
-  padding: calc(0.5 * var(--defaultGap)) calc(0.5 var(--cardSize)) 0;
   justify-content: space-between;
   align-items: center;
-  min-height: unset;
-  max-width: calc(1124px - 7 * var(--defaultGap));
   gap: calc(2.5 * var(--defaultGap));
+  padding: calc(0.5 * var(--defaultGap)) calc(0.5 var(--cardSize)) 0;
+  max-width: calc(1124px - 7 * var(--defaultGap));
+  min-height: unset;
 }
 
 wrapper:first-of-type controls {
-  padding: 0;
-  justify-content: start;
   flex: 1;
+  justify-content: start;
+  padding: 0;
 }
 
 wrapper:first-of-type controls button.small {
-  height: unset;
-  padding: calc(0.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
-  font-size: 90%;
   transition: none;
+  padding: calc(0.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
+  height: unset;
+  font-size: 90%;
 }
 
 wrapper:first-of-type controls button {
-  height: 100%;
   padding: 0;
+  height: 100%;
 }
 
 wrapper:first-of-type controls:last-of-type {
@@ -1329,10 +1331,10 @@ wrapper:first-of-type controls:last-of-type {
 }
 
 wrapper.main {
-  width: calc(100% - 2 * var(--defaultGap));
-  padding: var(--defaultGap);
   justify-content: center;
   align-items: center;
+  padding: var(--defaultGap);
+  width: calc(100% - 2 * var(--defaultGap));
 }
 
 .portrait wrapper.main {
@@ -1340,9 +1342,9 @@ wrapper.main {
 }
 
 app.portrait {
-  padding: 30px;
   justify-content: space-between;
   align-items: center;
+  padding: 30px;
 }
 
 wrapper.columns {
@@ -1358,8 +1360,8 @@ wrapper.mobile {
 }
 
 wrapper message {
-  height: calc(2 * var(--defaultGap));
   padding: 8px var(--defaultGap) 0px;
+  height: calc(2 * var(--defaultGap));
 }
 
 .portrait wrapper.mobile.extra {
@@ -1402,14 +1404,14 @@ tray {
 tray diamond {
   position: absolute;
   z-index: -1;
-  overflow: hidden;
+  mask-repeat: no-repeat;
+  background-image: url(../images/diamond.svg);
+  background-size: cover;
+  background-repeat: no-repeat;
   width: 100%;
   height: 100%;
-  background-image: url(../images/diamond.svg);
-  background-repeat: no-repeat;
-  background-size: cover;
+  overflow: hidden;
   pointer-events: none;
-  mask-repeat: no-repeat;
   -webkit-mask-repeat: no-repeat;
 }
 
@@ -1439,8 +1441,8 @@ diamond.back {
 }
 
 tray.rotating {
-  transition-property: transform, rotate;
   transition: var(--longTransition) ease-in-out;
+  transition-property: transform, rotate;
 }
 
 flogo {
@@ -1449,27 +1451,27 @@ flogo {
 
 controls {
   display: flex;
-  height: 100%;
-  padding: 0;
-  transition-property: background-color, border-color;
   justify-content: center;
   align-items: center;
   transition: var(--mediumTransition) ease-in-out;
+  transition-property: background-color, border-color;
+  padding: 0;
+  height: 100%;
 }
 
 modal controls {
   position: fixed;
+  bottom: 0px;
   z-index: 100;
+  backdrop-filter: blur(10px);
+  border-top: 1px solid hsla(var(--appBackgroundHSL), 1);
+  background-color: hsla(var(--appBackgroundDarkHSL), 0.7);
+  padding: 0;
   width: 100%;
   height: var(--footerHeight);
-  padding: 0;
-  background-color: hsla(var(--appBackgroundDarkHSL), 0.7);
-  bottom: 0px;
-  border-top: 1px solid hsla(var(--appBackgroundHSL), 1);
-  backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  padding-bottom: calc(0.5 * env(safe-area-inset-bottom));
   gap: calc(0.5 * var(--defaultGap));
+  padding-bottom: calc(0.5 * env(safe-area-inset-bottom));
 }
 
 modal callout,
@@ -1491,57 +1493,57 @@ wrapper controls {
 }
 
 wrapper controls button {
+  background: none;
   height: 100%;
   font-size: 145%;
-  background: none;
 }
 
 rotators {
   position: absolute;
-  z-index: 100;
-  width: calc(var(--cardSize) * 2 + (calc(var(--defaultGap) * 10)));
-  padding: 0;
   justify-content: space-between;
+  z-index: 100;
+  padding: 0;
+  width: calc(var(--cardSize) * 2 + (calc(var(--defaultGap) * 10)));
   pointer-events: none;
 }
 
-wrapper > rotators {
+wrapper>rotators {
   transform: translateY(calc(-1.35 * var(--cardSize)));
 }
 
 rotators button {
-  padding: calc(1.25 * var(--defaultGap));
-  font-size: 200%;
-  line-height: 100%;
-  transition-property: opacity, color;
   justify-content: center;
   align-items: center;
   transition: var(--mediumTransition) ease-in-out;
-  pointer-events: all;
+  transition-property: opacity, color;
   background: none;
+  padding: calc(1.25 * var(--defaultGap));
+  pointer-events: all;
+  font-size: 200%;
+  line-height: 100%;
 }
 
 rotators button icon {
-  width: var(--mediumIconSize);
-  height: var(--mediumIconSize);
+  mask-size: var(--mediumIconSize) var(--mediumIconSize);
   background-color: hsl(var(--messageColorHSL));
   padding-top: 12px;
-  mask-size: var(--mediumIconSize) var(--mediumIconSize);
+  width: var(--mediumIconSize);
+  height: var(--mediumIconSize);
   -webkit-mask-size: var(--mediumIconSize) var(--mediumIconSize);
 }
 
 spot rotators button {
   display: flex;
-  width: calc(0.3 * var(--cardSize));
-  height: calc(0.3 * var(--cardSize));
   justify-content: end;
   align-items: start;
+  width: calc(0.3 * var(--cardSize));
+  height: calc(0.3 * var(--cardSize));
 }
 
 spot rotators button icon {
+  mask-size: var(--extraSmallIconSize) var(--extraSmallIconSize);
   width: var(--extraSmallIconSize);
   height: var(--extraSmallIconSize);
-  mask-size: var(--extraSmallIconSize) var(--extraSmallIconSize);
   -webkit-mask-size: var(--extraSmallIconSize) var(--extraSmallIconSize);
   background: hsla(var(--appBackgroundDarkestHSL), 0.2);
 }
@@ -1566,11 +1568,11 @@ spot rotators button:first-of-type {
 
 spot rotators {
   position: absolute;
-  z-index: 100;
-  width: var(--cardSize);
-  padding: 0px 0px 0px;
   opacity: 1;
+  z-index: 100;
   margin-top: 0px;
+  padding: 0px 0px 0px;
+  width: var(--cardSize);
   pointer-events: none;
 }
 
@@ -1593,13 +1595,13 @@ spot rotators:last-of-type {
 
 spot rotators button,
 spot.empty rotators button:hover {
-  padding: 0px 6px;
-  font-size: 100%;
-  color: hsl(var(--linkColorDarkHSL));
   opacity: 0;
-  transition-property: opacity, color;
   transition: var(--mediumTransition) ease-in-out;
+  transition-property: opacity, color;
+  padding: 0px 6px;
   pointer-events: none;
+  color: hsl(var(--linkColorDarkHSL));
+  font-size: 100%;
 }
 
 .guessing spot rotators button,
@@ -1614,9 +1616,9 @@ spot rotators button:hover {
 
 parking {
   display: flex;
-  padding: var(--defaultGap);
   flex-direction: column;
   gap: var(--defaultGap);
+  padding: var(--defaultGap);
 }
 
 .portrait parking {
@@ -1631,18 +1633,18 @@ parking {
 .portrait wrapper.mobile button.scroller {
   display: none;
   position: absolute;
-  z-index: 100;
-  width: 40px;
-  height: calc(var(--scale) * var(--cardSize));
-  padding: 0;
-  transform: translateY(calc(-0.13 * var(--cardSize)));
-  align-items: center;
-  margin-top: 0;
   left: 0;
+  align-items: center;
+  transform: translateY(calc(-0.13 * var(--cardSize)));
+  z-index: 100;
+  margin-top: 0;
+  border-radius: 0px;
+  background: none;
+  padding: 0;
   padding-top: 0;
   padding-bottom: 0;
-  background: none;
-  border-radius: 0px;
+  width: 40px;
+  height: calc(var(--scale) * var(--cardSize));
 }
 
 .portrait wrapper.mobile button.scroller icon {
@@ -1650,9 +1652,9 @@ parking {
 }
 
 .portrait wrapper.mobile button.scroller:last-of-type {
-  justify-content: end;
-  left: unset;
   right: 0;
+  left: unset;
+  justify-content: end;
 }
 
 wrapper.mobile {
@@ -1667,11 +1669,11 @@ wrapper.mobile button {
 }
 
 .mobile parking {
-  overflow: visible;
-  width: 100%;
   flex-direction: row;
   justify-content: center;
   align-items: center;
+  width: 100%;
+  overflow: visible;
 }
 
 .portrait .mobile parking spot rotators {
@@ -1685,12 +1687,12 @@ wrapper.mobile button {
 
 cards {
   display: flex;
-  width: calc(var(--cardSize) * 2 + var(--defaultGap));
-  height: calc(var(--cardSize) * 2 + var(--defaultGap));
-  padding: var(--defaultGap);
-  transform: translateY(60px);
   flex-wrap: wrap;
   gap: var(--defaultGap);
+  transform: translateY(60px);
+  padding: var(--defaultGap);
+  width: calc(var(--cardSize) * 2 + var(--defaultGap));
+  height: calc(var(--cardSize) * 2 + var(--defaultGap));
 }
 
 cards.disabled {
@@ -1699,9 +1701,9 @@ cards.disabled {
 
 spot {
   display: block;
+  outline: 1px dotted transparent;
   width: var(--cardSize);
   height: var(--cardSize);
-  outline: 1px dotted transparent;
   pointer-events: none;
 }
 
@@ -1723,8 +1725,8 @@ spot {
 
 parking spot {
   opacity: 1;
-  background: hsla(var(--appBackgroundDarkestHSL), 0.8);
   outline: 1px solid hsla(var(--hueMain), 100%, 70%, 0.7);
+  background: hsla(var(--appBackgroundDarkestHSL), 0.8);
 }
 
 parking spot.empty {
@@ -1762,8 +1764,8 @@ parking spot.empty {
 }
 
 spot.empty card {
-  background: transparent;
   cursor: default;
+  background: transparent;
 }
 
 parking spot.empty {
@@ -1781,11 +1783,11 @@ parking spot.empty {
 card {
   display: block;
   z-index: 100;
+  background: transparent;
+  background-size: 100% 100%;
   width: var(--cardSize);
   height: var(--cardSize);
   color: hsl(var(--hueMain), 100%, 90%);
-  background-size: 100% 100%;
-  background: transparent;
   user-select: none;
   -webkit-user-select: none;
   cursor: grab;
@@ -1795,8 +1797,8 @@ card {
 cards card,
 .multicolor.guessing cards card,
 .reviewing cards card {
-  color: hsl(var(--hueMain), 100%, 86%);
   background: none;
+  color: hsl(var(--hueMain), 100%, 86%);
 }
 
 .multicolor.creating card {
@@ -1818,10 +1820,10 @@ cards card,
 ghost {
   display: block;
   position: fixed;
+  transform-origin: 50% 50%;
   z-index: 200;
   width: var(--cardSize);
   height: var(--cardSize);
-  transform-origin: 50% 50%;
   -webkit-transform-origin: 50% 50%;
   top: calc(-0.5 * var(--cardSize));
   left: calc(-0.5 * var(--cardSize));
@@ -1832,10 +1834,10 @@ ghost card,
 ghost card.empty,
 .guessing ghost card.empty,
 .reviewing ghost card.empty {
-  border: 1px solid hsla(var(--hueMain), 100%, 70%, 0.7);
   opacity: 0;
-  background: hsla(var(--appBackgroundDarkestHSL), 0.8);
   transition: 0ms ease-in 0ms opacity;
+  border: 1px solid hsla(var(--hueMain), 100%, 70%, 0.7);
+  background: hsla(var(--appBackgroundDarkestHSL), 0.8);
   pointer-events: none;
 }
 
@@ -1867,28 +1869,28 @@ card.rotating {
 .multicolor.guessing cards spot.wrong card,
 .guessing cards spot.wrong card {
   background-image: url(../images/icon-quit.svg);
-  background-repeat: no-repeat;
   background-position: center center;
   background-size: 30px;
+  background-repeat: no-repeat;
 }
 
 hints {
   position: absolute;
+  transform: translateY(60px);
   z-index: -1;
   width: 100%;
   height: 100%;
   font-size: 130%;
-  transform: translateY(60px);
 }
 
 hints hint {
   display: block;
   position: absolute;
+  perspective: var(--cardSize);
+  background-size: 256px 256px;
+  padding: calc(var(--defaultGap) / 4) calc(var(--defaultGap) / 4) calc(var(--defaultGap));
   width: calc(1.75 * var(--cardSize));
   height: var(--wordHeight);
-  padding: calc(var(--defaultGap) / 4) calc(var(--defaultGap) / 4) calc(var(--defaultGap));
-  background-size: 256px 256px;
-  perspective: var(--cardSize);
 }
 
 input[type='number']::-webkit-inner-spin-button,
@@ -1904,15 +1906,15 @@ input[type='number'] {
 
 modal input,
 hints hint input {
-  width: 100%;
-  padding: 0;
-  border: none;
-  font-family: 'ClueFont';
-  line-height: 120%;
-  text-align: center;
-  color: hsl(var(--hueMain), 100%, 70%);
   outline: none;
+  border: none;
   background: none;
+  padding: 0;
+  width: 100%;
+  color: hsl(var(--hueMain), 100%, 70%);
+  line-height: 120%;
+  font-family: 'ClueFont';
+  text-align: center;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -1930,11 +1932,11 @@ modal input.large {
 
 modal categories {
   display: flex;
-  width: 100%;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
+  width: 100%;
   --backgroundCoverOn: hsla(var(--appBackgroundHSL), 1);
   --backgroundCover: hsla(var(--appBackgroundDarkHSL), 1);
   gap: calc(0.5 * var(--defaultGap));
@@ -1942,58 +1944,58 @@ modal categories {
 
 modal categories category {
   display: block;
-  padding: calc(0.5 * var(--defaultGap));
-  border: 1px solid hsla(var(--appForegroundHSL), 0.1);
-  text-align: center;
-  color: hsla(var(--appForegroundHSL), 0.7);
-  background-size: 140%;
   flex: 1;
   cursor: pointer;
+  border: 1px solid hsla(var(--appForegroundHSL), 0.1);
+  background-size: 140%;
+  padding: calc(0.5 * var(--defaultGap));
+  color: hsla(var(--appForegroundHSL), 0.7);
+  text-align: center;
   -webkit-tap-highlight-color: transparent;
-  background: var(--backgroundCover);
-  text-wrap: nowrap;
   border-radius: var(--borderRadius);
-  text-shadow: 0px 0px 4px hsl(var(--appBackgroundDarkestHSL));
+  background: var(--backgroundCover);
   max-width: 26%;
   user-select: none;
+  text-shadow: 0px 0px 4px hsl(var(--appBackgroundDarkestHSL));
+  text-wrap: nowrap;
   -webkit-user-select: none;
 }
 
 modal categories category.on {
   border: 1px solid hsla(var(--appForegroundHSL), 1);
-  color: hsla(var(--appForegroundHSL), 1);
   background: var(--backgroundCoverOn);
+  color: hsla(var(--appForegroundHSL), 1);
 }
 
 gamelinks {
   display: block;
-  width: 100%;
   counter-reset: recent-game-counter;
+  width: 100%;
 }
 
 gamelinks dot {
   position: absolute;
-  color: hsl(var(--alertHSL));
   transform: translateX(-14px);
+  color: hsl(var(--alertHSL));
 }
 
 gamelinks gamelink {
   display: flex;
-  padding: calc(0.66 * var(--defaultGap)) 0;
   flex-direction: column;
   gap: calc(0.33 * var(--defaultGap));
+  padding: calc(0.66 * var(--defaultGap)) 0;
   -webkit-tap-highlight-color: transparent;
 }
 
 .boxed {
-  padding: calc(0.75 * var(--defaultGap)) calc(0.5 * var(--defaultGap));
-  border: 1px solid hsla(var(--traySolvedBackgroundHSL), 0.4);
-  text-align: center;
-  color: hsl(var(--appForegroundHSL));
-  align-items: center;
-  background: hsla(var(--traySolvedBackgroundHSL), 0.15);
-  border-radius: var(--borderRadius);
   flex: 1;
+  align-items: center;
+  border: 1px solid hsla(var(--traySolvedBackgroundHSL), 0.4);
+  border-radius: var(--borderRadius);
+  background: hsla(var(--traySolvedBackgroundHSL), 0.15);
+  padding: calc(0.75 * var(--defaultGap)) calc(0.5 * var(--defaultGap));
+  color: hsl(var(--appForegroundHSL));
+  text-align: center;
 }
 
 .boxed.highlighted {
@@ -2002,9 +2004,9 @@ gamelinks gamelink {
 }
 
 .boxed.highlighted.quit {
-  background-color: hsla(var(--trayReviewingBackgroundHSL), 0.2);
   box-shadow: 0px 0px 4px hsl(var(--trayReviewingBackgroundHSL)), inset 0px 0px 4px hsl(var(--trayReviewingBackgroundHSL)), 0px 0px 15px hsl(var(--trayReviewingBackgroundHSL));
   border-color: hsl(var(--trayReviewingBackgroundHSL));
+  background-color: hsla(var(--trayReviewingBackgroundHSL), 0.2);
 }
 
 stats stat.boxed value {
@@ -2017,15 +2019,15 @@ stats stat.boxed small {
 
 stats {
   display: flex;
-  overflow: hidden;
-  width: 100%;
-  padding: 10px calc(0.5 * var(--defaultGap)) 6px;
-  font-size: 24px;
-  color: hsl(var(--messageColorHSL));
   justify-content: space-around;
   gap: calc(0.5 * var(--defaultGap));
   margin-bottom: calc(1 * var(--defaultGap));
   border-radius: var(--borderRadius);
+  padding: 10px calc(0.5 * var(--defaultGap)) 6px;
+  width: 100%;
+  overflow: hidden;
+  color: hsl(var(--messageColorHSL));
+  font-size: 24px;
   user-select: none;
   -webkit-user-select: none;
   cursor: default;
@@ -2033,25 +2035,25 @@ stats {
 
 stats stat {
   display: flex;
-  padding: 0;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 4px;
+  padding: 0;
 }
 
 stats stat small {
   display: block;
+  margin-bottom: 0px;
   padding: 0;
+  max-width: 100%;
   color: hsla(var(--messageColorHSL), 1);
   white-space: nowrap;
-  max-width: 100%;
-  margin-bottom: 0px;
 }
 
 stats stat value {
-  font-size: 1.25em;
   font-weight: bold;
+  font-size: 1.25em;
   line-height: 1em;
   text-align: center;
 }
@@ -2062,21 +2064,21 @@ stats stat value {
 
 gamelinks gamelink stats,
 message stats {
-  overflow: auto;
-  border: 1px solid hsla(var(--appBackgroundHSL), 0.5);
-  font-size: 16px;
-  color: hsl(var(--appBackgroundLightestHSL));
   justify-content: space-around;
   gap: calc(1.5 * var(--defaultGap));
+  margin-bottom: calc(0.5 * var(--defaultGap));
+  border: 1px solid hsla(var(--appBackgroundHSL), 0.5);
   background: hsla(var(--highlightColorHSL), 0.1);
   background: hsla(var(--appBackgroundHSL), 0.4);
-  margin-bottom: calc(0.5 * var(--defaultGap));
   max-width: calc(100% - var(--defaultGap));
+  overflow: auto;
+  color: hsl(var(--appBackgroundLightestHSL));
+  font-size: 16px;
 }
 
 message stats {
-  margin: 0px;
   justify-content: space-between;
+  margin: 0px;
   max-width: calc(100% - var(--defaultGap));
 }
 
@@ -2086,10 +2088,10 @@ message stats stat small {
 }
 
 message small.statlabel {
-  font-size: 14px;
-  color: hsla(var(--appBackgroundLightestHSL));
   margin-top: var(--defaultGap);
   margin-bottom: calc(0.5 * var(--defaultGap));
+  color: hsla(var(--appBackgroundLightestHSL));
+  font-size: 14px;
 }
 
 .portrait message stats {
@@ -2099,20 +2101,20 @@ message small.statlabel {
 stats::-webkit-scrollbar {
   display: none;
   -ms-overflow-style: none;
+  scroll-behavior: smooth;
   scrollbar-width: none;
   touch-action: auto;
-  scroll-behavior: smooth;
 }
 
 gamelinks gamelink stats stat {
-  text-align: left;
   align-items: start;
   gap: 2px;
+  text-align: left;
 }
 
 gamelinks gamelink stats stat value {
-  text-align: left;
   color: hsl(var(--appBackgroundLightestHSL));
+  text-align: left;
 }
 
 gamelinks gamelink stats stat small {
@@ -2121,12 +2123,12 @@ gamelinks gamelink stats stat small {
 
 small.statlabel {
   display: block;
-  font-size: 0.8em;
-  text-align: center;
-  color: hsla(var(--messageColorHSL), 1);
   gap: 5px;
   margin-bottom: 2px;
   max-width: 100%;
+  color: hsla(var(--messageColorHSL), 1);
+  font-size: 0.8em;
+  text-align: center;
 }
 
 small.statlabel icon {
@@ -2143,13 +2145,13 @@ gamelinks gamelink stats stat small {
 
 gamelinks p {
   display: flex;
-  width: 100%;
-  font-size: 1.2em;
-  text-align: left;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   cursor: pointer;
+  width: 100%;
+  font-size: 1.2em;
+  text-align: left;
 }
 
 gamelinks clues {
@@ -2165,10 +2167,10 @@ gamelinks p a:hover,
 gamelinks p a:active,
 gamelinks p a:focus,
 gamelinks p a:visited {
-  overflow: hidden;
-  text-align: left;
-  color: hsl(var(--linkColorLightHSL));
   flex: 1;
+  overflow: hidden;
+  color: hsl(var(--linkColorLightHSL));
+  text-align: left;
   text-overflow: ellipsis;
   text-wrap: nowrap;
 }
@@ -2190,41 +2192,41 @@ gamelinks gamelink.done p a {
 
 gamelinks p button.inline {
   display: flex;
-  z-index: 100;
-  width: calc(3 * var(--defaultGap) - 5px);
-  height: calc(2.5 * var(--defaultGap) - 5px);
-  padding: 0 0 0 20px;
-  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
-  font-size: 0.5em;
-  text-transform: uppercase;
-  color: hsl(var(--appForegroundDiminishedHSL));
   flex-direction: column;
   justify-content: center;
-  white-space: nowrap;
   gap: 2px;
+  z-index: 100;
   transition: none;
+  padding: 0 0 0 20px;
+  width: calc(3 * var(--defaultGap) - 5px);
+  height: calc(2.5 * var(--defaultGap) - 5px);
+  color: hsl(var(--appForegroundDiminishedHSL));
+  font-size: 0.5em;
+  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
+  text-transform: uppercase;
+  white-space: nowrap;
 }
 
 gamelinks p button.inline icon {
-  background-color: hsla(var(--appForegroundDiminishedHSL), 1);
   opacity: 1;
   transition: none;
+  background-color: hsla(var(--appForegroundDiminishedHSL), 1);
 }
 
 gamelinks p button.inline icon.play {
-  background-color: hsla(var(--appForegroundDiminishedHSL), 1);
   opacity: 1;
+  background-color: hsla(var(--appForegroundDiminishedHSL), 1);
 }
 
 gamelinks gamelink:hover p button.inline icon {
-  background-color: hsla(var(--appForegroundHSL), 1);
   opacity: 1;
+  background-color: hsla(var(--appForegroundHSL), 1);
 }
 
 gamelinks gamelink.done p button.inline icon {
-  background-color: hsl(var(--linkColorLightHSL));
   opacity: 1;
   transition: var(--shortTransition) ease-in-out background-color;
+  background-color: hsl(var(--linkColorLightHSL));
 }
 
 gamelinks gamelink.done p button.inline icon.alertbackground {
@@ -2240,8 +2242,8 @@ gamelinks gamelink:hover p button.inline icon {
 }
 
 modal gamelinks small {
-  text-align: left;
   margin-bottom: 2px;
+  text-align: left;
 }
 
 modal gamelinks a small {
@@ -2251,41 +2253,41 @@ modal gamelinks a small {
 modal small,
 modal legal {
   display: block;
+  transition: var(--mediumTransition) ease-in-out;
+  transition-property: opacity, color, background-color;
+  margin-bottom: calc(0.5 * var(--defaultGap));
   width: 100%;
-  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
+  max-width: calc(100% - 2 * var(--defaultGap));
+  color: hsl(var(--appForegroundDiminishedHSL));
   font-size: 70%;
   line-height: 120%;
-  color: hsl(var(--appForegroundDiminishedHSL));
-  transition-property: opacity, color, background-color;
-  max-width: calc(100% - 2 * var(--defaultGap));
-  transition: var(--mediumTransition) ease-in-out;
-  margin-bottom: calc(0.5 * var(--defaultGap));
+  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
 }
 
 modal instructions {
-  width: 100%;
-  line-height: 150%;
-  color: hsl(var(--appForegroundDiminishedHSL));
   margin-top: var(--defaultGap);
+  width: 100%;
   max-width: calc(100% - 2 * var(--defaultGap));
+  color: hsl(var(--appForegroundDiminishedHSL));
+  line-height: 150%;
 }
 
 modal legal {
   position: absolute;
-  width: 80%;
   bottom: calc(var(--footerHeight) + (2 * var(--defaultGap)));
+  width: 80%;
   max-width: calc(3 * var(--cardSize) + (4 * var(--defaultGap)));
 }
 
 modal section h3 small {
-  max-width: unset;
   padding-top: calc(0.25 * var(--defaultGap));
+  max-width: unset;
 }
 
 hints hint input {
-  font-size: 120%;
   transform: rotateX(24deg) rotateY(0deg);
   transform-style: preserve-3d;
+  font-size: 120%;
   text-shadow: 0px -1px 1px hsla(var(--appBackgroundDarkestHSL), 0.6);
 }
 
@@ -2316,25 +2318,25 @@ hints hint input::placeholder {
 }
 
 modal input {
-  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
-  font-size: 110%;
-  text-align: left;
   color: hsl(var(--appForegroundHSL));
+  font-size: 110%;
+  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
+  text-align: left;
 }
 
 hints hint input:disabled {
-  color: hsl(var(--hueMain), 100%, 70%);
   opacity: 1;
+  color: hsl(var(--hueMain), 100%, 70%);
 }
 
 .multicolor.creating hints hint input:disabled {
-  color: hsl(var(--hueCreating), 100%, 70%);
   opacity: 1;
+  color: hsl(var(--hueCreating), 100%, 70%);
 }
 
 .multicolor.guessing hints hint input:disabled {
-  color: hsl(var(--hueGuessing), 94%, 80%);
   opacity: 1;
+  color: hsl(var(--hueGuessing), 94%, 80%);
 }
 
 .multicolor.guessing.reviewing hints hint input:disabled {
@@ -2378,9 +2380,9 @@ card.empty {
 card menu {
   display: block;
   position: absolute;
+  padding: 0;
   width: calc(0.5 * var(--cardSize));
   height: calc(0.5 * var(--cardSize));
-  padding: 0;
 }
 
 words {
@@ -2390,23 +2392,23 @@ words {
 word {
   display: flex;
   position: absolute;
-  overflow: visible;
-  width: var(--cardSize);
-  height: calc(var(--cardSize) - 2px);
-  font-family: var(--wordFont);
-  font-size: calc(var(--wordScale) * 90%);
-  line-height: 100%;
-  text-align: center;
   justify-content: center;
   align-items: baseline;
   padding-top: 2px;
+  width: var(--cardSize);
+  height: calc(var(--cardSize) - 2px);
+  overflow: visible;
+  font-size: calc(var(--wordScale) * 90%);
+  line-height: 100%;
+  font-family: var(--wordFont);
   user-select: none;
+  text-align: center;
   -webkit-user-select: none;
 }
 
 parking word {
-  height: calc(var(--cardSize) - 8px);
   padding-top: 8px;
+  height: calc(var(--cardSize) - 8px);
 }
 
 cards word {
@@ -2432,24 +2434,24 @@ word:nth-child(4) {
 modal {
   display: flex;
   position: absolute;
-  z-index: 500;
-  width: 100%;
-  height: 100%;
-  opacity: 1;
+  top: 0;
   flex-direction: column;
   justify-content: start;
   align-items: center;
-  top: 0;
-  overflow-x: hidden;
-  background: hsla(var(--appBackgroundDarkestHSL), 1);
   gap: var(--defaultGap);
+  opacity: 1;
+  z-index: 500;
   transition: var(--mediumTransition) ease-in-out all;
+  background: hsla(var(--appBackgroundDarkestHSL), 1);
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
 }
 
 modal.centered {
-  font-size: 130%;
   justify-content: center;
   gap: calc(4 * var(--defaultGap));
+  font-size: 130%;
 }
 
 modal.centered section,
@@ -2473,9 +2475,9 @@ modal confirmation {
 
 modal section,
 modal section hidden {
-  width: 100%;
   gap: calc(0.5 * var(--defaultGap));
   margin-bottom: 160px;
+  width: 100%;
   max-width: calc(3 * var(--cardSize) + (4 * var(--defaultGap)));
 }
 
@@ -2488,8 +2490,8 @@ modal hider {
 }
 
 modal img {
-  width: 100%;
   margin: var(--defaultGap) 0;
+  width: 100%;
   max-width: calc(2.5 * var(--cardSize));
   user-select: none;
   -webkit-user-select: none;
@@ -2498,56 +2500,56 @@ modal img {
 callout,
 select {
   display: flex;
-  width: 100%;
-  padding: calc(0.5 * var(--defaultGap)) var(--defaultGap);
-  text-align: center;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
-  background: hsla(var(--appBackgroundHSL), 1);
   transition: var(--mediumTransition) ease-in-out all;
+  background: hsla(var(--appBackgroundHSL), 1);
+  padding: calc(0.5 * var(--defaultGap)) var(--defaultGap);
+  width: 100%;
+  max-width: calc(2 * var(--cardSize) + (4 * var(--defaultGap)));
+  text-align: center;
 }
 
 select {
-  border: none;
-  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
-  color: hsl(var(--appForegroundHSL));
   outline: none;
+  border: none;
   background: hsla(var(--appBackgroundHSL), 1);
+  color: hsl(var(--appForegroundHSL));
+  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
   -webkit-tap-highlight-color: transparent;
-  border-radius: var(--borderRadius);
   appearance: unset;
+  border-radius: var(--borderRadius);
   -webkit-appearance: unset;
 }
 
 section input {
-  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
   font-size: inherit;
+  font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
 }
 
 leftright {
   display: flex;
-  width: calc(100%);
-  margin: 0px;
-  padding: 5px 0px;
-  border: 1px solid hsla(var(--appBackgroundHSL), 1);
-  transition-property: background-color, border-color;
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  background: hsla(var(--appBackgroundHSL), 0.4);
-  border-radius: var(--borderRadius);
   gap: calc(0.5 * var(--defaultGap));
   transition: var(--mediumTransition) ease-in-out border-color, background-color;
+  transition-property: background-color, border-color;
+  margin: 0px;
+  border: 1px solid hsla(var(--appBackgroundHSL), 1);
+  border-radius: var(--borderRadius);
+  background: hsla(var(--appBackgroundHSL), 0.4);
+  padding: 5px 0px;
+  width: calc(100%);
 }
 
 leftright message,
 leftright callout,
 leftright p {
+  border-radius: var(--borderRadius);
   width: calc(1 * var(--cardSize));
   text-align: left;
-  border-radius: var(--borderRadius);
 }
 
 leftright p {
@@ -2556,11 +2558,11 @@ leftright p {
 
 leftright callout,
 leftright select {
-  width: unset;
-  margin: 0 5px 0 0;
-  padding: calc(0.3 * var(--defaultGap)) calc(0.5 * var(--defaultGap));
-  border-radius: var(--borderRadius) calc(0.5 * var(--borderRadius)) calc(0.5 * var(--borderRadius)) var(--borderRadius);
   flex: 2;
+  margin: 0 5px 0 0;
+  border-radius: var(--borderRadius) calc(0.5 * var(--borderRadius)) calc(0.5 * var(--borderRadius)) var(--borderRadius);
+  padding: calc(0.3 * var(--defaultGap)) calc(0.5 * var(--defaultGap));
+  width: unset;
 }
 
 leftright callout input {
@@ -2572,11 +2574,11 @@ leftright p {
 }
 
 modal cards {
-  height: auto;
+  transition: 0 linear all;
   transition-delay: 150ms;
   background: none;
+  height: auto;
   pointer-events: all;
-  transition: 0 linear all;
 }
 
 .guessing.reviewing modal cards,
@@ -2600,9 +2602,9 @@ modal cards card.intray {
 modal::-webkit-scrollbar {
   display: none;
   -ms-overflow-style: none;
+  scroll-behavior: smooth;
   scrollbar-width: none;
   touch-action: auto;
-  scroll-behavior: smooth;
 }
 
 .disabled {
@@ -2621,11 +2623,11 @@ modal::-webkit-scrollbar {
 
 version {
   display: flex;
+  gap: var(--defaultGap);
+  padding-top: var(--defaultGap);
+  color: hsl(var(--appForegroundHSL));
   font-size: 12px;
   text-align: center;
-  color: hsl(var(--appForegroundHSL));
-  padding-top: var(--defaultGap);
-  gap: var(--defaultGap);
 }
 
 .focuser {
@@ -2665,11 +2667,11 @@ app.dragging,
   }
 
   wrapper message {
-    height: calc(1 * var(--defaultGap) + 6px);
     padding: 0px var(--defaultGap) var(--defaultGap);
+    height: calc(1 * var(--defaultGap) + 6px);
     overflow: hidden;
-    text-wrap: nowrap;
     text-overflow: ellipsis;
+    text-wrap: nowrap;
   }
 
   .portrait wrapper.mobile parking {
@@ -2697,11 +2699,11 @@ app.dragging,
   }
 
   body {
-    font-size: 90%;
+    background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 200px), var(--textureHue), var(--texture2);
     width: 100%;
     height: 100%;
     overflow: hidden;
-    background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 200px), var(--textureHue), var(--texture2);
+    font-size: 90%;
   }
 
   app {
@@ -2715,17 +2717,17 @@ app.dragging,
   }
 
   wrapper:first-of-type {
-    gap: 0px;
     justify-content: space-between;
     align-items: start;
+    gap: 0px;
     padding: calc(0.5 * var(--defaultGap)) 0px;
   }
 
   wrapper:first-of-type controls button.small {
-    font-size: 120%;
-    padding: 6px calc(1 * var(--defaultGap));
-    background: none;
     border: none;
+    background: none;
+    padding: 6px calc(1 * var(--defaultGap));
+    font-size: 120%;
   }
 
   wrapper:first-of-type controls button {
@@ -2734,9 +2736,9 @@ app.dragging,
   }
 
   header {
-    gap: 10px;
     display: flex;
     justify-content: center;
+    gap: 10px;
   }
 
   button.dailycta {
@@ -2744,8 +2746,8 @@ app.dragging,
   }
 
   header icon {
-    scale: 0.8;
     display: block;
+    scale: 0.8;
   }
 
   header h1 {
@@ -2762,17 +2764,17 @@ app.dragging,
   }
 
   wrapper.main {
-    font-size: 1.3em;
+    padding: 0;
     max-height: 400px;
     overflow: visible;
-    padding: 0;
+    font-size: 1.3em;
   }
 
-  wrapper.main > rotators {
+  wrapper.main>rotators {
     scale: 0.7;
-    max-width: 145%;
-    min-width: 540px;
     padding: 0px;
+    min-width: 540px;
+    max-width: 145%;
   }
 
   .portrait wrapper.mobile parking spot {
@@ -2780,8 +2782,8 @@ app.dragging,
   }
 
   .portrait wrapper.mobile {
-    padding: 0px;
     bottom: 0px;
+    padding: 0px;
   }
 
   wrapper message {
@@ -2813,9 +2815,9 @@ app.dragging,
   }
 
   parking words word {
-    font-size: calc(var(--wordScale) * 140%);
-    height: calc(var(--cardSize) - 10px);
     padding-top: 10px;
+    height: calc(var(--cardSize) - 10px);
+    font-size: calc(var(--wordScale) * 140%);
   }
 
   cards words word {
@@ -2824,9 +2826,9 @@ app.dragging,
   }
 
   p {
-    font-size: 110%;
     padding: 0;
     width: 100%;
+    font-size: 110%;
   }
 
   checkbox {
@@ -2838,11 +2840,11 @@ app.dragging,
   }
 
   modal {
-    font-size: 16px;
     flex-direction: column;
     justify-content: start;
     align-items: center;
     margin-bottom: 60px;
+    font-size: 16px;
   }
 
   confirmation {
@@ -2855,9 +2857,9 @@ app.dragging,
   }
 
   modal small {
-    font-size: 12px;
     padding: 0px;
     width: 100%;
+    font-size: 12px;
   }
 
   modal legal {
@@ -2869,8 +2871,8 @@ app.dragging,
   }
 
   modal controls button {
-    width: calc(0.7 * var(--cardSize));
     padding: calc(0.5 * var(--defaultGap));
+    width: calc(0.7 * var(--cardSize));
     font-size: 140%;
   }
 
@@ -2889,16 +2891,16 @@ app.dragging,
   }
 
   callout {
-    width: calc(100% - (2 * var(--defaultGap)));
     margin: 0 var(--defaultGap);
+    width: calc(100% - (2 * var(--defaultGap)));
     max-width: unset;
     font-size: 110%;
   }
 
   modal section {
-    width: 85%;
-    padding: 0;
     gap: calc(0.5 * var(--defaultGap));
+    padding: 0;
+    width: 85%;
   }
 
   parking,
@@ -2954,15 +2956,15 @@ app.dragging,
   wrapper.mobile parking,
   .portrait wrapper.mobile parking {
     display: flex;
-    scale: 0.45;
     transform-origin: center center;
+    scale: 0.45;
     -webkit-transform-origin: center center;
   }
 
   wrapper.mobile.extra,
   .portrait wrapper.mobile.extra {
-    scale: 0.825;
     transform-origin: center center;
+    scale: 0.825;
     -webkit-transform-origin: center center;
   }
 }
@@ -2977,8 +2979,8 @@ app.dragging,
   }
 
   gamelink {
-    margin: 4px 0px;
     gap: 2px;
+    margin: 4px 0px;
   }
 
   modal section {
@@ -2988,17 +2990,17 @@ app.dragging,
   modal stats,
   gamelinks gamelink stats,
   stats.boxed {
-    padding: 4px calc(0.5 * var(--defaultGap)) 2px;
     margin-top: 0px;
     margin-bottom: 4px;
     border: none;
+    padding: 4px calc(0.5 * var(--defaultGap)) 2px;
   }
 
   .boxed {
+    gap: 1px;
     margin-top: 4px;
     border: none;
     padding: 4px;
-    gap: 1px;
   }
 
   wrapper:first-of-type {
