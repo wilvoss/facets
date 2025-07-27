@@ -908,10 +908,6 @@ subtitle {
   color: hsla(var(--linkColorDarkHSL), 1);
 }
 
-subtitle button {
-  border: 1px solid hsla(var(--appForegroundHSL), .2);
-}
-
 button.small {
   display: flex;
   flex-direction: row;
@@ -961,9 +957,24 @@ button.small.strong.disabled {
 }
 
 notification button.inline,
-notification button.small,
+notification button.small {
+  backdrop-filter: blur(3px);
+  box-shadow: inset 0px 1px 10px rgba(255, 255, 255, .15);
+  border: 1px solid hsl(var(--appForegroundHSL), .15);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .035), rgba(255, 255, 255, .035) 40%, rgba(255, 255, 255, 0) 40%), linear-gradient(180deg, rgba(255, 255, 255, .035), rgba(255, 255, 255, 0));
+  background-color: hsla(var(--appBackgroundDarkHSL), 0.13);
+  width: 90%;
+}
+
 notification.meta leftright {
   width: 90%;
+}
+
+notification button.small.isolated {
+  box-shadow: none;
+  background: none;
+  background-image: none;
+  background-color: none;
 }
 
 notification {
