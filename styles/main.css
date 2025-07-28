@@ -945,10 +945,6 @@ button.small {
   transition: var(--mediumTransition) ease-in-out;
 }
 
-button.small.inline icon {
-  /* background: hsla(var(--messageColorHSL), 1); */
-}
-
 button.small.isolated {
   position: absolute;
   box-shadow: none;
@@ -1984,8 +1980,6 @@ modal categories category {
   display: block;
   flex: 1;
   cursor: pointer;
-  border: 1px solid hsla(var(--appForegroundHSL), 0.1);
-  background-size: 140%;
   padding: calc(0.5 * var(--defaultGap));
   color: hsla(var(--appForegroundHSL), 0.7);
   text-align: center;
@@ -1997,6 +1991,10 @@ modal categories category {
   text-shadow: 0px 0px 4px hsl(var(--appBackgroundDarkestHSL));
   text-wrap: nowrap;
   -webkit-user-select: none;
+  backdrop-filter: blur(4px);
+  border: 1px solid hsla(var(--appBackgroundHSL), 1);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, .015) 40%, rgba(255, 255, 255, 0) 40%), linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, 0));
+  background-color: hsla(var(--appBackgroundDarkHSL), 0.5);
 }
 
 modal categories category.on {
@@ -2028,9 +2026,11 @@ gamelinks gamelink {
 .boxed {
   flex: 1;
   align-items: center;
+  backdrop-filter: blur(4px);
   border: 1px solid hsla(var(--traySolvedBackgroundHSL), 0.4);
   border-radius: var(--borderRadius);
-  background: hsla(var(--traySolvedBackgroundHSL), 0.15);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, .015) 40%, rgba(255, 255, 255, 0) 40%), linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, 0));
+  background-color: hsla(var(--traySolvedBackgroundHSL), 0.15);
   padding: calc(0.75 * var(--defaultGap)) calc(0.5 * var(--defaultGap));
   color: hsl(var(--appForegroundHSL));
   text-align: center;
@@ -2104,10 +2104,11 @@ gamelinks gamelink stats,
 message stats {
   justify-content: space-around;
   gap: calc(1.5 * var(--defaultGap));
+  backdrop-filter: blur(4px);
   margin-bottom: calc(0.5 * var(--defaultGap));
-  border: 1px solid hsla(var(--appBackgroundHSL), 0.5);
-  background: hsla(var(--highlightColorHSL), 0.1);
-  background: hsla(var(--appBackgroundHSL), 0.4);
+  border: 1px solid hsla(var(--appBackgroundHSL), 1);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, .015) 40%, rgba(255, 255, 255, 0) 40%), linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, 0));
+  background-color: hsla(var(--appBackgroundDarkHSL), 0.5);
   max-width: calc(100% - var(--defaultGap));
   overflow: auto;
   color: hsl(var(--appBackgroundLightestHSL));
@@ -2581,7 +2582,6 @@ leftright {
   transition-property: background-color, border-color;
   margin: 0px;
   border: 1px solid hsla(var(--appBackgroundHSL), 1);
-  /* border: 1px solid hsla(var(--appBackgroundHSL), 1); */
   border-radius: var(--borderRadius);
   background: hsla(var(--appBackgroundHSL), 0.4);
   background-image: linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, .015) 40%, rgba(255, 255, 255, 0) 40%), linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, 0));
@@ -2702,9 +2702,9 @@ hues {
 }
 
 hue {
-  cursor: pointer;
   display: block;
   transition: var(--mediumTransition) ease-in-out;
+  cursor: pointer;
   border: 1px solid hsla(var(--appBackgroundDarkestHSL), 1);
   border-radius: 50%;
   width: 30px;
