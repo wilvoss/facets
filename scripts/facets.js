@@ -1,4 +1,4 @@
-const version = '2.3.45';
+const version = '2.3.46';
 
 //#region MODULE HANDLING
 async function loadModels() {
@@ -69,7 +69,7 @@ LoadAllModules().then((modules) => {
     data() {
       return {
         //#region APP DATA
-        appDataVersion: '2.3.45',
+        appDataVersion: '2.3.46',
         appDataGuessingFirstRunItems: modules.firstRunGuessingMessages,
         appDataCreatorFirstRunItems: modules.firstRunCreatingMessages,
         appDataReviewingFirstRunItems: modules.firstRunReviewingMessages,
@@ -490,7 +490,7 @@ LoadAllModules().then((modules) => {
       //#region DATA MANAGEMENT
       SetWordSetTheme(_wordset) {
         note('SetWordSetTheme()');
-        if (this.userSettingsUseWordSetThemes) {
+        if (this.tempUseWordSetThemes) {
           this.documentCssRoot.style.setProperty('--texture2', 'url(' + _wordset.textureImage + ')');
           this.documentCssRoot.style.setProperty('--textureSize', _wordset.textureSize);
           this.documentCssRoot.style.setProperty('--textureBlendMode', _wordset.textureBlendMode);
@@ -1610,6 +1610,7 @@ ${words[14]} ${words[10]}`);
           e.preventDefault();
           e.stopPropagation();
         }
+        this.appStateShowCatChooser = false;
         this.appStateIsModalShowing = false;
         this.appStateShowSettings = false;
         this.appStateShowIntro = false;
@@ -2730,6 +2731,15 @@ We're working hard to make these Daily Facets better to play.`;
     },
 
     watch: {
+      tempWordSetName(_newValue) {
+        let set = this.enabledTempWordSet.find((set) => {
+          return set.name === _newValue;
+        });
+        this.SetWordSetTheme(set);
+      },
+      tempUseWordSetThemes(_newValue) {
+        this.SetWordSetTheme(this.currentGameWordSet);
+      },
       tempUserSettingsHueIndex(_newValue) {
         this.documentCssRoot.style.setProperty('--hueTheme', this.currentHueSet[_newValue]);
         if (this.tempUserSettingsUsesLightTheme) {
