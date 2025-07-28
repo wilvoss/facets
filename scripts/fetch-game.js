@@ -8,7 +8,7 @@ async function HandleOnLoadEvent(_e) {
   refresh = document.getElementById('refresh');
   okay = document.getElementById('okay');
 
-  var corsflareUrl = 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
+  var corsflareUrl = 'https://facets-shorturl-api.bigtentgames.workers.dev/';
   var rawUrl = window.location.search.split('?')[1];
 
   // return;/

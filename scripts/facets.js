@@ -1,4 +1,4 @@
-const version = '2.3.38';
+const version = '2.3.40';
 
 //#region MODULE HANDLING
 async function loadModels() {
@@ -69,7 +69,7 @@ LoadAllModules().then((modules) => {
     data() {
       return {
         //#region APP DATA
-        appDataVersion: '2.3.38',
+        appDataVersion: '2.3.40',
         appDataGuessingFirstRunItems: modules.firstRunGuessingMessages,
         appDataCreatorFirstRunItems: modules.firstRunCreatingMessages,
         appDataReviewingFirstRunItems: modules.firstRunReviewingMessages,
@@ -117,7 +117,7 @@ LoadAllModules().then((modules) => {
         appStateAutoAdvanceTips: true,
         appStateIsDragging: false,
         appStateIsGettingTinyURL: false,
-        appStateIsGettingLast10Games: false,
+        appStateIsGettingAnonymousGames: false,
         appStateIsGettingDailyGames: false,
         appStateIsGettingDailyGameStats: false,
         appStateIsGettingUserStats: false,
@@ -259,7 +259,7 @@ LoadAllModules().then((modules) => {
         }
         this.appStateShowGlobalCreated = !this.appStateShowGlobalCreated;
         if (this.appDataGlobalCreatedGames.length === 0) {
-          this.GetLast10GlobalCreatedGames();
+          this.GetRecentAnonymousGames();
         }
       },
 
@@ -624,7 +624,7 @@ LoadAllModules().then((modules) => {
             params = `id=${this.appDataPlayerCurrent.id}&key=${_stats.key}&guesses=${_stats.guesses}&quit=true`;
           }
 
-          const requestUrl = `https://empty-night-9bea.bigtentgames.workers.dev/${params}`;
+          const requestUrl = `https://facets-save-gamestats.bigtentgames.workers.dev/${params}`;
 
           await fetch(requestUrl, {
             method: 'GET',
@@ -825,7 +825,7 @@ LoadAllModules().then((modules) => {
 
         this.appDataCards = temp;
         await this.ShareBoard(false, true);
-        this.GetLast10GlobalCreatedGames();
+        this.GetRecentAnonymousGames();
       },
 
       async RestoreGame(_boardArray) {
@@ -957,7 +957,7 @@ ${words[14]} ${words[10]}`);
         words = words.join(',');
 
         const encodedWords = encodeURIComponent(words);
-        const requestUrl = `https://divine-dream-3aa5.bigtentgames.workers.dev/?${encodedWords}`;
+        const requestUrl = `https://facets-get-ai-solution.bigtentgames.workers.dev/?${encodedWords}`;
 
         try {
           const response = await fetch(requestUrl, {
@@ -1070,13 +1070,13 @@ ${words[14]} ${words[10]}`);
         return false;
       },
 
-      async GetLast10GlobalCreatedGames() {
-        if (!this.appStateIsGettingLast10Games) {
-          note('GetLast10GlobalCreatedGames()');
+      async GetRecentAnonymousGames() {
+        if (!this.appStateIsGettingAnonymousGames) {
+          note('GetRecentAnonymousGames()');
           if (window.location.href !== window.location.origin + '/generate.html?generated=true') {
-            this.appStateIsGettingLast10Games = true;
+            this.appStateIsGettingAnonymousGames = true;
             this.appDataGlobalCreatedGames = [];
-            var requestUrl = 'https://worker-falling-frost-2926.bigtentgames.workers.dev/';
+            var requestUrl = 'https://facets-get-recent-anonymous-games.bigtentgames.workers.dev/';
             await fetch(requestUrl, {
               method: 'GET',
               headers: {
@@ -1099,7 +1099,7 @@ ${words[14]} ${words[10]}`);
                 error(e);
               })
               .finally(() => {
-                this.appStateIsGettingLast10Games = false;
+                this.appStateIsGettingAnonymousGames = false;
               });
           }
         }
@@ -1113,7 +1113,7 @@ ${words[14]} ${words[10]}`);
             this.appStateIsGettingDailyGames = true;
             this.appStateIsGettingUserStats = !this.userSettingsHideStats;
             let incomingGames = [];
-            var requestUrl = 'https://lucky-bread-acb4.bigtentgames.workers.dev/';
+            var requestUrl = 'https://facets-get-last-10-daily-games.bigtentgames.workers.dev/';
             await fetch(requestUrl, {
               method: 'GET',
               headers: {
@@ -1164,7 +1164,7 @@ ${words[14]} ${words[10]}`);
         if (!this.appStateIsGettingDailyGameStats) {
           note('GetDailyGameStats()');
           this.appStateIsGettingDailyGameStats = true;
-          var requestUrl = 'https://old-frog-73f3.bigtentgames.workers.dev/';
+          var requestUrl = 'https://facets-get-daily-gamestats.bigtentgames.workers.dev/';
           await fetch(requestUrl, {
             method: 'GET',
             headers: {
@@ -1212,7 +1212,7 @@ ${words[14]} ${words[10]}`);
       async GetUsersStats() {
         note('GetUsersStats()');
         this.appStateIsGettingUserStats = true;
-        var requestUrl = 'https://calm-glitter-d861.bigtentgames.workers.dev/' + this.appDataPlayerCurrent.id;
+        var requestUrl = 'https://facets-get-users-stats.bigtentgames.workers.dev/' + this.appDataPlayerCurrent.id;
         await fetch(requestUrl, {
           method: 'GET',
           headers: {
@@ -2111,7 +2111,7 @@ Can you do better?
           let text = this.GetShareTextBasedOnContext(_gotIt);
           this.ConstructAndSetShareURLForCurrentGame(currentGameReviewIsFinal, _isNew);
           this.appStateIsGettingTinyURL = true;
-          var corsflareUrl = this.isAIGenerating ? 'https://flat-night-eecc.bigtentgames.workers.dev/' : 'https://worker-winter-glade-cd02.bigtentgames.workers.dev/';
+          var corsflareUrl = this.isAIGenerating ? 'https://facets-save-ai-game.bigtentgames.workers.dev/' : 'https://facets-shorturl-api.bigtentgames.workers.dev/';
           var requestUrl = corsflareUrl + location.search.substring(1);
 
           note('Fetching short url');
@@ -2603,7 +2603,7 @@ We're working hard to make these Daily Facets better to play.`;
         note('LoadPage()');
         announce('Player ' + this.appDataPlayerCurrent.id + ' has loaded v' + this.appDataVersion);
         this.GetDailyGames();
-        this.GetLast10GlobalCreatedGames();
+        this.GetRecentAnonymousGames();
         this.appDataTransitionLong = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
         this.appDataTransitionShort = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
         let boardPieces = this.GetBoardFromURL();

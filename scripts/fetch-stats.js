@@ -11,7 +11,7 @@ Vue.config.ignoredElements = ['app'];
 var app = new Vue({
   el: '#app',
   data: {
-    source: 'https://blue-heart-48ff.bigtentgames.workers.dev/',
+    source: 'https://facets-get-global-stats.bigtentgames.workers.dev/',
     isFetching: false,
     rawStats: [],
     stats: [],
