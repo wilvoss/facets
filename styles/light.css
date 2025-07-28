@@ -1,5 +1,4 @@
 :root {
-  --hueMainSource: 140;
   --hueMain: 140;
   --hueTheme: 140;
   --hueCreating: 195;
@@ -29,7 +28,6 @@
   --statBackground: hsla(var(--hueTheme), 100%, 98%, 0.7);
   --statBorder: hsla(var(--hueTheme), 60%, 80%, 1);
   --textureSource: radial-gradient(circle at center 400px, hsla(var(--appBackgroundDarkestHSL), 0.7) 1%, hsla(var(--appBackgroundDarkestHSL), 0.7) 40%, hsla(var(--appBackgroundHSL), 1) 80%);
-  /* --texture2: var(--textureSource); */
   --textureSize: cover;
   --textureBlendMode: normal;
   --statShadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
@@ -39,23 +37,15 @@ body {
   background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0.5) 200px), var(--textureHue), var(--texture2);
 }
 
-modal controls button {
-  color: hsl(var(--appBackgroundDarkestHSL));
-}
-
-modal controls button.secondary {
-  color: hsl(var(--appBackgroundHSL));
-}
-
 .boxed {
   border: 1px solid hsla(var(--messageColorHSL), 1);
-  color: hsl(var(--appBackgroundHSL));
   background: hsla(var(--messageColorHSL), 1);
+  color: hsl(var(--appBackgroundHSL));
 }
 
 .boxed.highlighted {
-  border: 1px solid hsla(var(--messageColorHSL), 1);
   box-shadow: none;
+  border: 1px solid hsla(var(--messageColorHSL), 1);
 }
 
 stats stat.boxed value {
@@ -64,10 +54,6 @@ stats stat.boxed value {
 
 stats stat.boxed small {
   color: hsl(var(--appBackgroundDarkHSL));
-}
-
-button.small {
-  /* background: hsla(var(--appBackgroundDarkestHSL), 0.7); */
 }
 
 leftright,
@@ -79,9 +65,8 @@ button badge {
   color: hsl(var(--appBackgroundDarkestHSL));
 }
 
-modal controls {
-  background-color: hsla(var(--messageColorHSL), 8);
-  border-color: hsla(var(--messageColorHSL), 1);
+modal {
+  background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0.5) 200px), var(--textureHue), var(--texture2);
 }
 
 modal callout,
@@ -95,8 +80,8 @@ select {
 }
 
 pointer {
-  background: hsl(var(--tipColorHSL));
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  background: hsl(var(--tipColorHSL));
 }
 
 pointer p.controls a,
@@ -134,8 +119,8 @@ message {
 }
 
 notification {
-  background: linear-gradient(180deg, hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundHSL), 0.5) calc(120px));
   backdrop-filter: blur(6px);
+  background: linear-gradient(180deg, hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundHSL), 0.5) calc(120px));
 }
 
 notification.meta {
@@ -147,8 +132,8 @@ notification message {
 }
 
 header button.small {
-  color: hsla(var(--appBackgroundDarkestHSL), 1);
   background-color: hsl(var(--messageColorHSL));
+  color: hsla(var(--appBackgroundDarkestHSL), 1);
 }
 
 tray diamond {
@@ -218,8 +203,8 @@ hints hint input:disabled {
 }
 
 .multicolor.guessing hints hint input:disabled {
-  color: hsl(var(--hueGuessing), 90%, 32%);
   opacity: 1;
+  color: hsl(var(--hueGuessing), 90%, 32%);
 }
 
 .multicolor.guessing.reviewing hints hint input:disabled {
@@ -275,21 +260,21 @@ checkbox toggle:before {
 }
 
 button.update {
-  border: 1px solid hsla(var(--hueCreating), 80%, 40%, 1);
-  color: white;
-  background: hsla(var(--hueCreating), 80%, 40%, 1);
   box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+  border: 1px solid hsla(var(--hueCreating), 80%, 40%, 1);
+  background: hsla(var(--hueCreating), 80%, 40%, 1);
+  color: white;
 }
 
 .creating button.update,
 .reviewing.guessing button.update {
-  background: hsla(var(--hueGuessing), 80%, 40%, 1);
   border-color: hsla(var(--hueGuessing), 80%, 40%, 1);
+  background: hsla(var(--hueGuessing), 80%, 40%, 1);
 }
 
 .creating.guessing button.update {
-  background: hsla(var(--hueCreating), 80%, 40%, 1);
   border-color: hsla(var(--hueCreating), 80%, 40%, 1);
+  background: hsla(var(--hueCreating), 80%, 40%, 1);
 }
 
 button.update.show {

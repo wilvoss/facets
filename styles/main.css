@@ -20,14 +20,12 @@
 }
 
 :root {
-  --hueMainSource: 140;
-  --hueMain: 140;
   --hueTheme: 215;
   --hueCreating: 215;
   --hueGuessing: 140;
   --hueReviewing: 355;
   --hueSolved: 175;
-  --hueHighlight: 140;
+  --hueLink: 140;
   --appBackgroundLightestHSL: var(--hueTheme), 80%, 70%;
   --appBackgroundLighterHSL: var(--hueTheme), 50%, 41%;
   --appBackgroundHSL: var(--hueTheme), 55%, 20%;
@@ -35,14 +33,14 @@
   --appBackgroundDarkestHSL: var(--hueTheme), 100%, 3%;
   --appForegroundHSL: var(--hueTheme), 100%, 100%;
   --appForegroundDiminishedHSL: var(--hueTheme), 0%, 65%;
-  --linkColorLightHSL: var(--hueHighlight), 79%, 55%;
-  --linkColorDarkHSL: var(--hueHighlight), 69%, 45%;
+  --linkColorLightHSL: var(--hueLink), 79%, 55%;
+  --linkColorDarkHSL: var(--hueLink), 69%, 45%;
   --messageColorHSL: 34, 100%, 70%;
   --tipColorHSL: 34, 100%, 70%;
   --highlightColorHSL: 50, 100%, 70%;
   --alertHSL: 0, 100%, 45%;
   --alertTextHSL: 0, 100%, 65%;
-  --trayBackgroundHSL: var(--hueMain), 100%, 50%;
+  --trayBackgroundHSL: var(--hueGuessing), 100%, 50%;
   --trayCreatingBackgroundHSL: var(--hueCreating), 100%, 50%;
   --trayGuessingBackgroundHSL: var(--hueGuessing), 100%, 40%;
   --trayReviewingBackgroundHSL: var(--hueReviewing), 100%, 54%;
@@ -266,7 +264,7 @@ button badge.show {
 }
 
 button.secondary {
-  color: hsl(var(--hueTheme), 40%, 50%);
+  color: hsl(var(--appBackgroundLighterHSL));
 }
 
 button.inline {
@@ -983,12 +981,9 @@ button.small.strong.disabled {
 notification button.inline,
 notification button.small {
   backdrop-filter: blur(4px);
-  /* box-shadow: inset 0px 1px 10px rgba(255, 255, 255, .15); */
-  /* border: 1px solid hsl(var(--appForegroundHSL), .15); */
   border: 1px solid hsla(var(--appBackgroundHSL), 1);
   background-image: linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, .015) 40%, rgba(255, 255, 255, 0) 40%), linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, 0));
   background-color: hsla(var(--appBackgroundDarkHSL), 0.5);
-  /* background-color: hsla(var(--appBackgroundDarkHSL), 0.13); */
   width: 90%;
 }
 
@@ -1768,7 +1763,7 @@ spot {
 
 parking spot {
   opacity: 1;
-  outline: 1px solid hsla(var(--hueMain), 100%, 70%, 0.7);
+  outline: 1px solid hsla(var(--hueGuessing), 100%, 70%, 0.7);
   background: hsla(var(--appBackgroundDarkestHSL), 0.8);
 }
 
@@ -1830,7 +1825,7 @@ card {
   background-size: 100% 100%;
   width: var(--cardSize);
   height: var(--cardSize);
-  color: hsl(var(--hueMain), 100%, 90%);
+  color: hsl(var(--hueGuessing), 100%, 90%);
   user-select: none;
   -webkit-user-select: none;
   cursor: grab;
@@ -1841,7 +1836,7 @@ cards card,
 .multicolor.guessing cards card,
 .reviewing cards card {
   background: none;
-  color: hsl(var(--hueMain), 100%, 86%);
+  color: hsl(var(--hueGuessing), 100%, 86%);
 }
 
 .multicolor.creating card {
@@ -1879,7 +1874,7 @@ ghost card.empty,
 .reviewing ghost card.empty {
   opacity: 0;
   transition: 0ms ease-in 0ms opacity;
-  border: 1px solid hsla(var(--hueMain), 100%, 70%, 0.7);
+  border: 1px solid hsla(var(--hueGuessing), 100%, 70%, 0.7);
   background: hsla(var(--appBackgroundDarkestHSL), 0.8);
   pointer-events: none;
 }
@@ -1954,7 +1949,7 @@ hints hint input {
   background: none;
   padding: 0;
   width: 100%;
-  color: hsl(var(--hueMain), 100%, 70%);
+  color: hsl(var(--hueGuessing), 100%, 70%);
   line-height: 120%;
   font-family: 'ClueFont';
   text-align: center;
@@ -2339,7 +2334,7 @@ hints hint input {
 }
 
 hints hint input::placeholder {
-  color: hsla(var(--hueMain), 70%, 48%, 1);
+  color: hsla(var(--hueGuessing), 70%, 48%, 1);
   user-select: none;
   -webkit-user-select: none;
 }
@@ -2369,7 +2364,7 @@ modal input {
 
 hints hint input:disabled {
   opacity: 1;
-  color: hsl(var(--hueMain), 100%, 70%);
+  color: hsl(var(--hueGuessing), 100%, 70%);
 }
 
 .multicolor.creating hints hint input:disabled {
@@ -2485,7 +2480,11 @@ modal {
   opacity: 1;
   z-index: 500;
   transition: var(--mediumTransition) ease-in-out all;
-  background: hsla(var(--appBackgroundDarkestHSL), 1);
+  background-image: linear-gradient(hsla(var(--appBackgroundDarkestHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0) 50%), var(--textureHue), var(--texture2);
+  background-position: center center;
+  background-size: cover, cover, var(--textureSize);
+  background-repeat: no-repeat, no-repeat, repeat;
+  background-color: hsl(var(--appBackgroundDarkestHSL));
   width: 100%;
   height: 100%;
   overflow-x: hidden;
@@ -2577,12 +2576,16 @@ leftright {
   justify-content: center;
   align-items: center;
   gap: calc(0.5 * var(--defaultGap));
+  backdrop-filter: blur(4px);
   transition: var(--mediumTransition) ease-in-out border-color, background-color;
   transition-property: background-color, border-color;
   margin: 0px;
   border: 1px solid hsla(var(--appBackgroundHSL), 1);
+  /* border: 1px solid hsla(var(--appBackgroundHSL), 1); */
   border-radius: var(--borderRadius);
   background: hsla(var(--appBackgroundHSL), 0.4);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, .015) 40%, rgba(255, 255, 255, 0) 40%), linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, 0));
+  background-color: hsla(var(--appBackgroundDarkHSL), 0.5);
   padding: 5px 0px;
   width: calc(100%);
 }
@@ -2688,6 +2691,28 @@ app.dragging,
 .dragging rotators,
 .dragging spot.empty card {
   cursor: grabbing;
+}
+
+hues {
+  display: flex;
+  justify-content: space-evenly;
+  gap: calc(.25 * var(--defaultGap));
+  padding: 4px 0;
+  width: 100%;
+}
+
+hue {
+  cursor: pointer;
+  display: block;
+  transition: var(--mediumTransition) ease-in-out;
+  border: 1px solid hsla(var(--appBackgroundDarkestHSL), 1);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+}
+
+hue.selected {
+  border-color: hsl(var(--appForegroundHSL));
 }
 
 @media screen and (max-height: 844px) {

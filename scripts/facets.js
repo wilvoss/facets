@@ -1,4 +1,4 @@
-const version = '2.3.41';
+const version = '2.3.42';
 
 //#region MODULE HANDLING
 async function loadModels() {
@@ -69,7 +69,7 @@ LoadAllModules().then((modules) => {
     data() {
       return {
         //#region APP DATA
-        appDataVersion: '2.3.41',
+        appDataVersion: '2.3.42',
         appDataGuessingFirstRunItems: modules.firstRunGuessingMessages,
         appDataCreatorFirstRunItems: modules.firstRunCreatingMessages,
         appDataReviewingFirstRunItems: modules.firstRunReviewingMessages,
@@ -109,6 +109,7 @@ LoadAllModules().then((modules) => {
         appDataDailyGamesStats: [],
         appDataInc: 0,
         appDataAIResult: null,
+        appDataHues: [215, 265, 315, 355, 25, 140],
         //#endregion
 
         //#region STATE MANAGEMENT
@@ -172,6 +173,7 @@ LoadAllModules().then((modules) => {
         userSettingsUseExtraCard: false,
         userSettingsHideStats: false,
         userSettingsUsesLightTheme: false,
+        userSettingsHueIndex: 0,
         userSettingsUsesSimplifiedTheme: false,
         userSettingsUseMultiColoredGems: true,
         userSettingsUseWordSetThemes: true,
@@ -190,6 +192,7 @@ LoadAllModules().then((modules) => {
         tempShareURLCode: '',
         tempUseMultiColoredGems: true,
         tempUserSettingsUsesLightTheme: false,
+        tempUserSettingsHueIndex: 0,
         tempUserSettingsUsesSimplifiedTheme: false,
         tempUserSettingsShowAllCards: true,
         tempUseWordSetThemes: true,
@@ -313,6 +316,11 @@ LoadAllModules().then((modules) => {
             this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder = false;
           }
         }
+      },
+
+      SetHueIndex(_index) {
+        note('SetHueIndex()');
+        this.tempUserSettingsHueIndex = _index;
       },
 
       ToggleTempUseLightTheme() {
@@ -1611,6 +1619,7 @@ ${words[14]} ${words[10]}`);
         this.tempUserWantsDailyReminder = this.userSettingsUserWantsDailyReminder;
         this.tempUserSettingsLanguage = this.userSettingsLanguage;
         this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
+        this.tempUserSettingsHueIndex = this.userSettingsHueIndex;
         this.tempUseExtraCard = this.userSettingsUseExtraCard;
         this.tempUserSettingsHideStats = this.userSettingsHideStats;
         this.tempUserSettingsUsesSimplifiedTheme = this.userSettingsUsesSimplifiedTheme;
@@ -1655,6 +1664,7 @@ ${words[14]} ${words[10]}`);
           this.userSettingsUseExtraCard = this.tempUseExtraCard;
           this.userSettingsHideStats = this.tempUserSettingsHideStats;
           this.ToggleUseLightTheme(this.tempUserSettingsUsesLightTheme);
+          this.userSettingsHueIndex = this.tempUserSettingsHueIndex;
           this.ToggleUseSimplifedTheme(this.tempUserSettingsUsesSimplifiedTheme);
           this.ToggleShowAllCards(this.tempUserSettingsShowAllCards);
           this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
@@ -1668,6 +1678,7 @@ ${words[14]} ${words[10]}`);
           await modules.SaveData('userSettingsUserWantsDailyReminder', this.userSettingsUserWantsDailyReminder);
           await modules.SaveData('userSettingsLanguage', this.userSettingsLanguage);
           await modules.SaveData('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
+          await modules.SaveData('userSettingsHueIndex', this.userSettingsHueIndex);
           await modules.SaveData('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
           await modules.SaveData('userSettingsShowAllCards', this.userSettingsShowAllCards);
           await modules.SaveData('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
@@ -1831,6 +1842,12 @@ ${words[14]} ${words[10]}`);
           this.ToggleUseLightTheme(JSON.parse(userSettingsUsesLightTheme));
           this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
         }
+
+        let userSettingsHueIndex = await modules.GetData('userSettingsHueIndex');
+        if (userSettingsHueIndex === undefined || userSettingsHueIndex === null) {
+          userSettingsHueIndex = 0;
+        }
+        this.tempUserSettingsHueIndex = this.userSettingsHueIndex = userSettingsHueIndex;
 
         let userSettingsUsesSimplifiedTheme = await modules.GetData('userSettingsUsesSimplifiedTheme');
         if (userSettingsUsesSimplifiedTheme !== undefined && userSettingsUsesSimplifiedTheme !== null) {
@@ -2713,6 +2730,12 @@ We're working hard to make these Daily Facets better to play.`;
     },
 
     watch: {
+      tempUserSettingsHueIndex(_newValue) {
+        this.documentCssRoot.style.setProperty('--hueTheme', this.currentHueSet[_newValue]);
+      },
+      tempUserSettingsUsesLightTheme(_newValue) {
+        this.documentCssRoot.style.setProperty('--hueTheme', this.currentHueSet[this.tempUserSettingsHueIndex]);
+      },
       userSettingsLanguage() {
         this.LoadTranslatedWords();
       },
@@ -3103,6 +3126,9 @@ We're working hard to make these Daily Facets better to play.`;
       },
       loadSimplifiedTheme() {
         return this.appStateUseFlower || this.userSettingsUsesSimplifiedTheme;
+      },
+      currentHueSet() {
+        return this.appDataHues;
       },
       //#endregion
     },
