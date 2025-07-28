@@ -1,4 +1,4 @@
-const version = '2.3.43';
+const version = '2.3.44';
 
 //#region MODULE HANDLING
 async function loadModels() {
@@ -69,7 +69,7 @@ LoadAllModules().then((modules) => {
     data() {
       return {
         //#region APP DATA
-        appDataVersion: '2.3.43',
+        appDataVersion: '2.3.44',
         appDataGuessingFirstRunItems: modules.firstRunGuessingMessages,
         appDataCreatorFirstRunItems: modules.firstRunCreatingMessages,
         appDataReviewingFirstRunItems: modules.firstRunReviewingMessages,
@@ -2732,7 +2732,7 @@ We're working hard to make these Daily Facets better to play.`;
     watch: {
       tempUserSettingsHueIndex(_newValue) {
         this.documentCssRoot.style.setProperty('--hueTheme', this.currentHueSet[_newValue]);
-        if (this.userSettingsUsesLightTheme) {
+        if (this.tempUserSettingsUsesLightTheme) {
           document.getElementById('themeColor').content = 'hsl(' + this.appDataHues[this.tempUserSettingsHueIndex] + ', 100%, 92%)';
         } else {
           document.getElementById('themeColor').content = 'hsl(' + this.appDataHues[this.tempUserSettingsHueIndex] + ', 100%, 3%)';
