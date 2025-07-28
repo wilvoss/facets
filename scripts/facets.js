@@ -1,4 +1,4 @@
-const version = '2.3.42';
+const version = '2.3.43';
 
 //#region MODULE HANDLING
 async function loadModels() {
@@ -69,7 +69,7 @@ LoadAllModules().then((modules) => {
     data() {
       return {
         //#region APP DATA
-        appDataVersion: '2.3.42',
+        appDataVersion: '2.3.43',
         appDataGuessingFirstRunItems: modules.firstRunGuessingMessages,
         appDataCreatorFirstRunItems: modules.firstRunCreatingMessages,
         appDataReviewingFirstRunItems: modules.firstRunReviewingMessages,
@@ -228,9 +228,9 @@ LoadAllModules().then((modules) => {
         note('ToggleUseLightTheme()');
         this.userSettingsUsesLightTheme = _value;
         if (this.userSettingsUsesLightTheme) {
-          document.getElementById('themeColor').content = 'hsl(140, 100%, 92%)';
+          document.getElementById('themeColor').content = 'hsl(' + this.appDataHues[this.tempUserSettingsHueIndex] + ', 100%, 92%)';
         } else {
-          document.getElementById('themeColor').content = 'hsl(215, 100%, 3%)';
+          document.getElementById('themeColor').content = 'hsl(' + this.appDataHues[this.tempUserSettingsHueIndex] + ', 100%, 3%)';
         }
       },
 
@@ -2732,9 +2732,19 @@ We're working hard to make these Daily Facets better to play.`;
     watch: {
       tempUserSettingsHueIndex(_newValue) {
         this.documentCssRoot.style.setProperty('--hueTheme', this.currentHueSet[_newValue]);
+        if (this.userSettingsUsesLightTheme) {
+          document.getElementById('themeColor').content = 'hsl(' + this.appDataHues[this.tempUserSettingsHueIndex] + ', 100%, 92%)';
+        } else {
+          document.getElementById('themeColor').content = 'hsl(' + this.appDataHues[this.tempUserSettingsHueIndex] + ', 100%, 3%)';
+        }
       },
       tempUserSettingsUsesLightTheme(_newValue) {
         this.documentCssRoot.style.setProperty('--hueTheme', this.currentHueSet[this.tempUserSettingsHueIndex]);
+        if (_newValue) {
+          document.getElementById('themeColor').content = 'hsl(' + this.appDataHues[this.tempUserSettingsHueIndex] + ', 100%, 92%)';
+        } else {
+          document.getElementById('themeColor').content = 'hsl(' + this.appDataHues[this.tempUserSettingsHueIndex] + ', 100%, 3%)';
+        }
       },
       userSettingsLanguage() {
         this.LoadTranslatedWords();
