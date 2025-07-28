@@ -1,4 +1,4 @@
-const version = '2.3.44';
+const version = '2.3.45';
 
 //#region MODULE HANDLING
 async function loadModels() {
@@ -69,7 +69,7 @@ LoadAllModules().then((modules) => {
     data() {
       return {
         //#region APP DATA
-        appDataVersion: '2.3.44',
+        appDataVersion: '2.3.45',
         appDataGuessingFirstRunItems: modules.firstRunGuessingMessages,
         appDataCreatorFirstRunItems: modules.firstRunCreatingMessages,
         appDataReviewingFirstRunItems: modules.firstRunReviewingMessages,
