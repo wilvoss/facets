@@ -591,6 +591,26 @@ icon.feedback {
   -webkit-mask-image: url(../images/icon-feedback.svg);
 }
 
+icon.globe {
+  mask-image: url(../images/icon-globe.svg);
+  -webkit-mask-image: url(../images/icon-globe.svg);
+}
+
+icon.gradcap {
+  mask-image: url(../images/icon-gradcap.svg);
+  -webkit-mask-image: url(../images/icon-gradcap.svg);
+}
+
+icon.anon {
+  mask-image: url(../images/icon-anon.svg);
+  -webkit-mask-image: url(../images/icon-anon.svg);
+}
+
+icon.edit {
+  mask-image: url(../images/icon-edit.svg);
+  -webkit-mask-image: url(../images/icon-edit.svg);
+}
+
 small {
   user-select: none;
   -webkit-user-select: none;
@@ -913,7 +933,7 @@ button.small {
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  gap: 2px;
+  gap: 4px;
   transition-property: background-color, border-color, opacity;
   cursor: pointer;
   border-radius: calc(1 * var(--borderRadius));
@@ -925,6 +945,10 @@ button.small {
   text-transform: unset;
   -webkit-tap-highlight-color: transparent;
   transition: var(--mediumTransition) ease-in-out;
+}
+
+button.small.inline icon {
+  /* background: hsla(var(--messageColorHSL), 1); */
 }
 
 button.small.isolated {
