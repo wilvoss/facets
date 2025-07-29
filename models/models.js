@@ -48,7 +48,7 @@ export class WordSetObject {
     this.name = spec.name ?? '';
     this.isSelected = spec.isSelected ?? false;
     this.data = spec.data ?? [];
-    this.textureImage = spec.textureImage ?? '../images/wallpapers/common.jpg';
+    this.textureImage = spec.textureImage ?? '../images/wallpapers/common.webp';
     this.textureHue = spec.textureHue ?? 'radial-gradient(circle, hsla(var(--appBackgroundDarkHSL), .8) 0%, hsla(var(--appBackgroundDarkHSL), 1) 100%)';
     this.textureSize = spec.textureSize ?? '512px';
     this.textureBlendMode = spec.textureBlendMode ?? 'normal';
