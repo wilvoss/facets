@@ -2580,8 +2580,8 @@ We're working hard to make these Daily Facets better to play.`;
       async LoadPage() {
         note('LoadPage()');
         highlight(`Player ${this.appDataPlayerCurrent.id} has loaded version ${this.appDataVersion}`, true);
-        await this.GetDailyGames();
-        await this.GetRecentAnonymousGames();
+        this.GetDailyGames();
+        this.GetRecentAnonymousGames();
         this.appDataTransitionLong = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
         this.appDataTransitionShort = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
         let boardPieces = this.GetBoardFromURL();
@@ -2589,7 +2589,7 @@ We're working hard to make these Daily Facets better to play.`;
           if (boardPieces.length >= 40) {
             document.title = 'Facets!';
             this.ToggleShowMeta(null);
-            await this.RestoreGame(boardPieces);
+            this.RestoreGame(boardPieces);
           } else if (!this.appStateIsGuessing) {
             if (this.isAIGenerating) {
               this.currentGameGuessingCardCount = 4;
@@ -2605,14 +2605,14 @@ We're working hard to make these Daily Facets better to play.`;
               }, 2000);
             }
             if (this.appDataCards.length === 0 && this.appDataCardsParked.length === 0) {
-              await this.NewGame(null, '', false);
+              this.NewGame(null, '', false);
               this.ToggleShowMeta(null);
             }
           }
         } catch (e) {
           error(e.message);
           boardPieces = [];
-          await this.NewGame(null, '😕 - Something went wrong.', false);
+          this.NewGame(null, '😕 - Something went wrong.', false);
           this.ToggleShowMeta(null);
         } finally {
         }
