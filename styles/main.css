@@ -1123,6 +1123,7 @@ pointer p {
   padding: calc(0.5 * var(--defaultGap)) calc(0.75 * var(--defaultGap)) 0;
   width: calc(100% - 2 * 0.75 * var(--defaultGap));
   font-size: 16px;
+  font-family: var(--wordFont);
   text-align: left;
   text-wrap: wrap;
 }
@@ -1135,29 +1136,33 @@ pointer p.controls {
   text-align: right;
 }
 
-pointer p.controls a {
+pointer p.controls button {
   display: inline-block;
+  border-radius: 0px;
   padding: calc(0.5 * var(--defaultGap)) 0;
-  width: 100%;
-  font-style: italic;
+  width: auto;
+  /* font-style: italic; */
+  font-family: var(--wordFont);
   text-align: left;
+  white-space: nowrap;
+  ;
 }
 
-pointer p.controls a,
-pointer p.controls a:hover,
-pointer p.controls a:focus,
-pointer p.controls a:visited,
-pointer p.controls a:active {
+pointer p.controls button,
+pointer p.controls button:hover,
+pointer p.controls button:focus,
+pointer p.controls button:visited,
+pointer p.controls button:active {
   mix-blend-mode: luminosity;
   color: hsl(0, 20%, 40%);
 }
 
-pointer p.controls a.right {
+pointer p.controls button.right {
   text-align: right;
   text-transform: uppercase;
 }
 
-pointer p.controls a:hover {
+pointer p.controls button:hover {
   color: hsl(0, 10%, 30%);
 }
 
@@ -1180,7 +1185,7 @@ arrow {
   z-index: 199;
   clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
   transition: var(--mediumTransition) ease-in-out;
-  transition-property: margin, rotate, opacity;
+  transition-property: margin, rotate, opacity, left, transform, top;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
   background: hsl(var(--tipColorHSL));
   width: 18px;
