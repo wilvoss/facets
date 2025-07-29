@@ -1,13 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 27.5.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 259.1 347.6" style="enable-background:new 0 0 259.1 347.6;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill-rule:evenodd;clip-rule:evenodd;}
-</style>
-<g>
-	<rect x="11" y="293.6" class="st0" width="237" height="54"/>
-	<polygon class="st0" points="129.5,261.2 129.7,261.3 259.1,131.9 220.9,93.7 156.5,158.1 156.5,0 102.5,0 102.5,158.1 38.2,93.7 
-		0,131.9 129.4,261.3 	"/>
+<svg width="260" height="349" viewBox="0 0 260 349" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_1_24)">
+<path d="M248.5 294.1H11.5V348.1H248.5V294.1Z" fill="#FF0000"/>
+<path fill-rule="evenodd" clip-rule="evenodd" d="M130 261.7L130.2 261.8L259.6 132.4L221.4 94.2L157 158.6V0.5H103V158.6L38.7 94.2L0.5 132.4L129.9 261.8L130 261.7Z" fill="#FF0000"/>
 </g>
+<defs>
+<clipPath id="clip0_1_24">
+<rect width="259.1" height="347.6" fill="white" transform="translate(0.5 0.5)"/>
+</clipPath>
+</defs>
 </svg>

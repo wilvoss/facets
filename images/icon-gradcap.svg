@@ -1,9 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 27.5.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 85.2 67.2" style="enable-background:new 0 0 85.2 67.2;" xml:space="preserve">
-<polygon points="-3.2,53.6 -3.2,53.6 -3.2,53.6 "/>
-<path d="M42.6,58L15.3,39.5l2,15.5c0,16.3,50.5,16.3,50.5,0l2-15.5L42.6,58z"/>
-<polygon points="42.6,0.6 0,21.9 42.6,49.8 85.2,20.9 "/>
-<path d="M6.2,47.9V23L3,22.6v25.3L0,61.9c0,1.7,9.2,1.7,9.2,0L6.2,47.9z"/>
+<svg width="86" height="68" viewBox="0 0 86 68" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_1_37)">
+<path d="M43.1 58.5L15.8 40L17.8 55.5C17.8 71.8 68.3 71.8 68.3 55.5L70.3 40L43.1 58.5Z" fill="#FF0000"/>
+<path d="M43.1 1.1L0.5 22.4L43.1 50.3L85.7 21.4L43.1 1.1Z" fill="#FF0000"/>
+<path d="M6.7 48.4V23.5L3.5 23.1V48.4L0.5 62.4C0.5 64.1 9.7 64.1 9.7 62.4L6.7 48.4Z" fill="#FF0000"/>
+</g>
+<defs>
+<clipPath id="clip0_1_37">
+<rect width="85.2" height="67.2" fill="white" transform="translate(0.5 0.5)"/>
+</clipPath>
+</defs>
 </svg>
