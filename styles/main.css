@@ -665,6 +665,7 @@ icon.spinner {
   -webkit-mask-image: url(../images/icon-spinner.svg);
   -webkit-animation: spin 1s steps(10, start) infinite;
   transition: var(--mediumTransition) linear opacity;
+  background-color: hsla(var(--linkColorLightHSL), 1);
 }
 
 icon.spinner.show {

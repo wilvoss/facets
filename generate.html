@@ -13,7 +13,7 @@
     <meta name="apple-touch-fullscreen" content="no" />
     <meta name="apple-mobile-web-app-capable" content="no" />
     <meta name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover, minimum-scale=1, maximum-scale=5, user-scalable=yes" />
+      content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5, user-scalable=yes" />
     <meta name="theme-color" id="themeColor" content="hsl(215, 100%, 3%)" />
 
     <meta name="keywords"
@@ -29,7 +29,7 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <link rel="stylesheet" href="styles/normalize.css" media="screen" />
-    <link rel="stylesheet" href="styles/main.css?2.3.54" media="screen" />
+    <link rel="stylesheet" href="styles/main.css?2.3.55" media="screen" />
     <link rel="stylesheet" href="styles/checkbox.min.css" media="screen" />
   </head>
 
@@ -51,12 +51,12 @@
             :style="{backgroundImage: 'url('+ wordset.textureImage + ')'}" />
         </preload>
         <link rel="stylesheet"
-          v-bind:href="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme) ? 'styles/light.css?2.3.54' : ''"
+          v-bind:href="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme) ? 'styles/light.css?2.3.55' : ''"
           media="screen" />
-        <link rel="stylesheet" v-bind:href="loadSimplifiedTheme ? 'styles/simple.min.css?2.3.54' : ''" media="screen" />
-        <link rel="stylesheet" v-bind:href="appStateUseFlower ? 'styles/flower.css?2.3.54' : ''" media="screen" />
+        <link rel="stylesheet" v-bind:href="loadSimplifiedTheme ? 'styles/simple.min.css?2.3.55' : ''" media="screen" />
+        <link rel="stylesheet" v-bind:href="appStateUseFlower ? 'styles/flower.css?2.3.55' : ''" media="screen" />
         <link rel="stylesheet"
-          v-bind:href="appStateUsePortraitLayout && !userSettingsShowAllCards && !tooSmall && !isPlayerCreating ? 'styles/focus.css?2.3.54' : ''"
+          v-bind:href="appStateUsePortraitLayout && !userSettingsShowAllCards && !tooSmall && !isPlayerCreating ? 'styles/focus.css?2.3.55' : ''"
           media="screen" />
         <splash :class="{hide: appStatePageHasLoaded}">
           <icon class="logo giant"></icon>
@@ -810,8 +810,8 @@
         </wrapper>
       </app>
     </main>
-    <script src="helpers/console-enhancer.js?2.3.54" type="text/javascript"></script>
-    <script src="scripts/facets.js?2.3.54" type="module"></script>
+    <script src="helpers/console-enhancer.js?2.3.55" type="text/javascript"></script>
+    <script src="scripts/facets.js?2.3.55" type="module"></script>
   </body>
 
 </html>
