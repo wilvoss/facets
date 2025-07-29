@@ -1,37 +1,8 @@
-const version = '2.3.48';
+import { createApp } from '/helpers/vue.esm-browser.prod.js';
+import { loadGameplayModules } from '/constants/gameplay.js';
+import { version } from '/constants/version.js';
 
 //#region MODULE HANDLING
-async function loadModels() {
-  const { LanguageObject } = await import(`../models/LanguageObject.min.js?${version}`);
-  const { WordSetObject } = await import(`../models/WordSetObject.min.js?${version}`);
-  const { WordObject } = await import(`../models/WordObject.min.js?${version}`);
-  const { CardObject } = await import(`../models/CardObject.min.js?${version}`);
-  const { PlayerObject } = await import(`../models/PlayerObject.min.js?${version}`);
-
-  return {
-    WordSetObject,
-    WordObject,
-    LanguageObject,
-    CardObject,
-    PlayerObject,
-  };
-}
-
-async function loadConstants() {
-  const { levelEmoji, levelMessage } = await import(`../constants/level.min.js?${version}`);
-  const { wordSets, allLanguages } = await import(`../constants/wordset.min.js?${version}`);
-  const { firstRunGuessingMessages, firstRunCreatingMessages, firstRunReviewingMessages } = await import(`../constants/firstrun.min.js?${version}`);
-  return {
-    levelEmoji,
-    levelMessage,
-    wordSets,
-    allLanguages,
-    firstRunGuessingMessages,
-    firstRunCreatingMessages,
-    firstRunReviewingMessages,
-  };
-}
-
 async function loadHelpers() {
   const { SaveData, GetData, RemoveData, ClearStore } = await import(`../helpers/db-helper.min.js?${version}`);
   const { GetUniqueWords, GetJustWords } = await import(`../helpers/word-helper.min.js?${version}`);
@@ -46,30 +17,21 @@ async function loadHelpers() {
 }
 
 async function LoadAllModules() {
-  const models = await loadModels(version);
+  const gameplayModules = await loadGameplayModules();
+
   const helpers = await loadHelpers(version);
-  const constants = await loadConstants(version);
-  return { ...models, ...helpers, ...constants };
+  return { ...helpers, ...gameplayModules };
 }
-//#endregion
-
-//#region configuration
-Vue.config.devtools = false;
-Vue.config.silent = true;
-
-// prettier-ignore
-Vue.config.ignoredElements = ["app", "pointer", "arrow", "splash", "preload", "notification", "message", "icon", "subtitle", "badge", "modal", "controls", "confirmation", "checkbox", "toggle", "legal", "credit", "version", "categories", "category", "leftright", "small", "callout", "instructions", "gamelinks", "gamelink", "stats", "stat", "value", "flogo", "count", "rotators", "ghost", "card", "words", "word", "parking", "spot", "tray", "diamond", "hints", "hint", "cards", "cta", "dot", "clues"];
 //#endregion
 
 LoadAllModules().then((modules) => {
   console.log('Modules loaded:', modules);
 
-  window.app = new Vue({
-    el: '#app',
+  const app = createApp({
     data() {
       return {
         //#region APP DATA
-        appDataVersion: '2.3.48',
+        appDataVersion: version,
         appDataGuessingFirstRunItems: modules.firstRunGuessingMessages,
         appDataCreatorFirstRunItems: modules.firstRunCreatingMessages,
         appDataReviewingFirstRunItems: modules.firstRunReviewingMessages,
@@ -814,9 +776,8 @@ LoadAllModules().then((modules) => {
         if (this.currentGameGuessingCardCount === 5) {
           this.appDataCardsParked.push(new modules.CardObject({ words: modules.GetUniqueWords(wordset, 4, modules.GetJustWords(allUsedWords)) }));
           if (UseDebug) {
-            announce('HERE ARE THE CARD WORDS');
             this.appDataCards.forEach((card) => {
-              log(JSON.stringify(card.words));
+              note(JSON.stringify(card.words));
             });
 
             for (let i = this.appDataCardsParked.length - 1; i > 0; i--) {
@@ -1241,11 +1202,11 @@ ${words[14]} ${words[10]}`);
             userStats.forEach((stat) => {
               for (const game of this.appDataDailyGames) {
                 if (stat.key === game.key) {
-                  Vue.set(game, 'guesses', stat.guesses);
+                  game.guesses = stat.guesses;
                   if (stat.quit !== null && stat.quit !== undefined) {
-                    Vue.set(game, 'quit', stat.quit);
+                    game.quit = stat.quit;
                   }
-                  Vue.set(game, 'solved', true);
+                  game.solved = true;
                 }
               }
             });
@@ -1349,7 +1310,7 @@ ${words[14]} ${words[10]}`);
         }
         let searchString = stringArray.join('');
         let url = location.origin + searchString;
-        log(url);
+        note(url);
         history.pushState(null, null, url);
         if (this.appStateShowDailyGames) {
           this.ToggleShowDailyGames(e);
@@ -2251,7 +2212,6 @@ Can you do better?
           message = `AI is hard! 
 We're working hard to make these Daily Facets better to play.`;
         }
-        announce(message);
         return message;
       },
 
@@ -2619,9 +2579,9 @@ We're working hard to make these Daily Facets better to play.`;
 
       async LoadPage() {
         note('LoadPage()');
-        announce('Player ' + this.appDataPlayerCurrent.id + ' has loaded v' + this.appDataVersion);
-        this.GetDailyGames();
-        this.GetRecentAnonymousGames();
+        highlight(`Player ${this.appDataPlayerCurrent.id} has loaded version ${this.appDataVersion}`, true);
+        await this.GetDailyGames();
+        await this.GetRecentAnonymousGames();
         this.appDataTransitionLong = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
         this.appDataTransitionShort = parseInt(getComputedStyle(document.body).getPropertyValue('--shortTransition').replace('ms', ''));
         let boardPieces = this.GetBoardFromURL();
@@ -2636,7 +2596,7 @@ We're working hard to make these Daily Facets better to play.`;
               this.appDataPlayerCurrent.id = 0;
 
               this.currentGameWordSet = this.enabledWordSets.find((set) => set.id === '100');
-              log(this.currentGameWordSet.name);
+              note(this.currentGameWordSet.name);
               this.SelectWordSet(null, this.currentGameWordSet);
               note(this.currentGameWordSet.name);
 
@@ -2645,14 +2605,14 @@ We're working hard to make these Daily Facets better to play.`;
               }, 2000);
             }
             if (this.appDataCards.length === 0 && this.appDataCardsParked.length === 0) {
-              this.NewGame(null, '', false);
+              await this.NewGame(null, '', false);
               this.ToggleShowMeta(null);
             }
           }
         } catch (e) {
           error(e.message);
           boardPieces = [];
-          this.NewGame(null, '😕 - Something went wrong.', false);
+          await this.NewGame(null, '😕 - Something went wrong.', false);
           this.ToggleShowMeta(null);
         } finally {
         }
@@ -2713,6 +2673,8 @@ We're working hard to make these Daily Facets better to play.`;
     },
 
     async mounted() {
+      UseDebug = document.location.href.indexOf('local') != -1 || document.location.href.indexOf('debug=true') != -1;
+
       await this.OnMount();
       this.DeregisterServiceWorkers();
       window.addEventListener('keydown', this.HandleKeyDownEvent);
@@ -3150,7 +3112,45 @@ We're working hard to make these Daily Facets better to play.`;
       currentHueSet() {
         return this.appDataHues;
       },
+      bottomParkingCards() {
+        let cards = [];
+        for (let index = 0; index < this.appDataCardsParked.length; index++) {
+          if (index < this.currentGameGuessingCardCount) {
+            cards.push(this.appDataCardsParked[index]);
+          }
+        }
+        return cards;
+      },
+      leftParkingCards() {
+        let cards = [];
+        for (let index = 0; index < this.appDataCardsParked.length; index++) {
+          if (index < this.currentGameGuessingCardCount / 2) {
+            cards.push(this.appDataCardsParked[index]);
+          }
+        }
+        return cards;
+      },
+      rightParkingCards() {
+        let cards = [];
+        for (let index = 0; index < this.appDataCardsParked.length; index++) {
+          if (index >= this.currentGameGuessingCardCount / 2 && index < this.currentGameGuessingCardCount) {
+            cards.push(this.appDataCardsParked[index]);
+          }
+        }
+        return cards;
+      },
       //#endregion
     },
   });
+
+  //#region configuration
+  // prettier-ignore
+  app.config.compilerOptions.isCustomElement = tag =>
+    [
+      "app", "pointer", "arrow", "splash", "preload", "notification", "message", "icon", "subtitle", "badge", "modal", "controls", "confirmation", "checkbox", "toggle", "legal", "credit", "version", "categories", "category", "leftright", "small", "callout", "instructions", "gamelinks", "gamelink", "stats", "stat", "value", "flogo", "count", "rotators", "ghost", "card", "words", "word", "parking", "spot", "tray", "diamond", "hints", "hint", "cards", "cta", "dot", "clues", "hues", "hue"
+    ].includes(tag);
+  //#endregion
+
+  //#endregion
+  window.app = app.mount('#app');
 });
