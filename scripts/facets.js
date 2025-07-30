@@ -2590,7 +2590,7 @@ We're working hard to make these Daily Facets better to play.`;
           if (boardPieces.length >= 40) {
             document.title = 'Facets!';
             this.ToggleShowMeta(null);
-            this.RestoreGame(boardPieces);
+            await this.RestoreGame(boardPieces);
           } else if (!this.appStateIsGuessing) {
             if (this.isAIGenerating) {
               this.currentGameGuessingCardCount = 4;
