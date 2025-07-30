@@ -1196,9 +1196,15 @@ ${words[14]} ${words[10]}`);
             if (!response.ok) {
               error(response.status);
             }
+            if (response.status === 204) {
+              return null;
+            }
             return response.text();
           })
           .then((payload) => {
+            if (!payload) {
+              return;
+            }
             let userStats = JSON.parse(payload);
             userStats.forEach((stat) => {
               for (const game of this.appDataDailyGames) {
