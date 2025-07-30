@@ -909,6 +909,7 @@ LoadAllModules().then((modules) => {
         let words, wordElements;
         words = [];
         wordElements = document.getElementsByTagName('word');
+        note(`wordElements.length = ${wordElements.length}`);
 
         for (let index = 0; index < wordElements.length; index++) {
           const element = wordElements[index];
