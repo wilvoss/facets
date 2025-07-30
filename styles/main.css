@@ -665,7 +665,7 @@ icon.spinner {
   -webkit-mask-image: url(../images/icon-spinner.svg);
   -webkit-animation: spin 1s steps(10, start) infinite;
   transition: var(--mediumTransition) linear opacity;
-  background-color: hsla(var(--linkColorLightHSL), 1);
+  background-color: hsl(var(--appBackgroundLightestHSL));
 }
 
 icon.spinner.show {
@@ -1360,11 +1360,11 @@ wrapper:first-of-type controls {
 }
 
 wrapper:first-of-type controls button.small {
-    backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   transition: none;
-      border: 1px solid hsla(var(--appBackgroundHSL), 1);
-      background-image: linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, .015) 40%, rgba(255, 255, 255, 0) 40%), linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, 0));
-      background-color: hsla(var(--appBackgroundDarkHSL), 0.5);
+  border: 1px solid hsla(var(--appBackgroundHSL), 1);
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, .015) 40%, rgba(255, 255, 255, 0) 40%), linear-gradient(180deg, rgba(255, 255, 255, .015), rgba(255, 255, 255, 0));
+  background-color: hsla(var(--appBackgroundDarkHSL), 0.5);
   padding: calc(0.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
   height: unset;
   font-size: 90%;
