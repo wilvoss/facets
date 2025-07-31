@@ -18,6 +18,7 @@ export default defineConfig({
         'game/index': path.resolve(__dirname, 'game/index.html'),
         'game/stats': path.resolve(__dirname, 'game/stats.html'),
         main: path.resolve(__dirname, 'index.html'),
+        generate: path.resolve(__dirname, 'generate.html'),
       },
     },
   },
