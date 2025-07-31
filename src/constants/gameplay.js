@@ -1,7 +1,5 @@
-import { version } from '/constants/version.js';
-
 export async function loadGameplayModules() {
-  const { WordSetObject, WordObject, LanguageObject, CardObject, PlayerObject } = await import(`../models/models.min.js?${version}`);
+  const { WordSetObject, WordObject, LanguageObject, CardObject, PlayerObject } = await import('../models/models.min.js');
 
   // // Predefined WordSet instances
   const Nouns = new WordSetObject({ id: '1', name: 'Nouns', data: ['./data/nouns.json?2.2.12'], textureImage: '../images/wallpapers/nouns.webp', enabled: false });

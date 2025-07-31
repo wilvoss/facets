@@ -1,11 +1,11 @@
-import { createApp } from '/helpers/vue.esm-browser.prod.js';
-import { loadGameplayModules } from '/constants/gameplay.js';
-import { version } from '/constants/version.js';
+import { createApp } from '/src/helpers/vue.esm-browser.prod.js';
+import { loadGameplayModules } from '/src/constants/gameplay.js';
+import { version } from '/src/constants/version.js';
 
 //#region MODULE HANDLING
 async function loadHelpers() {
-  const { SaveData, GetData, RemoveData, ClearStore } = await import(`../helpers/db-helper.min.js?${version}`);
-  const { GetUniqueWords, GetJustWords } = await import(`../helpers/word-helper.min.js?${version}`);
+  const { SaveData, GetData, RemoveData, ClearStore } = await import('/src/helpers/db-helper.min.js');
+  const { GetUniqueWords, GetJustWords } = await import('/src/helpers/word-helper.min.js');
   return {
     SaveData,
     GetData,

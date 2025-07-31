@@ -1,6 +1,5 @@
-import { createApp } from '/helpers/vue.esm-browser.prod.js';
-import { loadGameplayModules } from '/constants/gameplay.js';
-import { version } from '/constants/version.js';
+import { createApp } from '/src/helpers/vue.esm-browser.prod.js';
+import { loadGameplayModules } from '/src/constants/gameplay.js';
 
 //#region MODULE HANDLING
 

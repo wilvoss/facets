@@ -3,9 +3,13 @@ var UseDebug = false;
 function getCallerLines() {
   const stack = new Error().stack;
   const lines = stack.split('\n');
-  // Get the line numbers from the 3rd and 4th stack lines
-  const lineNum1 = (lines[3] || lines[2]).split(':')[2]?.trim() || '';
-  const lineNum2 = (lines[4] || lines[3]).split(':')[2]?.trim() || '';
+  // Extract line numbers from the stack trace (format: ...:line:column)
+  function extractLineNum(str) {
+    const match = str.match(/:(\d+):\d+\)?$/);
+    return match ? match[1] : '';
+  }
+  const lineNum1 = extractLineNum(lines[3] || lines[2]);
+  const lineNum2 = extractLineNum(lines[4] || lines[3]);
   let value = `${lineNum1}:${lineNum2}`;
   return value.padEnd(9, ' ');
 }
