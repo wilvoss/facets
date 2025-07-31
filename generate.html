@@ -2,32 +2,12 @@
 <html itemtype="https://schema.org/VideoGame" lang="en">
 
   <head>
-    <!-- <meta http-equiv="refresh" content="0;URL=/maintenance.html" /> -->
-
     <meta charset="utf-8" />
     <meta content="x-content-type-options=nosniff" />
-
     <title>Facets!</title>
-    <meta name="apple-mobile-web-app-title" content="Facets!" />
-    <meta name="mobile-web-app-capable" content="no" />
-    <meta name="apple-touch-fullscreen" content="no" />
-    <meta name="apple-mobile-web-app-capable" content="no" />
-    <meta name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5, user-scalable=yes" />
     <meta name="theme-color" id="themeColor" content="hsl(215, 100%, 3%)" />
-
-    <meta name="keywords"
-      content="free online game, brain teaser, casual game, puzzle game, word game, word association, puzzle, social game" />
-    <meta name="description"
-      content="Facets: A free word association puzzle game. Play custom challenges with friends or take on the AI's Daily Puzzle — brain-teasing fun without distractions!" />
-
-    <link rel="manifest" href="manifest.webmanifest" />
-
-    <link rel="apple-touch-icon" sizes="1024x1024" href="images/icon1024-apple-touch.png" />
-
     <link rel="icon alternate" type="image/png" href="favicon-alt.png">
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
-
     <link rel="stylesheet" href="styles/normalize.css" media="screen" />
     <link rel="stylesheet" href="styles/main.css" media="screen" />
     <link rel="stylesheet" href="styles/checkbox.min.css" media="screen" />
@@ -36,14 +16,8 @@
   <body>
     <main id="app" style="opacity: 0;">
       <app v-cloak>
-
-
-
         <wrapper class="main">
-
-
           <tray id="tray">
-
             <hints>
               <hint @pointerdown=" RotateTrayBasedOnInputFocus(index)" :id="'h' + index"
                 v-for="(hint, index) in appDataHints" :key="index"
@@ -69,11 +43,9 @@
                       v-for="(word, windex) in card.words" :id="'word' + windex">{{word.value}}</word>
                   </words>
                 </card>
-
               </spot>
             </cards>
           </tray>
-
         </wrapper>
       </app>
     </main>

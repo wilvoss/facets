@@ -71,7 +71,7 @@ LoadAllModules().then((modules) => {
         appDataDailyGamesStats: [],
         appDataInc: 0,
         appDataAIResult: null,
-        appDataHues: [215, 265, 315, 355, 25, 140],
+        appDataHues: [215, 265, 315, 355, 25, 140, 184],
         //#endregion
 
         //#region STATE MANAGEMENT
