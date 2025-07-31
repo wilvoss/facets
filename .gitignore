@@ -7,6 +7,9 @@ node_modules/
 # Vite build output
 dist/
 
+# Vite cache
+.vite/
+
 # Log files
 npm-debug.log*
 yarn-debug.log*
