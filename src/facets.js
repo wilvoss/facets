@@ -765,6 +765,11 @@ LoadAllModules().then((modules) => {
         this.ResetCardsAfterRotation(false);
 
         this.appDataCardsParked = this.appDataCards;
+        // Shuffle appDataCardsParked
+        for (let i = this.appDataCardsParked.length - 1; i > 0; i--) {
+          let j = Math.floor(Math.random() * (i + 1));
+          [this.appDataCardsParked[i], this.appDataCardsParked[j]] = [this.appDataCardsParked[j], this.appDataCardsParked[i]];
+        }
         let allUsedWords = [];
         this.appDataCards.forEach((card) => {
           card.words.forEach((word) => {
@@ -791,12 +796,6 @@ LoadAllModules().then((modules) => {
           this.appDataCardsParked.push(new modules.CardObject({}));
         }
         this.appDataCardsParked.push(new modules.CardObject({}));
-
-        // Shuffle temp before assigning
-        for (let i = temp.length - 1; i > 0; i--) {
-          let j = Math.floor(Math.random() * (i + 1));
-          [temp[i], temp[j]] = [temp[j], temp[i]];
-        }
 
         this.appDataCards = temp;
         await this.ShareBoard(false, true);
