@@ -105,6 +105,7 @@
         </notification>
         <notification :class="{show: appStateShowMeta}" class="meta">
           <header>
+            <h1>{{appDataGameName}}</h1>
             <icon class="logo giant"></icon>
             <flogo class="giant"></flogo>
           </header>
@@ -120,7 +121,7 @@
               Create a Puzzle
               <span></span>
             </button>
-            <leftright>
+            <row>
               <button v-if="vsShowDaily" class="small inline" @click="ToggleShowDailyGames($event)">
                 <icon class="cal"></icon>
                 Daily
@@ -131,8 +132,8 @@
                 Anonymous
                 <span></span>
               </button>
-            </leftright>
-            <leftright>
+            </row>
+            <row>
               <button class="small inline" @click="ToggleShowTutorial($event)">
                 <icon class="gradcap"></icon>
                 How To
@@ -143,7 +144,7 @@
                 Settings
                 <span></span>
               </button>
-            </leftright>
+            </row>
             <button title="Credits" class="small isolated" style="bottom: 0px; right: 0px; "
               @click="ToggleShowInfo($event)">
               <icon class="meeples"></icon>
@@ -312,13 +313,13 @@
                 :class="{on: tempWordSetName === set.name}" v-for="set in enabledTempWordSet">{{set.name}}</category>
             </categories>
             <h3>Language</h3>
-            <leftright>
+            <row>
               <p>Selected</p>
               <select v-model="tempUserSettingsLanguage">
                 <option v-for="option in enabledTempLanguages" :key="option.tag" :value="option.tag">{{ option.name }}
                 </option>
               </select>
-            </leftright>
+            </row>
             <h3>Difficulty</h3>
             <checkbox title="Enable this to make your puzzle much harder to solve!" :class="{on: tempUseExtraCard}"
               @click="ToggleTempUseExtraCard">
@@ -336,35 +337,35 @@
           <section>
             <h2>Settings</h2>
             <h3>Profile</h3>
-            <leftright>
+            <row>
               <p>Player name</p>
               <callout>
                 <input autocomplete="off" spellcheck="false" maxlength="14" placeholder="" onpointerup="this.select()"
                   v-model="tempName" />
               </callout>
-            </leftright>
-            <leftright>
+            </row>
+            <row>
               <p>Player ID</p>
               <callout>
                 <input spellcheck="false" onpointerup="this.select()" inputmode="numeric" type="number" pattern="\d*"
                   v-model="tempID" oninput="if (this.value.length > 16) this.value = this.value.slice(0, 16);"
                   maxlength="8" />
               </callout>
-            </leftright>
+            </row>
             <small class="alertText" v-if="tempIDisInvalid">Your ID
               must be 8 - 12 numbers long and not begin with 0.</small>
             <small>To avoid connection issues when sharing game stats across different devices, ensure this Player ID
               matches
               on all your browsers. Write this ID down before changing it.</small>
             <h3>Appearance</h3>
-            <leftright>
+            <row>
               <hues>
                 <hue @click="SetHueIndex(index)" v-for="(hue, index) in currentHueSet"
                   :class="{selected: index === tempUserSettingsHueIndex}" :key="'hueIndex' + index"
                   :style="{backgroundColor: 'hsl(' + hue + ', 50%, ' + (tempUserSettingsUsesLightTheme ? '70%' : '30%') + ')'}">
                 </hue>
               </hues>
-            </leftright>
+            </row>
             <small>Choose your mood.</small>
             <checkbox v-if="!appStateUseFlower" :class="{on: tempUserSettingsUsesLightTheme}"
               @click="ToggleTempUseLightTheme">
@@ -429,15 +430,15 @@
             </ul>
             Once you have updated your device settings, restart Facets, and then enable notifications here.
           </instructions> -->
-            <leftright style="margin-top: calc(2 * var(--defaultGap))" :class="{disabled: !tipsHaveBeenIncremented}">
+            <row style="margin-top: calc(2 * var(--defaultGap))" :class="{disabled: !tipsHaveBeenIncremented}">
               <a class="padded" @click="ResetFirstRun">Reset
                 tips</a>
-            </leftright>
+            </row>
             <small :class="{disabled: !tipsHaveBeenIncremented}">Tap this to restore the game guiding tips.</small>
 
-            <leftright>
+            <row>
               <a class="padded" @click="ReloadApp">Reload App</a>
-            </leftright>
+            </row>
             <small>Tap this to be sure that you have the latest version ({{appDataVersion}}).</small>
           </section>
           <controls>
@@ -451,11 +452,11 @@
             <h2>Anonymous puzzles</h2>
             <p>Play recent puzzles created by anonymous players from around the world.</p>
 
-            <leftright style="margin: 20px 0">
+            <row style="margin: 20px 0">
               <a class="padded" :class="{disabled: appStateIsGettingAnonymousGames}"
                 @click="GetRecentAnonymousGames">Refresh</a>
               <a class="padded" onclick="window.open('/game/stats.html', '_blank')">Global Stats</a>
-            </leftright>
+            </row>
 
             <icon v-show="appStateIsGettingAnonymousGames" style="position: relative" class="spinner show"></icon>
 

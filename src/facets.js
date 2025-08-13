@@ -3156,11 +3156,8 @@ We're working hard to make these Daily Facets better to play.`;
   });
 
   //#region configuration
-  // prettier-ignore
-  app.config.compilerOptions.isCustomElement = tag =>
-    [
-      "app", "pointer", "arrow", "splash", "preload", "notification", "message", "icon", "subtitle", "badge", "modal", "controls", "confirmation", "checkbox", "toggle", "legal", "credit", "version", "categories", "category", "leftright", "small", "callout", "instructions", "gamelinks", "gamelink", "stats", "stat", "value", "flogo", "count", "rotators", "ghost", "card", "words", "word", "parking", "spot", "tray", "diamond", "hints", "hint", "cards", "cta", "dot", "clues", "hues", "hue"
-    ].includes(tag);
+  app.config.compilerOptions.isCustomElement = (tag) =>
+    ['app', 'arrow', 'badge', 'callout', 'card', 'categories', 'category', 'checkbox', 'clues', 'confirmation', 'controls', 'count', 'cta', 'diamond', 'dot', 'flogo', 'gamelink', 'gamelinks', 'ghost', 'hint', 'hints', 'hue', 'hues', 'icon', 'instructions', 'row', 'legal', 'message', 'modal', 'notification', 'parking', 'pointer', 'preload', 'rotators', 'splash', 'spot', 'stat', 'stats', 'subtitle', 'toggle', 'tray', 'value', 'version', 'words', 'word'].includes(tag);
   //#endregion
 
   //#endregion

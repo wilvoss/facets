@@ -56,7 +56,7 @@ stats stat.boxed small {
   color: hsl(var(--appBackgroundDarkHSL));
 }
 
-leftright,
+row,
 checkbox {
   border: 1px solid hsla(var(--appBackgroundLighterHSL), 1);
 }
@@ -74,7 +74,7 @@ modal select {
   border: 1px solid hsla(var(--appBackgroundLighterHSL), 1);
 }
 
-leftright callout,
+row callout,
 select {
   background: hsl(var(--hueMain), 100%, 100%);
 }

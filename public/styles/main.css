@@ -389,6 +389,9 @@ button.dailycta.show {
 
 header h1 {
   margin: 0px;
+  width: 0px;
+  height: 0px;
+  overflow: hidden;
   color: hsla(var(--appForegroundHSL), 1);
 }
 
@@ -991,7 +994,7 @@ notification button.small {
   width: 90%;
 }
 
-notification.meta leftright {
+notification.meta row {
   width: 90%;
 }
 
@@ -1071,7 +1074,7 @@ notification.meta p {
   color: hsl(var(--messageColorHSL));
 }
 
-notification.meta leftright {
+notification.meta row {
   gap: calc(0.25 * var(--defaultGap));
   border: none;
   background: none;
@@ -2588,7 +2591,7 @@ section input {
   font-family: 'Abel', 'Segoe UI', 'Helvetica Neue';
 }
 
-leftright {
+row {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -2607,20 +2610,20 @@ leftright {
   width: calc(100%);
 }
 
-leftright message,
-leftright callout,
-leftright p {
+row message,
+row callout,
+row p {
   border-radius: var(--borderRadius);
   width: calc(1 * var(--cardSize));
   text-align: left;
 }
 
-leftright p {
+row p {
   flex: 1;
 }
 
-leftright callout,
-leftright select {
+row callout,
+row select {
   flex: 2;
   margin: 0 5px 0 0;
   border-radius: var(--borderRadius) calc(0.5 * var(--borderRadius)) calc(0.5 * var(--borderRadius)) var(--borderRadius);
@@ -2628,11 +2631,11 @@ leftright select {
   width: unset;
 }
 
-leftright callout input {
+row callout input {
   text-align: left;
 }
 
-leftright p {
+row p {
   padding-left: var(--defaultGap);
 }
 
@@ -2836,7 +2839,7 @@ hue.selected {
   }
 
   header h1 {
-    display: none;
+    /* display: none; */
   }
 
   wrapper controls {
