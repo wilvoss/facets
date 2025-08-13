@@ -3156,8 +3156,8 @@ We're working hard to make these Daily Facets better to play.`;
   });
 
   //#region configuration
-  app.config.compilerOptions.isCustomElement = (tag) =>
-    ['app', 'arrow', 'badge', 'callout', 'card', 'categories', 'category', 'checkbox', 'clues', 'confirmation', 'controls', 'count', 'cta', 'diamond', 'dot', 'flogo', 'gamelink', 'gamelinks', 'ghost', 'hint', 'hints', 'hue', 'hues', 'icon', 'instructions', 'row', 'legal', 'message', 'modal', 'notification', 'parking', 'pointer', 'preload', 'rotators', 'splash', 'spot', 'stat', 'stats', 'subtitle', 'toggle', 'tray', 'value', 'version', 'words', 'word'].includes(tag);
+  // There are NO vue components in this code. All non-standard HTML tags are meant for semantic and syntactical purposes
+  app.config.compilerOptions.isCustomElement = (tag) => true;
   //#endregion
 
   //#endregion

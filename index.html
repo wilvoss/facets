@@ -35,6 +35,7 @@
 
   <body>
     <main id="app">
+      <!-- There are NO vue components in this code. All non-standard HTML tags are meant for semantic and syntactical purposes -->
       <app v-cloak
         :class="{ai: isAIGenerated, multicolor: userSettingsUseMultiColoredGems, solved: appStateIsGuessing && currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, wallpaper: tempUseWordSetThemes, dragging: appStateIsDragging, guessing: appStateIsGuessing, simple: userSettingsUsesSimplifiedTheme, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: isPlayerCreating}"
         @pointerdown="HandleBodyPointerDown($event)"
@@ -396,8 +397,7 @@
               Make "parked" cards bigger <toggle></toggle>
             </checkbox>
             <small v-if="appStateUsePortraitLayout">Enable this if you want to increase the size of the unused cards
-              when
-              guessing.
+              when guessing.
             </small>
             <!-- <checkbox v-if="isNotificationSupported && isSyncSupported && appStateUseNotifications"
             :class="{on: tempUserWantsDailyReminder, disabled: Notification.permission === 'denied'}"
