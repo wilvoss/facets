@@ -398,7 +398,7 @@ header h1 {
 icon {
   display: block;
   mask-size: calc(0.75 * var(--smallIconSize)) calc(0.75 * var(--smallIconSize));
-  background-color: hsl(var(--appForegroundDiminishedHSL));
+  background-color: hsl(var(--appBackgroundLightestHSL));
   width: var(--smallIconSize);
   height: var(--smallIconSize);
   -webkit-mask-size: calc(0.75 * var(--smallIconSize)) calc(0.75 * var(--smallIconSize));

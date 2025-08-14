@@ -225,7 +225,7 @@
                 button to check your solution.</p>
             </hidden>
           </section>
-          <controls><button class="secondary" @click="ToggleShowTutorial($event)">Back</button></controls>
+          <controls><button @click="ToggleShowTutorial($event)">Back</button></controls>
         </modal>
         <modal v-if="appStateShowConfirmation" class="centered">
           <confirmation>
@@ -303,7 +303,7 @@
               <span>Version {{appDataVersion}}</span>
             </version>
           </section>
-          <controls><button class="secondary" @click="appStateShowInfo = false">Back</button></controls>
+          <controls><button @click="appStateShowInfo = false">Back</button></controls>
         </modal>
         <modal v-if="appStateShowCatChooser">
           <section>
@@ -482,7 +482,7 @@
             </gamelinks>
 
             <controls>
-              <button class="secondary" @click="appStateShowGlobalCreated = false">Back</button>
+              <button @click="appStateShowGlobalCreated = false">Back</button>
             </controls>
           </section>
         </modal>
@@ -596,7 +596,7 @@
             </gamelinks>
 
             <controls>
-              <button class="secondary" @click="appStateShowDailyGames = false">Back</button>
+              <button @click="appStateShowDailyGames = false">Back</button>
             </controls>
           </section>
         </modal>
