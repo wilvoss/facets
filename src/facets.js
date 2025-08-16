@@ -2236,11 +2236,11 @@ We're working hard to make these Daily Facets better to play.`;
           let starText = this.currentGameGuessingCardCount === 5 ? ' ⭐️' : '';
           let cardText = this.currentGameGuessingCardCount === 5 ? ' 5-card ' : '';
 
-          text = `🧠${this.currentGameGuessingWordSet.emoji}${starText} I created "${this.GetSolutionWords()}" for you to solve!`;
+          text = `🧠${this.currentGameGuessingWordSet.emoji}${starText} I created [${this.GetSolutionWords()}] for you to solve!`;
         } else if (this.appDataPlayerCurrent.role === 'reviewer') {
           text = this.GetMessageBasedOnTrayCount(_gotIt, this.currentGameGuessersName);
         } else {
-          text = `🤔 ${this.appDataPlayerCreator.name}, here's my guess for "${this.GetSolutionWords()}"`;
+          text = `🤔 ${this.appDataPlayerCreator.name}, here's my guess for [${this.GetSolutionWords()}]`;
         }
         return text;
       },
