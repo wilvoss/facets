@@ -2233,13 +2233,22 @@ We're working hard to make these Daily Facets better to play.`;
         let pretext = this.currentGameGuessingWordSet.startsWithVowel ? 'an ' : 'a ';
         pretext = this.currentGameGuessingCardCount === 5 ? 'a ' : pretext;
         if (this.appDataPlayerCurrent.id === this.appDataPlayerSender.id && this.appDataPlayerCurrent.id === this.appDataPlayerCreator.id) {
-          text = '🧠' + this.currentGameGuessingWordSet.emoji + (this.currentGameGuessingCardCount === 5 ? '⭐️' : '') + ' I created ' + pretext + (this.currentGameGuessingCardCount === 5 ? '5-card ' : '') + '"' + this.currentGameGuessingWordSet.name + '" word puzzle for you to solve!';
+          let starText = this.currentGameGuessingCardCount === 5 ? ' ⭐️' : '';
+          let cardText = this.currentGameGuessingCardCount === 5 ? ' 5-card ' : '';
+
+          text = `🧠${this.currentGameGuessingWordSet.emoji}${starText} I created "${this.GetSolutionWords()}" for you to solve!`;
         } else if (this.appDataPlayerCurrent.role === 'reviewer') {
           text = this.GetMessageBasedOnTrayCount(_gotIt, this.currentGameGuessersName);
         } else {
-          text = '🤔 ' + this.appDataPlayerCreator.name + ", here's my guess!";
+          text = `🤔 ${this.appDataPlayerCreator.name}, here's my guess for "${this.GetSolutionWords()}"`;
         }
         return text;
+      },
+
+      GetSolutionWords() {
+        note('GetSolutionWords()');
+        let words = this.currentGameSolutionActual.split(':');
+        return `${words[0]} - ${words[3]} - ${words[6]} - ${words[9]}`;
       },
       //#endregion
 
