@@ -2063,16 +2063,17 @@ Can you do better?
         note('ShareText()');
         if (!this.isAIGenerating) {
           this.appDataMessage = '';
-          note('_text = ' + _text);
-          note('_url = ' + _url);
+          let urlText = _url === '' ? '' : '<' + _url + '>';
           let _shareObject = {
-            text: _text + (_url === '' ? '' : ' <' + _url + '>'),
+            text: `${_text}
+${urlText}`,
           };
 
           if (navigator.canShare && !navigator.canShare(_shareObject)) {
+            urlText = _url === '' ? window.location.origin : _url;
             _shareObject = {
               text: _text,
-              url: _url === '' ? window.location.origin : _url,
+              url: urlText,
             };
           }
           if (navigator.share && navigator.canShare(_shareObject)) {
@@ -2082,12 +2083,14 @@ Can you do better?
                 note('Message shared via navigator.share()');
               })
               .catch((e) => {
-                this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
+                this.CopyTextToClipboard(`${_text}
+${urlText}`);
                 error('Failed to share via navigator.share(): ', e);
               });
           } else {
             // fall back to clipboard
-            this.CopyTextToClipboard(_text + (_url === '' ? '' : ' <' + _url + '>'));
+            this.CopyTextToClipboard(`${_text}
+${urlText}`);
           }
         }
       },
@@ -2236,11 +2239,14 @@ We're working hard to make these Daily Facets better to play.`;
           let starText = this.currentGameGuessingCardCount === 5 ? ' ⭐️' : '';
           let cardText = this.currentGameGuessingCardCount === 5 ? ' 5-card ' : '';
 
-          text = `🧠${this.currentGameGuessingWordSet.emoji}${starText} I created [${this.GetSolutionWords()}] for you to solve!`;
+          text = `🧠${this.currentGameGuessingWordSet.emoji}${starText} ${this.GetSolutionWords()}
+I created this word puzzle!`;
         } else if (this.appDataPlayerCurrent.role === 'reviewer') {
-          text = this.GetMessageBasedOnTrayCount(_gotIt, this.currentGameGuessersName);
+          text = `${this.GetMessageBasedOnTrayCount(_gotIt, this.currentGameGuessersName)}
+${this.GetSolutionWords()}`;
         } else {
-          text = `🤔 ${this.appDataPlayerCreator.name}, here's my guess for [${this.GetSolutionWords()}]`;
+          text = `🤔 ${this.appDataPlayerCreator.name}, here's my guess!
+${this.GetSolutionWords()}`;
         }
         return text;
       },
@@ -2248,7 +2254,7 @@ We're working hard to make these Daily Facets better to play.`;
       GetSolutionWords() {
         note('GetSolutionWords()');
         let words = this.currentGameSolutionActual.split(':');
-        return `${words[0]} - ${words[3]} - ${words[6]} - ${words[9]}`;
+        return `(${words[0]} • ${words[3]} • ${words[6]} • ${words[9]})`;
       },
       //#endregion
 

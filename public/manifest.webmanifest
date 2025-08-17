@@ -86,7 +86,7 @@
   "prefer_related_applications": false,
   "categories": ["entertainment", "games"],
   "edge_side_panel": {
-    "preferred_width": 0
+    "preferred_width": 340
   },
   "launch_handler": {
     "client_mode": "focus-existing"

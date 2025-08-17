@@ -139,7 +139,7 @@ export async function loadGameplayModules() {
             'Whelp, here\'s the solution.',
             'Let\'s end this.',
             'No more guessing for you.',
-            'I was hopeful, then not. Here\'s the final puzzle.'
+            'I was hopeful, then not. Here\'s the solution.'
         ]
     ];
 
