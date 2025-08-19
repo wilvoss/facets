@@ -2,8 +2,8 @@ export async function loadGameplayModules() {
   const { WordSetObject, WordObject, LanguageObject, CardObject, PlayerObject } = await import('../models/models.min.js');
 
   // // Predefined WordSet instances
-  const Nouns = new WordSetObject({ id: '1', name: 'Nouns', data: ['./data/nouns.json?2.2.12'], textureImage: '../images/wallpapers/nouns.webp', enabled: false });
-  const Verbs = new WordSetObject({ id: '2', name: 'Verbs', data: ['./data/verbs.json?2.2.06'], textureImage: '../images/wallpapers/verbs.webp', enabled: false });
+  const Nouns = new WordSetObject({ id: '1', name: 'Nouns', data: ['./data/nouns.json?2.3.85'], textureImage: '../images/wallpapers/nouns.webp', enabled: false });
+  const Verbs = new WordSetObject({ id: '2', name: 'Verbs', data: ['./data/verbs.json?2.3.85'], textureImage: '../images/wallpapers/verbs.webp', enabled: false });
   const Winter = new WordSetObject({ id: '3', name: 'Winter', data: ['./data/winter.json?2.2.06'], enabled: false });
   const Spring = new WordSetObject({ id: '4', name: 'Spring', data: ['./data/spring.json?2.2.06'], enabled: false });
   const Summer = new WordSetObject({ id: '5', name: 'Summer', data: ['./data/summer.json?2.2.06'], enabled: false });
