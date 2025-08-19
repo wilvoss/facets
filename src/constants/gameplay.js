@@ -72,76 +72,96 @@ export async function loadGameplayModules() {
 
   // prettier-ignore
   const levelEmoji = [
-        ['🤢', '🤮', '🥵'],
-        ['🫣', '😱', '😥'],
-        ['😢', '🥺', '🫤'],
-        ['🤪', '🤭', '😜'],
-        ['🔥', '❤️', '🎁', '🏅', '👌', '🌟'],
-        ['🛑', '⛔️', '👎']
-    ];
+    ['🤢', '🤮', '🥵', '🙅'],
+    ['🫣', '😱', '😥', '😩'],
+    ['😢', '🥺', '🫤', '☹️', '😒'],
+    ['🤪', '🤭', '😜', '🤨'],
+    ['🔥', '❤️', '🎁', '🏅', '👌', '🌟'],
+    ['🛑', '⛔️', '👎'],
+  ];
 
   // prettier-ignore
   const levelMessage = [
-        [
-            'Oh boy, this is just sad.',
-            'Yikes - that smarts.',
-            'This is how we grow.',
-            'This one is challenging!',
-            'YOLO',
-            'Copium.',
-            'Really?',
-            'That\'s a whiff!',
-            'Where to begin?',
-            'The idea is to guess correctly.',
-            'There are many ways to fail. You\'ve found a powerful one.'
-        ],
-        [
-            'I guess one right is better than nothing?',
-            'It\'s a start!',
-            '3 out of 4 wrong isn\'t ideal.',
-            'Something\'s amiss.',
-            'Could be worse, but not much.',
-            'You can do it. I think.',
-            'One is the loneliest number.',
-            'There are many ways to fail. You\'ve found one.'
-        ],
-        [
-            'You\'re missing a couple!',
-            'Half \'n half. MMMMM.',
-            '6 one, half-dozen the other.',
-            '2 down, 2 to go.',
-            'Coulda, woulda, shoulda.',
-            'There are many ways to fail, this is just one of them.',
-            'Ya basic.'
-        ],
-        [
-            'Not quite!',
-            'Soooo close!',
-            'You\'ve got this!',
-            'You can do it!',
-            'Just 1 card off.',
-            '75% correct!',
-            'I have high hopes!'
-        ],
-        [
-            'You nailed it!',
-            'Got it - amazing!',
-            'Such a vibe, you solved it!',
-            'Daaaaang, that\'s right!',
-            'Wow. You\'re neat - well done.',
-            'Such synchronicity. It\'s like you know me!',
-            'Shazam! Perfect.',
-            'Booyah! You locked it in.',
-            'Correct!',
-            'Time to celebrate!'
-        ],
-        [
-            'Whelp, here\'s the solution.',
-            'Let\'s end this.',
-            'No more guessing for you.',
-            'I was hopeful, then not. Here\'s the solution.'
-        ]
-    ];
+    [
+      'Oh boy, this is just sad.',
+      'Yikes - that smarts.',
+      'This is how we grow.',
+      'This one is challenging!',
+      'YOLO',
+      'Copium.',
+      'Really?',
+      'That\'s a whiff!',
+      'Where to begin?',
+      'The idea is to guess correctly.',
+      'There are many ways to fail. You\'ve found a powerful one.',
+      'Sometimes it\'s not you, it\'s my clues!',
+      'Might be my clues. Might be you.',
+      'Gah. IDK. Try again.'
+    ],
+    [
+      'I guess one right is better than nothing?',
+      'It\'s a start!',
+      '3 out of 4 wrong isn\'t ideal.',
+      'Something\'s amiss.',
+      'Could be worse, but not much.',
+      'You can do it. I think.',
+      'One is the loneliest number.',
+      'There are many ways to fail. You\'ve found one.',
+      'This might be really hard. Might.',
+      'You\'re missing something.',
+      'You know, 25% isn\'t great.',
+      'Okay, let\'s keep trying.',
+      'Practice makes progress?',
+    ],
+    [
+      'You\'re missing a couple!',
+      'Half \'n half. MMMMM.',
+      '6 one, half-dozen the other.',
+      '2 down, 2 to go.',
+      'Coulda, woulda, shoulda.',
+      'There are many ways to fail, this is just one of them.',
+      'Ya basic.',
+      'You\'re halfway there.',
+      'Keep going, you\'re doing great!',
+      'My clues might be lacking.'
+    ],
+    [
+      'Not quite!',
+      'Soooo close!',
+      'You\'ve got this!',
+      'You can do it!',
+      'Just 1 card off.',
+      '75% correct!',
+      'I have high hopes!',
+      'A wee smidge off.',
+      'You\'re almost there.',
+      'Just a hair\'s breadth away.'
+    ],
+    [
+      'You nailed it!',
+      'Got it - amazing!',
+      'Such a vibe, you solved it!',
+      'Daaaaang, that\'s right!',
+      'Wow. You\'re neat - well done.',
+      'Such synchronicity. It\'s like you know me!',
+      'Shazam! Perfect.',
+      'Booyah! You locked it in.',
+      'Correct!',
+      'Time to celebrate!'
+    ],
+    [
+      'Whelp, here\'s the solution.',
+      'Let\'s end this.',
+      'No more guessing for you.',
+      'I was hopeful, then not. Here\'s the solution.',
+      'Wasn\'t meant to be.',
+      'This maybe isn\'t your day!',
+      'Maybe my next puzzle will make sense?',
+      'Not every puzzle can be a winner.',
+      'Sometimes it\'s not you, it\'s my clues!',
+      'I\'m not mad, just disappointed.',
+    ]
+  ];
 
   return {
     Nouns,
