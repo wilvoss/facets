@@ -117,6 +117,7 @@ LoadAllModules().then((modules) => {
         appStateUseFlower: false,
         appStateBrowserNotificationInterval: null,
         appStateShareError: false,
+        isOnline: true,
         //#endregion
 
         //#region CURRENT GAME
@@ -2696,6 +2697,10 @@ ${this.GetSolutionWords()}`;
       HandleVersionAvailable() {
         note('HandleVersionAvailable()');
       },
+      HandleOnlineStatusChange() {
+        note('HandleOnlineStatusChange()');
+        this.isOnline = navigator.onLine;
+      },
       //#endregion
     },
 
@@ -2709,6 +2714,8 @@ ${this.GetSolutionWords()}`;
       window.addEventListener('visibilitychange', this.HandlePageVisibilityChange);
       window.addEventListener('resize', this.HandleResize);
       window.addEventListener('popstate', this.HandlePopState);
+      window.addEventListener('online', this.HandleOnlineStatusChange);
+      window.addEventListener('offline', this.HandleOnlineStatusChange);
     },
 
     beforeDestroy() {
@@ -2717,6 +2724,8 @@ ${this.GetSolutionWords()}`;
       window.removeEventListener('visibilitychange', this.HandlePageVisibilityChange);
       window.removeEventListener('resize', this.HandleResize);
       window.removeEventListener('popstate', this.HandlePopState);
+      window.removeEventListener('online', this.HandleOnlineStatusChange);
+      window.removeEventListener('offline', this.HandleOnlineStatusChange);
     },
 
     watch: {

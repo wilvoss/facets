@@ -59,8 +59,12 @@
         <link rel="stylesheet"
           v-bind:href="appStateUsePortraitLayout && !userSettingsShowAllCards && !tooSmall && !isPlayerCreating ? 'styles/focus.css' : ''"
           media="screen" />
-        <splash :class="{hide: appStatePageHasLoaded}">
-          <icon class="logo giant"></icon>
+        <splash :class="{hide: appStatePageHasLoaded && isOnline}">
+          <icon v-if="isOnline" class="logo giant"></icon>
+          <message v-if="!isOnline">
+            You appear to be offline.
+            <small v-if="!isOnline">Once Facets connects online, you can continue playing.</small>
+          </message>
         </splash>
         <notification @click="appStateShowNotification = false" :class="{show: appStateShowNotification}">
           <message :title="playerMessage">
@@ -105,6 +109,9 @@
           </message>
         </notification>
         <notification :class="{show: appStateShowMeta}" class="meta">
+          <button @click="HandleOldGameClick($event, todaysDaily)" class="dailycta"
+            :class="{show: !appStateShowNotification && vsShowDaily && dailyIsFreshToday && appStateShowMeta, blink: appStateFirstRunGuessingIndex === -1}">Solve
+            Today's Facet!</button>
           <header>
             <h1>{{appDataGameName}}</h1>
             <icon class="logo giant"></icon>
@@ -608,27 +615,23 @@
               <badge :class="{show:dailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
             </button>
           </controls>
-          <header :disabled="appStateShowNotification" :class="{disabled: appStateSolving}">
+          <header :disabled="appStateShowNotification" :class="{disabled: appStateSolving}"
+            @click="appStateShowNotification = true">
             <span>
               {{currentDaily && vsShowDaily ? currentDaily.key === todaysKey ? 'Today\'s' : currentDaily.date.split(',')[0] : ''}}
             </span>
             <flogo></flogo>
-            <icon v-if="currentDaily && !currentDaily.solved" :class="correctCalIconClass" class="large"
-              @click="ToggleShowDailyGames($event)"></icon>
-            <icon v-if="currentDaily && currentDaily.solved && !currentDaily.quit" class="check large"
-              @click="ToggleShowDailyGames($event)"></icon>
+            <icon v-if="currentDaily && !currentDaily.solved" :class="correctCalIconClass" class="large"></icon>
+            <icon v-if="currentDaily && currentDaily.solved && !currentDaily.quit" class="check large"></icon>
             <icon v-if="currentDaily && currentDaily.solved && currentDaily.quit"
-              style="background: hsl(var(--alertHSL))" class="quit large" @click="ToggleShowDailyGames($event)"></icon>
-            <icon v-if="!currentDaily" class="logo" @click="appStateShowNotification = true"></icon>
+              style="background: hsl(var(--alertHSL))" class="quit large"></icon>
+            <icon v-if="!currentDaily" class="logo"></icon>
             <span>
               <count v-if="currentDaily && currentDaily.solved"> in {{currentDaily.guesses}}
                 {{currentDaily.guesses !== 1 ? 'tries' : 'try'}}
               </count>
               <count v-if="currentDaily && !currentDaily.solved"> Daily </count>
             </span>
-            <button @click="HandleOldGameClick($event, todaysDaily)" class="dailycta"
-              :class="{show: !appStateShowNotification && vsShowDaily && dailyIsFreshToday && appStateShowMeta, blink: appStateFirstRunGuessingIndex === -1}">Solve
-              Today's Facet!</button>
           </header>
           <controls :class="{disabled: actionButtonState, pointoutparent: (appStateFirstRunGuessingIndex === 5 &&
           isPlayerGuessing) || (appStateFirstRunCreatingIndex === 4 && isPlayerCreating)}">

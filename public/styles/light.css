@@ -127,7 +127,8 @@ notification.meta {
   background-image: linear-gradient(hsla(var(--appBackgroundDarkHSL), 1), hsla(var(--appBackgroundDarkestHSL), 0.5) 200px), var(--textureHue), var(--texture2);
 }
 
-notification message {
+notification message,
+splash message {
   background-color: hsl(var(--appBackgroundDarkestHSL));
 }
 

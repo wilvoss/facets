@@ -1087,6 +1087,7 @@ notification.show {
   pointer-events: all;
 }
 
+splash message,
 notification message {
   gap: calc(0.25 * var(--defaultGap));
   margin: var(--defaultGap);
@@ -1100,6 +1101,10 @@ notification message {
   color: hsl(var(--appForegroundHSL));
   font-size: 1.1em;
   line-height: 1.5em;
+}
+
+splash message small {
+  color: hsl(var(--messageColorHSL));
 }
 
 pointer {
@@ -2838,8 +2843,8 @@ hue.selected {
     scale: 0.8;
   }
 
-  header h1 {
-    /* display: none; */
+  splash message {
+    max-width: calc(2 * var(--cardSize) - 3 * var(--defaultGap));
   }
 
   wrapper controls {
@@ -2939,7 +2944,8 @@ hue.selected {
     max-width: 90%;
   }
 
-  modal section {
+  modal section,
+  section section {
     padding: 0 var(--defaultGap);
     width: calc(100% - var(--defaultGap));
   }
