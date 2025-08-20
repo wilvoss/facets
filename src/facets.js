@@ -1575,6 +1575,7 @@ ${words[14]} ${words[10]}`);
         note('HandlePageVisibilityChange()');
         if (!document.hidden) {
           this.GetDailyGames();
+          this.HandleOnlineStatusChange();
         }
       },
 
@@ -2607,6 +2608,7 @@ ${this.GetSolutionWords()}`;
 
       async LoadPage() {
         note('LoadPage()');
+        this.HandleOnlineStatusChange();
         highlight(`Player ${this.appDataPlayerCurrent.id} has loaded version ${this.appDataVersion}`, true);
         this.GetDailyGames();
         this.GetRecentAnonymousGames();
