@@ -1623,7 +1623,6 @@ ${words[14]} ${words[10]}`);
           this.userSettingsLanguage = this.tempUserSettingsLanguage;
           let newSelectedWordSet = this.tempWordSets.find((set) => set.name === this.tempWordSetName);
           this.SelectWordSet(e, newSelectedWordSet);
-
           let wordSetChanged = false;
           wordSetChanged = this.appDataWordSets.find((set) => set.isSelected === true).id !== this.tempWordSets.find((set) => set.isSelected === true).id;
           this.appDataWordSets = this.tempWordSets;
@@ -1632,41 +1631,42 @@ ${words[14]} ${words[10]}`);
             this.NewGame();
             this.SetWordSetTheme(this.currentGameGuessingWordSet);
           }
+        }
 
-          let userChangedID = this.appDataPlayerCurrent.id !== this.tempID;
-          this.appDataPlayerCurrent.id = this.tempID;
-          this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
-          this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder;
-          this.userSettingsUseExtraCard = this.tempUseExtraCard;
-          this.userSettingsHideStats = this.tempUserSettingsHideStats;
-          this.ToggleUseLightTheme(this.tempUserSettingsUsesLightTheme);
-          this.userSettingsHueIndex = this.tempUserSettingsHueIndex;
-          this.ToggleUseSimplifedTheme(this.tempUserSettingsUsesSimplifiedTheme);
-          this.ToggleShowAllCards(this.tempUserSettingsShowAllCards);
-          this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
-          if (this.appDataPlayerCurrent.role === 'creator') {
-            this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
-          }
-          this.SetWordSetTheme(this.currentGameGuessingWordSet);
+        let userChangedID = this.appDataPlayerCurrent.id !== this.tempID;
+        this.appDataPlayerCurrent.id = this.tempID;
+        this.userSettingsUseWordSetThemes = this.tempUseWordSetThemes;
+        this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder;
+        this.userSettingsUseExtraCard = this.tempUseExtraCard;
+        this.userSettingsHideStats = this.tempUserSettingsHideStats;
+        this.ToggleUseSimplifedTheme(this.tempUserSettingsUsesSimplifiedTheme);
+        this.ToggleShowAllCards(this.tempUserSettingsShowAllCards);
+        this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
+        if (this.appDataPlayerCurrent.role === 'creator') {
+          this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
+        }
+        this.ToggleUseLightTheme(this.tempUserSettingsUsesLightTheme);
+        this.userSettingsHueIndex = this.tempUserSettingsHueIndex;
 
-          await modules.SaveData('userID', this.appDataPlayerCurrent.id);
-          await modules.SaveData('useWordSetThemes', this.userSettingsUseWordSetThemes);
-          await modules.SaveData('userSettingsUserWantsDailyReminder', this.userSettingsUserWantsDailyReminder);
-          await modules.SaveData('userSettingsLanguage', this.userSettingsLanguage);
-          await modules.SaveData('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
-          await modules.SaveData('userSettingsHueIndex', this.userSettingsHueIndex);
-          await modules.SaveData('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
-          await modules.SaveData('userSettingsShowAllCards', this.userSettingsShowAllCards);
-          await modules.SaveData('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
-          await modules.SaveData('useExtraCard', this.userSettingsUseExtraCard);
-          await modules.SaveData('userSettingsHideStats', this.userSettingsHideStats);
-          await modules.SaveData('wordSet', this.currentGameWordSet.id);
+        this.SetWordSetTheme(this.currentGameGuessingWordSet);
 
-          if (userChangedID) {
-            localStorage.removeItem('dailyGames');
-            await this.GetDailyGameStats();
-            window.location.reload();
-          }
+        await modules.SaveData('userID', this.appDataPlayerCurrent.id);
+        await modules.SaveData('useWordSetThemes', this.userSettingsUseWordSetThemes);
+        await modules.SaveData('userSettingsUserWantsDailyReminder', this.userSettingsUserWantsDailyReminder);
+        await modules.SaveData('userSettingsLanguage', this.userSettingsLanguage);
+        await modules.SaveData('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
+        await modules.SaveData('userSettingsHueIndex', this.userSettingsHueIndex);
+        await modules.SaveData('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
+        await modules.SaveData('userSettingsShowAllCards', this.userSettingsShowAllCards);
+        await modules.SaveData('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
+        await modules.SaveData('useExtraCard', this.userSettingsUseExtraCard);
+        await modules.SaveData('userSettingsHideStats', this.userSettingsHideStats);
+        await modules.SaveData('wordSet', this.currentGameWordSet.id);
+
+        if (userChangedID) {
+          localStorage.removeItem('dailyGames');
+          await this.GetDailyGameStats();
+          window.location.reload();
         }
         this.appStateIsModalShowing = false;
         this.appStateShowSettings = false;
@@ -1846,6 +1846,7 @@ ${words[14]} ${words[10]}`);
 
       HandleKeyDownEvent(e) {
         if (!e.metaKey && !e.ctrlKey && !e.altKey) {
+          note(e.key);
           switch (e.key) {
             case 'Enter':
               note('HandleKeyDownEvent()');
@@ -1912,7 +1913,21 @@ ${words[14]} ${words[10]}`);
                 this.appStateShowMeta = true;
               }
               break;
-
+            case 'ArrowRight':
+              this.tempUserSettingsHueIndex = this.tempUserSettingsHueIndex === this.appDataHues.length - 1 ? 0 : this.tempUserSettingsHueIndex + 1;
+              this.SubmitSettings(null);
+              break;
+            case 'ArrowLeft':
+              this.tempUserSettingsHueIndex = this.tempUserSettingsHueIndex === 0 ? this.appDataHues.length - 1 : this.tempUserSettingsHueIndex - 1;
+              this.SubmitSettings(null);
+              break;
+            case '\\':
+              this.tempUserSettingsUsesLightTheme = !this.tempUserSettingsUsesLightTheme;
+              this.SubmitSettings(null);
+              break;
+            case '/':
+              this.tempUseWordSetThemes = !this.tempUseWordSetThemes;
+              this.SubmitSettings(null);
             default:
           }
         }

@@ -320,9 +320,9 @@
               <category :class="{on: set.name === tempWordSetName }" @click="tempWordSetName = set.name"
                 :class="{on: tempWordSetName === set.name}" v-for="set in enabledTempWordSet">{{set.name}}</category>
             </categories>
-            <h3>Language</h3>
+            <h3>Cards</h3>
             <row>
-              <p>Selected</p>
+              <p>Language</p>
               <select v-model="tempUserSettingsLanguage">
                 <option v-for="option in enabledTempLanguages" :key="option.tag" :value="option.tag">{{ option.name }}
                 </option>
