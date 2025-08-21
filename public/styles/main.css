@@ -950,7 +950,7 @@ button.small {
   transition-property: background-color, border-color, opacity;
   cursor: pointer;
   border-radius: calc(1 * var(--borderRadius));
-  padding: calc(0.5 * var(--defaultGap)) calc(1 * var(--defaultGap));
+  padding: calc(0.75 * var(--defaultGap)) calc(1 * var(--defaultGap));
   max-width: calc(2 * var(--cardSize));
   color: hsl(var(--appForegroundHSL));
   line-height: 140%;
