@@ -244,6 +244,10 @@ button.resume.small {
   font-family: var(--wordFont);
 }
 
+.resumeBackground {
+  background-color: hsl(var(--linkColorLightHSL));
+}
+
 button badge {
   display: flex;
   justify-content: center;
