@@ -1289,6 +1289,7 @@ ${words[14]} ${words[10]}`);
           this.appDataConfirmationObject = { message: `Did ${this.appDataPlayerSender.name} have the right answer?`, target: 'correct' };
           this.appStateShowConfirmation = true;
         } else if (this.appStateIsGuessing) {
+          x;
           if (this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
             if (this.GetIsAIGenerated()) {
               this.ShareWin(null);
@@ -1964,6 +1965,7 @@ ${words[14]} ${words[10]}`);
             case '/':
               this.tempUseWordSetThemes = !this.tempUseWordSetThemes;
               this.SubmitSettings(null);
+              break;
             default:
           }
         }
@@ -2996,9 +2998,10 @@ ${this.GetSolutionWords()}`;
       },
       submitButtonText() {
         let text = this.appDataActionButtonTexts.send;
-        if (this.appStateShareError) {
-          return 'Retry';
-        }
+        // disabling this return value for the moment until I can determine the issue
+        // if (this.appStateShareError) {
+        //   return 'Retry';
+        // }
         if (this.appDataPlayerCurrent.role === 'reviewer') {
           text = this.appDataActionButtonTexts.respond;
         } else if (this.appDataPlayerCurrent.role === 'creator') {
