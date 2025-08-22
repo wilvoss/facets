@@ -1290,7 +1290,6 @@ ${words[14]} ${words[10]}`);
           this.appDataConfirmationObject = { message: `Did ${this.appDataPlayerSender.name} have the right answer?`, target: 'correct' };
           this.appStateShowConfirmation = true;
         } else if (this.appStateIsGuessing) {
-          x;
           if (this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
             if (this.GetIsAIGenerated()) {
               this.ShareWin(null);

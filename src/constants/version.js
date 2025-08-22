@@ -1,2 +1,2 @@
-export const version = '2.4.00';
+export const version = '2.4.01';
 const highestDataID = 4136;
