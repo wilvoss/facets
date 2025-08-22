@@ -870,6 +870,7 @@ LoadAllModules().then((modules) => {
           });
 
           let wrongGuesses = urlParams.has('wg') ? urlParams.get('wg').split(' ') : [];
+          wrongGuesses = wrongGuesses.map(decodeURIComponent);
           let parsedWrongGuesses = wrongGuesses.map((as) =>
             as.split('_').map((s) =>
               s === '[]'
@@ -2260,6 +2261,7 @@ ${urlText}`);
             wgValues.push('[' + card.wrongGuesses[1].join(',') + ']');
             wgValues.push('[' + card.wrongGuesses[2].join(',') + ']');
             wgValues.push('[' + card.wrongGuesses[3].join(',') + ']');
+            wgValues = wgValues.map(encodeURIComponent);
             urlString += wgValues.join('_');
           }
 
@@ -2272,6 +2274,7 @@ ${urlText}`);
             wgValues.push('[' + card.wrongGuesses[1].join(',') + ']');
             wgValues.push('[' + card.wrongGuesses[2].join(',') + ']');
             wgValues.push('[' + card.wrongGuesses[3].join(',') + ']');
+            wgValues = wgValues.map(encodeURIComponent);
             urlString += wgValues.join('_');
           }
           if (_currentGameReviewIsFinal) {
