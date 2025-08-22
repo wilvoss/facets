@@ -2998,10 +2998,9 @@ ${this.GetSolutionWords()}`;
       },
       submitButtonText() {
         let text = this.appDataActionButtonTexts.send;
-        // disabling this return value for the moment until I can determine the issue
-        // if (this.appStateShareError) {
-        //   return 'Retry';
-        // }
+        if (this.appStateShareError) {
+          return 'Retry';
+        }
         if (this.appDataPlayerCurrent.role === 'reviewer') {
           text = this.appDataActionButtonTexts.respond;
         } else if (this.appDataPlayerCurrent.role === 'creator') {
