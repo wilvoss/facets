@@ -30,3 +30,11 @@ jobs:
           publish_dir: ./dist
           publish_branch: gh-pages
           force_orphan: true
+
+      - name: Notify Discord
+        run: |
+          TAG_NAME=${GITHUB_REF#refs/tags/}
+          TAG_DESC=$(git for-each-ref refs/tags/${TAG_NAME} --format='%(contents)')
+          curl -H "Content-Type: application/json" \
+          -d "{\"content\": \"🏷️ New tag pushed: **${TAG_NAME}**\n📝 Description: ${TAG_DESC}\"}" \
+          "${{ secrets.DISCORD_WEBHOOK_URL }}"
