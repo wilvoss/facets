@@ -10,7 +10,7 @@ export class CardObject {
     this.isInTray = spec.isInTray ?? false;
     this.isExtra = spec.isExtra ?? false;
     this.isRotating = spec.isRotating ?? false;
-    this.wrongGuesses = spec.wrongGuesses ?? { s0: [], s1: [], s2: [], s3: [] };
+    this.wrongGuesses = spec.wrongGuesses ?? [[], [], [], []];
     this.justDropped = spec.justDropped ?? false;
   }
 }

@@ -1495,7 +1495,8 @@ diamond.back {
   background: hsl(var(--trayGuessingBackgroundHSL));
 }
 
-.multicolor.reviewing diamond.back {
+.multicolor.reviewing diamond.back,
+.multicolor.solved.guessing.reviewing diamond.back {
   background: hsl(var(--trayReviewingBackgroundHSL));
 }
 
@@ -1872,7 +1873,8 @@ cards card,
   color: hsl(var(--hueGuessing), 94%, 90%);
 }
 
-.multicolor.guessing.reviewing card {
+.multicolor.guessing.reviewing card,
+.multicolor.solved.guessing.reviewing card {
   color: hsl(var(--hueReviewing), 94%, 90%);
 }
 
@@ -2407,7 +2409,8 @@ hints hint input:disabled {
   color: hsl(var(--hueGuessing), 94%, 80%);
 }
 
-.multicolor.guessing.reviewing hints hint input:disabled {
+.multicolor.guessing.reviewing hints hint input:disabled,
+.multicolor.guessing.solved.reviewing hints hint input:disabled {
   color: hsl(var(--hueReviewing), 94%, 80%);
 }
 

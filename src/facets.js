@@ -620,7 +620,7 @@ LoadAllModules().then((modules) => {
         }
       },
 
-      async IsCurrentGuessCorrect() {
+      async IsCurrentGuessCorrect(_moveCards = true) {
         note('IsCurrentGuessCorrect()');
         if (this.numberOfCardsThatHaveBeenPlacedOnTray === 4) {
           this.currentGameGuessCount++;
@@ -650,7 +650,7 @@ LoadAllModules().then((modules) => {
             }
           }
           this.currentGameSolutionGuessing = mappedSol.join(':');
-          if (this.currentGameSolutionActual === this.currentGameSolutionGuessing) {
+          if (_moveCards && this.currentGameSolutionActual === this.currentGameSolutionGuessing) {
             this.RotateTray(8);
             window.history.pushState({}, document.title, window.location.pathname);
           }
@@ -661,38 +661,48 @@ LoadAllModules().then((modules) => {
 
           if (mappedSol[1] !== actualSol[1]) {
             let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[1])));
-            if (!card.wrongGuesses.s0.includes(mappedSol[1])) {
-              card.wrongGuesses.s0.push(mappedSol[1]);
+            if (!card.wrongGuesses[0].includes(mappedSol[1])) {
+              card.wrongGuesses[0].push(mappedSol[1]);
             }
-            this.SwapCards(card, this.firstAvailableParkingSpot);
+            if (_moveCards) {
+              this.SwapCards(card, this.firstAvailableParkingSpot);
+            }
           }
           if (mappedSol[2] !== actualSol[2]) {
             let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[2])));
-            if (!card.wrongGuesses.s1.includes(mappedSol[2])) {
-              card.wrongGuesses.s1.push(mappedSol[2]);
+            if (!card.wrongGuesses[1].includes(mappedSol[2])) {
+              card.wrongGuesses[1].push(mappedSol[2]);
             }
-            this.SwapCards(card, this.firstAvailableParkingSpot);
+            if (_moveCards) {
+              this.SwapCards(card, this.firstAvailableParkingSpot);
+            }
           }
           if (mappedSol[10] !== actualSol[10]) {
             let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[10])));
-            if (!card.wrongGuesses.s2.includes(mappedSol[10])) {
-              card.wrongGuesses.s2.push(mappedSol[10]);
+            if (!card.wrongGuesses[2].includes(mappedSol[10])) {
+              card.wrongGuesses[2].push(mappedSol[10]);
             }
-            this.SwapCards(card, this.firstAvailableParkingSpot);
+            if (_moveCards) {
+              this.SwapCards(card, this.firstAvailableParkingSpot);
+            }
           }
           if (mappedSol[11] !== actualSol[11]) {
             let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[11])));
-            if (!card.wrongGuesses.s3.includes(mappedSol[11])) {
-              card.wrongGuesses.s3.push(mappedSol[11]);
+            if (!card.wrongGuesses[3].includes(mappedSol[11])) {
+              card.wrongGuesses[3].push(mappedSol[11]);
             }
-            this.SwapCards(card, this.firstAvailableParkingSpot);
+            if (_moveCards) {
+              this.SwapCards(card, this.firstAvailableParkingSpot);
+            }
           }
-          this.appDataMessage = this.GetMessageBasedOnTrayCount(true, '');
-          this.appStateShowNotification = true;
+          if (_moveCards) {
+            this.appDataMessage = this.GetMessageBasedOnTrayCount(true, '');
+            this.appStateShowNotification = true;
 
-          this.appDataTimeoutNotification = setTimeout(() => {
-            this.appStateShowNotification = false;
-          }, 1700);
+            this.appDataTimeoutNotification = setTimeout(() => {
+              this.appStateShowNotification = false;
+            }, 1700);
+          }
           this.CheckIfAnyCardsGuesssAlreadyTried();
           this.ScrollParking(null, 'beginning');
 
@@ -726,26 +736,26 @@ LoadAllModules().then((modules) => {
 
           if (mappedSol[1] !== '-1' && mappedSol[1] !== actualSol[1]) {
             let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[1])));
-            if (card.wrongGuesses.s0.includes(mappedSol[1])) {
-              card.failedCheckAlready = card.wrongGuesses.s0.includes(mappedSol[1]);
+            if (card.wrongGuesses[0].includes(mappedSol[1])) {
+              card.failedCheckAlready = card.wrongGuesses[0].includes(mappedSol[1]);
             }
           }
           if (mappedSol[2] !== '-1' && mappedSol[2] !== actualSol[2]) {
             let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[2])));
-            if (card.wrongGuesses.s1.includes(mappedSol[2])) {
-              card.failedCheckAlready = card.wrongGuesses.s1.includes(mappedSol[2]);
+            if (card.wrongGuesses[1].includes(mappedSol[2])) {
+              card.failedCheckAlready = card.wrongGuesses[1].includes(mappedSol[2]);
             }
           }
           if (mappedSol[10] !== '-1' && mappedSol[10] !== actualSol[10]) {
             let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[10])));
-            if (card.wrongGuesses.s2.includes(mappedSol[10])) {
-              card.failedCheckAlready = card.wrongGuesses.s2.includes(mappedSol[10]);
+            if (card.wrongGuesses[2].includes(mappedSol[10])) {
+              card.failedCheckAlready = card.wrongGuesses[2].includes(mappedSol[10]);
             }
           }
           if (mappedSol[11] !== '-1' && mappedSol[11] !== actualSol[11]) {
             let card = this.appDataCards.find((card) => card.words.some((word) => word.id === parseInt(mappedSol[11])));
-            if (card.wrongGuesses.s3.includes(mappedSol[11])) {
-              card.failedCheckAlready = card.wrongGuesses.s3.includes(mappedSol[11]);
+            if (card.wrongGuesses[3].includes(mappedSol[11])) {
+              card.failedCheckAlready = card.wrongGuesses[3].includes(mappedSol[11]);
             }
           }
         }
@@ -858,6 +868,29 @@ LoadAllModules().then((modules) => {
               index++;
             }
           });
+
+          let wrongGuesses = urlParams.has('wg') ? urlParams.get('wg').split(' ') : [];
+          let parsedWrongGuesses = wrongGuesses.map((as) =>
+            as.split('_').map((s) =>
+              s === '[]'
+                ? []
+                : s
+                    .slice(1, -1)
+                    .split(',')
+                    .filter((x) => x !== '')
+                    .map(String),
+            ),
+          );
+
+          if (parsedWrongGuesses.length === 10) {
+            for (let i = 0; i < 6; i++) {
+              this.appDataCardsParked[i].wrongGuesses = parsedWrongGuesses[i];
+            }
+            for (let i = 0; i < 4; i++) {
+              this.appDataCards[i].wrongGuesses = parsedWrongGuesses[i + 6];
+            }
+          }
+
           this.appDataHints.forEach((hint) => {
             hint.value = _boardArray[index++];
           });
@@ -879,6 +912,7 @@ LoadAllModules().then((modules) => {
 
           if (this.isPlayerReviewing && this.appDataPlayerCreator.id !== 0) {
             this.appDataReviewingFirstRunItems[0][0] = this.appDataReviewingFirstRunItems[0][0].replace('Your friend ', this.appDataPlayerSender.name + ' ');
+            this.IsCurrentGuessCorrect(false);
           }
           if (this.isPlayerGuessing && (this.appDataPlayerCreator.id !== 0 || this.isAIGenerated)) {
             this.appDataGuessingFirstRunItems[0][0] = this.appDataGuessingFirstRunItems[0][0].replace('Your friend ', this.appDataPlayerSender.name + ' ');
@@ -1567,7 +1601,9 @@ ${words[14]} ${words[10]}`);
         }
 
         setTimeout(() => {
-          this.appParkingRightButtonDisabled = parking.scrollWidth - parking.clientWidth <= parking.scrollLeft;
+          if (parking && parking.scrollWidth) {
+            this.appParkingRightButtonDisabled = parking.scrollWidth - parking.clientWidth <= parking.scrollLeft;
+          }
         }, 300);
       },
 
@@ -2212,6 +2248,30 @@ ${urlText}`);
           urlString += '&sendingID=' + encodeURIComponent(this.appDataPlayerCurrent.id);
           urlString += '&useExtraCard=' + encodeURIComponent(this.currentGameGuessingCardCount === 5);
           urlString += '&sol=' + encodeURIComponent(this.currentGameSolutionActual);
+          urlString += '&wg=';
+          for (let i = 0; i < this.appDataCardsParked.length; i++) {
+            let card = this.appDataCardsParked[i];
+            let wgValues = [];
+            urlString += i > 0 ? '+' : '';
+            // prettier-ignore
+            wgValues.push('[' + ( card.wrongGuesses[0].join(',')) + ']');
+            wgValues.push('[' + card.wrongGuesses[1].join(',') + ']');
+            wgValues.push('[' + card.wrongGuesses[2].join(',') + ']');
+            wgValues.push('[' + card.wrongGuesses[3].join(',') + ']');
+            urlString += wgValues.join('_');
+          }
+
+          for (let i = 0; i < this.appDataCards.length; i++) {
+            let card = this.appDataCards[i];
+            let wgValues = [];
+            urlString += '+';
+            // prettier-ignore
+            wgValues.push('[' + ( card.wrongGuesses[0].join(',')) + ']');
+            wgValues.push('[' + card.wrongGuesses[1].join(',') + ']');
+            wgValues.push('[' + card.wrongGuesses[2].join(',') + ']');
+            wgValues.push('[' + card.wrongGuesses[3].join(',') + ']');
+            urlString += wgValues.join('_');
+          }
           if (_currentGameReviewIsFinal) {
             urlString += '&final=true';
           }
