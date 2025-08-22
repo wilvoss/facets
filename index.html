@@ -727,7 +727,8 @@
             <cards :class="{disabled: appStateIsModalShowing}">
               <spot v-for="(card, index) in appDataCards"
                 :class="{wrong: card.failedCheckAlready && !card.isRotating, empty: card.words.length === 0, selected: card.isSelected, pointout: (appStateIsGuessing && appStateFirstRunGuessingIndex === 3 && card.words.length > 0) || (appStateFirstRunCreatingIndex === 1 && isPlayerCreating), pointadjacent: (isPlayerCreating && appStateFirstRunCreatingIndex === 5)}">
-                <rotators v-if="appStateIsGuessing && currentGameSolutionGuessing !== currentGameSolutionActual">
+                <rotators
+                  v-if="(appStateIsGuessing && currentGameSolutionGuessing !== currentGameSolutionActual) || appDataPlayerCurrent.role === 'reviewer'">
                   <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateCard($event, card, 1)">
                     <icon class="rotate"></icon>
                   </button>
@@ -745,7 +746,8 @@
                       v-for="(word, windex) in card.words" :id="'word' + windex">{{word.value}}</word>
                   </words>
                 </card>
-                <rotators v-if="appStateIsGuessing && currentGameSolutionGuessing !== currentGameSolutionActual">
+                <rotators
+                  v-if="(appStateIsGuessing && currentGameSolutionGuessing !== currentGameSolutionActual) || appDataPlayerCurrent.role === 'reviewer'">
                   <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateCard($event, card, 1)">
                     <icon class="rotate"></icon>
                   </button>

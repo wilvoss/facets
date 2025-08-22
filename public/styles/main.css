@@ -1496,7 +1496,7 @@ diamond.back {
 }
 
 .multicolor.reviewing diamond.back,
-.multicolor.solved.guessing.reviewing diamond.back {
+.multicolor.solved.guessing.reviewing.unaided diamond.back {
   background: hsl(var(--trayReviewingBackgroundHSL));
 }
 
@@ -1874,7 +1874,7 @@ cards card,
 }
 
 .multicolor.guessing.reviewing card,
-.multicolor.solved.guessing.reviewing card {
+.multicolor.solved.guessing.reviewing.unaided card {
   color: hsl(var(--hueReviewing), 94%, 90%);
 }
 
@@ -2410,7 +2410,7 @@ hints hint input:disabled {
 }
 
 .multicolor.guessing.reviewing hints hint input:disabled,
-.multicolor.guessing.solved.reviewing hints hint input:disabled {
+.multicolor.guessing.solved.reviewing.unaided hints hint input:disabled {
   color: hsl(var(--hueReviewing), 94%, 80%);
 }
 

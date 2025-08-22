@@ -1541,7 +1541,7 @@ ${words[14]} ${words[10]}`);
       },
 
       HandleCardPointerDown(e, _card) {
-        if (this.appStateIsGuessing && this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
+        if (this.appStateIsGuessing && this.currentGameSolutionGuessing === this.currentGameSolutionActual && this.appDataPlayerCurrent.role !== 'reviewer') {
           return;
         }
         if (e !== null) {
@@ -1559,7 +1559,7 @@ ${words[14]} ${words[10]}`);
       },
 
       HandleCardPointerUp(e, _card, _destination = 'tray') {
-        if (this.appStateIsGuessing && this.currentGameSolutionGuessing === this.currentGameSolutionActual) {
+        if (this.appStateIsGuessing && this.currentGameSolutionGuessing === this.currentGameSolutionActual && this.appDataPlayerCurrent.role !== 'reviewer') {
           return;
         }
         e.preventDefault();
