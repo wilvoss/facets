@@ -869,30 +869,30 @@ LoadAllModules().then((modules) => {
             }
           });
 
-          // let wgraw = urlParams.has('wg') ? urlParams.get('wg').split(' ') : [];
-          // if (wgraw != []) {
-          //   let wrongGuesses = wgraw.map(decodeURIComponent);
-          //   let parsedWrongGuesses = wrongGuesses.map((as) =>
-          //     as.split('_').map((s) =>
-          //       s === '[]'
-          //         ? []
-          //         : s
-          //             .slice(1, -1)
-          //             .split(',')
-          //             .filter((x) => x !== '')
-          //             .map(String),
-          //     ),
-          //   );
+          let wgraw = urlParams.has('wg') ? urlParams.get('wg').split(' ') : [];
+          if (wgraw != []) {
+            let wrongGuesses = wgraw.map(decodeURIComponent);
+            let parsedWrongGuesses = wrongGuesses.map((as) =>
+              as.split('_').map((s) =>
+                s === '[]'
+                  ? []
+                  : s
+                      .slice(1, -1)
+                      .split(',')
+                      .filter((x) => x !== '')
+                      .map(String),
+              ),
+            );
 
-          //   if (parsedWrongGuesses.length === 10) {
-          //     for (let i = 0; i < 6; i++) {
-          //       this.appDataCardsParked[i].wrongGuesses = parsedWrongGuesses[i];
-          //     }
-          //     for (let i = 0; i < 4; i++) {
-          //       this.appDataCards[i].wrongGuesses = parsedWrongGuesses[i + 6];
-          //     }
-          //   }
-          // }
+            if (parsedWrongGuesses.length === 10) {
+              for (let i = 0; i < 6; i++) {
+                this.appDataCardsParked[i].wrongGuesses = parsedWrongGuesses[i];
+              }
+              for (let i = 0; i < 4; i++) {
+                this.appDataCards[i].wrongGuesses = parsedWrongGuesses[i + 6];
+              }
+            }
+          }
 
           this.appDataHints.forEach((hint) => {
             hint.value = _boardArray[index++];
