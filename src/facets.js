@@ -2684,6 +2684,23 @@ ${this.GetSolutionWords()}`;
         }
       },
 
+      async OverRideAllCardWords(_ids) {
+        if (_ids.length === 16) {
+          this.tempWordSetName = 'All Words';
+          await this.SubmitSettings(null);
+          let index = 0;
+          if (this.appDataPlayerCurrent.role === 'creator') {
+            for (let i = 0; i < this.appDataCards.length; i++) {
+              const card = array[i];
+              for (let j = 0; j < card.words.length; j++) {
+                word = card.words[j];
+                word = _ids[index++];
+              }
+            }
+          }
+        }
+      },
+
       async OnMount() {
         this.$nextTick(async () => {
           await this.GetUserSettings();
