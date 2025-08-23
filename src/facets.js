@@ -869,25 +869,28 @@ LoadAllModules().then((modules) => {
             }
           });
 
-          let wgraw = urlParams.has('wg') ? urlParams.get('wg') : [];
-          if (wgraw != []) {
-            let parsedWrongGuesses = wgraw.split(' ').map((parent) =>
-              parent.split(':').map((child) =>
-                child === ''
-                  ? []
-                  : child
-                      .split(',')
-                      .filter((x) => x !== '')
-                      .map(String),
-              ),
-            );
+          let wgraw = urlParams.has('wg') ? urlParams.get('wg') : '';
+          if (wgraw != '') {
+            wgraw = decodeURIComponent(wgraw);
+            if (wgraw.indexOf('[') === -1 && wgraw.indexOf(']') === -1 && wgraw.indexOf(':') !== -1) {
+              let parsedWrongGuesses = wgraw.split(' ').map((parent) =>
+                parent.split(':').map((child) =>
+                  child === ''
+                    ? []
+                    : child
+                        .split(',')
+                        .filter((x) => x !== '')
+                        .map(String),
+                ),
+              );
 
-            if (parsedWrongGuesses.length === 10) {
-              for (let i = 0; i < 6; i++) {
-                this.appDataCardsParked[i].wrongGuesses = parsedWrongGuesses[i];
-              }
-              for (let i = 0; i < 4; i++) {
-                this.appDataCards[i].wrongGuesses = parsedWrongGuesses[i + 6];
+              if (parsedWrongGuesses.length === 10) {
+                for (let i = 0; i < 6; i++) {
+                  this.appDataCardsParked[i].wrongGuesses = parsedWrongGuesses[i];
+                }
+                for (let i = 0; i < 4; i++) {
+                  this.appDataCards[i].wrongGuesses = parsedWrongGuesses[i + 6];
+                }
               }
             }
           }
