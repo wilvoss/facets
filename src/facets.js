@@ -1952,6 +1952,11 @@ ${words[14]} ${words[10]}`);
                 this.appStateShowMeta = true;
               }
               break;
+            default:
+          }
+        }
+        if (e.altKey) {
+          switch (e.key) {
             case 'ArrowRight':
               this.tempUserSettingsHueIndex = this.tempUserSettingsHueIndex === this.appDataHues.length - 1 ? 0 : this.tempUserSettingsHueIndex + 1;
               this.SubmitSettings(null);

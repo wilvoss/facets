@@ -32,6 +32,7 @@ jobs:
           force_orphan: true
 
       - name: Notify Discord
+        if: success()
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
           TAG_DESC=$(git for-each-ref refs/tags/${TAG_NAME} --format='%(contents)')
