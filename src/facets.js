@@ -869,30 +869,30 @@ LoadAllModules().then((modules) => {
             }
           });
 
-          let wgraw = urlParams.has('wg') ? urlParams.get('wg').split(' ') : [];
-          if (wgraw != []) {
-            let wrongGuesses = wgraw.map(decodeURIComponent);
-            let parsedWrongGuesses = wrongGuesses.map((as) =>
-              as.split('_').map((s) =>
-                s === '[]'
-                  ? []
-                  : s
-                      .slice(1, -1)
-                      .split(',')
-                      .filter((x) => x !== '')
-                      .map(String),
-              ),
-            );
+          // let wgraw = urlParams.has('wg') ? urlParams.get('wg').split(' ') : [];
+          // if (wgraw != []) {
+          //   let wrongGuesses = wgraw.map(decodeURIComponent);
+          //   let parsedWrongGuesses = wrongGuesses.map((as) =>
+          //     as.split('_').map((s) =>
+          //       s === '[]'
+          //         ? []
+          //         : s
+          //             .slice(1, -1)
+          //             .split(',')
+          //             .filter((x) => x !== '')
+          //             .map(String),
+          //     ),
+          //   );
 
-            if (parsedWrongGuesses.length === 10) {
-              for (let i = 0; i < 6; i++) {
-                this.appDataCardsParked[i].wrongGuesses = parsedWrongGuesses[i];
-              }
-              for (let i = 0; i < 4; i++) {
-                this.appDataCards[i].wrongGuesses = parsedWrongGuesses[i + 6];
-              }
-            }
-          }
+          //   if (parsedWrongGuesses.length === 10) {
+          //     for (let i = 0; i < 6; i++) {
+          //       this.appDataCardsParked[i].wrongGuesses = parsedWrongGuesses[i];
+          //     }
+          //     for (let i = 0; i < 4; i++) {
+          //       this.appDataCards[i].wrongGuesses = parsedWrongGuesses[i + 6];
+          //     }
+          //   }
+          // }
 
           this.appDataHints.forEach((hint) => {
             hint.value = _boardArray[index++];
@@ -2257,30 +2257,30 @@ ${urlText}`);
           urlString += '&sendingID=' + encodeURIComponent(this.appDataPlayerCurrent.id);
           urlString += '&useExtraCard=' + encodeURIComponent(this.currentGameGuessingCardCount === 5);
           urlString += '&sol=' + encodeURIComponent(this.currentGameSolutionActual);
-          urlString += '&wg=';
-          for (let i = 0; i < this.appDataCardsParked.length; i++) {
-            let card = this.appDataCardsParked[i];
-            let wgValues = [];
-            urlString += i > 0 ? '+' : '';
-            // prettier-ignore
-            wgValues.push('[' + ( card.wrongGuesses[0].join(',')) + ']');
-            wgValues.push('[' + card.wrongGuesses[1].join(',') + ']');
-            wgValues.push('[' + card.wrongGuesses[2].join(',') + ']');
-            wgValues.push('[' + card.wrongGuesses[3].join(',') + ']');
-            urlString += wgValues.join('_');
-          }
+          // urlString += '&wg=';
+          // for (let i = 0; i < this.appDataCardsParked.length; i++) {
+          //   let card = this.appDataCardsParked[i];
+          //   let wgValues = [];
+          //   urlString += i > 0 ? '+' : '';
+          //   // prettier-ignore
+          //   wgValues.push('[' + ( card.wrongGuesses[0].join(',')) + ']');
+          //   wgValues.push('[' + card.wrongGuesses[1].join(',') + ']');
+          //   wgValues.push('[' + card.wrongGuesses[2].join(',') + ']');
+          //   wgValues.push('[' + card.wrongGuesses[3].join(',') + ']');
+          //   urlString += wgValues.join('_');
+          // }
 
-          for (let i = 0; i < this.appDataCards.length; i++) {
-            let card = this.appDataCards[i];
-            let wgValues = [];
-            urlString += '+';
-            // prettier-ignore
-            wgValues.push('[' + ( card.wrongGuesses[0].join(',')) + ']');
-            wgValues.push('[' + card.wrongGuesses[1].join(',') + ']');
-            wgValues.push('[' + card.wrongGuesses[2].join(',') + ']');
-            wgValues.push('[' + card.wrongGuesses[3].join(',') + ']');
-            urlString += wgValues.join('_');
-          }
+          // for (let i = 0; i < this.appDataCards.length; i++) {
+          //   let card = this.appDataCards[i];
+          //   let wgValues = [];
+          //   urlString += '+';
+          //   // prettier-ignore
+          //   wgValues.push('[' + ( card.wrongGuesses[0].join(',')) + ']');
+          //   wgValues.push('[' + card.wrongGuesses[1].join(',') + ']');
+          //   wgValues.push('[' + card.wrongGuesses[2].join(',') + ']');
+          //   wgValues.push('[' + card.wrongGuesses[3].join(',') + ']');
+          //   urlString += wgValues.join('_');
+          // }
           if (_currentGameReviewIsFinal) {
             urlString += '&final=true';
           }
