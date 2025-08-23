@@ -24,6 +24,7 @@ jobs:
         run: npm run build
 
       - name: Deploy to GitHub Pages
+        id: deploy
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -32,7 +33,7 @@ jobs:
           force_orphan: true
 
       - name: Notify Discord
-        if: success()
+        if: steps.deploy.outcome == 'success'
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
           TAG_DESC=$(git for-each-ref refs/tags/${TAG_NAME} --format='%(contents)')
