@@ -417,6 +417,12 @@
             <small v-if="appStateUsePortraitLayout">Enable this if you want to increase the size of the unused cards
               when guessing.
             </small>
+            <h3>Behavior</h3>
+            <checkbox :class="{on: tempUserSettingsNoSnark}" @click="ToggleTempNoSnark">
+              No snark <toggle></toggle>
+            </checkbox>
+            <small>Enable this if you don't want snark in the share texts!</small>
+
             <!-- <checkbox v-if="isNotificationSupported && isSyncSupported && appStateUseNotifications"
             :class="{on: tempUserWantsDailyReminder, disabled: Notification.permission === 'denied'}"
             @click="ToggleTempUserWantsDailyReminder">

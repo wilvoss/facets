@@ -147,6 +147,7 @@ LoadAllModules().then((modules) => {
         vsUseFocus: true,
         userSettingsLanguage: 'en-us',
         userSettingsLegalAccepted: false,
+        userSettingsNoSnark: false,
         //#endregion
 
         //#region TEMP USER SETTINGS
@@ -166,6 +167,7 @@ LoadAllModules().then((modules) => {
         tempUseExtraCard: false,
         tempWordSets: [],
         tempUserSettingsLanguage: 'en-us',
+        tempUserSettingsNoSnark: false,
         //#endregion
 
         //#region DOM REFERENCE
@@ -264,6 +266,11 @@ LoadAllModules().then((modules) => {
       ToggleTempUseWordSetThemes() {
         note('ToggleTempUseWordSetThemes()');
         this.tempUseWordSetThemes = !this.tempUseWordSetThemes;
+      },
+
+      ToggleTempNoSnark() {
+        note('ToggleTempNoSnark()');
+        this.tempUserSettingsNoSnark = !this.tempUserSettingsNoSnark;
       },
 
       async ToggleTempUserWantsDailyReminder() {
@@ -1634,6 +1641,7 @@ ${words[14]} ${words[10]}`);
         this.tempUseWordSetThemes = this.userSettingsUseWordSetThemes;
         this.tempUserWantsDailyReminder = this.userSettingsUserWantsDailyReminder;
         this.tempUserSettingsLanguage = this.userSettingsLanguage;
+        this.tempUserSettingsNoSnark = this.userSettingsNoSnark;
         this.tempUserSettingsUsesLightTheme = this.userSettingsUsesLightTheme;
         this.tempUserSettingsHueIndex = this.userSettingsHueIndex;
         this.tempUseExtraCard = this.userSettingsUseExtraCard;
@@ -1679,6 +1687,7 @@ ${words[14]} ${words[10]}`);
         this.userSettingsUserWantsDailyReminder = this.tempUserWantsDailyReminder;
         this.userSettingsUseExtraCard = this.tempUseExtraCard;
         this.userSettingsHideStats = this.tempUserSettingsHideStats;
+        this.userSettingsNoSnark = this.tempUserSettingsNoSnark;
         this.ToggleUseSimplifedTheme(this.tempUserSettingsUsesSimplifiedTheme);
         this.ToggleShowAllCards(this.tempUserSettingsShowAllCards);
         this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
@@ -1701,6 +1710,7 @@ ${words[14]} ${words[10]}`);
         await modules.SaveData('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
         await modules.SaveData('useExtraCard', this.userSettingsUseExtraCard);
         await modules.SaveData('userSettingsHideStats', this.userSettingsHideStats);
+        await modules.SaveData('userSettingsNoSnark', this.userSettingsNoSnark);
         await modules.SaveData('wordSet', this.currentGameWordSet.id);
 
         if (userChangedID) {
@@ -1851,6 +1861,12 @@ ${words[14]} ${words[10]}`);
         if (userSettingsHideStats !== undefined && userSettingsHideStats !== null) {
           this.userSettingsHideStats = JSON.parse(userSettingsHideStats);
           this.tempUserSettingsHideStats = this.userSettingsHideStats;
+        }
+
+        let userSettingsNoSnark = await modules.GetData('userSettingsNoSnark');
+        if (userSettingsNoSnark !== undefined && userSettingsNoSnark !== null) {
+          this.userSettingsNoSnark = JSON.parse(userSettingsNoSnark);
+          this.tempUserSettingsNoSnark = this.userSettingsNoSnark;
         }
 
         let userSettingsUsesLightTheme = await modules.GetData('userSettingsUsesLightTheme');
@@ -2309,7 +2325,23 @@ ${urlText}`);
         let name = !usingName ? '' : _name + ', ';
         let useLowerCase = usingName && levelMessage.indexOf('I ') !== 0;
         levelMessage = useLowerCase ? levelMessage.charAt(0).toLowerCase() + levelMessage.slice(1) : levelMessage;
-        let message = pretext + modules.levelEmoji[count][getRandomInt(0, modules.levelEmoji[count].length)] + ' ' + name + levelMessage;
+        let levelEmoji = modules.levelEmoji[count][getRandomInt(0, modules.levelEmoji[count].length)] + ' ';
+        if (this.userSettingsNoSnark) {
+          switch (count) {
+            case 0:
+            case 1:
+            case 2:
+            case 3:
+              levelEmoji = '🤪';
+              levelMessage = "you've got this!";
+              break;
+            case 5:
+              levelEmoji = '🛑';
+              levelMessage = "here's the solution.";
+              break;
+          }
+        }
+        let message = pretext + levelEmoji + ' ' + name + levelMessage;
         if (count === 4 && this.currentDaily && this.currentDaily.quit) {
           message = `AI is hard! 
 We're working hard to make these Daily Facets better to play.`;
@@ -2688,13 +2720,15 @@ ${this.GetSolutionWords()}`;
         if (_ids.length === 16) {
           this.tempWordSetName = 'All Words';
           await this.SubmitSettings(null);
+          let words = await this.GetCurrentGameWordSet();
           let index = 0;
           if (this.appDataPlayerCurrent.role === 'creator') {
             for (let i = 0; i < this.appDataCards.length; i++) {
-              const card = array[i];
+              const card = this.appDataCards[i];
               for (let j = 0; j < card.words.length; j++) {
-                word = card.words[j];
-                word = _ids[index++];
+                let word = words.filter((w) => w.id === parseInt(_ids[index]))[0];
+                index = index + 1;
+                card.words[j] = word;
               }
             }
           }
