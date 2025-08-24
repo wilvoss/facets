@@ -1972,7 +1972,7 @@ ${words[14]} ${words[10]}`);
             default:
           }
         }
-        if (e.altKey) {
+        if (e.shiftKey) {
           switch (e.key) {
             case 'ArrowRight':
               this.tempUserSettingsHueIndex = this.tempUserSettingsHueIndex === this.appDataHues.length - 1 ? 0 : this.tempUserSettingsHueIndex + 1;
