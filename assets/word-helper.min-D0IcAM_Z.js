@@ -1,0 +1,1 @@
+function o(n,t=20,r=null){r!==null&&(n=n.filter(e=>!r.includes(e.value)));let l=[...n];for(let e=l.length-1;e>0;e--){let u=Math.floor(Math.random()*(e+1));[l[e],l[u]]=[l[u],l[e]]}return l.slice(0,t)}function i(n){return n.map(t=>t.value).join(",")}export{i as GetJustWords,o as GetUniqueWords};
