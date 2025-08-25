@@ -31,6 +31,10 @@ LoadAllModules().then((modules) => {
         this.stats = this.ProcessRawStats();
       },
 
+      OpenGame() {
+        window.open('/', '_blank');
+      },
+
       async GetStats() {
         this.isFetching = true;
         try {

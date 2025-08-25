@@ -40,7 +40,8 @@
       header {
         flex-direction: column;
         align-items: center;
-        padding: 8px;
+        gap: calc(.5 * var(--defaultGap));
+        padding: 40px 8px 8px;
       }
 
       header h1,
@@ -76,7 +77,7 @@
         justify-content: center;
         align-items: stretch;
         gap: calc(0.5 * var(--defaultGap));
-        padding: calc(2 * var(--defaultGap)) calc(1 * var(--defaultGap)) 0;
+        padding: calc(1 * var(--defaultGap)) calc(1 * var(--defaultGap)) 0;
         width: calc(100% - 2 * var(--defaultGap));
         max-width: 500px;
         overflow: initial;
@@ -161,12 +162,12 @@
       <app v-cloak>
         <link rel="stylesheet" v-if="userSettingsUsesLightTheme" href="../styles/light.css" media="screen" />
         <wrapper>
-          <header @click="window.open('/', '_blank')">
+          <header @click="OpenGame">
             <icon class="logo"></icon>
             <h2>Facets - Global Stats</h2>
+            <subtitle>Updated Hourly</subtitle>
           </header>
         </wrapper>
-        <subtitle>Updated Hourly</subtitle>
         <icon class="spinner" :class="{show: isFetching}"></icon>
         <stats :class="stat.key.toLowerCase()" v-for="stat in stats">
           <message>{{stat.key}}</message>
