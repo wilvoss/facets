@@ -37,6 +37,7 @@ jobs:
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
           TAG_DESC=$(git for-each-ref refs/tags/${TAG_NAME} --format='%(contents)')
+          PAYLOAD=$(jq -n --arg content "🏷️ New tag pushed: **${TAG_NAME}**\n📝 Description: ${TAG_DESC}" '{content: $content}')
           curl -H "Content-Type: application/json" \
-          -d "{\"content\": \"🏷️ New tag pushed: **${TAG_NAME}**\n📝 Description: ${TAG_DESC}\"}" \
-          "${{ secrets.DISCORD_WEBHOOK_URL }}"
+            -d "$PAYLOAD" \
+            "${{ secrets.DISCORD_WEBHOOK_URL }}"
