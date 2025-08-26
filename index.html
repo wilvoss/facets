@@ -66,6 +66,12 @@
             <small v-if="!isOnline">Once Facets connects online, you can continue playing.</small>
           </message>
         </splash>
+        <update>
+          <button @click="HandlePWAUpdate" class="updatecta"
+            :class="{show: !appStateUserHasCreatedAGame && appStateShowUpdateButton}">Update
+            Available!</button>
+        </update>
+
         <notification @click="appStateShowNotification = false" :class="{show: appStateShowNotification}">
           <message :title="playerMessage">
             <div v-html="playerMessage"></div>
@@ -110,7 +116,7 @@
         </notification>
         <notification :class="{show: appStateShowMeta}" class="meta">
           <button @click="HandleOldGameClick($event, todaysDaily)" class="dailycta"
-            :class="{show: !appStateShowNotification && vsShowDaily && dailyIsFreshToday && appStateShowMeta, blink: appStateFirstRunGuessingIndex === -1}">Solve
+            :class="{show: !appStateShowUpdateButton && !appStateShowNotification && vsShowDaily && dailyIsFreshToday && appStateShowMeta, blink: appStateFirstRunGuessingIndex === -1}">Solve
             Today's Facet!</button>
           <header>
             <h1>{{appDataGameName}}</h1>
@@ -153,8 +159,7 @@
                 <span></span>
               </button>
             </row>
-            <button title="Buy me a coffee" class="small inline"
-              @click="window.open('https://www.buymeacoffee.com/wilvoss', '_blank')">
+            <button title="Buy me a coffee" class="small inline" @click="HandleDonateButtonPress">
               <icon class="bmc"></icon>
               Buy me a Coffee!
             </button>
@@ -261,12 +266,12 @@
             </message>
             <input autocomplete="off" style="text-align: center" spellcheck="false" maxlength="14" id="nameInput"
               placeholder="_ _ _ _ _ _ _ _ _ _ _ _ _" v-model="tempName" />
-            <checkbox v-if="isNotificationSupported && isSyncSupported && isPWAOnHomeScreen"
+            <!-- <checkbox v-if="isNotificationSupported && isSyncSupported && isPWAOnHomeScreen"
               :class="{on: tempUserWantsDailyReminder && Notification.permission === 'granted', disabled: !Notification.permission === 'granted'}"
               @click="ToggleTempUserWantsDailyReminder">
               Allow notifications
               <toggle></toggle>
-            </checkbox>
+            </checkbox> -->
 
             <legal>By continuing to use this game, you agree to our <a href="https://bigtentgames.com/#privacy"
                 target="_blank">Privacy Policy</a>, which explains how we collect and use player names and temporary IDs
@@ -280,7 +285,7 @@
 
             <h3>Created by</h3>
             <credit>Wil Voss</credit>
-            <button class="small resume" onclick="window.open('https://www.buymeacoffee.com/wilvoss', '_blank')">
+            <button class="small resume" @click="HandleDonateButtonPress">
               <icon class="bmc small resumeBackground"></icon>
               Buy me a coffee!
             </button>
@@ -462,9 +467,11 @@
             <small :class="{disabled: !tipsHaveBeenIncremented}">Tap this to restore the game guiding tips.</small>
 
             <row>
-              <a class="padded" @click="ReloadApp">Reload App</a>
+              <a class="padded" @click="HandlePWAUpdate">Reload app</a>
             </row>
-            <small>Tap this to be sure that you have the latest version ({{appDataVersion}}).</small>
+            <small>Tap this to be sure that you have the latest version. Currently running
+              build
+              {{appDataVersion}}.</small>
           </section>
           <controls>
             <button class="secondary" @click="CancelSettings($event)">Cancel</button>

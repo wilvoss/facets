@@ -1,6 +1,7 @@
 import { createApp } from '/src/helpers/vue.esm-browser.prod.js';
 import { loadGameplayModules } from '/src/constants/gameplay.js';
 import { version } from '/src/constants/version.js';
+import { registerSW } from 'virtual:pwa-register';
 
 //#region MODULE HANDLING
 async function loadHelpers() {
@@ -117,6 +118,8 @@ LoadAllModules().then((modules) => {
         appStateUseFlower: false,
         appStateBrowserNotificationInterval: null,
         appStateShareError: false,
+        appStatePWAHasUpdate: false,
+        appStateShowUpdateButton: false,
         isOnline: true,
         //#endregion
 
@@ -173,6 +176,9 @@ LoadAllModules().then((modules) => {
         //#region DOM REFERENCE
         documentCssRoot: document.querySelector(':root'),
         cssStyles: window.getComputedStyle(document.querySelector(':root')),
+        facetsChannel: new BroadcastChannel('facets_main'),
+        windowId: Math.random().toString(36).substr(2, 9), // Unique per window
+
         //#endregion
       };
     },
@@ -824,6 +830,7 @@ LoadAllModules().then((modules) => {
         note('RestoreGame()');
         var urlParams = new URLSearchParams(window.location.search);
 
+        this.appStateUserHasCreatedAGame = false;
         this.appDataPlayerSender.name = urlParams.has('sendingName') ? urlParams.get('sendingName') : this.appDataPlayerSender.name;
         this.currentGameGuessersName = this.appDataPlayerSender.name;
         this.currentGameLanguage = urlParams.has('lang') ? urlParams.get('lang') : 'en-us';
@@ -1293,6 +1300,10 @@ ${words[14]} ${words[10]}`);
       //#endregion
 
       //#region HANDLERS
+      HandleDonateButtonPress() {
+        note('HandleDonateButtonPress()');
+        window.open('https://www.buymeacoffee.com/wilvoss', '_blank');
+      },
       HandleSubmitButtonPress() {
         note('HandleSubmitButtonPress()');
         if (this.appDataPlayerCurrent.role === 'reviewer' && this.numberOfCardsThatHaveBeenPlacedOnTray === 4) {
@@ -1623,6 +1634,17 @@ ${words[14]} ${words[10]}`);
         if (!document.hidden) {
           this.GetDailyGames();
           this.HandleOnlineStatusChange();
+
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistration().then((registration) => {
+              if (registration) {
+                note('Manually checking for service worker update on visibility change');
+                registration.update();
+              }
+            });
+          }
+          // Optionally, restart your interval if needed:
+          this.RegisterServiceWorker();
         }
       },
 
@@ -1969,6 +1991,14 @@ ${words[14]} ${words[10]}`);
                 this.appStateShowMeta = true;
               }
               break;
+            case '\\':
+              this.tempUserSettingsUsesLightTheme = !this.tempUserSettingsUsesLightTheme;
+              this.SubmitSettings(null);
+              break;
+            case '/':
+              this.tempUseWordSetThemes = !this.tempUseWordSetThemes;
+              this.SubmitSettings(null);
+              break;
             default:
           }
         }
@@ -1982,14 +2012,7 @@ ${words[14]} ${words[10]}`);
               this.tempUserSettingsHueIndex = this.tempUserSettingsHueIndex === 0 ? this.appDataHues.length - 1 : this.tempUserSettingsHueIndex - 1;
               this.SubmitSettings(null);
               break;
-            case '\\':
-              this.tempUserSettingsUsesLightTheme = !this.tempUserSettingsUsesLightTheme;
-              this.SubmitSettings(null);
-              break;
-            case '/':
-              this.tempUseWordSetThemes = !this.tempUseWordSetThemes;
-              this.SubmitSettings(null);
-              break;
+
             default:
           }
         }
@@ -2806,38 +2829,61 @@ ${this.GetSolutionWords()}`;
           console.log('Service workers are not supported in this browser.');
         }
       },
-      //#endregion
-
-      //#region NOTIFICATIONS MANAGEMENT
-      EnableDailyReminders() {
-        return new Promise((resolve, reject) => {
-          if (Notification.permission === 'granted') {
-            resolve(true);
-          } else {
-            Notification.requestPermission()
-              .then((permission) => {
-                if (permission === 'granted') {
-                  this.HandleServiceWorkerRegistration();
-                  resolve(true);
-                } else {
-                  resolve(false);
-                }
-              })
-              .catch((e) => {
-                reject(e);
-              });
-          }
+      RegisterServiceWorker() {
+        const intervalMS = 60 * 60 * 1000;
+        registerSW({
+          onRegistered: (r) => {
+            if (r) {
+              note('checking for service worker update');
+              r.update();
+            }
+          },
+          onNeedRefresh: () => {
+            this.appStatePWAHasUpdate = true;
+            this.appStateShowUpdateButton = true;
+            setTimeout(() => {
+              this.appStateShowUpdateButton = false;
+            }, 5000);
+          },
+          onOfflineReady: () => {},
         });
       },
-      HandleServiceWorkerRegistration() {
-        note('HandleServiceWorkerRegistration()');
-      },
-      HandleVersionAvailable() {
-        note('HandleVersionAvailable()');
+      async ActivatePWAUpdate() {
+        // This method should be called when the user clicks the update button
+        if ('serviceWorker' in navigator) {
+          const registration = await navigator.serviceWorker.getRegistration();
+          if (registration && registration.waiting) {
+            registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+            registration.waiting.addEventListener('statechange', (e) => {
+              if (e.target.state === 'activated') {
+                window.location.reload();
+              }
+            });
+          } else {
+            window.location.reload();
+          }
+        }
       },
       HandleOnlineStatusChange() {
         note('HandleOnlineStatusChange()');
         this.isOnline = navigator.onLine;
+      },
+      HandlePWAUpdate() {
+        note('HandlePWAUpdate()');
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.getRegistration().then((registration) => {
+            if (registration && registration.waiting) {
+              registration.waiting.postMessage({ type: 'SKIP_WAITING' });
+              registration.waiting.addEventListener('statechange', (e) => {
+                if (e.target.state === 'activated') {
+                  window.location.reload();
+                }
+              });
+            } else {
+              window.location.reload();
+            }
+          });
+        }
       },
       //#endregion
     },
@@ -2846,7 +2892,6 @@ ${this.GetSolutionWords()}`;
       UseDebug = document.location.href.indexOf('local') != -1 || document.location.href.indexOf('debug=true') != -1;
 
       await this.OnMount();
-      this.DeregisterServiceWorkers();
       window.addEventListener('keydown', this.HandleKeyDownEvent);
       window.addEventListener('pointermove', this.HandlePointerMoveEvent);
       window.addEventListener('visibilitychange', this.HandlePageVisibilityChange);
@@ -2854,6 +2899,22 @@ ${this.GetSolutionWords()}`;
       window.addEventListener('popstate', this.HandlePopState);
       window.addEventListener('online', this.HandleOnlineStatusChange);
       window.addEventListener('offline', this.HandleOnlineStatusChange);
+
+      this.RegisterServiceWorker();
+      // this.DeregisterServiceWorkers();
+
+      this.facetsChannel.onmessage = (event) => {
+        note('event ID = ' + event.data.senderId);
+        if (
+          event.data.type === 'PARK_THIS_TAB' &&
+          event.data.senderId !== this.windowId // Only park if not the sender
+        ) {
+          window.location.href = '/game/close.html';
+        }
+      };
+
+      // Notify all other main windows to park themselves
+      this.facetsChannel.postMessage({ type: 'PARK_THIS_TAB' });
     },
 
     beforeDestroy() {
@@ -2864,6 +2925,10 @@ ${this.GetSolutionWords()}`;
       window.removeEventListener('popstate', this.HandlePopState);
       window.removeEventListener('online', this.HandleOnlineStatusChange);
       window.removeEventListener('offline', this.HandleOnlineStatusChange);
+
+      if (this.facetsChannel) {
+        this.facetsChannel.close();
+      }
     },
 
     watch: {
