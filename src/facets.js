@@ -518,7 +518,7 @@ LoadAllModules().then((modules) => {
         if (this.currentGameLanguage !== '') {
           lang = this.currentGameLanguage;
         }
-        let fetchPromises = this.currentGameWordSet.data.map(async (url) => {
+        let fetchPromises = await this.currentGameWordSet.data.map(async (url) => {
           let modifiedUrl = url.toString().replace('./data/', './data/' + lang);
           if (this.currentGameWordSet.noLanguage) {
             modifiedUrl = url.toString().replace('./data/', './data/common/');
