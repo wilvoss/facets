@@ -37,7 +37,9 @@ jobs:
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
           TAG_DESC=$(git for-each-ref refs/tags/${TAG_NAME} --format='%(contents)')
-          CONTENT="Description: ${TAG_DESC} (tag pushed)"
+          # Remove the tag name from the description if it exists
+          TAG_DESC_CLEANED=$(echo "$TAG_DESC" | sed "s/${TAG_NAME}[[:space:]]*//")
+          CONTENT="Tag pushed: **${TAG_NAME}** ${TAG_DESC_CLEANED}"
           PAYLOAD=$(jq -n --arg content "$CONTENT" '{content: $content}')
           curl -H "Content-Type: application/json" \
             -d "$PAYLOAD" \
