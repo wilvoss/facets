@@ -132,6 +132,16 @@ splash message {
   background-color: hsl(var(--appBackgroundDarkestHSL));
 }
 
+button.updatecta {
+  border-color: hsla(var(--appBackgroundLighterHSL, 1));
+}
+
+notification button.inline,
+notification button.small {
+  border-color: hsla(var(--appBackgroundLighterHSL, 1));
+  background-color: hsla(var(--appBackgroundDarkHSL), 0.1);
+}
+
 header button.small {
   background-color: hsl(var(--messageColorHSL));
   color: hsla(var(--appBackgroundDarkestHSL), 1);

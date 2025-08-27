@@ -2192,6 +2192,18 @@ Can you do better?
 ${urlText}`,
           };
 
+          // Detect Windows or Edge
+          const ua = navigator.userAgent;
+          const isWindows = ua.includes('Windows');
+          const isEdge = ua.includes('Edg/');
+
+          if (isWindows || isEdge) {
+            // Just copy to clipboard for Windows/Edge users
+            this.CopyTextToClipboard(`${_text}
+${urlText}`);
+            return;
+          }
+
           if (navigator.canShare && !navigator.canShare(_shareObject)) {
             urlText = _url === '' ? window.location.origin : _url;
             _shareObject = {
