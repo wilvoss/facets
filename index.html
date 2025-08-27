@@ -37,7 +37,7 @@
     <main id="app">
       <!-- There are NO vue components in this code. All non-standard HTML tags are meant for semantic and syntactical purposes -->
       <app v-cloak
-        :class="{ai: isAIGenerated, multicolor: userSettingsUseMultiColoredGems, solved: appStateIsGuessing && currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, wallpaper: tempUseWordSetThemes, dragging: appStateIsDragging, guessing: appStateIsGuessing, simple: userSettingsUsesSimplifiedTheme, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: isPlayerCreating}"
+        :class="{unaided: unaided, ai: isAIGenerated, multicolor: userSettingsUseMultiColoredGems, solved: appStateIsGuessing && currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, wallpaper: tempUseWordSetThemes, dragging: appStateIsDragging, guessing: appStateIsGuessing, simple: userSettingsUsesSimplifiedTheme, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: isPlayerCreating}"
         @pointerdown="HandleBodyPointerDown($event)"
         @pointerup="HandleBodyPointerUp($event, appStateIsDragging ? appDataDraggedCard : selectedCard)">
         <preload v-if="appStatePageHasLoaded">
@@ -428,7 +428,11 @@
               No snark <toggle></toggle>
             </checkbox>
             <small>Enable this if you don't want snark in the share texts!</small>
-
+            <checkbox :class="{on: tempUserSettingsHideReviewAids}" @click="ToggleTempUnaidedReview">
+              Unaided puzzle review <toggle></toggle>
+            </checkbox>
+            <small>Enable this if you want to hide the wrong card clues when reviewing a puzzle.
+            </small>
             <!-- <checkbox v-if="isNotificationSupported && isSyncSupported && appStateUseNotifications"
             :class="{on: tempUserWantsDailyReminder, disabled: Notification.permission === 'denied'}"
             @click="ToggleTempUserWantsDailyReminder">

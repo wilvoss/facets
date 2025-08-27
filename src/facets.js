@@ -145,6 +145,7 @@ LoadAllModules().then((modules) => {
         userSettingsUseWordSetThemes: true,
         userSettingsUserWantsDailyReminder: false,
         userSettingsShowAllCards: true,
+        userSettingsHideReviewAids: false,
         appStateShowCreateOOBE: false,
         userSettingsStreaks: [],
         vsUseFocus: true,
@@ -161,7 +162,8 @@ LoadAllModules().then((modules) => {
         tempUserSettingsUsesLightTheme: false,
         tempUserSettingsHueIndex: 0,
         tempUserSettingsUsesSimplifiedTheme: false,
-        tempUserSettingsShowAllCards: true,
+        tempUserSettingsShowAllCards: false,
+        tempUserSettingsHideReviewAids: false,
         tempUseWordSetThemes: true,
         tempUserWantsDailyReminder: false,
         tempUserSettingsHideStats: false,
@@ -216,6 +218,11 @@ LoadAllModules().then((modules) => {
       ToggleShowAllCards(_value) {
         note('ToggleShowAllCards()');
         this.userSettingsShowAllCards = _value;
+      },
+
+      ToggleUnaidedReview(_value) {
+        note('ToggleUnaidedReview()');
+        this.userSettingsHideReviewAids = _value;
       },
 
       ToggleFocus() {
@@ -317,6 +324,11 @@ LoadAllModules().then((modules) => {
       ToggleTempShowAllCards() {
         note('ToggleTempShowAllCards()');
         this.tempUserSettingsShowAllCards = !this.tempUserSettingsShowAllCards;
+      },
+
+      ToggleTempUnaidedReview() {
+        note('ToggleTempUnaidedReview()');
+        this.tempUserSettingsHideReviewAids = !this.tempUserSettingsHideReviewAids;
       },
 
       ToggleTempUsePortraitLayout() {
@@ -1670,6 +1682,7 @@ ${words[14]} ${words[10]}`);
         this.tempUserSettingsHideStats = this.userSettingsHideStats;
         this.tempUserSettingsUsesSimplifiedTheme = this.userSettingsUsesSimplifiedTheme;
         this.tempUserSettingsShowAllCards = this.userSettingsShowAllCards;
+        this.tempUserSettingsHideReviewAids = this.userSettingsHideReviewAids;
       },
 
       HandleIntroButtonClick(e) {
@@ -1712,6 +1725,7 @@ ${words[14]} ${words[10]}`);
         this.userSettingsNoSnark = this.tempUserSettingsNoSnark;
         this.ToggleUseSimplifedTheme(this.tempUserSettingsUsesSimplifiedTheme);
         this.ToggleShowAllCards(this.tempUserSettingsShowAllCards);
+        this.ToggleUnaidedReview(this.tempUserSettingsHideReviewAids);
         this.userSettingsUseMultiColoredGems = this.tempUseMultiColoredGems;
         if (this.appDataPlayerCurrent.role === 'creator') {
           this.currentGameGuessingCardCount = this.userSettingsUseExtraCard ? 5 : 4;
@@ -1729,6 +1743,7 @@ ${words[14]} ${words[10]}`);
         await modules.SaveData('userSettingsHueIndex', this.userSettingsHueIndex);
         await modules.SaveData('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
         await modules.SaveData('userSettingsShowAllCards', this.userSettingsShowAllCards);
+        await modules.SaveData('userSettingsHideReviewAids', this.userSettingsHideReviewAids);
         await modules.SaveData('useMultiColoredGems', this.userSettingsUseMultiColoredGems);
         await modules.SaveData('useExtraCard', this.userSettingsUseExtraCard);
         await modules.SaveData('userSettingsHideStats', this.userSettingsHideStats);
@@ -1913,6 +1928,12 @@ ${words[14]} ${words[10]}`);
         if (userSettingsShowAllCards !== undefined && userSettingsShowAllCards !== null) {
           this.ToggleShowAllCards(JSON.parse(userSettingsShowAllCards));
           this.tempUserSettingsShowAllCards = this.userSettingsShowAllCards;
+        }
+
+        let userSettingsHideReviewAids = await modules.GetData('userSettingsHideReviewAids');
+        if (userSettingsHideReviewAids !== undefined && userSettingsHideReviewAids !== null) {
+          this.ToggleUnaidedReview(JSON.parse(userSettingsHideReviewAids));
+          this.tempUserSettingsHideReviewAids = this.userSettingsHideReviewAids;
         }
 
         let userSettingsUseMultiColoredGems = await modules.GetData('useMultiColoredGems');
@@ -3377,6 +3398,9 @@ ${this.GetSolutionWords()}`;
           }
         }
         return cards;
+      },
+      unaided() {
+        return this.userSettingsHideReviewAids && this.appDataPlayerCurrent.role === 'reviewer';
       },
       //#endregion
     },

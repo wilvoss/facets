@@ -1967,6 +1967,11 @@ card.rotating {
   background-repeat: no-repeat;
 }
 
+.unaided.multicolor.guessing cards spot.wrong card,
+.unaided.guessing cards spot.wrong card {
+  background: none;
+}
+
 hints {
   position: absolute;
   transform: translateY(60px);
