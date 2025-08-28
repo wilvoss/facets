@@ -2150,8 +2150,9 @@ Can you do better?
               ])
               .then(() => {
                 note('Attempting to copy via navigator.clipboard.write');
-                this.appDataMessage = `"${_text}"
+                let formattedText = _text.replace(/\n/g, '<br />');
 
+                this.appDataMessage = `<sharetext>"${formattedText}"</sharetext><br /><br >
 Message copied to the clipboard.`;
                 this.appStateShowNotification = true;
               })
