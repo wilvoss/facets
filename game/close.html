@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html itemtype="https://schema.org/VideoGame" lang="en">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta content="x-content-type-options=nosniff" />
+
+    <title>Session Over</title>
+    <meta name="apple-mobile-web-app-title" content="Facets!" />
+    <meta name="mobile-web-app-capable" content="no" />
+    <meta name="apple-touch-fullscreen" content="no" />
+    <meta name="apple-mobile-web-app-capable" content="no" />
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, minimum-scale=1, maximum-scale=5, user-scalable=yes" />
+    <meta name="theme-color" id="themeColor" content="rgb(0, 9, 15)" />
+
+    <meta name="robots" content="noindex">
+
+    <meta name="keywords"
+      content="free online game, brain teaser, casual game, puzzle game, word game, word association, puzzle, social game" />
+    <meta name="description"
+      content="Facets: A free word association puzzle game. Play custom challenges with friends or take on the AI's Daily Puzzle — brain-teasing fun without distractions!" />
+
+    <link rel="apple-touch-icon" sizes="120x120" href="../images/icon180.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../images/icon180.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="../images/icon192.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="../images/icon512-apple-touch.png" />
+
+    <link rel="icon alternate" type="image/png" href="/favicon-alt.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <link rel="stylesheet" href="../styles/normalize.css" media="screen" />
+    <link rel="stylesheet" href="../styles/main.min.css" media="screen" />
+    <style>
+      body {
+        line-height: 150%;
+      }
+
+      section {
+        margin-top: 40px;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      h2 {
+        margin-top: 0;
+        font-size: 2.2em;
+      }
+
+      modal {
+        justify-content: space-around;
+      }
+
+      modal message {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        cursor: default;
+        background: none;
+        padding-bottom: 20px;
+        /* width: 80%; */
+        pointer-events: all;
+        text-align: center;
+      }
+
+      modal controls.hide,
+      message.hide,
+      message.hide,
+      a.hide,
+      button.hide {
+        display: none;
+      }
+
+      message span {
+        display: contents;
+      }
+
+      a.padded {
+        display: inline-block;
+        width: 50%;
+        font-size: 0.9em;
+      }
+
+      button {
+        border: 1px solid hsla(var(--linkColorDarkHSL), 0.75);
+        width: 90%;
+        max-width: 140px;
+      }
+
+      icon {
+        position: relative;
+        margin-top: 10px;
+      }
+
+      small span {
+        display: inline-block;
+        margin-left: 6px;
+      }
+
+      @media screen and (max-width: 678px) {
+        button {
+          width: 50%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <modal>
+      <section>
+        <header>
+          <icon class="logo"></icon>
+          <h2>
+            <small style="max-width: 100%; font-size: 50%; padding-top: var(--defaultGap)">
+              This Facets session has expired.
+            </small>
+          </h2>
+        </header>
+        <message>It is safe to close this window.</message>
+      </section>
+    </modal>
+  </body>
+
+</html>
