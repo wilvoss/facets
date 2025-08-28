@@ -2150,7 +2150,9 @@ Can you do better?
               ])
               .then(() => {
                 note('Attempting to copy via navigator.clipboard.write');
-                this.appDataMessage = 'Message copied to the clipboard.';
+                this.appDataMessage = `"${_text}"
+
+Message copied to the clipboard.`;
                 this.appStateShowNotification = true;
               })
               .catch((e) => {
