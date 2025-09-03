@@ -926,7 +926,7 @@ LoadAllModules().then((modules) => {
           });
 
           if (urlParams.has('sol')) {
-            this.currentGameSolutionActual = urlParams.get('sol');
+            this.currentGameSolutionActual = decodeURIComponent(urlParams.get('sol'));
             if (urlParams.has('final')) {
               this.currentGameSolutionGuessing = this.currentGameSolutionActual;
               this.appDataMessage = `${this.appDataPlayerCurrent.name}, here's the solution to ${this.appDataPlayerSender.name}'s puzzle.`;
@@ -1981,8 +1981,8 @@ ${words[14]} ${words[10]}`);
               }
               break;
             case ':':
-            case '?':
-            case '&':
+            // case '?':
+            // case '&':
             case '=':
               note('HandleKeyDownEvent()');
               e.preventDefault();
