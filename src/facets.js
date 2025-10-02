@@ -1790,16 +1790,7 @@ ${words[14]} ${words[10]}`);
           this.GetDailyGames();
           this.HandleOnlineStatusChange();
 
-          if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.getRegistration().then((registration) => {
-              if (registration) {
-                note('Manually checking for service worker update on visibility change');
-                registration.update();
-              }
-            });
-          }
-          // Optionally, restart your interval if needed:
-          this.RegisterServiceWorker();
+          // Let Vite PWA handle update detection naturally
         }
       },
 
@@ -3012,10 +3003,7 @@ ${this.GetSolutionWords()}`;
         const intervalMS = 60 * 60 * 1000;
         registerSW({
           onRegistered: (r) => {
-            if (r) {
-              note('checking for service worker update');
-              r.update();
-            }
+            note('Service worker registered successfully');
           },
           onNeedRefresh: () => {
             this.appStatePWAHasUpdate = true;
