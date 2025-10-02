@@ -120,6 +120,7 @@ LoadAllModules().then((modules) => {
         appStateShareError: false,
         appStatePWAHasUpdate: false,
         appStateShowUpdateButton: false,
+        updateButtonTimeout: null,
         isOnline: true,
 
         // BTG AUTHENTICATION
@@ -3019,8 +3020,14 @@ ${this.GetSolutionWords()}`;
           onNeedRefresh: () => {
             this.appStatePWAHasUpdate = true;
             this.appStateShowUpdateButton = true;
-            setTimeout(() => {
+            // Clear any existing timeout
+            if (this.updateButtonTimeout) {
+              clearTimeout(this.updateButtonTimeout);
+            }
+            // Set new timeout and store the ID
+            this.updateButtonTimeout = setTimeout(() => {
               this.appStateShowUpdateButton = false;
+              this.updateButtonTimeout = null;
             }, 5000);
           },
           onOfflineReady: () => {},
@@ -3048,6 +3055,13 @@ ${this.GetSolutionWords()}`;
       },
       HandlePWAUpdate() {
         note('HandlePWAUpdate()');
+        // Clear the update button state and timeout
+        this.appStatePWAHasUpdate = false;
+        this.appStateShowUpdateButton = false;
+        if (this.updateButtonTimeout) {
+          clearTimeout(this.updateButtonTimeout);
+          this.updateButtonTimeout = null;
+        }
         if ('serviceWorker' in navigator) {
           navigator.serviceWorker.getRegistration().then((registration) => {
             if (registration && registration.waiting) {
@@ -3103,6 +3117,10 @@ ${this.GetSolutionWords()}`;
 
       if (this.appStateBrowserSWCheckInterval) {
         clearInterval(this.appStateBrowserSWCheckInterval);
+      }
+
+      if (this.updateButtonTimeout) {
+        clearTimeout(this.updateButtonTimeout);
       }
     },
 
