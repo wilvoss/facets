@@ -1365,12 +1365,12 @@ ${words[14]} ${words[10]}`);
             return true;
           } else {
             note('BTG auth token is invalid');
-            this.ClearBTGAuth();
+            await this.ClearBTGAuth();
             return false;
           }
         } catch (error) {
           error('BTG auth validation failed:', error);
-          this.ClearBTGAuth();
+          await this.ClearBTGAuth();
           return false;
         } finally {
           this.authLoading = false;
@@ -1391,7 +1391,7 @@ ${words[14]} ${words[10]}`);
         this.LoadBTGUserProfile();
       },
 
-      ClearBTGAuth() {
+      async ClearBTGAuth() {
         note('ClearBTGAuth() called');
         this.isAuthenticated = false;
         this.userToken = null;
@@ -1404,6 +1404,14 @@ ${words[14]} ${words[10]}`);
         // Clear cross-subdomain cookie
         const domain = window.location.hostname.includes('local') ? '.bigtentgames.local' : '.bigtentgames.com';
         document.cookie = `btg_auth_token=; domain=${domain}; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+
+        // Clear stored BTG profile from IndexedDB
+        try {
+          await modules.DeleteData('btgProfile');
+          note('BTG profile cleared from IndexedDB');
+        } catch (err) {
+          error('Error clearing BTG profile from IndexedDB:', err);
+        }
       },
 
       async LoadBTGUserProfile() {
@@ -1431,9 +1439,246 @@ ${words[14]} ${words[10]}`);
               playerName: this.playerName,
               playerId: this.playerId,
             });
+
+            // Cloud-first data flow: Download and apply cloud data
+            note('Loading user data from cloud...');
+            const cloudData = await this.LoadUserDataFromCloud();
+
+            if (cloudData && (cloudData.settings || cloudData.dailyStats)) {
+              note('Applying cloud data to local storage (cloud overrides local)');
+              await this.ApplyCloudDataToLocal(cloudData);
+
+              // If this is the first time linking (no cloud data), save current local data to cloud
+              if (!cloudData.settings) {
+                note('No cloud settings found, saving current local data to cloud');
+                await this.SaveUserDataToCloud();
+              }
+            } else {
+              // No cloud data found, this might be first login - save current local data
+              note('No cloud data found, saving current local data to cloud');
+              await this.SaveUserDataToCloud();
+            }
+
+            // Store BTG profile data in IndexedDB for persistence
+            await modules.SaveData('btgProfile', {
+              email: this.userEmail,
+              playerName: this.playerName,
+              playerId: this.playerId,
+              linkedAt: new Date().toISOString(),
+            });
           }
-        } catch (error) {
-          error('Failed to load BTG user profile:', error);
+        } catch (err) {
+          error('Failed to load BTG user profile:', err);
+        }
+      },
+
+      async SaveUserDataToCloud() {
+        const callId = Math.random().toString(36).substr(2, 9);
+        note(`SaveUserDataToCloud() called [${callId}]`);
+        if (!this.isAuthenticated || !this.userToken || !this.playerId) {
+          note(`Not authenticated or missing playerId, skipping cloud save [${callId}]`);
+          return;
+        }
+
+        try {
+          // Prepare user settings data
+          const userSettings = {
+            userSettingsLanguage: this.userSettingsLanguage,
+            userSettingsUsesLightTheme: this.userSettingsUsesLightTheme,
+            userSettingsUsesSimplifiedTheme: this.userSettingsUsesSimplifiedTheme,
+            userSettingsUseMultiColoredGems: this.userSettingsUseMultiColoredGems,
+            userSettingsShowAllCards: this.userSettingsShowAllCards,
+            userSettingsHideStats: this.userSettingsHideStats,
+            userSettingsNoSnark: this.userSettingsNoSnark,
+            userSettingsHideReviewAids: this.userSettingsHideReviewAids,
+            userSettingsHueIndex: this.userSettingsHueIndex,
+            playerName: this.appDataPlayerCurrent.name,
+            facetsPlayerId: this.appDataPlayerCurrent.id,
+          };
+
+          // Save user settings to cloud using existing facets-user-settings KV store
+          const settingsUrl = `https://facets-save-user-settings.bigtentgames.workers.dev/`;
+          note(`Saving user settings [${callId}]`);
+          const settingsResponse = await fetch(settingsUrl, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${this.userToken}`,
+            },
+            body: JSON.stringify({
+              playerId: this.playerId,
+              settings: userSettings,
+            }),
+          });
+
+          if (!settingsResponse.ok) {
+            throw new Error(`Settings save failed: ${settingsResponse.status} ${settingsResponse.statusText}`);
+          }
+          note(`User settings saved successfully [${callId}]`);
+
+          // Get current daily stats from IndexedDB
+          let dailyStats = [];
+          try {
+            note(`About to load daily stats from IndexedDB [${callId}]`);
+            note(`Looking for key: userDailyStats_${this.appDataPlayerCurrent.id} [${callId}]`);
+
+            if (!modules || typeof modules.GetData !== 'function') {
+              throw new Error('modules.GetData is not available');
+            }
+
+            const loadResult = await modules.GetData(`userDailyStats_${this.appDataPlayerCurrent.id}`);
+            note(`Raw IndexedDB result [${callId}]:`, loadResult);
+
+            dailyStats = loadResult || [];
+            note(`Processed daily stats [${callId}]: ${dailyStats.length} entries`);
+          } catch (indexedDBError) {
+            error(`Failed to load daily stats from IndexedDB [${callId}]:`, indexedDBError);
+            error(`Error type [${callId}]:`, typeof indexedDBError);
+            error(`Error message [${callId}]:`, indexedDBError?.message || 'No message');
+            error(`Error stack [${callId}]:`, indexedDBError?.stack || 'No stack');
+            // Continue with empty array if IndexedDB fails
+            dailyStats = [];
+          }
+
+          // Save daily stats to cloud using existing user-daily-stats KV store
+          if (dailyStats.length > 0) {
+            note(`Saving daily stats [${callId}]: ${dailyStats.length} entries`);
+            const statsUrl = `https://facets-save-daily-stats.bigtentgames.workers.dev/`;
+            const statsResponse = await fetch(statsUrl, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${this.userToken}`,
+              },
+              body: JSON.stringify({
+                playerId: this.playerId,
+                facetsPlayerId: this.appDataPlayerCurrent.id,
+                dailyStats: dailyStats,
+              }),
+            });
+
+            if (!statsResponse.ok) {
+              throw new Error(`Daily stats save failed: ${statsResponse.status} ${statsResponse.statusText}`);
+            }
+            note(`Daily stats saved successfully [${callId}]`);
+          } else {
+            note(`No daily stats to save [${callId}]`);
+          }
+
+          note(`User data successfully saved to cloud [${callId}]`);
+        } catch (err) {
+          error(`Failed to save user data to cloud [${callId}]:`, err);
+          throw err; // Re-throw so SubmitSettings knows it failed
+        }
+      },
+
+      async LoadUserDataFromCloud() {
+        note('LoadUserDataFromCloud() called');
+        note(`Auth status: authenticated=${this.isAuthenticated}, token=${!!this.userToken}, playerId=${this.playerId}`);
+        if (!this.isAuthenticated || !this.userToken || !this.playerId) {
+          note('Not authenticated or missing playerId, skipping cloud load');
+          return null;
+        }
+
+        try {
+          // Load user settings from cloud
+          const settingsUrl = `https://facets-get-user-settings.bigtentgames.workers.dev/${this.playerId}`;
+          note(`Fetching from URL: ${settingsUrl}`);
+          const settingsResponse = await fetch(settingsUrl, {
+            method: 'GET',
+            headers: {
+              Authorization: `Bearer ${this.userToken}`,
+            },
+          });
+
+          let cloudData = {
+            settings: null,
+            dailyStats: null,
+          };
+
+          if (settingsResponse.ok && settingsResponse.status !== 204) {
+            const settingsData = await settingsResponse.json();
+            cloudData.settings = settingsData.settings;
+          }
+
+          // Load daily stats from cloud using existing facets-get-users-stats worker
+          // This worker uses Facets Player ID, so we need the linked ID from settings
+          if (cloudData.settings && cloudData.settings.facetsPlayerId) {
+            const statsUrl = `https://facets-get-users-stats.bigtentgames.workers.dev/${cloudData.settings.facetsPlayerId}`;
+            const statsResponse = await fetch(statsUrl, {
+              method: 'GET',
+              headers: {
+                Origin: window.location.origin,
+                'Access-Control-Request-Method': 'GET',
+                'Access-Control-Request-Headers': 'Content-Type',
+              },
+            });
+
+            if (statsResponse.ok && statsResponse.status !== 204) {
+              const statsText = await statsResponse.text();
+              if (statsText) {
+                cloudData.dailyStats = JSON.parse(statsText);
+              }
+            }
+          }
+
+          note('User data loaded from cloud:', cloudData);
+          return cloudData;
+        } catch (err) {
+          error('Failed to load user data from cloud:', err);
+          return null;
+        }
+      },
+
+      async ApplyCloudDataToLocal(cloudData) {
+        note('ApplyCloudDataToLocal() called');
+        if (!cloudData) return;
+
+        try {
+          // Apply settings if available
+          if (cloudData.settings) {
+            const settings = cloudData.settings;
+
+            // Apply user preferences
+            if (settings.userSettingsLanguage) this.userSettingsLanguage = settings.userSettingsLanguage;
+            if (settings.userSettingsUsesLightTheme !== undefined) this.userSettingsUsesLightTheme = settings.userSettingsUsesLightTheme;
+            if (settings.userSettingsUsesSimplifiedTheme !== undefined) this.userSettingsUsesSimplifiedTheme = settings.userSettingsUsesSimplifiedTheme;
+            if (settings.userSettingsUseMultiColoredGems !== undefined) this.userSettingsUseMultiColoredGems = settings.userSettingsUseMultiColoredGems;
+            if (settings.userSettingsShowAllCards !== undefined) this.userSettingsShowAllCards = settings.userSettingsShowAllCards;
+            if (settings.userSettingsHideStats !== undefined) this.userSettingsHideStats = settings.userSettingsHideStats;
+            if (settings.userSettingsNoSnark !== undefined) this.userSettingsNoSnark = settings.userSettingsNoSnark;
+            if (settings.userSettingsHideReviewAids !== undefined) this.userSettingsHideReviewAids = settings.userSettingsHideReviewAids;
+            if (settings.userSettingsHueIndex !== undefined) this.userSettingsHueIndex = settings.userSettingsHueIndex;
+
+            // Apply player info (cloud overrides local)
+            if (settings.playerName) this.appDataPlayerCurrent.name = settings.playerName;
+            if (settings.facetsPlayerId) {
+              this.appDataPlayerCurrent.id = settings.facetsPlayerId;
+            }
+
+            // Save applied settings to local storage
+            await modules.SaveData('userSettingsLanguage', this.userSettingsLanguage);
+            await modules.SaveData('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
+            await modules.SaveData('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
+            await modules.SaveData('userSettingsUseMultiColoredGems', this.userSettingsUseMultiColoredGems);
+            await modules.SaveData('userSettingsShowAllCards', this.userSettingsShowAllCards);
+            await modules.SaveData('userSettingsHideStats', this.userSettingsHideStats);
+            await modules.SaveData('userSettingsNoSnark', this.userSettingsNoSnark);
+            await modules.SaveData('userSettingsHideReviewAids', this.userSettingsHideReviewAids);
+            await modules.SaveData('userSettingsHueIndex', this.userSettingsHueIndex);
+            await modules.SaveData('playerName', this.appDataPlayerCurrent.name);
+            await modules.SaveData('playerID', this.appDataPlayerCurrent.id);
+          }
+
+          // Apply daily stats if available (cloud overrides local)
+          if (cloudData.dailyStats && Array.isArray(cloudData.dailyStats)) {
+            await modules.SaveData(`userDailyStats_${this.appDataPlayerCurrent.id}`, cloudData.dailyStats);
+            note(`Saved ${cloudData.dailyStats.length} daily stats from cloud`);
+          }
+
+          note('Cloud data successfully applied to local storage');
+        } catch (err) {
+          error('Failed to apply cloud data to local storage:', err);
         }
       },
 
@@ -1790,7 +2035,14 @@ ${words[14]} ${words[10]}`);
           this.GetDailyGames();
           this.HandleOnlineStatusChange();
 
-          // Let Vite PWA handle update detection naturally
+          if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.getRegistration().then((registration) => {
+              if (registration) {
+                note('Manually checking for service worker update on visibility change');
+                registration.update();
+              }
+            });
+          }
         }
       },
 
@@ -1883,6 +2135,16 @@ ${words[14]} ${words[10]}`);
         await modules.SaveData('userSettingsHideStats', this.userSettingsHideStats);
         await modules.SaveData('userSettingsNoSnark', this.userSettingsNoSnark);
         await modules.SaveData('wordSet', this.currentGameWordSet.id);
+
+        // Save settings to cloud if BTG authenticated
+        if (this.isAuthenticated && this.userToken && this.playerId) {
+          try {
+            await this.SaveUserDataToCloud();
+            note('Settings saved to cloud successfully');
+          } catch (err) {
+            error('Failed to save settings to cloud:', err);
+          }
+        }
 
         if (userChangedID) {
           localStorage.removeItem('dailyGames');
@@ -2930,6 +3192,19 @@ ${this.GetSolutionWords()}`;
 
       async OnMount() {
         this.$nextTick(async () => {
+          // Restore BTG profile from IndexedDB if available
+          try {
+            const storedProfile = await modules.GetData('btgProfile');
+            if (storedProfile) {
+              note('Restoring BTG profile from IndexedDB:', storedProfile);
+              this.userEmail = storedProfile.email || '';
+              this.playerName = storedProfile.playerName || 'Player';
+              this.playerId = storedProfile.playerId || '';
+            }
+          } catch (err) {
+            error('Error loading BTG profile from IndexedDB:', err);
+          }
+
           await this.GetUserSettings();
           this.LoadPage();
         });
@@ -3003,7 +3278,10 @@ ${this.GetSolutionWords()}`;
         const intervalMS = 60 * 60 * 1000;
         registerSW({
           onRegistered: (r) => {
-            note('Service worker registered successfully');
+            if (r) {
+              note('checking for service worker update');
+              r.update();
+            }
           },
           onNeedRefresh: () => {
             this.appStatePWAHasUpdate = true;

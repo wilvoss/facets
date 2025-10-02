@@ -124,9 +124,6 @@
             <flogo class="giant"></flogo>
           </header>
           <p>Hi, {{appDataPlayerCurrent.name}}!</p>
-          <p v-if="isAuthenticated && userEmail">Logged in as {{userEmail}}</p>
-          <p v-if="authLoading">Checking authentication...</p>
-          <!-- <p v-if="!isAuthenticated && !authLoading">Not authenticated</p> -->
           <icon
             :class="{show: appStateIsGettingAnonymousGames || appStateIsGettingDailyGames || appStateIsGettingDailyGameStats}"
             style="position: relative" class="spinner"></icon>
@@ -372,7 +369,8 @@
                   v-model="tempName" />
               </callout>
             </row>
-            <row>
+            <small v-if="isAuthenticated && userEmail">Logged in with {{userEmail}}.</small>
+            <row v-if="!isAuthenticated">
               <p>Player ID</p>
               <callout>
                 <input spellcheck="false" onpointerup="this.select()" inputmode="numeric" type="number" pattern="\d*"
@@ -382,7 +380,8 @@
             </row>
             <small class="alertText" v-if="tempIDisInvalid">Your ID
               must be 8 - 12 numbers long and not begin with 0.</small>
-            <small>To avoid connection issues when sharing game stats across different devices, ensure this Player ID
+            <small v-if="!isAuthenticated">To avoid connection issues when sharing game stats across different devices,
+              ensure this Player ID
               matches
               on all your browsers. Write this ID down before changing it.</small>
             <h3>Appearance</h3>

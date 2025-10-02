@@ -33,10 +33,7 @@ async function HandleOnLoadEvent(_e) {
   await fetch(requestUrl, {
     method: 'GET',
     headers: {
-      Host: window.location.hostname,
-      Origin: window.location.origin,
-      'Access-Control-Request-Method': 'GET',
-      'Access-Control-Request-Headers': 'Content-Type',
+      'Content-Type': 'application/json',
     },
   })
     .then((response) => {
@@ -60,7 +57,6 @@ async function HandleOnLoadEvent(_e) {
 }
 
 function HandleError(_refreshable = false) {
-  console.log('handleError() called');
   loading.className = 'hide';
   message.className = '';
   okay.className = 'padded';
@@ -71,7 +67,6 @@ function HandleError(_refreshable = false) {
     refresh.className = 'padded secondary disabled';
     window.setInterval(() => {
       count--;
-      console.log(count);
       if (count <= 0) {
         window.clearInterval(timer);
         message.innerHTML = 'Cutting and polishing a gem takes time! <br />Try refreshing your browser.';
