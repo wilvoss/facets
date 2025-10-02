@@ -121,6 +121,18 @@ LoadAllModules().then((modules) => {
         appStatePWAHasUpdate: false,
         appStateShowUpdateButton: false,
         isOnline: true,
+
+        // BTG AUTHENTICATION
+        isAuthenticated: false,
+        userToken: null,
+        userEmail: '',
+        playerName: 'Player',
+        playerId: '',
+        authLoading: false,
+
+        // BROADCAST CHANNEL
+        facetsChannel: null,
+        windowId: Math.random().toString(36).substr(2, 9), // Unique per window
         //#endregion
 
         //#region CURRENT GAME
@@ -1308,6 +1320,136 @@ ${words[14]} ${words[10]}`);
           .finally(() => {
             this.appStateIsGettingUserStats = false;
           });
+      },
+      //#endregion
+
+      //#region BTG AUTHENTICATION
+      GetCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+      },
+
+      async CheckBTGAuthStatus() {
+        note('CheckBTGAuthStatus() called');
+
+        // Check localStorage first, then cookies
+        let token = localStorage.getItem('btg_auth_token');
+        if (!token) {
+          token = this.GetCookie('btg_auth_token');
+        }
+
+        if (!token) {
+          note('No BTG auth token found in localStorage or cookies');
+          return false;
+        }
+
+        note('BTG auth token found:', token ? 'present' : 'missing');
+
+        this.authLoading = true;
+
+        try {
+          const response = await fetch('https://btg-accounts-worker.bigtentgames.workers.dev/auth/validate', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (response.ok) {
+            note('BTG auth token is valid');
+            this.SetBTGAuthToken(token);
+            return true;
+          } else {
+            note('BTG auth token is invalid');
+            this.ClearBTGAuth();
+            return false;
+          }
+        } catch (error) {
+          error('BTG auth validation failed:', error);
+          this.ClearBTGAuth();
+          return false;
+        } finally {
+          this.authLoading = false;
+        }
+      },
+
+      SetBTGAuthToken(token) {
+        note('SetBTGAuthToken() called');
+        this.userToken = token;
+        this.isAuthenticated = true;
+        localStorage.setItem('btg_auth_token', token);
+
+        // Set cross-subdomain cookie
+        const domain = window.location.hostname.includes('local') ? '.bigtentgames.local' : '.bigtentgames.com';
+        document.cookie = `btg_auth_token=${token}; domain=${domain}; path=/; max-age=${7 * 24 * 60 * 60}`;
+
+        // Load user profile
+        this.LoadBTGUserProfile();
+      },
+
+      ClearBTGAuth() {
+        note('ClearBTGAuth() called');
+        this.isAuthenticated = false;
+        this.userToken = null;
+        this.userEmail = '';
+        this.playerName = 'Player';
+        this.playerId = '';
+
+        localStorage.removeItem('btg_auth_token');
+
+        // Clear cross-subdomain cookie
+        const domain = window.location.hostname.includes('local') ? '.bigtentgames.local' : '.bigtentgames.com';
+        document.cookie = `btg_auth_token=; domain=${domain}; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      },
+
+      async LoadBTGUserProfile() {
+        note('LoadBTGUserProfile() called');
+        if (!this.isAuthenticated || !this.userToken) return;
+
+        try {
+          const response = await fetch('https://btg-accounts-worker.bigtentgames.workers.dev/account/profile', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${this.userToken}`,
+            },
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            this.userEmail = data.profile.email || '';
+            this.playerName = data.profile.playerName || 'Player';
+            this.playerId = data.profile.playerId || '';
+
+            note('BTG user profile loaded:', {
+              email: this.userEmail,
+              playerName: this.playerName,
+              playerId: this.playerId,
+            });
+          }
+        } catch (error) {
+          error('Failed to load BTG user profile:', error);
+        }
+      },
+
+      SetupFacetsChannel() {
+        note('SetupFacetsChannel() called');
+        if (this.facetsChannel) {
+          this.facetsChannel.close();
+        }
+        this.facetsChannel = new BroadcastChannel('facets_main');
+        this.facetsChannel.onmessage = (event) => {
+          if (event.data.type === 'PARK_THIS_TAB' && event.data.senderId !== this.windowId) {
+            window.location.href = '/game/close.html';
+          }
+        };
+
+        // Notify other tabs to park themselves
+        this.facetsChannel.postMessage({ type: 'PARK_THIS_TAB', senderId: this.windowId });
       },
       //#endregion
 
@@ -2939,18 +3081,11 @@ ${this.GetSolutionWords()}`;
       this.RegisterServiceWorker();
       // this.DeregisterServiceWorkers();
 
-      this.facetsChannel.onmessage = (event) => {
-        note('event ID = ' + event.data.senderId);
-        if (
-          event.data.type === 'PARK_THIS_TAB' &&
-          event.data.senderId !== this.windowId // Only park if not the sender
-        ) {
-          window.location.href = '/game/close.html';
-        }
-      };
+      // Setup BroadcastChannel for cross-tab communication
+      this.SetupFacetsChannel();
 
-      // Notify all other main windows to park themselves
-      this.facetsChannel.postMessage({ type: 'PARK_THIS_TAB' });
+      // Check BTG authentication status
+      await this.CheckBTGAuthStatus();
     },
 
     beforeDestroy() {
@@ -2964,6 +3099,10 @@ ${this.GetSolutionWords()}`;
 
       if (this.facetsChannel) {
         this.facetsChannel.close();
+      }
+
+      if (this.appStateBrowserSWCheckInterval) {
+        clearInterval(this.appStateBrowserSWCheckInterval);
       }
     },
 
