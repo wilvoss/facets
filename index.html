@@ -126,7 +126,7 @@
           <p>Hi, {{appDataPlayerCurrent.name}}!</p>
           <p v-if="isAuthenticated && userEmail">Logged in as {{userEmail}}</p>
           <p v-if="authLoading">Checking authentication...</p>
-          <p v-if="!isAuthenticated && !authLoading">Not authenticated</p>
+          <!-- <p v-if="!isAuthenticated && !authLoading">Not authenticated</p> -->
           <icon
             :class="{show: appStateIsGettingAnonymousGames || appStateIsGettingDailyGames || appStateIsGettingDailyGameStats}"
             style="position: relative" class="spinner"></icon>
