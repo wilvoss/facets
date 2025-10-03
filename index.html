@@ -273,11 +273,10 @@
             </message>
             <input v-if="!isAuthenticated" autocomplete="off" style="text-align: center" spellcheck="false"
               maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _ _ _ _ _ _ _ _" v-model="tempName" />
-            <small v-if="!isAuthenticated">If you want to sync your preferences across devices, you can also use a Big
-              Tent Games account.
-              <a href="#" @click="HandleLoginClick">Log in / Sign
-                up</a>
-            </small>
+            <p v-if="!isAuthenticated" style="font-size: .8em; text-align: center;">
+              If you want to sync your preferences across devices, you can also use a Big
+              Tent Games account <a href="#" @click="HandleLoginClick">log in or sign up</a>.
+            </p>
 
             <!-- <checkbox v-if="isNotificationSupported && isSyncSupported && isPWAOnHomeScreen"
               :class="{on: tempUserWantsDailyReminder && Notification.permission === 'granted', disabled: !Notification.permission === 'granted'}"
@@ -286,9 +285,9 @@
               <toggle></toggle>
             </checkbox> -->
 
-            <legal>By continuing to use this game, you agree to our <a href="https://bigtentgames.com/#privacy"
-                target="_blank">Privacy Policy</a>, which explains how we collect and use player names and temporary IDs
-              necessary for game functionality.</legal>
+            <legal>We NEVER sell or trade your data to anyone. By continuing to use this game, you agree to our <a
+                href="https://bigtentgames.com/#privacy" target="_blank">Privacy Policy</a>, which explains everything.
+            </legal>
           </section>
           <controls><button @click="HandleIntroButtonClick($event)">Next</button></controls>
         </modal>
