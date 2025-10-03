@@ -1346,6 +1346,51 @@ ${words[14]} ${words[10]}`);
         return null;
       },
 
+      async GetAvailableFacetsPlayerId() {
+        note('GetAvailableFacetsPlayerId() called');
+
+        try {
+          // Generate initial candidate ID using your original range
+          const candidateId = getRandomInt(10000000, 1000000000000000);
+
+          // Let the smart worker check and potentially generate a better ID
+          const response = await fetch(`https://facets-check-player-id.bigtentgames.workers.dev/${candidateId}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              Origin: window.location.origin,
+            },
+          });
+
+          if (response.ok) {
+            const data = await response.json();
+            const availableId = parseInt(data.available);
+
+            if (data.isGenerated) {
+              note(`Original ID ${candidateId} was taken, worker generated new ID: ${availableId}`);
+            } else {
+              note(`Original ID ${candidateId} is available`);
+            }
+
+            return availableId;
+          } else {
+            note(`Error from player ID worker: ${response.status}, using fallback`);
+            // Fallback to local generation using your original range
+            return this.GenerateLocalFallbackId();
+          }
+        } catch (error) {
+          note(`Failed to contact player ID worker: ${error}, using fallback`);
+          // Fallback to local generation using your original range
+          return this.GenerateLocalFallbackId();
+        }
+      },
+
+      GenerateLocalFallbackId() {
+        // Fallback method when worker is unavailable - use your original range
+        const fallbackId = getRandomInt(10000000, 1000000000000000);
+        note(`Generated local fallback ID: ${fallbackId}`);
+        return fallbackId;
+      },
       async CheckBTGAuthStatus() {
         note('CheckBTGAuthStatus() called');
 
@@ -1524,6 +1569,15 @@ ${words[14]} ${words[10]}`);
             // Mark that user has used BTG account
             this.hasPlayedAsBTGAccountBefore = true;
             await modules.SaveData('hasPlayedAsBTGAccountBefore', true);
+
+            // If user is in first-run intro and just authenticated, update tempName to BTG player name
+            // Only if they haven't already set a custom Facets player name (i.e., still using default "Player")
+            if (this.appStateShowIntro && this.playerName && (!this.appDataPlayerCurrent.name || this.appDataPlayerCurrent.name === 'Player')) {
+              note('First-run authentication detected, updating tempName to BTG player name: ' + this.playerName + ' (current Facets name: ' + (this.appDataPlayerCurrent.name || 'empty') + ')');
+              this.tempName = this.playerName;
+            } else if (this.appStateShowIntro && this.playerName) {
+              note('First-run authentication detected, but keeping existing Facets name: ' + this.appDataPlayerCurrent.name);
+            }
           }
         } catch (err) {
           error('Failed to load BTG user profile: ' + err);
@@ -1860,6 +1914,39 @@ ${words[14]} ${words[10]}`);
         const returnUrl = encodeURIComponent(window.location.href);
         const accountUrl = `https://${domain}/#account?returnUrl=${returnUrl}`;
         window.location.href = accountUrl;
+      },
+
+      async HandleLogOutClick() {
+        note('HandleLogOutClick() - Performing complete logout and app reset');
+
+        try {
+          // Clear BTG authentication first
+          await this.ClearBTGAuth();
+
+          // Clear ALL IndexedDB data to reset user to first-run state
+          await modules.ClearStore();
+          note('Cleared all IndexedDB data');
+
+          // Clear all localStorage data
+          localStorage.clear();
+          note('Cleared all localStorage data');
+
+          // Clear any remaining cookies (belt and suspenders approach)
+          const domain = window.location.hostname.includes('local') ? '.bigtentgames.local' : '.bigtentgames.com';
+          const cookieNames = ['btg_auth_token'];
+          cookieNames.forEach((cookieName) => {
+            document.cookie = `${cookieName}=; domain=${domain}; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+          });
+          note('Cleared all cookies');
+
+          // Refresh the app to trigger clean first-run experience
+          note('Refreshing app for clean first-run experience');
+          window.location.reload();
+        } catch (error) {
+          console.error('Error during logout cleanup:', error);
+          // Even if there's an error, still refresh to ensure clean state
+          window.location.reload();
+        }
       },
 
       SetupPeriodicAuthCheck() {
@@ -2407,7 +2494,8 @@ ${words[14]} ${words[10]}`);
           id = JSON.parse(id);
           this.appDataPlayerCurrent.id = id;
         } else {
-          this.appDataPlayerCurrent.id = getRandomInt(10000000, 1000000000000000);
+          // Get a collision-free Facets Player ID from the smart worker
+          this.appDataPlayerCurrent.id = await this.GetAvailableFacetsPlayerId();
           await modules.SaveData('userID', this.appDataPlayerCurrent.id);
           this.appStateShowOOBE = window.location.search !== '';
         }
