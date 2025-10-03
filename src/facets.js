@@ -1594,6 +1594,9 @@ ${words[14]} ${words[10]}`);
 
         try {
           // Prepare user settings data
+          // Get OOBE/tutorial settings - use current app state values, not IndexedDB
+          const userHasSeenFirstTimeCreatingTutorial = await modules.GetData('userHasSeenFirstTimeCreatingTutorial');
+
           const userSettings = {
             userSettingsLanguage: this.userSettingsLanguage,
             userSettingsUsesLightTheme: this.userSettingsUsesLightTheme,
@@ -1609,6 +1612,11 @@ ${words[14]} ${words[10]}`);
             userSettingsUseExtraCard: this.userSettingsUseExtraCard,
             playerName: this.appDataPlayerCurrent.name,
             facetsPlayerId: this.appDataPlayerCurrent.id,
+            // OOBE and tutorial state - use current app state values
+            userHasSeenFirstTimeCreatingTutorial: userHasSeenFirstTimeCreatingTutorial || false,
+            appStateFirstRunGuessingIndex: this.appStateFirstRunGuessingIndex,
+            appStateFirstRunCreatingIndex: this.appStateFirstRunCreatingIndex,
+            appStateFirstRunReviewingIndex: this.appStateFirstRunReviewingIndex,
           };
 
           // Save user settings to cloud using existing facets-user-settings KV store
@@ -1825,7 +1833,31 @@ ${words[14]} ${words[10]}`);
               this.tempID = parseInt(settings.facetsPlayerId);
             }
 
-            // Save applied settings to local storage
+            // Apply OOBE and tutorial state (cloud overrides local)
+            if (settings.userHasSeenFirstTimeCreatingTutorial !== undefined) {
+              await modules.SaveData('userHasSeenFirstTimeCreatingTutorial', settings.userHasSeenFirstTimeCreatingTutorial);
+              note('Applied userHasSeenFirstTimeCreatingTutorial from cloud: ' + settings.userHasSeenFirstTimeCreatingTutorial);
+            }
+
+            if (settings.appStateFirstRunGuessingIndex !== undefined) {
+              this.appStateFirstRunGuessingIndex = parseInt(settings.appStateFirstRunGuessingIndex);
+              await modules.SaveData('appStateFirstRunGuessingIndex', this.appStateFirstRunGuessingIndex);
+              note('Applied appStateFirstRunGuessingIndex from cloud: ' + this.appStateFirstRunGuessingIndex);
+            }
+
+            if (settings.appStateFirstRunCreatingIndex !== undefined) {
+              this.appStateFirstRunCreatingIndex = parseInt(settings.appStateFirstRunCreatingIndex);
+              await modules.SaveData('appStateFirstRunCreatingIndex', this.appStateFirstRunCreatingIndex);
+              note('Applied appStateFirstRunCreatingIndex from cloud: ' + this.appStateFirstRunCreatingIndex);
+            }
+
+            if (settings.appStateFirstRunReviewingIndex !== undefined) {
+              this.appStateFirstRunReviewingIndex = parseInt(settings.appStateFirstRunReviewingIndex);
+              await modules.SaveData('appStateFirstRunReviewingIndex', this.appStateFirstRunReviewingIndex);
+              note('Applied appStateFirstRunReviewingIndex from cloud: ' + this.appStateFirstRunReviewingIndex);
+            }
+
+            note('OOBE/Tutorial state restored from cloud - GuessingIndex: ' + this.appStateFirstRunGuessingIndex + ', CreatingIndex: ' + this.appStateFirstRunCreatingIndex + ', ReviewingIndex: ' + this.appStateFirstRunReviewingIndex); // Save applied settings to local storage
             await modules.SaveData('userSettingsLanguage', this.userSettingsLanguage);
             await modules.SaveData('userSettingsUsesLightTheme', this.userSettingsUsesLightTheme);
             await modules.SaveData('userSettingsUsesSimplifiedTheme', this.userSettingsUsesSimplifiedTheme);
@@ -2613,6 +2645,14 @@ ${words[14]} ${words[10]}`);
         if (userSettingsUseMultiColoredGems !== undefined && userSettingsUseMultiColoredGems !== null) {
           this.userSettingsUseMultiColoredGems = JSON.parse(userSettingsUseMultiColoredGems);
           this.tempUseMultiColoredGems = this.userSettingsUseMultiColoredGems;
+        }
+
+        // Load OOBE/tutorial completion status
+        let userHasSeenFirstTimeCreatingTutorial = await modules.GetData('userHasSeenFirstTimeCreatingTutorial');
+        if (userHasSeenFirstTimeCreatingTutorial !== undefined && userHasSeenFirstTimeCreatingTutorial !== null) {
+          // Store this for cloud sync, but it doesn't need to set any app state directly
+          // The firstRun indexes will control tutorial behavior
+          note('User has seen first time creating tutorial: ' + userHasSeenFirstTimeCreatingTutorial);
         }
       },
 
