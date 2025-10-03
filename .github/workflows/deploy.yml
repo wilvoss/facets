@@ -36,10 +36,14 @@ jobs:
         if: steps.deploy.outcome == 'success'
         run: |
           TAG_NAME=${GITHUB_REF#refs/tags/}
-          TAG_DESC=$(git for-each-ref refs/tags/${TAG_NAME} --format='%(contents)')
-          # Remove the tag name from the description if it exists
-          TAG_DESC_CLEANED=$(echo "$TAG_DESC" | sed "s/${TAG_NAME}[[:space:]]*//")
-          CONTENT="Tag pushed: **${TAG_NAME}** ${TAG_DESC_CLEANED}"
+          # Get only the tag message (not commit message)
+          TAG_MESSAGE=$(git tag -l --format='%(contents:subject)' "${TAG_NAME}")
+          # If no tag message exists, use empty string
+          if [ -z "$TAG_MESSAGE" ]; then
+            CONTENT="Tag pushed: **${TAG_NAME}**"
+          else
+            CONTENT="Tag pushed: **${TAG_NAME}** - ${TAG_MESSAGE}"
+          fi
           PAYLOAD=$(jq -n --arg content "$CONTENT" '{content: $content}')
           curl -H "Content-Type: application/json" \
             -d "$PAYLOAD" \

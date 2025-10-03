@@ -130,6 +130,8 @@ LoadAllModules().then((modules) => {
         playerName: 'Player',
         playerId: '',
         authLoading: false,
+        hasPlayedAsBTGAccountBefore: false,
+        authCheckInterval: null,
 
         // BROADCAST CHANNEL
         facetsChannel: null,
@@ -1265,7 +1267,19 @@ ${words[14]} ${words[10]}`);
       async GetUsersStats() {
         note('GetUsersStats()');
         this.appStateIsGettingUserStats = true;
-        var requestUrl = 'https://facets-get-users-stats.bigtentgames.workers.dev/' + this.appDataPlayerCurrent.id;
+
+        // Only get stats for the currently loaded daily games (last 10)
+        const gameKeys = this.appDataDailyGames.map((game) => game.key).filter((key) => key);
+        if (gameKeys.length === 0) {
+          note('No daily games loaded, skipping user stats fetch');
+          this.appStateIsGettingUserStats = false;
+          return;
+        }
+
+        // Send comma-separated list of game keys to only fetch relevant stats
+        const keysParam = gameKeys.join(',');
+        var requestUrl = `https://facets-get-users-stats.bigtentgames.workers.dev/${this.appDataPlayerCurrent.id}?keys=${encodeURIComponent(keysParam)}`;
+
         await fetch(requestUrl, {
           method: 'GET',
           headers: {
@@ -1337,16 +1351,35 @@ ${words[14]} ${words[10]}`);
 
         // Check localStorage first, then cookies
         let token = localStorage.getItem('btg_auth_token');
-        if (!token) {
-          token = this.GetCookie('btg_auth_token');
-        }
+        const cookieToken = this.GetCookie('btg_auth_token');
+        const wasAuthenticated = this.isAuthenticated;
 
-        if (!token) {
-          note('No BTG auth token found in localStorage or cookies');
+        // If localStorage has token but cookie doesn't, user logged out elsewhere
+        if (token && !cookieToken) {
+          note('Token exists in localStorage but not in cookie - user logged out externally');
+          await this.ClearBTGAuth();
           return false;
         }
 
-        note('BTG auth token found:', token ? 'present' : 'missing');
+        // Use cookie token if localStorage is empty but sync to localStorage
+        if (!token && cookieToken) {
+          note('Syncing cookie token to localStorage');
+          token = cookieToken;
+          localStorage.setItem('btg_auth_token', token);
+        }
+
+        // If no token found but user was previously authenticated, clear state
+        if (!token) {
+          if (wasAuthenticated) {
+            note('No BTG auth token found but user was previously authenticated - clearing auth state');
+            await this.ClearBTGAuth();
+          } else {
+            note('No BTG auth token found in localStorage or cookies');
+          }
+          return false;
+        }
+
+        note('BTG auth token found: ' + (token ? 'present' : 'missing'));
 
         this.authLoading = true;
 
@@ -1364,12 +1397,12 @@ ${words[14]} ${words[10]}`);
             this.SetBTGAuthToken(token);
             return true;
           } else {
-            note('BTG auth token is invalid');
+            note('BTG auth token is invalid (status: ' + response.status + ')');
             await this.ClearBTGAuth();
             return false;
           }
         } catch (error) {
-          error('BTG auth validation failed:', error);
+          error('BTG auth validation failed: ' + error);
           await this.ClearBTGAuth();
           return false;
         } finally {
@@ -1393,6 +1426,24 @@ ${words[14]} ${words[10]}`);
 
       async ClearBTGAuth() {
         note('ClearBTGAuth() called');
+
+        // If user was authenticated, remember they've used BTG before
+        if (this.isAuthenticated) {
+          this.hasPlayedAsBTGAccountBefore = true;
+          await modules.SaveData('hasPlayedAsBTGAccountBefore', true);
+          note('Set hasPlayedAsBTGAccountBefore flag');
+
+          // Broadcast logout to other Facets tabs
+          if (this.facetsChannel) {
+            this.facetsChannel.postMessage({
+              type: 'BTG_LOGOUT',
+              senderId: this.windowId,
+              timestamp: Date.now(),
+            });
+            note('Broadcasted BTG logout to other tabs');
+          }
+        }
+
         this.isAuthenticated = false;
         this.userToken = null;
         this.userEmail = '';
@@ -1410,7 +1461,7 @@ ${words[14]} ${words[10]}`);
           await modules.DeleteData('btgProfile');
           note('BTG profile cleared from IndexedDB');
         } catch (err) {
-          error('Error clearing BTG profile from IndexedDB:', err);
+          error('Error clearing BTG profile from IndexedDB: ' + err);
         }
       },
 
@@ -1434,11 +1485,14 @@ ${words[14]} ${words[10]}`);
             this.playerName = data.profile.playerName || 'Player';
             this.playerId = data.profile.playerId || '';
 
-            note('BTG user profile loaded:', {
-              email: this.userEmail,
-              playerName: this.playerName,
-              playerId: this.playerId,
-            });
+            note(
+              'BTG user profile loaded: ' +
+                JSON.stringify({
+                  email: this.userEmail,
+                  playerName: this.playerName,
+                  playerId: this.playerId,
+                }),
+            );
 
             // Cloud-first data flow: Download and apply cloud data
             note('Loading user data from cloud...');
@@ -1466,9 +1520,13 @@ ${words[14]} ${words[10]}`);
               playerId: this.playerId,
               linkedAt: new Date().toISOString(),
             });
+
+            // Mark that user has used BTG account
+            this.hasPlayedAsBTGAccountBefore = true;
+            await modules.SaveData('hasPlayedAsBTGAccountBefore', true);
           }
         } catch (err) {
-          error('Failed to load BTG user profile:', err);
+          error('Failed to load BTG user profile: ' + err);
         }
       },
 
@@ -1492,6 +1550,9 @@ ${words[14]} ${words[10]}`);
             userSettingsNoSnark: this.userSettingsNoSnark,
             userSettingsHideReviewAids: this.userSettingsHideReviewAids,
             userSettingsHueIndex: this.userSettingsHueIndex,
+            userSettingsUseWordSetThemes: this.userSettingsUseWordSetThemes,
+            userSettingsUserWantsDailyReminder: this.userSettingsUserWantsDailyReminder,
+            userSettingsUseExtraCard: this.userSettingsUseExtraCard,
             playerName: this.appDataPlayerCurrent.name,
             facetsPlayerId: this.appDataPlayerCurrent.id,
           };
@@ -1527,15 +1588,15 @@ ${words[14]} ${words[10]}`);
             }
 
             const loadResult = await modules.GetData(`userDailyStats_${this.appDataPlayerCurrent.id}`);
-            note(`Raw IndexedDB result [${callId}]:`, loadResult);
+            note(`Raw IndexedDB result [${callId}]: ` + JSON.stringify(loadResult));
 
             dailyStats = loadResult || [];
             note(`Processed daily stats [${callId}]: ${dailyStats.length} entries`);
           } catch (indexedDBError) {
-            error(`Failed to load daily stats from IndexedDB [${callId}]:`, indexedDBError);
-            error(`Error type [${callId}]:`, typeof indexedDBError);
-            error(`Error message [${callId}]:`, indexedDBError?.message || 'No message');
-            error(`Error stack [${callId}]:`, indexedDBError?.stack || 'No stack');
+            error(`Failed to load daily stats from IndexedDB [${callId}]: ` + indexedDBError);
+            error(`Error type [${callId}]: ` + typeof indexedDBError);
+            error(`Error message [${callId}]: ` + (indexedDBError?.message || 'No message'));
+            error(`Error stack [${callId}]: ` + (indexedDBError?.stack || 'No stack'));
             // Continue with empty array if IndexedDB fails
             dailyStats = [];
           }
@@ -1567,7 +1628,7 @@ ${words[14]} ${words[10]}`);
 
           note(`User data successfully saved to cloud [${callId}]`);
         } catch (err) {
-          error(`Failed to save user data to cloud [${callId}]:`, err);
+          error(`Failed to save user data to cloud [${callId}]: ` + err);
           throw err; // Re-throw so SubmitSettings knows it failed
         }
       },
@@ -1622,10 +1683,10 @@ ${words[14]} ${words[10]}`);
             }
           }
 
-          note('User data loaded from cloud:', cloudData);
+          note('User data loaded from cloud: ' + JSON.stringify(cloudData));
           return cloudData;
         } catch (err) {
-          error('Failed to load user data from cloud:', err);
+          error('Failed to load user data from cloud: ' + err);
           return null;
         }
       },
@@ -1639,21 +1700,75 @@ ${words[14]} ${words[10]}`);
           if (cloudData.settings) {
             const settings = cloudData.settings;
 
-            // Apply user preferences
-            if (settings.userSettingsLanguage) this.userSettingsLanguage = settings.userSettingsLanguage;
-            if (settings.userSettingsUsesLightTheme !== undefined) this.userSettingsUsesLightTheme = settings.userSettingsUsesLightTheme;
-            if (settings.userSettingsUsesSimplifiedTheme !== undefined) this.userSettingsUsesSimplifiedTheme = settings.userSettingsUsesSimplifiedTheme;
-            if (settings.userSettingsUseMultiColoredGems !== undefined) this.userSettingsUseMultiColoredGems = settings.userSettingsUseMultiColoredGems;
-            if (settings.userSettingsShowAllCards !== undefined) this.userSettingsShowAllCards = settings.userSettingsShowAllCards;
-            if (settings.userSettingsHideStats !== undefined) this.userSettingsHideStats = settings.userSettingsHideStats;
-            if (settings.userSettingsNoSnark !== undefined) this.userSettingsNoSnark = settings.userSettingsNoSnark;
-            if (settings.userSettingsHideReviewAids !== undefined) this.userSettingsHideReviewAids = settings.userSettingsHideReviewAids;
-            if (settings.userSettingsHueIndex !== undefined) this.userSettingsHueIndex = settings.userSettingsHueIndex;
+            // Apply user preferences with proper visual updates
+            if (settings.userSettingsLanguage) {
+              this.userSettingsLanguage = settings.userSettingsLanguage;
+              this.tempUserSettingsLanguage = settings.userSettingsLanguage;
+            }
+
+            if (settings.userSettingsUsesLightTheme !== undefined) {
+              this.ToggleUseLightTheme(settings.userSettingsUsesLightTheme);
+              this.tempUserSettingsUsesLightTheme = settings.userSettingsUsesLightTheme;
+            }
+
+            if (settings.userSettingsUsesSimplifiedTheme !== undefined) {
+              this.ToggleUseSimplifedTheme(settings.userSettingsUsesSimplifiedTheme);
+              this.tempUserSettingsUsesSimplifiedTheme = settings.userSettingsUsesSimplifiedTheme;
+            }
+
+            if (settings.userSettingsUseMultiColoredGems !== undefined) {
+              this.userSettingsUseMultiColoredGems = settings.userSettingsUseMultiColoredGems;
+              this.tempUseMultiColoredGems = settings.userSettingsUseMultiColoredGems;
+            }
+
+            if (settings.userSettingsShowAllCards !== undefined) {
+              this.ToggleShowAllCards(settings.userSettingsShowAllCards);
+              this.tempUserSettingsShowAllCards = settings.userSettingsShowAllCards;
+            }
+
+            if (settings.userSettingsHideStats !== undefined) {
+              this.userSettingsHideStats = settings.userSettingsHideStats;
+              this.tempUserSettingsHideStats = settings.userSettingsHideStats;
+            }
+
+            if (settings.userSettingsNoSnark !== undefined) {
+              this.userSettingsNoSnark = settings.userSettingsNoSnark;
+              this.tempUserSettingsNoSnark = settings.userSettingsNoSnark;
+            }
+
+            if (settings.userSettingsHideReviewAids !== undefined) {
+              this.ToggleUnaidedReview(settings.userSettingsHideReviewAids);
+              this.tempUserSettingsHideReviewAids = settings.userSettingsHideReviewAids;
+            }
+
+            if (settings.userSettingsHueIndex !== undefined) {
+              this.userSettingsHueIndex = settings.userSettingsHueIndex;
+              this.tempUserSettingsHueIndex = settings.userSettingsHueIndex;
+            }
+
+            if (settings.userSettingsUseWordSetThemes !== undefined) {
+              this.userSettingsUseWordSetThemes = settings.userSettingsUseWordSetThemes;
+              this.tempUseWordSetThemes = settings.userSettingsUseWordSetThemes;
+            }
+
+            if (settings.userSettingsUserWantsDailyReminder !== undefined) {
+              this.userSettingsUserWantsDailyReminder = settings.userSettingsUserWantsDailyReminder;
+              this.tempUserWantsDailyReminder = settings.userSettingsUserWantsDailyReminder;
+            }
+
+            if (settings.userSettingsUseExtraCard !== undefined) {
+              this.userSettingsUseExtraCard = settings.userSettingsUseExtraCard;
+              this.tempUseExtraCard = settings.userSettingsUseExtraCard;
+            }
 
             // Apply player info (cloud overrides local)
-            if (settings.playerName) this.appDataPlayerCurrent.name = settings.playerName;
+            if (settings.playerName) {
+              this.appDataPlayerCurrent.name = settings.playerName;
+              this.tempName = settings.playerName;
+            }
             if (settings.facetsPlayerId) {
               this.appDataPlayerCurrent.id = settings.facetsPlayerId;
+              this.tempID = parseInt(settings.facetsPlayerId);
             }
 
             // Save applied settings to local storage
@@ -1666,8 +1781,36 @@ ${words[14]} ${words[10]}`);
             await modules.SaveData('userSettingsNoSnark', this.userSettingsNoSnark);
             await modules.SaveData('userSettingsHideReviewAids', this.userSettingsHideReviewAids);
             await modules.SaveData('userSettingsHueIndex', this.userSettingsHueIndex);
+            await modules.SaveData('useWordSetThemes', this.userSettingsUseWordSetThemes);
+            await modules.SaveData('userSettingsUserWantsDailyReminder', this.userSettingsUserWantsDailyReminder);
+            await modules.SaveData('useExtraCard', this.userSettingsUseExtraCard);
             await modules.SaveData('playerName', this.appDataPlayerCurrent.name);
             await modules.SaveData('playerID', this.appDataPlayerCurrent.id);
+            await modules.SaveData('name', this.appDataPlayerCurrent.name);
+            await modules.SaveData('userID', this.appDataPlayerCurrent.id);
+            await modules.SaveData('useWordSetThemes', this.userSettingsUseWordSetThemes);
+            await modules.SaveData('userSettingsUserWantsDailyReminder', this.userSettingsUserWantsDailyReminder);
+            await modules.SaveData('useExtraCard', this.userSettingsUseExtraCard);
+
+            note(
+              'Applied cloud settings: ' +
+                JSON.stringify({
+                  language: this.userSettingsLanguage,
+                  lightTheme: this.userSettingsUsesLightTheme,
+                  simplifiedTheme: this.userSettingsUsesSimplifiedTheme,
+                  multiColoredGems: this.userSettingsUseMultiColoredGems,
+                  showAllCards: this.userSettingsShowAllCards,
+                  hideStats: this.userSettingsHideStats,
+                  noSnark: this.userSettingsNoSnark,
+                  hideReviewAids: this.userSettingsHideReviewAids,
+                  hueIndex: this.userSettingsHueIndex,
+                  useWordSetThemes: this.userSettingsUseWordSetThemes,
+                  userWantsDailyReminder: this.userSettingsUserWantsDailyReminder,
+                  useExtraCard: this.userSettingsUseExtraCard,
+                  playerName: this.appDataPlayerCurrent.name,
+                  playerId: this.appDataPlayerCurrent.id,
+                }),
+            );
           }
 
           // Apply daily stats if available (cloud overrides local)
@@ -1678,7 +1821,7 @@ ${words[14]} ${words[10]}`);
 
           note('Cloud data successfully applied to local storage');
         } catch (err) {
-          error('Failed to apply cloud data to local storage:', err);
+          error('Failed to apply cloud data to local storage: ' + err);
         }
       },
 
@@ -1692,6 +1835,12 @@ ${words[14]} ${words[10]}`);
           if (event.data.type === 'PARK_THIS_TAB' && event.data.senderId !== this.windowId) {
             window.location.href = '/game/close.html';
           }
+          if (event.data.type === 'BTG_LOGOUT' && event.data.senderId !== this.windowId) {
+            note('Received BTG logout message from another tab');
+            if (this.isAuthenticated) {
+              this.ClearBTGAuth();
+            }
+          }
         };
 
         // Notify other tabs to park themselves
@@ -1703,6 +1852,35 @@ ${words[14]} ${words[10]}`);
       HandleDonateButtonPress() {
         note('HandleDonateButtonPress()');
         window.open('https://www.buymeacoffee.com/wilvoss', '_blank');
+      },
+
+      HandleLoginClick() {
+        note('HandleLoginClick() - Redirecting to BTG account page with return URL');
+        const domain = window.location.hostname.replace(/^[^.]+\./, ''); // Remove subdomain, keep base domain
+        const returnUrl = encodeURIComponent(window.location.href);
+        const accountUrl = `https://${domain}/#account?returnUrl=${returnUrl}`;
+        window.location.href = accountUrl;
+      },
+
+      SetupPeriodicAuthCheck() {
+        // Clear any existing interval
+        if (this.authCheckInterval) {
+          clearInterval(this.authCheckInterval);
+        }
+
+        // Check auth status every 30 seconds for faster logout detection
+        this.authCheckInterval = setInterval(async () => {
+          if (this.isAuthenticated) {
+            const wasAuthenticated = this.isAuthenticated;
+            const isStillValid = await this.CheckBTGAuthStatus();
+
+            // If user was authenticated but now isn't, they logged out externally
+            if (wasAuthenticated && !isStillValid) {
+              note('User logged out externally - clearing local auth state');
+              // Auth already cleared by CheckBTGAuthStatus if invalid
+            }
+          }
+        }, 30 * 1000); // 30 seconds for faster logout detection
       },
       HandleSubmitButtonPress() {
         note('HandleSubmitButtonPress()');
@@ -2035,6 +2213,10 @@ ${words[14]} ${words[10]}`);
           this.GetDailyGames();
           this.HandleOnlineStatusChange();
 
+          // Always check BTG authentication status when returning to tab (immediate logout detection)
+          // This will detect external logouts even if user was previously authenticated
+          this.CheckBTGAuthStatus();
+
           if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistration().then((registration) => {
               if (registration) {
@@ -2134,26 +2316,26 @@ ${words[14]} ${words[10]}`);
         await modules.SaveData('useExtraCard', this.userSettingsUseExtraCard);
         await modules.SaveData('userSettingsHideStats', this.userSettingsHideStats);
         await modules.SaveData('userSettingsNoSnark', this.userSettingsNoSnark);
-        await modules.SaveData('wordSet', this.currentGameWordSet.id);
-
-        // Save settings to cloud if BTG authenticated
-        if (this.isAuthenticated && this.userToken && this.playerId) {
-          try {
-            await this.SaveUserDataToCloud();
-            note('Settings saved to cloud successfully');
-          } catch (err) {
-            error('Failed to save settings to cloud:', err);
-          }
-        }
+        await modules.SaveData('wordSet', this.currentGameWordSet.id); // Keep wordSet separate as it's not user preference
 
         if (userChangedID) {
           localStorage.removeItem('dailyGames');
           await this.GetDailyGameStats();
           window.location.reload();
         }
+
+        // Close UI immediately for responsive experience
         this.appStateIsModalShowing = false;
         this.appStateShowSettings = false;
         this.appStateShowIntro = false;
+
+        // Sync to cloud asynchronously in background (non-blocking)
+        if (this.isAuthenticated && this.userToken && this.playerId) {
+          // Don't await - let it run in background
+          this.SaveUserDataToCloud().catch((err) => {
+            error('Background cloud sync failed after SubmitSettings: ' + err);
+          });
+        }
       },
 
       async GetUserSettings() {
@@ -2234,6 +2416,13 @@ ${words[14]} ${words[10]}`);
         let dailyGames = await modules.GetData('dailyGames');
         if (dailyGames !== undefined && dailyGames !== null) {
           this.appDataUserDailyGamesStarted = JSON.parse(dailyGames);
+        }
+
+        // Load BTG account history flag
+        let hasPlayedAsBTGAccountBefore = await modules.GetData('hasPlayedAsBTGAccountBefore');
+        if (hasPlayedAsBTGAccountBefore !== undefined && hasPlayedAsBTGAccountBefore !== null) {
+          this.hasPlayedAsBTGAccountBefore = JSON.parse(hasPlayedAsBTGAccountBefore);
+          note(`Loaded hasPlayedAsBTGAccountBefore: ${this.hasPlayedAsBTGAccountBefore}`);
         }
 
         let name = await modules.GetData('name');
@@ -3196,24 +3385,44 @@ ${this.GetSolutionWords()}`;
           try {
             const storedProfile = await modules.GetData('btgProfile');
             if (storedProfile) {
-              note('Restoring BTG profile from IndexedDB:', storedProfile);
+              note('Restoring BTG profile from IndexedDB: ' + JSON.stringify(storedProfile));
               this.userEmail = storedProfile.email || '';
               this.playerName = storedProfile.playerName || 'Player';
               this.playerId = storedProfile.playerId || '';
             }
           } catch (err) {
-            error('Error loading BTG profile from IndexedDB:', err);
+            error('Error loading BTG profile from IndexedDB: ' + err);
           }
 
-          await this.GetUserSettings();
+          try {
+            // Check authentication status and load cloud data if authenticated
+            note('Checking BTG authentication on startup...');
+            const isAuthenticated = await this.CheckBTGAuthStatus();
+
+            // Load user settings (this may be overridden by cloud data if authenticated)
+            // Note: If authenticated, cloud data is already loaded in LoadBTGUserProfile()
+            await this.GetUserSettings();
+          } catch (err) {
+            error('Error during startup authentication/settings loading: ' + err);
+            // Continue with app loading even if auth/cloud loading fails
+            try {
+              await this.GetUserSettings();
+            } catch (fallbackErr) {
+              error('Critical error loading user settings: ' + fallbackErr);
+            }
+          }
+
           this.LoadPage();
+
+          // Set up periodic token validation
+          this.SetupPeriodicAuthCheck();
         });
       },
 
       async LoadPage() {
         note('LoadPage()');
         this.HandleOnlineStatusChange();
-        highlight(`Player ${this.appDataPlayerCurrent.id} has loaded version ${this.appDataVersion}`, true);
+        note(`Player ${this.appDataPlayerCurrent.id} has loaded version ${this.appDataVersion}`);
         this.GetDailyGames();
         this.GetRecentAnonymousGames();
         this.appDataTransitionLong = parseInt(getComputedStyle(document.body).getPropertyValue('--longTransition').replace('ms', ''));
@@ -3319,6 +3528,13 @@ ${this.GetSolutionWords()}`;
         note('HandleOnlineStatusChange()');
         this.isOnline = navigator.onLine;
       },
+
+      HandleWindowFocus() {
+        note('HandleWindowFocus() - checking auth status on window focus');
+        if (this.isAuthenticated) {
+          this.CheckBTGAuthStatus();
+        }
+      },
       HandlePWAUpdate() {
         note('HandlePWAUpdate()');
         // Clear the update button state and timeout
@@ -3357,6 +3573,7 @@ ${this.GetSolutionWords()}`;
       window.addEventListener('popstate', this.HandlePopState);
       window.addEventListener('online', this.HandleOnlineStatusChange);
       window.addEventListener('offline', this.HandleOnlineStatusChange);
+      window.addEventListener('focus', this.HandleWindowFocus);
 
       this.RegisterServiceWorker();
       // this.DeregisterServiceWorkers();
@@ -3364,8 +3581,7 @@ ${this.GetSolutionWords()}`;
       // Setup BroadcastChannel for cross-tab communication
       this.SetupFacetsChannel();
 
-      // Check BTG authentication status
-      await this.CheckBTGAuthStatus();
+      // BTG authentication is already handled in OnMount()
     },
 
     beforeDestroy() {
@@ -3376,6 +3592,7 @@ ${this.GetSolutionWords()}`;
       window.removeEventListener('popstate', this.HandlePopState);
       window.removeEventListener('online', this.HandleOnlineStatusChange);
       window.removeEventListener('offline', this.HandleOnlineStatusChange);
+      window.removeEventListener('focus', this.HandleWindowFocus);
 
       if (this.facetsChannel) {
         this.facetsChannel.close();
@@ -3387,6 +3604,10 @@ ${this.GetSolutionWords()}`;
 
       if (this.updateButtonTimeout) {
         clearTimeout(this.updateButtonTimeout);
+      }
+
+      if (this.authCheckInterval) {
+        clearInterval(this.authCheckInterval);
       }
     },
 
