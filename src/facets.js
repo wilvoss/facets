@@ -1300,9 +1300,18 @@ ${words[14]} ${words[10]}`);
           })
           .then((payload) => {
             if (!payload) {
+              // No data - set default stats
+              this.appDataPlayerStats = { g1: 0, g2: 0, beyond2: 0, quit: 0, total: 0 };
               return;
             }
-            let userStats = JSON.parse(payload);
+
+            const responseData = JSON.parse(payload);
+
+            // Worker returns object with games array and precalculated summary
+            const userStats = responseData.games || [];
+            const summaryStats = responseData.summary;
+
+            // Update daily games with user progress (using recent games)
             userStats.forEach((stat) => {
               for (const game of this.appDataDailyGames) {
                 if (stat.key === game.key) {
@@ -1314,23 +1323,14 @@ ${words[14]} ${words[10]}`);
                 }
               }
             });
-            this.appDataPlayerStats = { g1: 0, g2: 0, beyond2: 0, quit: 0, total: 0 };
-            for (let x = 0; x < userStats.length; x++) {
-              const stat = userStats[x];
-              if (stat.quit !== null && stat.quit !== undefined) {
-                this.appDataPlayerStats.quit++;
-              } else if (stat.guesses === 1) {
-                this.appDataPlayerStats.g1++;
-              } else if (stat.guesses === 2) {
-                this.appDataPlayerStats.g2++;
-              } else {
-                this.appDataPlayerStats.beyond2++;
-              }
-              this.appDataPlayerStats.total++;
-            }
+
+            // Use precalculated summary stats from worker, with fallback to default
+            this.appDataPlayerStats = summaryStats || { g1: 0, g2: 0, beyond2: 0, quit: 0, total: 0 };
           })
           .catch((e) => {
             error(e);
+            // Set default stats on error
+            this.appDataPlayerStats = { g1: 0, g2: 0, beyond2: 0, quit: 0, total: 0 };
           })
           .finally(() => {
             this.appStateIsGettingUserStats = false;

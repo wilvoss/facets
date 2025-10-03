@@ -40,9 +40,9 @@ jobs:
           TAG_MESSAGE=$(git tag -l --format='%(contents:subject)' "${TAG_NAME}")
           # If no tag message exists, use empty string
           if [ -z "$TAG_MESSAGE" ]; then
-            CONTENT="Tag pushed: **${TAG_NAME}**"
+            CONTENT="Update: **${TAG_NAME}**"
           else
-            CONTENT="Tag pushed: **${TAG_NAME}** - ${TAG_MESSAGE}"
+            CONTENT="Update: ${TAG_MESSAGE}"
           fi
           PAYLOAD=$(jq -n --arg content "$CONTENT" '{content: $content}')
           curl -H "Content-Type: application/json" \
