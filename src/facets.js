@@ -869,12 +869,6 @@ LoadAllModules().then((modules) => {
         this.currentGameGuessingCardCount = urlParams.has('useExtraCard') && JSON.parse(urlParams.get('useExtraCard')) ? 5 : 4;
         this.appStateForceAutoCheck = this.appDataPlayerCreator.id === 0;
 
-        if (this.appDataPlayerSender.id !== this.appDataPlayerCreator.id && this.appDataPlayerCreator.id !== this.appDataPlayerCurrent.id && !this.appStateForceAutoCheck) {
-          this.appStateIsModalShowing = true;
-          this.appDataConfirmationObject = { message: `Are you "${this.appDataPlayerCreator.name}," the original creator of this puzzle?`, target: 'creator' };
-          this.appStateShowConfirmation = true;
-        }
-
         let corruptData = false;
         if (_boardArray.length >= 40) {
           this.appDataShareURL = window.location.href;
@@ -1610,6 +1604,8 @@ ${words[14]} ${words[10]}`);
             userSettingsUseWordSetThemes: this.userSettingsUseWordSetThemes,
             userSettingsUserWantsDailyReminder: this.userSettingsUserWantsDailyReminder,
             userSettingsUseExtraCard: this.userSettingsUseExtraCard,
+            // Game creation settings
+            wordSet: this.currentGameWordSet.id, // Selected category/word set for game creation
             playerName: this.appDataPlayerCurrent.name,
             facetsPlayerId: this.appDataPlayerCurrent.id,
             // OOBE and tutorial state - use current app state values
@@ -1823,6 +1819,22 @@ ${words[14]} ${words[10]}`);
               this.tempUseExtraCard = settings.userSettingsUseExtraCard;
             }
 
+            // Apply game creation settings (cloud overrides local)
+            if (settings.wordSet) {
+              // Find and select the word set from cloud
+              const wordSet = this.appDataWordSets.find((m) => m.id === settings.wordSet);
+              if (wordSet) {
+                // Clear previous selection
+                this.appDataWordSets.forEach((m) => {
+                  m.isSelected = false;
+                });
+                // Set the cloud word set as selected
+                wordSet.isSelected = true;
+                this.currentGameWordSet = wordSet;
+                note('Applied wordSet from cloud: ' + settings.wordSet);
+              }
+            }
+
             // Apply player info (cloud overrides local)
             if (settings.playerName) {
               this.appDataPlayerCurrent.name = settings.playerName;
@@ -1870,6 +1882,7 @@ ${words[14]} ${words[10]}`);
             await modules.SaveData('useWordSetThemes', this.userSettingsUseWordSetThemes);
             await modules.SaveData('userSettingsUserWantsDailyReminder', this.userSettingsUserWantsDailyReminder);
             await modules.SaveData('useExtraCard', this.userSettingsUseExtraCard);
+            await modules.SaveData('wordSet', this.currentGameWordSet.id);
             await modules.SaveData('playerName', this.appDataPlayerCurrent.name);
             await modules.SaveData('playerID', this.appDataPlayerCurrent.id);
             await modules.SaveData('name', this.appDataPlayerCurrent.name);
@@ -2208,17 +2221,7 @@ ${words[14]} ${words[10]}`);
               this.NewGame(null);
             }
             break;
-          case 'creator':
-            if (_value) {
-              confirm = window.confirm(`Are you sure you are, (${this.appDataPlayerCreator.name}), the original creator?`);
-              if (confirm) {
-                this.tempID = this.appDataPlayerCreator.id;
-                this.appDataPlayerCurrent.id = this.appDataPlayerCreator.id;
-                this.appDataPlayerCurrent.role = 'reviewer';
-                await modules.SaveData('userID', this.appDataPlayerCurrent.id);
-              }
-            }
-            break;
+
           default:
             break;
         }
