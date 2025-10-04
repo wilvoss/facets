@@ -32,9 +32,6 @@ async function HandleOnLoadEvent(_e) {
 
   await fetch(requestUrl, {
     method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
   })
     .then((response) => {
       if (!response.ok) {
