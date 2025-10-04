@@ -124,6 +124,7 @@
             <flogo class="giant"></flogo>
           </header>
           <p>Hi, {{appDataPlayerCurrent.name}}!</p>
+          <small v-if="isAuthenticated && userEmail">Logged in as {{userEmail}}</small>
           <button v-if="!isAuthenticated" @click="HandleLoginClick">Log in / Sign
             up</button>
           <icon
@@ -266,7 +267,6 @@
             <message v-if="isAuthenticated" style="text-align: center; line-height: 150%;">
               Welcome {{tempName}}!
             </message>
-
             <message v-if="!isAuthenticated" style="text-align: center; line-height: 150%;">
               <greeting>Welcome!</greeting>
               What's your player name?
@@ -381,7 +381,7 @@
                   v-model="tempName" />
               </callout>
             </row>
-            <small v-if="isAuthenticated && userEmail">Logged in with {{userEmail}}.</small>
+            <small v-if="isAuthenticated && userEmail">Logged in as {{userEmail}}.</small>
 
             <row v-if="isAuthenticated">
               <a class="padded" @click="HandleLogOutClick">Log out</a>
