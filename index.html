@@ -124,8 +124,9 @@
             <flogo class="giant"></flogo>
           </header>
           <p>Hi, {{appDataPlayerCurrent.name}}!</p>
-          <small v-if="isAuthenticated && userEmail" @click="appStateShowSettings = true">Logged in as
-            {{userEmail}}</small>
+          <small style="cursor: pointer;" v-if="isAuthenticated && userEmail"
+            @click="appStateShowSettings = true">Logged in to Big Tent
+            Games</small>
           <button v-if="!isAuthenticated" @click="HandleLoginClick">Log in / Sign
             up</button>
           <icon
