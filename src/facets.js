@@ -1958,6 +1958,18 @@ ${words[14]} ${words[10]}`);
         if (_index > 0 || this.appDataPlayerCurrent.role === 'creator') {
           this.RotateTrayBasedOnInputFocus(_index);
         } else {
+          if (this.isIOS) {
+            const success = this.CopyToClipboardViaExecCommand(_hint);
+            highlight('iOS or iPadOS copy was ' + (success ? 'successful' : 'unsuccessful'));
+            if (success) {
+              this.appDataMessage = `"${safeText.replace(/\n/g, '<br />')}" copied to the clipboard.`;
+              this.appStateShowNotification = _showNotification;
+            } else {
+              this.appDataMessage = `Unable to copy to clipboard on this device.`;
+              this.appStateShowNotification = _showNotification;
+            }
+            return;
+          }
           this.CopyTextToClipboard(_hint);
         }
       },
