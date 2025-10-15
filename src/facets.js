@@ -1955,7 +1955,7 @@ ${words[14]} ${words[10]}`);
 
       HandleHintClick(_index, _hint) {
         note('HandleHintClick()' + ' with index: ' + _index + ' and hint: ' + _hint);
-        if (_index > 0) {
+        if (_index > 0 || this.appDataPlayerCurrent.role === 'creator') {
           this.RotateTrayBasedOnInputFocus(_index);
         } else {
           this.CopyTextToClipboard(_hint);
