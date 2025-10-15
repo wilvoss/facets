@@ -2869,9 +2869,14 @@ Can you do better?
 
         // iOS Safari: fallback to execCommand due to clipboard API restrictions
         if (this.isIOS) {
-          this.CopyToClipboardViaExecCommand(safeText);
-          this.appDataMessage = `"${safeText.replace(/\n/g, '<br />')}" copied to the clipboard.`;
-          this.appStateShowNotification = _showNotification;
+          const success = this.CopyToClipboardViaExecCommand(safeText);
+          if (success) {
+            this.appDataMessage = `"${safeText.replace(/\n/g, '<br />')}" copied to the clipboard.`;
+            this.appStateShowNotification = _showNotification;
+          } else {
+            this.appDataMessage = `Unable to copy to clipboard on this device.`;
+            this.appStateShowNotification = _showNotification;
+          }
           return;
         }
 
@@ -2913,7 +2918,7 @@ Message copied to the clipboard.`;
         }
       },
 
-      async CopyToClipboardViaExecCommand(_text) {
+      CopyToClipboardViaExecCommand(_text) {
         note('CopyToClipboardViaExecCommand()');
         const textarea = document.createElement('textarea');
         textarea.value = _text;
