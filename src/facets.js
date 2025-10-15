@@ -1958,7 +1958,7 @@ ${words[14]} ${words[10]}`);
         if (_index > 0 || this.appDataPlayerCurrent.role === 'creator') {
           this.RotateTrayBasedOnInputFocus(_index);
         } else {
-          if (this.isIOS) {
+          if (this.isOldIOS) {
             // const success = this.CopyToClipboardViaExecCommand(_hint);
             let input = document.getElementById('hint0');
             let successful = false;
@@ -1973,7 +1973,7 @@ ${words[14]} ${words[10]}`);
             input.blur();
             input.enabled = false;
 
-            highlight('iOS or iPadOS copy was ' + (successful ? 'successful' : 'unsuccessful'));
+            highlight('iOS or iPadOS copy of "' + input.value + '" was ' + (successful ? 'successful' : 'unsuccessful'));
             if (successful) {
               this.appDataMessage = `"${_hint}" copied to the clipboard.`;
             } else {
@@ -4078,13 +4078,11 @@ ${this.GetSolutionWords()}`;
           return game;
         });
       },
-      isIOS() {
-        // More robust iOS detection
-        return (
-          ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(navigator.platform) ||
-          // iPad on iOS 13+ returns MacIntel, so check for touch support
-          (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
-        );
+      isOldIOS() {
+        // True if iOS/iPadOS and does NOT support navigator.clipboard.writeText
+        const isIOSDevice = ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(navigator.platform) || (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
+        const hasModernClipboard = !!(navigator.clipboard && navigator.clipboard.writeText);
+        return isIOSDevice && !hasModernClipboard;
       },
       isChromeAndiOSoriPadOS() {
         note('isChromeAndiOSoriPadOS()');
