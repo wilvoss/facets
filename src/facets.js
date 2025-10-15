@@ -1959,15 +1959,27 @@ ${words[14]} ${words[10]}`);
           this.RotateTrayBasedOnInputFocus(_index);
         } else {
           if (this.isIOS) {
-            const success = this.CopyToClipboardViaExecCommand(_hint);
-            highlight('iOS or iPadOS copy was ' + (success ? 'successful' : 'unsuccessful'));
-            if (success) {
-              this.appDataMessage = `"${safeText.replace(/\n/g, '<br />')}" copied to the clipboard.`;
-              this.appStateShowNotification = _showNotification;
+            // const success = this.CopyToClipboardViaExecCommand(_hint);
+            let input = document.getElementById('hint0');
+            let successful = false;
+            input.enabled = true;
+            input.focus();
+            input.setSelectionRange(0, 99999);
+            try {
+              successful = document.execCommand('copy');
+            } catch (err) {
+              successful = false;
+            }
+            input.blur();
+            input.enabled = false;
+
+            highlight('iOS or iPadOS copy was ' + (successful ? 'successful' : 'unsuccessful'));
+            if (successful) {
+              this.appDataMessage = `"${_hint}" copied to the clipboard.`;
             } else {
               this.appDataMessage = `Unable to copy to clipboard on this device.`;
-              this.appStateShowNotification = _showNotification;
             }
+            this.appStateShowNotification = true;
             return;
           }
           this.CopyTextToClipboard(_hint);
@@ -2933,21 +2945,29 @@ Message copied to the clipboard.`;
 
       CopyToClipboardViaExecCommand(_text) {
         note('CopyToClipboardViaExecCommand()');
-        const textarea = document.createElement('textarea');
-        textarea.value = _text;
-        textarea.setAttribute('readonly', '');
-        textarea.style.position = 'absolute';
-        textarea.style.left = '-9999px';
-        document.body.appendChild(textarea);
-        textarea.select();
+        const input = document.createElement('input');
+        input.value = _text;
+        input.setAttribute('readonly', '');
+        input.style.position = 'fixed';
+        input.style.top = '0';
+        input.style.left = '0';
+        input.style.width = '2em';
+        input.style.height = '2em';
+        input.style.padding = '0';
+        input.style.border = 'none';
+        input.style.outline = 'none';
+        input.style.boxShadow = 'none';
+        input.style.background = 'transparent';
+        document.body.appendChild(input);
+        input.focus();
+        input.setSelectionRange(0, 99999);
         let successful = false;
         try {
           successful = document.execCommand('copy');
         } catch (err) {
           successful = false;
         }
-        document.body.removeChild(textarea);
-        this.appDataMessage = '';
+        document.body.removeChild(input);
         return successful;
       },
 
