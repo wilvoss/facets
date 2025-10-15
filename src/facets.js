@@ -1958,36 +1958,34 @@ ${words[14]} ${words[10]}`);
         if (_index > 0 || this.appDataPlayerCurrent.role === 'creator') {
           this.RotateTrayBasedOnInputFocus(_index);
         } else {
-          if (this.isOldIOS) {
-            // const success = this.CopyToClipboardViaExecCommand(_hint);
-            let input = document.getElementById('hint0');
-            let successful = false;
-            input.disabled = false;
-            input.focus();
-            input.setSelectionRange(0, 99999);
-            try {
-              if (navigator.clipboard && navigator.clipboard.writeText) {
-                navigator.clipboard.writeText(_hint);
-                successful = true;
-              } else {
-                successful = document.execCommand('copy');
-              }
-            } catch (err) {
-              successful = false;
-            }
-            input.blur();
-            input.disabled = true;
-
-            highlight('iOS or iPadOS copy of "' + input.value + '" was ' + (successful ? 'successful' : 'unsuccessful'));
-            if (successful) {
-              this.appDataMessage = `"${_hint}" copied to the clipboard.`;
+          // const success = this.CopyToClipboardViaExecCommand(_hint);
+          let input = document.getElementById('hint0');
+          let successful = false;
+          input.disabled = false;
+          input.focus();
+          input.setSelectionRange(0, 99999);
+          try {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+              navigator.clipboard.writeText(_hint);
+              successful = true;
             } else {
-              this.appDataMessage = `Unable to copy to clipboard on this device.`;
+              successful = document.execCommand('copy');
+              successful = true;
             }
-            this.appStateShowNotification = true;
-            return;
+          } catch (err) {
+            error('Fallback: Oops, unable to copy: ' + err);
+            successful = false;
           }
-          this.CopyTextToClipboard(_hint);
+          input.blur();
+          input.disabled = true;
+
+          highlight('iOS or iPadOS copy of "' + input.value + '" was ' + (successful ? 'successful' : 'unsuccessful'));
+          if (successful) {
+            this.appDataMessage = `"${_hint}" copied to the clipboard.`;
+          } else {
+            this.appDataMessage = `Unable to copy to clipboard on this device.`;
+          }
+          this.appStateShowNotification = true;
         }
       },
 
