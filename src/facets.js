@@ -1962,16 +1962,21 @@ ${words[14]} ${words[10]}`);
             // const success = this.CopyToClipboardViaExecCommand(_hint);
             let input = document.getElementById('hint0');
             let successful = false;
-            input.enabled = true;
+            input.disabled = false;
             input.focus();
             input.setSelectionRange(0, 99999);
             try {
-              successful = document.execCommand('copy');
+              if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(_hint);
+                successful = true;
+              } else {
+                successful = document.execCommand('copy');
+              }
             } catch (err) {
               successful = false;
             }
             input.blur();
-            input.enabled = false;
+            input.disabled = true;
 
             highlight('iOS or iPadOS copy of "' + input.value + '" was ' + (successful ? 'successful' : 'unsuccessful'));
             if (successful) {
