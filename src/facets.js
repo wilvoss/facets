@@ -2870,6 +2870,7 @@ Can you do better?
         // iOS Safari: fallback to execCommand due to clipboard API restrictions
         if (this.isIOS) {
           const success = this.CopyToClipboardViaExecCommand(safeText);
+          highlight('iOS or iPadOS copy was ' + (success ? 'successful' : 'unsuccessful'));
           if (success) {
             this.appDataMessage = `"${safeText.replace(/\n/g, '<br />')}" copied to the clipboard.`;
             this.appStateShowNotification = _showNotification;
