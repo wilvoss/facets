@@ -4047,7 +4047,12 @@ ${this.GetSolutionWords()}`;
         });
       },
       isIOS() {
-        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        // More robust iOS detection
+        return (
+          ['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone', 'iPod'].includes(navigator.platform) ||
+          // iPad on iOS 13+ returns MacIntel, so check for touch support
+          (navigator.userAgent.includes('Mac') && 'ontouchend' in document)
+        );
       },
       isChromeAndiOSoriPadOS() {
         note('isChromeAndiOSoriPadOS()');
