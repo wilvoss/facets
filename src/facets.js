@@ -2864,54 +2864,71 @@ Can you do better?
       },
 
       async CopyTextToClipboard(_text, _showNotification = true) {
+        // Always coerce _text to string for safety
+        const safeText = String(_text);
+
+        // iOS Safari: fallback to execCommand due to clipboard API restrictions
+        if (this.isIOS) {
+          this.CopyToClipboardViaExecCommand(safeText);
+          this.appDataMessage = `"${safeText.replace(/\n/g, '<br />')}" copied to the clipboard.`;
+          this.appStateShowNotification = _showNotification;
+          return;
+        }
+
         if (navigator.clipboard) {
           if (window.ClipboardItem) {
             // ClipboardItem is available
-            await navigator.clipboard
-              .write([
+            try {
+              await navigator.clipboard.write([
                 new ClipboardItem({
-                  'text/plain': new Blob([_text], { type: 'text/plain' }),
+                  'text/plain': new Blob([safeText], { type: 'text/plain' }),
                 }),
-              ])
-              .then(() => {
-                note('Attempting to copy via navigator.clipboard.write');
-                let formattedText = _text.replace(/\n/g, '<br />');
-
-                this.appDataMessage = `<sharetext>"${formattedText}"</sharetext><br /><br >
+              ]);
+              note('Attempting to copy via navigator.clipboard.write');
+              let formattedText = safeText.replace(/\n/g, '<br />');
+              this.appDataMessage = `<sharetext>"${formattedText}"</sharetext><br /><br >
 Message copied to the clipboard.`;
-
-                if (_text === this.appDataHints[0].value) {
-                  this.appDataMessage = `"${formattedText}" copied to the clipboard.`;
-                }
-
-                this.appStateShowNotification = _showNotification;
-              })
-              .catch((e) => {
-                error(e);
-                this.CopyToClipboardViaExecCommand(_text);
-              });
+              if (safeText === this.appDataHints[0].value) {
+                this.appDataMessage = `"${formattedText}" copied to the clipboard.`;
+              }
+              this.appStateShowNotification = _showNotification;
+            } catch (e) {
+              error(e);
+              this.CopyToClipboardViaExecCommand(safeText);
+            }
           } else {
             // ClipboardItem is not available, use writeText
-            await navigator.clipboard
-              .writeText(_text)
-              .then(() => {
-                note('Attempting to copy via navigator.clipboard.writeText');
-                this.appDataMessage = 'Message copied to the clipboard.';
-                this.appStateShowNotification = true;
-              })
-              .catch((e) => {
-                error(e);
-                this.CopyToClipboardViaExecCommand(_text);
-              });
+            try {
+              await navigator.clipboard.writeText(safeText);
+              note('Attempting to copy via navigator.clipboard.writeText');
+              this.appDataMessage = 'Message copied to the clipboard.';
+              this.appStateShowNotification = true;
+            } catch (e) {
+              error(e);
+              this.CopyToClipboardViaExecCommand(safeText);
+            }
           }
         } else {
-          this.CopyToClipboardViaExecCommand(_text);
+          this.CopyToClipboardViaExecCommand(safeText);
         }
       },
 
       async CopyToClipboardViaExecCommand(_text) {
         note('CopyToClipboardViaExecCommand()');
-        let result = copyToClipboard(_text);
+        const textarea = document.createElement('textarea');
+        textarea.value = _text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'absolute';
+        textarea.style.left = '-9999px';
+        document.body.appendChild(textarea);
+        textarea.select();
+        let successful = false;
+        try {
+          successful = document.execCommand('copy');
+        } catch (err) {
+          successful = false;
+        }
+        document.body.removeChild(textarea);
         this.appDataMessage = '';
       },
 
@@ -4021,6 +4038,9 @@ ${this.GetSolutionWords()}`;
           }
           return game;
         });
+      },
+      isIOS() {
+        return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
       },
       isChromeAndiOSoriPadOS() {
         note('isChromeAndiOSoriPadOS()');
