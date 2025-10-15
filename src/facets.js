@@ -2935,6 +2935,7 @@ Message copied to the clipboard.`;
         }
         document.body.removeChild(textarea);
         this.appDataMessage = '';
+        return successful;
       },
 
       async ShareText(_text, _url) {
