@@ -1953,6 +1953,15 @@ ${words[14]} ${words[10]}`);
         window.open('https://www.buymeacoffee.com/wilvoss', '_blank');
       },
 
+      HandleHintClick(_index, _hint) {
+        note('HandleHintClick()' + ' with index: ' + _index + ' and hint: ' + _hint);
+        if (_index > 0) {
+          this.RotateTrayBasedOnInputFocus(_index);
+        } else {
+          this.CopyTextToClipboard(_hint);
+        }
+      },
+
       HandleLoginClick() {
         note('HandleLoginClick() - Redirecting to BTG account page with return URL');
         const domain = window.location.hostname.replace(/^[^.]+\./, ''); // Remove subdomain, keep base domain
@@ -2854,7 +2863,7 @@ Can you do better?
         }
       },
 
-      async CopyTextToClipboard(_text) {
+      async CopyTextToClipboard(_text, _showNotification = true) {
         if (navigator.clipboard) {
           if (window.ClipboardItem) {
             // ClipboardItem is available
@@ -2870,7 +2879,12 @@ Can you do better?
 
                 this.appDataMessage = `<sharetext>"${formattedText}"</sharetext><br /><br >
 Message copied to the clipboard.`;
-                this.appStateShowNotification = true;
+
+                if (_text === this.appDataHints[0].value) {
+                  this.appDataMessage = `"${formattedText}" copied to the clipboard.`;
+                }
+
+                this.appStateShowNotification = _showNotification;
               })
               .catch((e) => {
                 error(e);

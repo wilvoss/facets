@@ -75,12 +75,14 @@
         <notification @click="appStateShowNotification = false" :class="{show: appStateShowNotification}">
           <message :title="playerMessage">
             <div v-html="playerMessage"></div>
-            <small v-if="!userSettingsHideStats && currentDaily && currentDaily.solved" class="statlabel">
+            <small
+              v-if="playerMessage !== appDataMessage && !userSettingsHideStats && currentDaily && currentDaily.solved"
+              class="statlabel">
               {{currentDaily === todaysDaily ? 'Today\'s' :  currentDaily.date}} Daily
               - Global Stats
             </small>
             <stats title="Success rates for solving this puzzle"
-              v-if="!userSettingsHideStats && currentDaily && currentDaily.solved">
+              v-if="playerMessage !== appDataMessage && !userSettingsHideStats && currentDaily && currentDaily.solved">
               <stat>
                 <value>
                   {{!appStateIsGettingDailyGameStats && currentDaily.stats && currentDaily.stats.guesscounts.g1 ? currentDaily.stats.guesscounts.g1 : '-'}}
@@ -740,7 +742,7 @@
             <diamond class="back"></diamond>
             <diamond></diamond>
             <hints>
-              <hint @pointerdown=" RotateTrayBasedOnInputFocus(index)" :id="'h' + index"
+              <hint @pointerdown="HandleHintClick(index, hint.value)" :id="'h' + index"
                 v-for="(hint, index) in appDataHints" :key="index"
                 :class="{pointoutparent: index === 0 && ((appStateFirstRunCreatingIndex === 2 && isPlayerCreating) || (appStateFirstRunGuessingIndex === 1 && isPlayerGuessing))}">
                 <input autocomplete="off" autocapitalize="off" autocomplete="off" spellcheck="false"
