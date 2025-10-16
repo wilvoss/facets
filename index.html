@@ -742,8 +742,8 @@
             <diamond class="back"></diamond>
             <diamond></diamond>
             <hints>
-              <hint @pointerdown="HandleHintClick(index, hint.value)" :id="'h' + index"
-                v-for="(hint, index) in appDataHints" :key="index"
+              <hint @pointerdown="HandleHintClick(index)" :id="'h' + index" v-for="(hint, index) in appDataHints"
+                :key="index"
                 :class="{pointoutparent: index === 0 && ((appStateFirstRunCreatingIndex === 2 && isPlayerCreating) || (appStateFirstRunGuessingIndex === 1 && isPlayerGuessing))}">
                 <input autocomplete="off" autocapitalize="off" autocomplete="off" spellcheck="false"
                   :id="'hint' + index" type="text" title="Please only use alphanumeric characters."

@@ -2451,12 +2451,6 @@ hints hint input:disabled {
   color: hsl(var(--hueSolved), 94%, 80%);
 }
 
-.guessing input,
-.guessing hints hint input {
-  user-select: none;
-  -webkit-user-select: none;
-}
-
 hints hint:nth-child(1) {
   transform: translate(0px, calc(-1.825 * var(--wordHeight)));
   rotate: 0deg;

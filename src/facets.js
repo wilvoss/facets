@@ -1958,7 +1958,6 @@ ${words[14]} ${words[10]}`);
         if (_index > 0 || this.appDataPlayerCurrent.role === 'creator') {
           this.RotateTrayBasedOnInputFocus(_index);
         } else {
-          navigator.permissions.query({ name: 'clipboard-write' }).then((r) => highlight(r.state));
           let input = document.getElementById('hint0');
           input.focus();
           input.setSelectionRange(0, 99999);
@@ -1968,10 +1967,12 @@ ${words[14]} ${words[10]}`);
             .then(() => {
               highlight('Text copied to clipboard: ' + input.value);
               input.blur();
+              this.appDataMessage = `"${input.value.replace(/\n/g, '<br />')}" copied to the clipboard.`;
               this.appStateShowNotification = true;
             })
             .catch((err) => {
               error('Failed to copy text: ' + err);
+              this.appStateShowNotification = false;
               input.blur();
             });
         }
