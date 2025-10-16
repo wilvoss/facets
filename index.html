@@ -29,7 +29,7 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <link rel="stylesheet" href="styles/normalize.css" media="screen" />
-    <link rel="stylesheet" href="styles/main.css" media="screen" />
+    <link rel="stylesheet" href="styles/main.css?2.5.39" media="screen" />
     <link rel="stylesheet" href="styles/checkbox.min.css" media="screen" />
   </head>
 
@@ -52,7 +52,7 @@
             :style="{backgroundImage: 'url('+ wordset.textureImage + ')'}" />
         </preload>
         <link rel="stylesheet"
-          v-bind:href="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme) ? 'styles/light.css' : ''"
+          v-bind:href="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme) ? 'styles/light.css?2.5.39' : ''"
           media="screen" />
         <link rel="stylesheet" v-bind:href="loadSimplifiedTheme ? 'styles/simple.min.css' : ''" media="screen" />
         <link rel="stylesheet" v-bind:href="appStateUseFlower ? 'styles/flower.css' : ''" media="screen" />
