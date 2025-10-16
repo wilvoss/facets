@@ -693,7 +693,7 @@
               isPlayerGuessing || appStateFirstRunCreatingIndex === 3 && isPlayerCreating}" class="rotate"></icon>
             </button>
           </rotators>
-          <input autocomplete="off"
+          <input autocomplete="off" type="text" :inert="appDataPlayerCurrent.role !== 'creator'"
             aria-label="This is an input that holds focus while the tray is rotating. It's not used for anything else."
             aria-hidden="true" maxlength="0" :disabled="appStateIsGuessing" tabindex="-1" id="parkingInput"
             style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1"
