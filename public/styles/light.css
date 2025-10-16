@@ -201,11 +201,11 @@ hints hint input {
 }
 
 .multicolor.creating hints hint input,
-.multicolor.creating hints hint input:disabled {
+.multicolor.creating hints hint input:readonly {
   color: hsla(var(--hueCreating), 100%, 36%, 1);
 }
 
-hints hint input:disabled {
+hints hint input:readonly {
   color: hsl(var(--hueGuessing), 100%, 32%);
 }
 
@@ -213,16 +213,16 @@ hints hint input:disabled {
   color: hsla(var(--hueCreating), 70%, 60%, 1);
 }
 
-.multicolor.guessing hints hint input:disabled {
+.multicolor.guessing hints hint input:readonly {
   opacity: 1;
   color: hsl(var(--hueGuessing), 90%, 32%);
 }
 
-.multicolor.guessing.reviewing hints hint input:disabled {
+.multicolor.guessing.reviewing hints hint input:readonly {
   color: hsl(var(--hueReviewing), 60%, 50%);
 }
 
-.multicolor.guessing.solved hints hint input:disabled {
+.multicolor.guessing.solved hints hint input:readonly {
   color: hsl(var(--hueSolved), 60%, 60%);
 }
 
