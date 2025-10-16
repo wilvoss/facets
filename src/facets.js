@@ -3438,6 +3438,11 @@ ${this.GetSolutionWords()}`;
           this.CheckIfAnyCardsGuesssAlreadyTried();
         }
         this.appStateTrayRotation = 0;
+        if (this.appDataPlayerCurrent.role === 'creator') {
+          document.getElementById('hint0').focus();
+        } else {
+          document.activeElement.blur();
+        }
       },
 
       GetScrollSize() {
