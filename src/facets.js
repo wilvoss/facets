@@ -1953,7 +1953,7 @@ ${words[14]} ${words[10]}`);
         window.open('https://www.buymeacoffee.com/wilvoss', '_blank');
       },
 
-      HandleHintClick(_index, _hint) {
+      async HandleHintClick(_index, _hint) {
         note('HandleHintClick()' + ' with index: ' + _index + ' and hint: ' + _hint);
         if (_index > 0 || this.appDataPlayerCurrent.role === 'creator') {
           this.RotateTrayBasedOnInputFocus(_index);
@@ -1966,7 +1966,7 @@ ${words[14]} ${words[10]}`);
           input.setSelectionRange(0, 99999);
           try {
             if (navigator.clipboard && navigator.clipboard.writeText) {
-              navigator.clipboard.writeText(_hint);
+              await navigator.clipboard.writeText(_hint);
               successful = true;
             } else {
               successful = document.execCommand('copy');
