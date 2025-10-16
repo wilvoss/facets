@@ -2427,27 +2427,27 @@ modal input {
   text-align: left;
 }
 
-hints hint input:readonly {
+hints hint input.readonly {
   opacity: 1;
   color: hsl(var(--hueGuessing), 100%, 70%);
 }
 
-.multicolor.creating hints hint input:readonly {
+.multicolor.creating hints hint input.readonly {
   opacity: 1;
   color: hsl(var(--hueCreating), 100%, 70%);
 }
 
-.multicolor.guessing hints hint input:readonly {
+.multicolor.guessing hints hint input.readonly {
   opacity: 1;
   color: hsl(var(--hueGuessing), 94%, 80%);
 }
 
-.multicolor.guessing.reviewing hints hint input:readonly,
-.multicolor.guessing.solved.reviewing.unaided hints hint input:readonly {
+.multicolor.guessing.reviewing hints hint input.readonly,
+.multicolor.guessing.solved.reviewing.unaided hints hint input.readonly {
   color: hsl(var(--hueReviewing), 94%, 80%);
 }
 
-.multicolor.guessing.solved hints hint input:readonly {
+.multicolor.guessing.solved hints hint input.readonly {
   color: hsl(var(--hueSolved), 94%, 80%);
 }
 

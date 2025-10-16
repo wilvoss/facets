@@ -29,7 +29,7 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <link rel="stylesheet" href="styles/normalize.css" media="screen" />
-    <link rel="stylesheet" href="styles/main.css?2.5.39" media="screen" />
+    <link rel="stylesheet" href="styles/main.css?2.5.40" media="screen" />
     <link rel="stylesheet" href="styles/checkbox.min.css" media="screen" />
   </head>
 
@@ -52,7 +52,7 @@
             :style="{backgroundImage: 'url('+ wordset.textureImage + ')'}" />
         </preload>
         <link rel="stylesheet"
-          v-bind:href="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme) ? 'styles/light.css?2.5.39' : ''"
+          v-bind:href="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme) ? 'styles/light.css?2.5.40' : ''"
           media="screen" />
         <link rel="stylesheet" v-bind:href="loadSimplifiedTheme ? 'styles/simple.min.css' : ''" media="screen" />
         <link rel="stylesheet" v-bind:href="appStateUseFlower ? 'styles/flower.css' : ''" media="screen" />
@@ -748,7 +748,7 @@
                 <input autocomplete="off" autocapitalize="off" autocomplete="off" spellcheck="false"
                   :id="'hint' + index" type="text" title="Please only use alphanumeric characters."
                   pattern="[A-Za-z0-9]*"
-                  :class="{pointout: index === 0 && ((appStateFirstRunCreatingIndex === 2 && isPlayerCreating) || (appStateFirstRunGuessingIndex === 1 && isPlayerGuessing))}"
+                  :class="{readonly: appStateIsGuessing || index > 0,pointout: index === 0 && ((appStateFirstRunCreatingIndex === 2 && isPlayerCreating) || (appStateFirstRunGuessingIndex === 1 && isPlayerGuessing))}"
                   :readonly="appStateIsGuessing || index > 0" v-model="hint.value" maxlength="14" type="text"
                   placeholder="clue" />
               </hint>
