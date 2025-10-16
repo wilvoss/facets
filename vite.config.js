@@ -26,7 +26,6 @@ export default defineConfig({
         generate: path.resolve(__dirname, 'generate.html'),
       },
     },
-    minify: false,
   },
   plugins: [
     VitePWA({
