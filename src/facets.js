@@ -1953,37 +1953,26 @@ ${words[14]} ${words[10]}`);
         window.open('https://www.buymeacoffee.com/wilvoss', '_blank');
       },
 
-      async HandleHintClick(_index, _hint) {
+      HandleHintClick(_index, _hint) {
         note('HandleHintClick()' + ' with index: ' + _index + ' and hint: ' + _hint);
         if (_index > 0 || this.appDataPlayerCurrent.role === 'creator') {
           this.RotateTrayBasedOnInputFocus(_index);
         } else {
-          // const success = this.CopyToClipboardViaExecCommand(_hint);
           let input = document.getElementById('hint0');
-          let successful = false;
           input.focus();
           input.setSelectionRange(0, 99999);
-          try {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-              await navigator.clipboard.writeText(_hint);
-              successful = true;
-            } else {
-              successful = document.execCommand('copy');
-              successful = true;
-            }
-          } catch (err) {
-            error('Fallback: Oops, unable to copy: ' + err);
-            successful = false;
-          }
-          input.blur();
 
-          highlight('iOS or iPadOS copy of "' + input.value + '" was ' + (successful ? 'successful' : 'unsuccessful'));
-          if (successful) {
-            this.appDataMessage = `"${_hint}" copied to the clipboard.`;
-          } else {
-            this.appDataMessage = `Unable to copy to clipboard on this device.`;
-          }
-          this.appStateShowNotification = true;
+          navigator.clipboard
+            .writeText(input.value)
+            .then(() => {
+              highlight('Text copied to clipboard: ' + input.value);
+              input.blur();
+              this.appStateShowNotification = true;
+            })
+            .catch((err) => {
+              error('Failed to copy text: ' + err);
+              input.blur();
+            });
         }
       },
 
