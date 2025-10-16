@@ -1961,7 +1961,6 @@ ${words[14]} ${words[10]}`);
           // const success = this.CopyToClipboardViaExecCommand(_hint);
           let input = document.getElementById('hint0');
           let successful = false;
-          input.disabled = false;
           input.focus();
           input.setSelectionRange(0, 99999);
           try {
@@ -1977,7 +1976,6 @@ ${words[14]} ${words[10]}`);
             successful = false;
           }
           input.blur();
-          input.disabled = true;
 
           highlight('iOS or iPadOS copy of "' + input.value + '" was ' + (successful ? 'successful' : 'unsuccessful'));
           if (successful) {

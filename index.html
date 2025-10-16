@@ -749,7 +749,7 @@
                   :id="'hint' + index" type="text" title="Please only use alphanumeric characters."
                   pattern="[A-Za-z0-9]*"
                   :class="{pointout: index === 0 && ((appStateFirstRunCreatingIndex === 2 && isPlayerCreating) || (appStateFirstRunGuessingIndex === 1 && isPlayerGuessing))}"
-                  :disabled="appStateIsGuessing || index > 0" v-model="hint.value" maxlength="14" type="text"
+                  :readonly="appStateIsGuessing || index > 0" v-model="hint.value" maxlength="14" type="text"
                   placeholder="clue" />
               </hint>
             </hints>
