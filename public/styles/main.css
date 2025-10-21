@@ -1135,6 +1135,11 @@ notification message {
   line-height: 1.5em;
 }
 
+notification message a {
+  color: hsl(var(--linkColorLightHSL));
+  cursor: pointer;
+}
+
 splash message small {
   color: hsl(var(--messageColorHSL));
 }
