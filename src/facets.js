@@ -1483,24 +1483,53 @@ ${words[14]} ${words[10]}`);
           }
         }
 
+        // Try centralized cross-subdomain clear if available
+        try {
+          if (window.CrossSubdomainAuth && typeof window.CrossSubdomainAuth.clearAuthData === 'function') {
+            // central domain helper will clear cookie/localStorage and broadcast
+            window.CrossSubdomainAuth.clearAuthData(true);
+            note('Called CrossSubdomainAuth.clearAuthData()');
+          } else {
+            // Fallback: explicit clear + broadcast
+            const domain = window.location.hostname.includes('local') ? '.bigtentgames.local' : '.bigtentgames.com';
+            document.cookie = `btg_auth_token=; domain=${domain}; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+            try {
+              localStorage.removeItem('btg_auth_token');
+            } catch (e) {
+              note('Could not remove btg_auth_token from localStorage: ' + e);
+            }
+            try {
+              new BroadcastChannel('btg_auth_logout').postMessage('logout');
+            } catch (e) {
+              note('Could not post logout broadcast: ' + e);
+            }
+            note('Performed fallback auth clear');
+          }
+        } catch (err) {
+          error('Error clearing cross-subdomain auth: ' + err);
+        }
+
+        // local state cleanup
         this.isAuthenticated = false;
         this.userToken = null;
         this.userEmail = '';
         this.playerName = 'Player';
         this.playerId = '';
 
-        localStorage.removeItem('btg_auth_token');
-
-        // Clear cross-subdomain cookie
-        const domain = window.location.hostname.includes('local') ? '.bigtentgames.local' : '.bigtentgames.com';
-        document.cookie = `btg_auth_token=; domain=${domain}; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-
-        // Clear stored BTG profile from IndexedDB
+        // Wipe IndexedDB to fully reset user data (preferred)
         try {
-          await modules.DeleteData('btgProfile');
-          note('BTG profile cleared from IndexedDB');
+          if (modules && typeof modules.ClearStore === 'function') {
+            await modules.ClearStore();
+            note('Cleared IndexedDB via modules.ClearStore()');
+          } else if (modules && typeof modules.RemoveData === 'function') {
+            // Fallback: remove specific keys if ClearStore is not available
+            await modules.RemoveData('btgProfile').catch(() => {});
+            note('Cleared btgProfile via modules.RemoveData() (fallback)');
+          } else {
+            note('No IndexedDB helper available to clear storage (skipping)');
+          }
         } catch (err) {
-          error('Error clearing BTG profile from IndexedDB: ' + err);
+          error('Error clearing IndexedDB during ClearBTGAuth(): ' + err);
         }
       },
 
