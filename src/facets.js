@@ -2918,7 +2918,13 @@ Can you do better?
                 }),
               ]);
               note('Attempting to copy via navigator.clipboard.write');
-              let formattedText = safeText.replace(/\n/g, '<br />');
+
+              // convert newlines to <br /> and convert any URLs into anchor tags for display
+              let formattedText = safeText.replace(/<((https?:\/\/)[^>]+)>/gi, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+
+              // convert plain URLs (avoid touching ones already wrapped by <>)
+              formattedText = formattedText.replace(/(^|\s)(https?:\/\/[^\s<]+)/gi, '$1<a href="$2" target="_blank" rel="noopener noreferrer">$2</a>');
+
               this.appDataMessage = `<sharetext>"${formattedText}"</sharetext><br /><br >
 Message copied to the clipboard.`;
               if (safeText === this.appDataHints[0].value) {
@@ -2934,7 +2940,13 @@ Message copied to the clipboard.`;
             try {
               await navigator.clipboard.writeText(safeText);
               note('Attempting to copy via navigator.clipboard.writeText');
-              this.appDataMessage = 'Message copied to the clipboard.';
+
+              // format message similarly for writeText branch
+              let formattedText = safeText.replace(/<((https?:\/\/)[^>]+)>/gi, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
+              formattedText = formattedText.replace(/(^|\s)(https?:\/\/[^\s<]+)/gi, '$1<a href="$2" target="_blank" rel="noopener noreferrer">$2</a>');
+
+              this.appDataMessage = `<sharetext>"${formattedText}"</sharetext><br /><br >
+Message copied to the clipboard.`;
               this.appStateShowNotification = true;
             } catch (e) {
               error(e);
