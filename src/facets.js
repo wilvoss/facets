@@ -1385,7 +1385,8 @@ ${words[14]} ${words[10]}`);
         note(`Generated local fallback ID: ${fallbackId}`);
         return fallbackId;
       },
-      async CheckBTGAuthStatus() {
+
+      async CheckBTGAuthStatus(forceRefresh = false) {
         note('CheckBTGAuthStatus() called');
 
         // Check localStorage first, then cookies
@@ -1404,7 +1405,11 @@ ${words[14]} ${words[10]}`);
         if (!token && cookieToken) {
           note('Syncing cookie token to localStorage');
           token = cookieToken;
-          localStorage.setItem('btg_auth_token', token);
+          try {
+            localStorage.setItem('btg_auth_token', token);
+          } catch (e) {
+            note('localStorage setItem failed: ' + e);
+          }
         }
 
         // If no token found but user was previously authenticated, clear state
@@ -1420,6 +1425,12 @@ ${words[14]} ${words[10]}`);
 
         note('BTG auth token found: ' + (token ? 'present' : 'missing'));
 
+        // If already authenticated and token hasn't changed and no forceRefresh, skip network/profile load
+        if (this.isAuthenticated && this.userToken === token && !forceRefresh) {
+          note('Already authenticated with same token; skipping validation/profile reload');
+          return true;
+        }
+
         this.authLoading = true;
 
         try {
@@ -1433,7 +1444,12 @@ ${words[14]} ${words[10]}`);
 
           if (response.ok) {
             note('BTG auth token is valid');
-            this.SetBTGAuthToken(token);
+            // Only set token / reload profile if it's new or forceRefresh requested
+            if (!this.isAuthenticated || this.userToken !== token || forceRefresh) {
+              this.SetBTGAuthToken(token);
+            } else {
+              note('Token valid but already in-use; skipping SetBTGAuthToken');
+            }
             return true;
           } else {
             note('BTG auth token is invalid (status: ' + response.status + ')');
@@ -1442,7 +1458,11 @@ ${words[14]} ${words[10]}`);
           }
         } catch (error) {
           error('BTG auth validation failed: ' + error);
-          await this.ClearBTGAuth();
+          // If validation network fails, don't aggressively clear auth unless cookie/local storage mismatch was detected earlier.
+          // But to be safe, clear if previously authenticated and validation failed.
+          if (this.isAuthenticated) {
+            await this.ClearBTGAuth();
+          }
           return false;
         } finally {
           this.authLoading = false;
@@ -2031,6 +2051,7 @@ ${words[14]} ${words[10]}`);
       },
 
       SetupPeriodicAuthCheck() {
+        note('SetupPeriodicAuthCheck() called');
         // Clear any existing interval
         if (this.authCheckInterval) {
           clearInterval(this.authCheckInterval);
@@ -2365,7 +2386,7 @@ ${words[14]} ${words[10]}`);
         }, 300);
       },
 
-      HandlePageVisibilityChange() {
+      async HandlePageVisibilityChange() {
         note('HandlePageVisibilityChange()');
         if (!document.hidden) {
           this.GetDailyGames();
@@ -2373,7 +2394,8 @@ ${words[14]} ${words[10]}`);
 
           // Always check BTG authentication status when returning to tab (immediate logout detection)
           // This will detect external logouts even if user was previously authenticated
-          this.CheckBTGAuthStatus();
+          await this.CheckBTGAuthStatus();
+          this.LoadBTGUserProfile();
 
           if ('serviceWorker' in navigator) {
             navigator.serviceWorker.getRegistration().then((registration) => {

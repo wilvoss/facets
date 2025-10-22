@@ -956,6 +956,20 @@ header h1 {
 icon.logo {
   mask-image: url(../images/logo-facets.svg);
   -webkit-mask-image: url(../images/logo-facets.svg);
+  margin-bottom: var(--defaultGap);
+}
+
+p.greeting {
+  margin: 0;
+  padding: 0;
+  color: hsl(var(--appForegroundDiminishedHSL));
+  font-size: 110%;
+  line-height: 140%;
+}
+
+p.greeting small {
+  display: block;
+  color: hsl(var(--appForegroundDiminishedHSL));
 }
 
 subtitle {

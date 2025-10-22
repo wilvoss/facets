@@ -57,7 +57,7 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
     <link rel="stylesheet" href="styles/normalize.css" media="screen" />
-    <link rel="stylesheet" href="styles/main.css?2.5.40" media="screen" />
+    <link rel="stylesheet" href="styles/main.css?2.5.46" media="screen" />
     <link rel="stylesheet" href="styles/checkbox.min.css" media="screen" />
   </head>
 
@@ -80,7 +80,7 @@
             :style="{backgroundImage: 'url('+ wordset.textureImage + ')'}" />
         </preload>
         <link rel="stylesheet"
-          v-bind:href="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme) ? 'styles/light.css?2.5.40' : ''"
+          v-bind:href="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme) ? 'styles/light.css?2.5.46' : ''"
           media="screen" />
         <link rel="stylesheet" v-bind:href="loadSimplifiedTheme ? 'styles/simple.min.css' : ''" media="screen" />
         <link rel="stylesheet" v-bind:href="appStateUseFlower ? 'styles/flower.css' : ''" media="screen" />
@@ -149,19 +149,19 @@
             :class="{show: !appStateShowUpdateButton && !appStateShowNotification && vsShowDaily && dailyIsFreshToday && appStateShowMeta}">Solve
             Today's Facet!</button>
           <header>
-            <h1>{{appDataGameName}}</h1>
             <icon class="logo giant"></icon>
             <flogo class="giant"></flogo>
           </header>
-          <p>Hi, {{appDataPlayerCurrent.name}}!</p>
-          <small style="cursor: pointer;" v-if="isAuthenticated && userEmail"
-            @click="appStateShowSettings = true">Logged in to Big Tent
-            Games</small>
-          <small v-if="!isAuthenticated" @click="HandleLoginClick" style="text-align: center;">
-            <a href="#">Log in or sign up now</a>
-            <br />
-            Sync your name and settings across devices!
-          </small>
+          <p class="greeting" @click="ShowSettings($event)">Hi, {{appDataPlayerCurrent.name}}!
+            <small v-if="isAuthenticated && userEmail">You are currently logged in to Big Tent
+              Games</small>
+            <small v-if="!isAuthenticated" @click="HandleLoginClick" style="text-align: center;">
+              <br />
+              <a href="#" style="font-size: 1em">Log in or Sign up</a>
+              <br />
+              Sync your name and settings across devices!
+            </small>
+          </p>
 
           <icon
             :class="{show: appStateIsGettingAnonymousGames || appStateIsGettingDailyGames || appStateIsGettingDailyGameStats}"
@@ -304,7 +304,6 @@
               Welcome {{tempName}}!
             </message>
             <message v-if="!isAuthenticated" style="text-align: center; line-height: 150%;">
-              <greeting>Welcome!</greeting>
               What's your player name?
             </message>
             <input v-if="!isAuthenticated" autocomplete="off" style="text-align: center" spellcheck="false"
