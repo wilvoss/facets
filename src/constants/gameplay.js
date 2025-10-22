@@ -46,7 +46,7 @@ export async function loadGameplayModules() {
 
   const firstRunGuessingMessages = [
     ['Hey! Your friend created this word association puzzle for you to solve.', 'Hello! Our AI created this word association puzzle for you to solve.'],
-    ['The goal is to place 4 cards on the gem to form word-pairs on the outer edge that connect to these clues.'],
+    ['The goal is to place 4 cards on the gem to form word-pairs on the outer edge that connect to these clues. Double click/tap <i>hint1</i> to select the text.'],
     ['Drag cards to any spot on the gem.'],
     ['Tap the corners of any card in the tray to rotate.'],
     ['Keep placing cards. You can tap the big arrows to rotate the entire gem. '],

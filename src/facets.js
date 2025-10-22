@@ -4221,6 +4221,7 @@ ${this.GetSolutionWords()}`;
             if (this.appDataGuessingFirstRunItems[this.appStateFirstRunGuessingIndex]) {
               finalIndex = this.appDataGuessingFirstRunItems[this.appStateFirstRunGuessingIndex].length === 1 ? 0 : finalIndex;
               text = this.appDataGuessingFirstRunItems[this.appStateFirstRunGuessingIndex][finalIndex];
+              text = text.replace('hint1', this.appDataHints[0].value);
             }
             break;
           case 'creator':
