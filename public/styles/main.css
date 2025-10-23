@@ -2833,6 +2833,10 @@ hue.selected {
     transform-origin: 50% 50%;
     scale: .85;
   }
+
+  p.greeting {
+    font-size: 130%;
+  }
 }
 
 @media screen and (max-width: 678px) {
