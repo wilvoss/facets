@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html itemtype="https://schema.org/VideoGame" lang="en">
+
+  <head>
+    <!-- <meta http-equiv="refresh" content="0;URL=/maintenance.html" /> -->
+
+    <meta charset="utf-8" />
+    <meta content="x-content-type-options=nosniff" />
+
+    <title>Facets!</title>
+    <meta name="apple-mobile-web-app-title" content="Facets!" />
+    <meta name="mobile-web-app-capable" content="no" />
+    <meta name="apple-touch-fullscreen" content="no" />
+    <meta name="apple-mobile-web-app-capable" content="no" />
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5, user-scalable=yes" />
+    <meta name="theme-color" id="themeColor" content="hsl(215, 100%, 3%)" />
+
+    <meta name="keywords"
+      content="free online game, brain teaser, casual game, puzzle game, word game, word association, puzzle, social game" />
+    <meta name="description"
+      content="Facets: A free word association puzzle game. Play custom challenges with friends or take on the AI's Daily Puzzle — brain-teasing fun without distractions!" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "VideoGame",
+        "name": "Facets",
+        "url": "https://facets.bigtentgames.com",
+        "description": "Facets — a free browser-based word-association puzzle by Big Tent Games. This subdomain (facets.bigtentgames.com) hosts the Facets game, including Daily puzzles, user-created puzzles, and account-sync features via Big Tent Games.",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Big Tent Games",
+          "url": "https://bigtentgames.com"
+        },
+        "author": {
+          "@type": "Person",
+          "name": "Wil Voss",
+          "url": "https://bigtentgames.com",
+          "sameAs": [
+            "https://wilvoss.com",
+            "https://portfolio.wilvoss.com"
+          ],
+          "jobTitle": "Game Designer, Creative Technologist"
+        },
+        "applicationCategory": "Game",
+        "operatingSystem": "Web",
+        "inLanguage": "en"
+      }
+    </script>
+
+    <link rel="manifest" href="manifest.webmanifest" />
+
+    <link rel="apple-touch-icon" sizes="1024x1024" href="images/icon1024-apple-touch.png" />
+
+    <link rel="icon alternate" type="image/png" href="favicon-alt.png">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+    <link rel="stylesheet" href="styles/normalize.css" media="screen" />
+    <link rel="stylesheet" href="styles/main.css?2.5.46" media="screen" />
+    <link rel="stylesheet" href="styles/checkbox.min.css" media="screen" />
+    <script type="module" crossorigin src="/assets/modulepreload-polyfill-B5Qt9EMX.js"></script>
+    <script type="module" crossorigin src="/assets/gameplay-D8WbgvML.js"></script>
+    <script type="module" crossorigin src="/assets/facets-DH9WfeGH.js"></script>
+  <link rel="manifest" href="/manifest.webmanifest"></head>
+
+  <body>
+    <main id="app">
+      <!-- There are NO vue components in this code. All non-standard HTML tags are meant for semantic and syntactical purposes -->
+      <app v-cloak
+        :class="{unaided: unaided, ai: isAIGenerated, multicolor: userSettingsUseMultiColoredGems, solved: appStateIsGuessing && currentGameSolutionGuessing === currentGameSolutionActual, portrait: appStateUsePortraitLayout, wallpaper: tempUseWordSetThemes, dragging: appStateIsDragging, guessing: appStateIsGuessing, simple: userSettingsUsesSimplifiedTheme, reviewing: appDataPlayerCurrent.role === 'reviewer', creating: isPlayerCreating}"
+        @pointerdown="HandleBodyPointerDown($event)"
+        @pointerup="HandleBodyPointerUp($event, appStateIsDragging ? appDataDraggedCard : selectedCard)">
+        <preload v-if="appStatePageHasLoaded">
+          <img width="0px" height="0px" alt="preload image that can't be seen"
+            :style="{backgroundImage: 'url(./images/tut-4' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg)'}" />
+          <img width="0px" height="0px" alt="preload image that can't be seen"
+            :style="{backgroundImage: 'url(./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg)'}" />
+          <img width="0px" height="0px" alt="preload image that can't be seen"
+            :style="{backgroundImage: 'url(./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg)'}" />
+
+          <img v-for="wordset in enabledWordSets" width="0px" height="0px" alt="preload image that can't be seen"
+            :style="{backgroundImage: 'url('+ wordset.textureImage + ')'}" />
+        </preload>
+        <link rel="stylesheet"
+          v-bind:href="appStateUseFlower || (userSettingsUsesLightTheme && !appStateShowSettings) || (appStateShowSettings && tempUserSettingsUsesLightTheme) ? 'styles/light.css?2.5.46' : ''"
+          media="screen" />
+        <link rel="stylesheet" v-bind:href="loadSimplifiedTheme ? 'styles/simple.min.css' : ''" media="screen" />
+        <link rel="stylesheet" v-bind:href="appStateUseFlower ? 'styles/flower.css' : ''" media="screen" />
+        <link rel="stylesheet"
+          v-bind:href="appStateUsePortraitLayout && !userSettingsShowAllCards && !tooSmall && !isPlayerCreating ? 'styles/focus.css' : ''"
+          media="screen" />
+        <splash :class="{hide: appStatePageHasLoaded && isOnline}">
+          <icon v-if="isOnline" class="logo giant"></icon>
+          <message v-if="!isOnline">
+            You appear to be offline.
+            <small v-if="!isOnline">Once Facets connects online, you can continue playing.</small>
+          </message>
+        </splash>
+        <update>
+          <button @click="HandlePWAUpdate" class="updatecta"
+            :class="{show: !appStateUserHasCreatedAGame && appStateShowUpdateButton}">Update
+            Available!</button>
+        </update>
+
+        <notification @click="appStateShowNotification = false" :class="{show: appStateShowNotification}">
+          <message :title="playerMessage">
+            <div v-html="playerMessage"></div>
+            <small
+              v-if="playerMessage !== appDataMessage && !userSettingsHideStats && currentDaily && currentDaily.solved"
+              class="statlabel">
+              {{currentDaily === todaysDaily ? 'Today\'s' :  currentDaily.date}} Daily
+              - Global Stats
+            </small>
+            <stats title="Success rates for solving this puzzle"
+              v-if="playerMessage !== appDataMessage && !userSettingsHideStats && currentDaily && currentDaily.solved">
+              <stat>
+                <value>
+                  {{!appStateIsGettingDailyGameStats && currentDaily.stats && currentDaily.stats.guesscounts.g1 ? currentDaily.stats.guesscounts.g1 : '-'}}
+                </value>
+                <small>in 1 try</small>
+              </stat>
+              <stat>
+                <value>
+                  {{!appStateIsGettingDailyGameStats && currentDaily.stats && currentDaily.stats.guesscounts.g2 ? currentDaily.stats.guesscounts.g2 : '-'}}
+                </value>
+                <small>in 2 tries</small>
+              </stat>
+              <stat>
+                <value>
+                  {{!appStateIsGettingDailyGameStats && currentDaily.stats && currentDaily.stats.guesscounts.beyond2 ? currentDaily.stats.guesscounts.beyond2 : '-'}}
+                </value>
+                <small>in 3+ tries</small>
+              </stat>
+              <stat>
+                <value>
+                  {{!appStateIsGettingDailyGameStats && currentDaily.stats && currentDaily.stats.avg ? currentDaily.stats.avg : '-'}}
+                </value>
+                <small>tries avg</small>
+              </stat>
+              <stat>
+                <value>
+                  {{!appStateIsGettingDailyGameStats && currentDaily.stats && currentDaily.stats.guesscounts.quits ? currentDaily.stats.guesscounts.quits : '-'}}
+                </value>
+                <small>quit</small>
+              </stat>
+            </stats>
+          </message>
+        </notification>
+        <notification :class="{show: appStateShowMeta}" class="meta">
+          <button @click="HandleOldGameClick($event, todaysDaily)" class="dailycta"
+            :class="{show: !appStateShowUpdateButton && !appStateShowNotification && vsShowDaily && dailyIsFreshToday && appStateShowMeta}">Solve
+            Today's Facet!</button>
+          <header>
+            <icon class="logo giant"></icon>
+            <flogo class="giant"></flogo>
+          </header>
+          <p class="greeting" @click="ShowSettings($event)">Hi, {{appDataPlayerCurrent.name}}!
+            <small v-if="isAuthenticated && userEmail">You are currently logged in to Big Tent
+              Games</small>
+            <small v-if="!isAuthenticated" @click="HandleLoginClick" style="text-align: center;">
+              <br />
+              <a href="#" style="font-size: 1em">Log in or Sign up</a>
+              <br />
+              Sync your name and settings across devices!
+            </small>
+          </p>
+
+          <icon
+            :class="{show: appStateIsGettingAnonymousGames || appStateIsGettingDailyGames || appStateIsGettingDailyGameStats}"
+            style="position: relative" class="spinner"></icon>
+          <subtitle>
+            <button v-if="(currentGameSolutionGuessing !== currentGameSolutionActual) || appStateUserHasCreatedAGame"
+              class="resume blink small" @click="ToggleShowMeta($event)">{{resumeText}}</button>
+            <button class="small inline" @click="HandleNewGameClick">
+              <icon class="edit"></icon>
+              Create a Puzzle
+              <span></span>
+            </button>
+            <row>
+              <button v-if="vsShowDaily" class="small inline" @click="ToggleShowDailyGames($event)">
+                <icon class="cal"></icon>
+                Daily
+                <badge :class="{show: dailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
+              </button>
+              <button class="small inline" @click="ToggleShowGlobalCreated($event)">
+                <icon class="anon"></icon>
+                Anonymous
+                <span></span>
+              </button>
+            </row>
+            <row>
+              <button class="small inline" @click="ToggleShowTutorial($event)">
+                <icon class="gradcap"></icon>
+                How To
+                <span></span>
+              </button>
+              <button class="small inline" @click="ShowSettings($event)">
+                <icon class="settings"></icon>
+                Settings
+                <span></span>
+              </button>
+            </row>
+            <button title="Buy me a coffee" class="small inline" @click="HandleDonateButtonPress">
+              <icon class="bmc"></icon>
+              Buy me a Coffee!
+            </button>
+            <button title="Credits" class="small isolated" style="bottom: 0px; right: 0px; "
+              @click="ToggleShowInfo($event)">
+              <icon class="meeples"></icon>
+            </button>
+          </subtitle>
+        </notification>
+        <pointer :class="{hidden: hidePointer}" :inert="hidePointer"
+          :style="{left: appStatePointerLocation.left + 'px', top: appStatePointerLocation.top + 'px'}">
+          <p class="pointer-text" v-html="pointerText"></p>
+          <p class="controls">
+            <button
+              v-if="(isPlayerGuessing && appStateFirstRunGuessingIndex < appDataGuessingFirstRunItems.length - 1) || (isPlayerCreating && appStateFirstRunCreatingIndex < appDataCreatorFirstRunItems.length - 1) || (isPlayerReviewing && appStateFirstRunReviewingIndex < appDataReviewingFirstRunItems.length - 1)"
+              @click="EndAllFirstRunTips">Stop
+              showing tips</button>
+            <seekers>
+              <button tabindex="0"
+                v-if="(isPlayerGuessing && appStateFirstRunGuessingIndex > 0) || (isPlayerCreating && appStateFirstRunCreatingIndex > 0) || (isPlayerReviewing && appStateFirstRunReviewingIndex > 0)"
+                @click="HandlePreviousTipButtonPointerUp($event)" class="right">Back</button>
+              <button tabindex="0" @click="HandleAdvanceTipButtonPointerUp($event)"
+                class="right">{{tipSubmitText}}</button>
+            </seekers>
+          </p>
+        </pointer>
+        <arrow :class="{hidden: hidePointer}"
+          :style="{left: appStatePointerArrowLocation.x + 'px', top: appStatePointerArrowLocation.y + 'px', transform: 'translate(-10px, 2px) rotate(' +  appStatePointerArrowLocation.rotate + 'deg)'}">
+        </arrow>
+        <modal v-if="appStateShowTutorial" class="tutorial">
+          <section>
+            <h2>How to play</h2>
+            <p v-if="!appStateShowCreateOOBE && isPlayerCreating">A Facets puzzle consists of 4
+              different <span class="highlightText">clues</span> that connect 4 different
+              <span class="highlightText">word-pairs</span>.
+              You can create your own puzzles to send to friends, solve the
+              Daily Facet, or guess puzzles your friends create!
+            </p>
+            <p v-if="!appStateShowCreateOOBE && !isPlayerCreating">A Facets puzzle consists of 4
+              different <span class="highlightText">clues</span> that connect 4 different
+              <span class="highlightText">word-pairs</span>.
+              You can guess puzzles your friends create, solve the
+              Daily Facet, or create your own puzzles to send to friends!
+            </p>
+            <hidden v-if="!isPlayerCreating">
+              <h3>Guessing</h3>
+              <p>Find the right word-pairs based on the clues given. Drag cards onto the gem and rotate them until you
+                think
+                you've solved the puzzle!</p>
+              <img :src="'./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
+              <p>Hit the <cta>{{appDataActionButtonTexts.guess}}</cta> or <cta>{{appDataActionButtonTexts.reply}}</cta>
+                button to check your solution.</p>
+            </hidden>
+
+            <h3 v-if="!appStateShowCreateOOBE">Creating</h3>
+            <p>When creating a new puzzle, it's your job to come up with clues that "connect" the four word-pairs that
+              are
+              displayed on the edges of the gem. (These characters are not allowed: ? : = and &)</p>
+            <img :src="'./images/tut-7' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
+            <p>When you are satisfied with your 4 clues, hit the <cta>{{appDataActionButtonTexts.send}}</cta> button.
+              The
+              puzzle will scramble and you'll be able to share a message with your friend that contains a link to the
+              scrambled puzzle.</p>
+            <p>They're gonna have to recreate your puzzle based on your clues! 🧠</p>
+
+            <h3>Reviewing</h3>
+            <p>Your friends will send their guesses back to you for review. When reviewing, remove incorrectly placed
+              cards from the gem.</p>
+            <img :src="'./images/tut-4' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
+            <p>Click the <cta>{{appDataActionButtonTexts.respond}}</cta> button to send the puzzle back, even if you are
+              just giving them the solution.</p>
+
+            <hidden v-if="isPlayerCreating">
+              <h3>Guessing</h3>
+              <p>Find the right word-pairs based on the clues given. Drag cards onto the gem and rotate them until you
+                think
+                you've solved the puzzle!</p>
+              <img :src="'./images/tut-6' + (userSettingsUsesLightTheme ? '-light' : '') + '.svg'" />
+              <p>Hit the <cta>{{appDataActionButtonTexts.guess}}</cta> or <cta>{{appDataActionButtonTexts.reply}}</cta>
+                button to check your solution.</p>
+            </hidden>
+          </section>
+          <controls><button @click="ToggleShowTutorial($event)">Back</button></controls>
+        </modal>
+        <modal v-if="appStateShowConfirmation" class="centered">
+          <confirmation>
+            <message v-html="appDataConfirmationObject.message"></message>
+            <controls>
+              <button class="secondary" @click="HandleYesNo(appDataConfirmationObject.target, false)">No</button>
+              <button @click="HandleYesNo(appDataConfirmationObject.target, true)">Yes</button>
+            </controls>
+          </confirmation>
+        </modal>
+        <modal v-if="appStateShowIntro" class="centered">
+          <section>
+            <h2>
+              Facets
+              <p
+                style="font-family: var(--wordFont); max-width: unset; font-size: 50%; padding-top: var(--defaultGap); line-height: 150%;">
+                Craft word puzzles, send each other solutions, and discover how you and your friends connect! </p>
+            </h2>
+            <message v-if="isAuthenticated" style="text-align: center; line-height: 150%;">
+              Welcome {{tempName}}!
+            </message>
+            <message v-if="!isAuthenticated" style="text-align: center; line-height: 150%;">
+              What's your player name?
+            </message>
+            <input v-if="!isAuthenticated" autocomplete="off" style="text-align: center" spellcheck="false"
+              maxlength="14" id="nameInput" placeholder="_ _ _ _ _ _ _ _ _ _ _ _ _" v-model="tempName" />
+            <p v-if="!isAuthenticated" style="font-size: .8em; text-align: center;">
+              If you want to sync your preferences across devices, you can also use a Big
+              Tent Games account <a href="#" @click="HandleLoginClick">log in or sign up</a>.
+            </p>
+
+            <!-- <checkbox v-if="isNotificationSupported && isSyncSupported && isPWAOnHomeScreen"
+              :class="{on: tempUserWantsDailyReminder && Notification.permission === 'granted', disabled: !Notification.permission === 'granted'}"
+              @click="ToggleTempUserWantsDailyReminder">
+              Allow notifications
+              <toggle></toggle>
+            </checkbox> -->
+
+            <legal>We NEVER sell or trade your data to anyone. By continuing to use this game, you agree to our <a
+                href="https://bigtentgames.com/#privacy" target="_blank">Privacy Policy</a>, which explains everything.
+            </legal>
+          </section>
+          <controls><button @click="HandleIntroButtonClick($event)">Next</button></controls>
+        </modal>
+        <modal v-if="appStateShowInfo">
+          <section>
+            <h2>Credits</h2>
+
+            <h3>Created by</h3>
+            <credit>Wil Voss</credit>
+            <button class="small resume" @click="HandleDonateButtonPress">
+              <icon class="bmc small resumeBackground"></icon>
+              Buy me a coffee!
+            </button>
+
+            <h3>Dedication</h3>
+            <credit>Made with ❤️ for Sonna and Melinda.</credit>
+
+            <h3>Feedback & ideas</h3>
+            <credit>Lex Barbieri</credit>
+            <credit>Jaime Bortello</credit>
+            <credit>Summer Bronson</credit>
+            <credit>Melinda Cocolas</credit>
+            <credit>Liz G.</credit>
+            <credit>Marianne Giesemann</credit>
+            <credit>Perdis Hawkins</credit>
+            <credit>Jerry Hoffmeister</credit>
+            <credit>Chris Lehan</credit>
+            <credit>Nina Lourie</credit>
+            <credit>Sean O'Dell</credit>
+            <credit>Stacey Rea</credit>
+            <credit>AJ Rogers</credit>
+            <credit>Elaine Soennichsen</credit>
+            <credit>Kathleen Voss</credit>
+            <credit>Sonna Voss</credit>
+
+            <h3>How can you help?</h3>
+            <a class="padded" @click="ShareText('https://bigtentgames.com/facets', '')">Share with friends!</a>
+            <a class="padded" href="https://discord.gg/sJ3vG3RHZd" target="_blank">Join our Discord!</a>
+            <a class="padded" href="https://github.com/wilvoss/facets/issues" target="_blank">Submit a bug!</a>
+            <button class="small resume" onclick="window.open('https://www.buymeacoffee.com/wilvoss', '_blank')">
+              <icon class="bmc small resumeBackground"></icon>
+              Buy me a coffee!
+            </button>
+
+            <h3></h3>
+            <version>
+              <span>&copy;{{currentYear}} Big Tent Games</span>
+              <span><a href="https://bigtentgames.com/#privacy" target="_blank">Privacy Policy</a></span>
+              <span>Version {{appDataVersion}}</span>
+            </version>
+          </section>
+          <controls><button @click="appStateShowInfo = false">Back</button></controls>
+        </modal>
+        <modal v-if="appStateShowCatChooser">
+          <section>
+            <h2>Puzzle Options</h2>
+            <h3 style="padding-top: 0px">Category</h3>
+            <categories>
+              <category :class="{on: set.name === tempWordSetName }" @click="tempWordSetName = set.name"
+                :class="{on: tempWordSetName === set.name}" v-for="set in enabledTempWordSet">{{set.name}}</category>
+            </categories>
+            <h3>Cards</h3>
+            <row>
+              <p>Language</p>
+              <select v-model="tempUserSettingsLanguage">
+                <option v-for="option in enabledTempLanguages" :key="option.tag" :value="option.tag">{{ option.name }}
+                </option>
+              </select>
+            </row>
+            <h3>Difficulty</h3>
+            <checkbox title="Enable this to make your puzzle much harder to solve!" :class="{on: tempUseExtraCard}"
+              @click="ToggleTempUseExtraCard">
+              Make it crazy hard
+              <toggle></toggle>
+            </checkbox>
+            <small>Enable this to add an extra random guessing card that doesn't belong in the solution.</small>
+          </section>
+          <controls>
+            <button class="secondary" @click="GetCategoryNames(); appStateShowCatChooser = false;">Back</button>
+            <button @click="HandleGoButtonClick($event)">Create</button>
+          </controls>
+        </modal>
+        <modal v-if="appStateShowSettings">
+          <section>
+            <h2>Settings</h2>
+            <h3>Profile</h3>
+            <row>
+              <p>Player name</p>
+              <callout>
+                <input autocomplete="off" spellcheck="false" maxlength="14" placeholder="" onpointerup="this.select()"
+                  v-model="tempName" />
+              </callout>
+            </row>
+            <small v-if="isAuthenticated && userEmail">Logged into Big Tent Games as {{userEmail}}.</small>
+
+            <row v-if="isAuthenticated">
+              <a class="padded" @click="HandleLogOutClick">Log out</a>
+            </row>
+
+            <h3>Appearance</h3>
+            <row>
+              <hues>
+                <hue @click="SetHueIndex(index)" v-for="(hue, index) in currentHueSet"
+                  :class="{selected: index === tempUserSettingsHueIndex}" :key="'hueIndex' + index"
+                  :style="{backgroundColor: 'hsl(' + hue + ', 50%, ' + (tempUserSettingsUsesLightTheme ? '70%' : '30%') + ')'}">
+                </hue>
+              </hues>
+            </row>
+            <small>Choose your mood.</small>
+            <checkbox v-if="!appStateUseFlower" :class="{on: tempUserSettingsUsesLightTheme}"
+              @click="ToggleTempUseLightTheme">
+              Light mode <toggle></toggle>
+            </checkbox>
+            <small v-if="!appStateUseFlower">Enable this if you want a brighter, lighter visual experience.</small>
+            <checkbox :class="{on: !tempUseWordSetThemes}" @click="ToggleTempUseWordSetThemes">
+              Hide backgrounds <toggle></toggle>
+            </checkbox>
+            <small>Enable this to hide category related backgrounds.</small>
+            <checkbox :class="{on: tempUserSettingsUsesSimplifiedTheme}" @click="ToggleTempUseSimplifiedTheme">
+              Simple visuals <toggle></toggle>
+            </checkbox>
+            <small>Enable this if you want remove the gem theme entirely. </small>
+            <checkbox
+              :class="{disabled: tempUserSettingsUsesSimplifiedTheme, on: !tempUseMultiColoredGems && !tempUserSettingsUsesSimplifiedTheme}"
+              @click="ToggleTempUseMultiColoredGems">
+              Monocolored gem <toggle></toggle>
+            </checkbox>
+            <small :class="{disabled: tempUserSettingsUsesSimplifiedTheme}">Enable this if you want the gem to remain
+              green when you are creating, guessing, or reviewing.</small>
+            <checkbox :class="{on: tempUserSettingsHideStats}" @click="ToggleTempHideStats">
+              Hide stats <toggle></toggle>
+            </checkbox>
+            <small>Enable this if you don't want to see statistics associated with the Daily Facet.</small>
+            <checkbox v-if="appStateUsePortraitLayout" :class="{on: !tempUserSettingsShowAllCards}"
+              @click="ToggleTempShowAllCards">
+              Make "parked" cards bigger <toggle></toggle>
+            </checkbox>
+            <small v-if="appStateUsePortraitLayout">Enable this if you want to increase the size of the unused cards
+              when guessing.
+            </small>
+            <h3>Behavior</h3>
+            <checkbox :class="{on: tempUserSettingsNoSnark}" @click="ToggleTempNoSnark">
+              No snark <toggle></toggle>
+            </checkbox>
+            <small>Enable this if you don't want snark in the share texts!</small>
+            <checkbox :class="{on: tempUserSettingsHideReviewAids}" @click="ToggleTempUnaidedReview">
+              Unaided puzzle review <toggle></toggle>
+            </checkbox>
+            <small>Enable this if you want to hide the wrong card clues when reviewing a puzzle.
+            </small>
+            <!-- <checkbox v-if="isNotificationSupported && isSyncSupported && appStateUseNotifications"
+            :class="{on: tempUserWantsDailyReminder, disabled: Notification.permission === 'denied'}"
+            @click="ToggleTempUserWantsDailyReminder">
+            Notifications
+            <toggle></toggle>
+          </checkbox>
+          <small v-if="isNotificationSupported && isSyncSupported && appStateUseNotifications"
+            :class="{disabled: Notification.permission === 'denied'}"> Enable this to get Daily Reminder notifications
+            (once a day at 8:00 am). </small>
+          <instructions
+            v-if="appStateUseNotifications && isNotificationSupported && isSyncSupported && !isPWAOnHomeScreen && Notification.permission === 'denied'">
+            Notifications are currently disabled in your browser settings. To enable notifications for Facets, please
+            follow these steps:
+            <ul>
+              <li>Open your browser's settings.</li>
+              <li>Navigate to Privacy and Security > Site Settings > Notifications.</li>
+              <li>Find Facets ({{location.hostname}}) in the list and change the setting to "Allow."</li>
+            </ul>
+            Once you have updated your browser settings, refresh close and reopen Facets, after which you can enable
+            notifications here.
+          </instructions>
+          <instructions
+            v-if="isNotificationSupported && isSyncSupported && isPWAOnHomeScreen && Notification.permission === 'denied'">
+            Notifications for Facets may be disabled on your device:
+            <ul>
+              <li>Open your device settings.</li>
+              <li>Navigate to Apps and Notifications > App info (or equivalent).</li>
+              <li>Find Facets in the list, and make sure notifications are enabled.</li>
+            </ul>
+            Once you have updated your device settings, restart Facets, and then enable notifications here.
+          </instructions> -->
+            <row style="margin-top: calc(2 * var(--defaultGap))" :class="{disabled: !tipsHaveBeenIncremented}">
+              <a class="padded" @click="ResetFirstRun">Reset
+                tips</a>
+            </row>
+            <small :class="{disabled: !tipsHaveBeenIncremented}">Tap this to restore the game guiding tips.</small>
+
+            <row>
+              <a class="padded" @click="HandlePWAUpdate">Reload app</a>
+            </row>
+            <small>Tap this to be sure that you have the latest version. Currently running
+              build
+              {{appDataVersion}}.</small>
+          </section>
+          <controls>
+            <button class="secondary" @click="CancelSettings($event)">Cancel</button>
+            <button :disabled="tempIDisInvalid" title="Please only use numbers." :class="{disabled: tempIDisInvalid}"
+              @click="SubmitSettings($event)">Save</button>
+          </controls>
+        </modal>
+        <modal v-if="appStateShowGlobalCreated">
+          <section>
+            <h2>Anonymous puzzles</h2>
+            <p>Play recent puzzles created by anonymous players from around the world.</p>
+
+            <row style="margin: 20px 0">
+              <a class="padded" :class="{disabled: appStateIsGettingAnonymousGames}"
+                @click="GetRecentAnonymousGames">Refresh</a>
+              <a class="padded" onclick="window.open('/game/stats.html', '_blank')">Global Stats</a>
+            </row>
+
+            <icon v-show="appStateIsGettingAnonymousGames" style="position: relative" class="spinner show"></icon>
+
+            <message style="padding: calc(2 * var(--defaultGap)) 0"
+              v-if="!appStateIsGettingAnonymousGames && createdGamesWithWordSetNames.length === 0">
+              <p>😢</p>
+              <p>There are no player puzzles to display.</p>
+              <button style="margin-top: 20px; border: 1px solid hsla(var(--linkColorDarkHSL), 0.75)"
+                @click="ToggleShowGlobalCreated; HandleNewGameClick">Create One!</button>
+            </message>
+
+            <gamelinks>
+              <gamelink v-for="game in createdGamesWithWordSetNames" @click="HandleOldGameClick($event, game)">
+                <p>
+                  <a href=""><small>{{game.name}}
+                      {{game.useExtraCard === "true" ? '(5-cards)' : ''}}</small>{{game.hints.replace(/:/g," - ")}}</a>
+                  <button title="Report this puzzle for offensive language." @click="ReportPuzzle($event, game)"
+                    class="inline report">
+                    <icon class="alert"></icon>Report
+                  </button>
+                </p>
+              </gamelink>
+            </gamelinks>
+
+            <controls>
+              <button @click="appStateShowGlobalCreated = false">Back</button>
+            </controls>
+          </section>
+        </modal>
+        <modal v-if="appStateShowDailyGames">
+          <section>
+            <h2>The Daily Facet</h2>
+            <p>These AI puzzles can be quite hard. Can you solve them more quickly than your friends?</p>
+            <small v-if="!userSettingsHideStats" class="statlabel" style="margin-top: var(--defaultGap)"> You've solved
+              {{appDataPlayerStats.total}}
+              {{appDataPlayerStats.total === 1 ? 'Daily Facet' :  'Daily Facets' }} </small>
+            <stats v-if="!userSettingsHideStats" style="padding-top: 0px;">
+              <stat class="boxed">
+                <value>
+                  {{!appStateIsGettingDailyGameStats && appDataPlayerStats && appDataPlayerStats.g1 ? appDataPlayerStats.g1 : '-'}}
+                </value>
+                <small>in 1 try</small>
+              </stat>
+              <stat class="boxed">
+                <value>
+                  {{!appStateIsGettingDailyGameStats && appDataPlayerStats && appDataPlayerStats.g2 ? appDataPlayerStats.g2 : '-'}}
+                </value>
+                <small>in 2 tries</small>
+              </stat>
+              <stat class="boxed">
+                <value>
+                  {{!appStateIsGettingDailyGameStats && appDataPlayerStats && appDataPlayerStats.beyond2 ? appDataPlayerStats.beyond2 : '-'}}
+                </value>
+                <small>in 3+ tries</small>
+              </stat>
+              <stat class="boxed">
+                <value>
+                  {{!appStateIsGettingDailyGameStats && appDataPlayerStats && appDataPlayerStats.quit ? appDataPlayerStats.quit : '-'}}
+                </value>
+                <small>quit</small>
+              </stat>
+            </stats>
+            <icon v-show="appStateIsGettingDailyGames " style="position: relative" class="spinner show"></icon>
+            <message style="padding: calc(2 * var(--defaultGap)) 0"
+              v-if="!appStateIsGettingDailyGames && dailyGamesWithWordSetNames.length === 0">
+              <p v-if="Navigator.online">There was an error. 😢</p>
+              <p v-if="!Navigator.online">You appear to be offline. 😢</p>
+              <button v-if="!Navigator.online" @click="GetDailyGames">Retry</button>
+            </message>
+
+            <gamelinks v-if="!appStateIsGettingDailyGames">
+              <gamelink :class="{done: game.solved, quit: game.quit}"
+                v-for="(game, index) in dailyGamesWithWordSetNames">
+                <p @click="HandleGameLinkClick($event, game)">
+                  <a>
+                    <small>
+                      <dot
+                        v-if="index === 0 && todaysDaily !== currentDaily && game.guesses === 0 && dailyIsFreshToday || game.guesses === 0 && !HasUserStartedGame(game)">
+                        •</dot>
+                      <icon v-if="game.solved" class="eye tiny"></icon>
+                      {{game === todaysDaily ? 'Today' : game.date}}
+                    </small>
+                    <clues> {{game.hints.replace(/:/g," - ")}} </clues>
+                  </a>
+                  <button v-if="game.guesses === 0" class="inline report"
+                    style="justify-content: end; padding-left: 40px; padding-right: 0px;">
+                    <icon class="continue"></icon>
+                  </button>
+                  <button v-if="game.solved && game.guesses > 0 && !game.quit" class="inline report">
+                    <icon class="check"></icon>
+                    In {{game.guesses}}
+                  </button>
+                  <button v-if="game.solved && game.guesses > 0 && game.quit" class="inline report">
+                    <icon class="quit alertbackground"></icon>
+                    In {{game.guesses}}
+                  </button>
+                  <button v-if="!game.solved && game.guesses > 0" class="inline report"
+                    :class="{alert: !game.solved && game.guesses > 0}">
+                    {{game.guesses}} {{game.guesses === 1 ? "Try" : "Tries"}}
+                    <icon class="continue"></icon>
+                  </button>
+                </p>
+
+                <!-- <small class="statlabel"> {{game === todaysDaily ? 'Today\'s' : game.date}} player counts </small> -->
+                <stats v-if="!userSettingsHideStats" title="Success rates for solving this puzzle">
+                  <stat>
+                    <value>
+                      {{!appStateIsGettingDailyGameStats && game.stats && game.stats.guesscounts.g1 ? game.stats.guesscounts.g1 : '-'}}
+                    </value>
+                    <small>in 1 try</small>
+                  </stat>
+                  <stat>
+                    <value>
+                      {{!appStateIsGettingDailyGameStats && game.stats && game.stats.guesscounts.g2 ? game.stats.guesscounts.g2 : '-'}}
+                    </value>
+                    <small>in 2 tries</small>
+                  </stat>
+                  <stat>
+                    <value>
+                      {{!appStateIsGettingDailyGameStats && game.stats && game.stats.guesscounts.beyond2 ? game.stats.guesscounts.beyond2 : '-'}}
+                    </value>
+                    <small>in 3+ tries</small>
+                  </stat>
+                  <stat>
+                    <value>{{!appStateIsGettingDailyGameStats && game.stats && game.stats.avg ? game.stats.avg : '-'}}
+                    </value>
+                    <small>tries avg</small>
+                  </stat>
+                  <stat v-if="!appStateUsePortraitLayout">
+                    <value>
+                      {{!appStateIsGettingDailyGameStats && game.stats && game.stats.guesscounts.quits ? game.stats.guesscounts.quits : '-'}}
+                    </value>
+                    <small>quit</small>
+                  </stat>
+                </stats>
+              </gamelink>
+            </gamelinks>
+
+            <controls>
+              <button @click="appStateShowDailyGames = false">Back</button>
+            </controls>
+          </section>
+        </modal>
+        <wrapper v-if="!appStateShowMeta">
+          <controls>
+            <button class="small" id="menu" @pointerup="ToggleShowMeta($event)">
+              <span></span>
+              Home
+              <badge :class="{show:dailyIsFreshToday}">{{appDataNumberOfNewDailies}}</badge>
+            </button>
+          </controls>
+          <header :disabled="appStateShowNotification" :class="{disabled: appStateSolving}"
+            @click="appStateShowNotification = true">
+            <span>
+              {{currentDaily && vsShowDaily ? currentDaily.key === todaysKey ? 'Today\'s' : currentDaily.date.split(',')[0] : ''}}
+            </span>
+            <flogo></flogo>
+            <icon v-if="currentDaily && !currentDaily.solved" :class="correctCalIconClass" class="large"></icon>
+            <icon v-if="currentDaily && currentDaily.solved && !currentDaily.quit" class="check large"></icon>
+            <icon v-if="currentDaily && currentDaily.solved && currentDaily.quit"
+              style="background: hsl(var(--alertHSL))" class="quit large"></icon>
+            <icon v-if="!currentDaily" class="logo"></icon>
+            <span>
+              <count v-if="currentDaily && currentDaily.solved"> in {{currentDaily.guesses}}
+                {{currentDaily.guesses !== 1 ? 'tries' : 'try'}}
+              </count>
+              <count v-if="currentDaily && !currentDaily.solved"> Daily </count>
+            </span>
+          </header>
+          <controls :class="{disabled: actionButtonState, pointoutparent: (appStateFirstRunGuessingIndex === 5 &&
+          isPlayerGuessing) || (appStateFirstRunCreatingIndex === 4 && isPlayerCreating)}">
+            <button id="shareButton" class="inline" :class="{pointout: (appStateFirstRunReviewingIndex === 2 &&
+            isPlayerReviewing) || (appStateFirstRunGuessingIndex === 5 &&
+            isPlayerGuessing) || (appStateFirstRunCreatingIndex === 4 && isPlayerCreating)}"
+              @click="HandleSubmitButtonPress">
+              <icon :class="{show: appStateIsGettingTinyURL}" class="spinner"></icon>
+              <span v-if="!appStateIsGettingTinyURL" v-html="submitButtonText"></span>
+            </button>
+          </controls>
+        </wrapper>
+        <wrapper class="main" :class="{disabled: appStateSolving}" v-if="!appStateShowMeta">
+          <rotators style="width: calc(3.25 * var(--cardSize))" :class="{pointoutparent: appStateFirstRunGuessingIndex === 4 &&
+          isPlayerGuessing || appStateFirstRunCreatingIndex === 3 && isPlayerCreating}">
+            <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateTray(1)">
+              <icon class="rotate"></icon>
+            </button>
+            <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise" @click="RotateTray(-1)">
+              <icon :class="{pointout: appStateFirstRunGuessingIndex === 4 &&
+              isPlayerGuessing || appStateFirstRunCreatingIndex === 3 && isPlayerCreating}" class="rotate"></icon>
+            </button>
+          </rotators>
+          <input autocomplete="off" type="text" :inert="appDataPlayerCurrent.role !== 'creator'"
+            aria-label="This is an input that holds focus while the tray is rotating. It's not used for anything else."
+            aria-hidden="true" maxlength="0" :disabled="appStateIsGuessing" tabindex="-1" id="parkingInput"
+            style="opacity: 0; width: 0px; height: 0px; overflow: hidden; position: absolute; z-index: -1"
+            v-model="appDataParkingInputValue" tabindex="-1" />
+          <ghost :style="{transform: 'translate(' + appDataGhostX + 'px, ' + appDataGhostY + 'px)'}">
+            <card class="selected" :style="{rotate: (appDataDraggedCard.rotation * 90) + 'deg'}"
+              :class="{show: appStateIsDragging, empty: appDataDraggedCard.words.length === 0}">
+              <words>
+                <word v-for="word in appDataDraggedCard.words">{{word.value}}</word>
+              </words>
+            </card>
+          </ghost>
+          <parking v-if="!appStateUsePortraitLayout"
+            :class="{pointout: (isPlayerCreating && appStateFirstRunCreatingIndex === 5)}">
+            <spot v-for="(card, index) in leftParkingCards"
+              :class="{empty: card.words.length === 0, selected: card.isSelected, pointout: ((card.words.length !== 0 && isPlayerGuessing && appStateFirstRunGuessingIndex === 2 && !appStateIsDragging) || (isPlayerReviewing && appStateFirstRunReviewingIndex === 1))}">
+              <rotators>
+                <button aria-label="Rotate Tray Clockwise" class="clockwise" @pointerdown="RotateCard($event, card, 1)">
+                  <icon class="rotate"></icon>
+                </button>
+                <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise"
+                  @pointerdown="RotateCard($event, card, -1)">
+                  <icon class="rotate"></icon>
+                </button>
+              </rotators>
+              <card @click="HandleCardClick($event, card)" @pointerup="HandleCardPointerUp($event, card, 'parking')"
+                @pointerdown="HandleCardPointerDown($event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}"
+                :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
+                <words>
+                  <word v-for="word in card.words">{{word.value}}</word>
+                </words>
+              </card>
+              <rotators>
+                <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateCard($event, card, 1)">
+                  <icon class="rotate"></icon>
+                </button>
+                <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise"
+                  @click="RotateCard($event, card, -1)">
+                  <icon class="rotate"></icon>
+                </button>
+              </rotators>
+            </spot>
+          </parking>
+          <tray id="tray" :class="{rotating: appStateTrayIsRotating}"
+            :style=" {rotate: appStateTrayRotation * 90 + 'deg' }">
+            <diamond class="back"></diamond>
+            <diamond></diamond>
+            <hints>
+              <hint @pointerdown="HandleHintClick(index)" :id="'h' + index" v-for="(hint, index) in appDataHints"
+                :key="index"
+                :class="{pointoutparent: index === 0 && ((appStateFirstRunCreatingIndex === 2 && isPlayerCreating) || (appStateFirstRunGuessingIndex === 1 && isPlayerGuessing))}">
+                <input autocomplete="off" autocapitalize="off" autocomplete="off" spellcheck="false"
+                  :id="'hint' + index" type="text" title="Please only use alphanumeric characters."
+                  pattern="[A-Za-z0-9]*"
+                  :class="{readonly: appStateIsGuessing || index > 0,pointout: index === 0 && ((appStateFirstRunCreatingIndex === 2 && isPlayerCreating) || (appStateFirstRunGuessingIndex === 1 && isPlayerGuessing))}"
+                  :readonly="appStateIsGuessing || index > 0" v-model="hint.value" maxlength="14" type="text"
+                  placeholder="clue" />
+              </hint>
+            </hints>
+            <cards :class="{disabled: appStateIsModalShowing}">
+              <spot v-for="(card, index) in appDataCards"
+                :class="{wrong: card.failedCheckAlready && !card.isRotating, empty: card.words.length === 0, selected: card.isSelected, pointout: (appStateIsGuessing && appStateFirstRunGuessingIndex === 3 && card.words.length > 0) || (appStateFirstRunCreatingIndex === 1 && isPlayerCreating), pointadjacent: (isPlayerCreating && appStateFirstRunCreatingIndex === 5)}">
+                <rotators
+                  v-if="(appStateIsGuessing && currentGameSolutionGuessing !== currentGameSolutionActual) || appDataPlayerCurrent.role === 'reviewer'">
+                  <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateCard($event, card, 1)">
+                    <icon class="rotate"></icon>
+                  </button>
+                  <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise"
+                    @click="RotateCard($event, card, -1)">
+                    <icon class="rotate"></icon>
+                  </button>
+                </rotators>
+                <card @click="HandleCardClick($event, card)" @pointerup="HandleCardPointerUp($event, card)"
+                  @pointerdown="HandleCardPointerDown($event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}"
+                  :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
+                  <words>
+                    <word
+                      :class="{pointout: appStateFirstRunCreatingIndex === 2 && isPlayerCreating && windex === 0 && (index === 0 || index === 1)}"
+                      v-for="(word, windex) in card.words" :id="'word' + windex">{{word.value}}</word>
+                  </words>
+                </card>
+                <rotators
+                  v-if="(appStateIsGuessing && currentGameSolutionGuessing !== currentGameSolutionActual) || appDataPlayerCurrent.role === 'reviewer'">
+                  <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateCard($event, card, 1)">
+                    <icon class="rotate"></icon>
+                  </button>
+                  <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise"
+                    @click="RotateCard($event, card, -1)">
+                    <icon class="rotate"></icon>
+                  </button>
+                </rotators>
+              </spot>
+            </cards>
+          </tray>
+          <parking v-if="!appStateUsePortraitLayout">
+            <spot v-for="(card, index) in rightParkingCards"
+              :class="{empty: card.words.length === 0, selected: card.isSelected, pointout: ((card.words.length !== 0 && isPlayerGuessing && appStateFirstRunGuessingIndex === 2 && !appStateIsDragging) || (isPlayerReviewing && appStateFirstRunReviewingIndex === 1))}">
+              <rotators>
+                <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateCard($event, card, 1)">
+                  <icon class="rotate"></icon>
+                </button>
+                <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise"
+                  @click="RotateCard($event, card, -1)">
+                  <icon class="rotate"></icon>
+                </button>
+              </rotators>
+              <card @click="HandleCardClick($event, card)" @pointerup="HandleCardPointerUp($event, card, 'parking')"
+                @pointerdown="HandleCardPointerDown($event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}"
+                :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
+                <words>
+                  <word v-for="word in card.words">{{word.value}}</word>
+                </words>
+              </card>
+              <rotators>
+                <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateCard($event, card, 1)">
+                  <icon class="rotate"></icon>
+                </button>
+                <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise"
+                  @click="RotateCard($event, card, -1)">
+                  <icon class="rotate"></icon>
+                </button>
+              </rotators>
+            </spot>
+          </parking>
+        </wrapper>
+        <wrapper class="mobile" :class="{extra: currentGameGuessingCardCount === 5}"
+          v-if="appStateUsePortraitLayout && !appStateShowMeta">
+          <button class="scroller" :class="{disabled: appDataParkingScrollLeft <= 0}"
+            @click="ScrollParking($event, 'right')" v-if="vsUseFocus">
+            <icon class="chevronleft large"></icon>
+          </button>
+          <parking id="parking">
+            <spot v-for="(card, index) in bottomParkingCards"
+              :class="{empty: card.words.length === 0, selected: card.isSelected, pointout: (isPlayerGuessing && !appStateIsDragging && appStateFirstRunGuessingIndex === 2 && card.words.length !== 0) || (isPlayerCreating && appStateFirstRunCreatingIndex === 5) || (isPlayerReviewing && !appStateIsDragging && appStateFirstRunReviewingIndex === 1)}">
+              <rotators v-if="!userSettingsShowAllCards">
+                <button aria-label="Rotate Tray Clockwise" class="clockwise" @pointerdown="RotateCard($event, card, 1)">
+                  <icon class="rotate"></icon>
+                </button>
+                <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise"
+                  @pointerdown="RotateCard($event, card, -1)">
+                  <icon class="rotate"></icon>
+                </button>
+              </rotators>
+              <card @pointerup="HandleCardPointerUp($event, card, 'parking')"
+                @pointerdown="HandleCardPointerDown($event, card)" :style="{rotate: (card.rotation * 90) + 'deg'}"
+                :class="{rotating: card.isRotating, selected: card.isSelected, dropped: card.justDropped}">
+                <words>
+                  <word v-for="word in card.words">{{word.value}}</word>
+                </words>
+              </card>
+              <rotators v-if="!userSettingsShowAllCards">
+                <button aria-label="Rotate Tray Clockwise" class="clockwise" @click="RotateCard($event, card, 1)">
+                  <icon class="rotate"></icon>
+                </button>
+                <button aria-label="Rotate Tray Anti-Clockwise" class="anticlockwise"
+                  @click="RotateCard($event, card, -1)">
+                  <icon class="rotate"></icon>
+                </button>
+              </rotators>
+            </spot>
+          </parking>
+          <button class="scroller" :class="{disabled: appParkingRightButtonDisabled}"
+            @click="ScrollParking($event, 'left')" v-if="vsUseFocus">
+            <icon class="chevronright large"></icon>
+          </button>
+        </wrapper>
+      </app>
+    </main>
+    <script src="/helpers/console-enhancer.js" type="text/javascript"></script>
+
+  </body>
+
+</html>

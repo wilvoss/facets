@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta content="x-content-type-options=nosniff" />
+
+    <title>Facets Stats!</title>
+    <meta name="apple-mobile-web-app-title" content="Facets! Stats" />
+    <meta name="mobile-web-app-capable" content="no" />
+    <meta name="apple-touch-fullscreen" content="no" />
+    <meta name="apple-mobile-web-app-capable" content="no" />
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, minimum-scale=1, maximum-scale=5, user-scalable=yes" />
+    <meta name="theme-color" id="themeColor" content="rgb(0, 9, 15)" />
+
+    <meta name="keywords"
+      content="free online game, brain teaser, casual game, puzzle game, word game, word association, puzzle, social game" />
+    <meta name="description" content="Statistics on Facets: A free word association puzzle game. Play custom challenges with friends or take on the AI's
+      Daily Puzzle — brain-teasing fun without distractions!" />
+
+    <link rel="apple-touch-icon" sizes="120x120" href="../images/icon180.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../images/icon180.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="../images/icon192.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="../images/icon512-apple-touch.png" />
+
+    <link rel="icon alternate" type="image/png" href="/favicon.png">
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+    <link rel="stylesheet" href="/styles/normalize.css" media="screen" />
+    <link rel="stylesheet" href="/styles/main.min.css" media="screen" />
+    <style>
+      app {
+        justify-content: flex-start;
+        align-items: center;
+        height: 100%;
+        overflow: auto;
+      }
+
+      header {
+        flex-direction: column;
+        align-items: center;
+        gap: calc(.5 * var(--defaultGap));
+        padding: 40px 8px 8px;
+      }
+
+      header h1,
+      header h2 {
+        margin-bottom: 0;
+        padding-bottom: 0;
+      }
+
+      header h2 {
+        margin-top: calc(2 * var(--defaultGap));
+        color: hsl(var(--messageColorHSL));
+        font-size: 1.17em;
+      }
+
+      subtitle {
+        display: flex;
+        flex-direction: row;
+        color: hsla(var(--appForegroundHSL), 1);
+        line-height: 1.3em;
+        text-align: center;
+      }
+
+      subtitle span {
+        display: block;
+        color: hsla(var(--appForegroundHSL), 0.7);
+      }
+
+      stats {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-content: start;
+        justify-content: center;
+        align-items: stretch;
+        gap: calc(0.5 * var(--defaultGap));
+        padding: calc(1 * var(--defaultGap)) calc(1 * var(--defaultGap)) 0;
+        width: calc(100% - 2 * var(--defaultGap));
+        max-width: 500px;
+        overflow: initial;
+      }
+
+      stats:last-of-type {
+        margin-bottom: calc(1.5 * var(--defaultGap));
+      }
+
+      stat {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        justify-content: start;
+        align-items: stretch;
+        gap: 0;
+        box-shadow: var(--statShadow);
+        border: 1px solid var(--statBorder);
+        border-radius: var(--borderRadius);
+        background: var(--statBackground);
+        padding: 20px 8px;
+        max-width: 100%;
+      }
+
+      .languages stat:first-of-type {
+        width: 100%;
+      }
+
+      value,
+      key {
+        display: block;
+        padding: 0 20px;
+        min-width: 60px;
+        line-height: 1.2em;
+        text-align: center;
+      }
+
+      key {
+        color: hsla(var(--traySolvedBackgroundHSL), 1);
+        font-size: 0.7em;
+      }
+
+      value {
+        font-size: 2.4em;
+        line-height: 1.2em;
+      }
+
+      icon.spinner {
+        margin-top: 210px;
+      }
+
+      app::-webkit-scrollbar {
+        display: none;
+
+        -ms-overflow-style: none;
+        scroll-behavior: smooth;
+        scrollbar-width: none;
+
+        touch-action: auto;
+      }
+
+      @media screen and (max-width: 678px) {
+        stats {
+          padding-top: var(--defaultGap);
+          max-width: 400px;
+        }
+
+        message {
+          margin-bottom: calc(.5 * var(--defaultGap));
+          font-size: .8em;
+        }
+
+        key {
+          font-size: .6em;
+        }
+      }
+    </style>
+    <script type="module" crossorigin src="/assets/game/stats-CIMWbbBu.js"></script>
+    <link rel="modulepreload" crossorigin href="/assets/modulepreload-polyfill-B5Qt9EMX.js">
+    <link rel="modulepreload" crossorigin href="/assets/gameplay-D8WbgvML.js">
+  <link rel="manifest" href="/manifest.webmanifest"></head>
+
+  <body>
+    <main id="app">
+      <app v-cloak>
+        <link rel="stylesheet" v-if="userSettingsUsesLightTheme" href="../styles/light.css" media="screen" />
+        <wrapper>
+          <header @click="OpenGame">
+            <icon class="logo"></icon>
+            <h2>Facets - Global Stats</h2>
+            <subtitle>Updated Hourly</subtitle>
+          </header>
+        </wrapper>
+        <icon class="spinner" :class="{show: isFetching}"></icon>
+        <stats :class="stat.key.toLowerCase()" v-for="stat in stats">
+          <message>{{stat.key}}</message>
+          <stat class="boxed" v-for="kv in stat.value">
+            <value>{{ kv.value }}</value>
+            <key>{{ kv.key }}</key>
+          </stat>
+        </stats>
+        <a v-if="!isFetching" style="margin-bottom: 40px" href="/">Open Facets</a>
+      </app>
+    </main>
+    <script src="/helpers/console-enhancer.js" type="text/javascript"></script>
+  </body>
+
+</html>
